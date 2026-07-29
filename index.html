@@ -1,0 +1,2004 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#E8E2D3">
+<title>Epi_Yaxin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light only;
+  --bg:#F7F3EA;--surface:#FFFFFF;--surface-2:#FBF8F2;
+  --cream:#E8E2D3;
+  --ink:#232019;--muted:#6E6A60;--faint:#9C978B;
+  --line:#E3DED2;--line-strong:#CFC9BA;
+  --pine:#1E6B58;--pine-soft:#E4EFEA;--pine-mid:#C6DED4;
+  --amber:#A87B22;--amber-soft:#F6EEDC;--amber-mid:#E7D6AF;
+  --clay:#A8483B;--clay-soft:#F6E7E4;--clay-mid:#EBCBC5;
+  --ac:#3E6B4E;--ac-soft:#E7EEE8;--ac-mid:#C8D8CC;
+  --r:10px;
+  --sans:"IBM Plex Sans","Noto Sans TC",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{background:#F7F3EA;color-scheme:light only;-webkit-text-size-adjust:100%;forced-color-adjust:none}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+input,textarea,select,button{color-scheme:light only}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.3}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:15px;color:var(--ink)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+a{color:var(--ac)}
+.wrap{max-width:940px;margin:0 auto;padding:0 14px 90px}
+header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position:sticky;top:0;z-index:40}
+.top-inner{max-width:940px;margin:0 auto}
+.brand h1{font-size:17px;color:var(--ink);letter-spacing:.01em}
+.tabs{display:flex;gap:2px;margin-top:11px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;background:transparent;border:0;color:var(--muted);padding:9px 14px;border-radius:8px 8px 0 0;white-space:nowrap;font-size:14px;font-weight:500}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--bg);font-weight:600}
+.tab[data-p="reading"][aria-selected="true"]{color:#3E6B4E}
+.tab[data-p="textbooks"][aria-selected="true"]{color:#2F5670}
+.tab[data-p="courses"][aria-selected="true"]{color:#1F6B6B}
+.tab[data-p="review"][aria-selected="true"]{color:#6A4A6E}
+.tab[data-p="ideas"][aria-selected="true"]{color:#9A6A2C}
+.tab[data-p="calendar"][aria-selected="true"]{color:#A0533F}
+.tab[data-p="settings"][aria-selected="true"]{color:#5A574E}
+#p-reading{--ac:#3E6B4E;--ac-soft:#E7EEE8;--ac-mid:#C8D8CC}
+#p-textbooks{--ac:#2F5670;--ac-soft:#E5EBF0;--ac-mid:#C3D2DE}
+#p-courses{--ac:#1F6B6B;--ac-soft:#E2EFEE;--ac-mid:#BFDCDA}
+#p-review{--ac:#6A4A6E;--ac-soft:#EFE8F0;--ac-mid:#DAC9DC}
+#p-ideas{--ac:#9A6A2C;--ac-soft:#F6EEE0;--ac-mid:#E7D5B6}
+#p-calendar{--ac:#A0533F;--ac-soft:#F6E9E4;--ac-mid:#E7CCC2}
+#p-settings{--ac:#5A574E;--ac-soft:#EDEBE6;--ac-mid:#D6D2C8}
+.ov{--ac:#6A4A6E;--ac-soft:#EFE8F0;--ac-mid:#DAC9DC}
+.syncdot{background:none;border:0;font-size:13px;line-height:1;padding:2px 4px;color:#B7B1A4}
+.syncdot.ok{color:#3E6B4E}.syncdot.pend{color:#9A6A2C}.syncdot.err{color:#A8483B}
+.badge{display:inline-block;min-width:17px;padding:0 5px;margin-left:5px;border-radius:9px;background:var(--clay);color:#fff;font-family:var(--mono);font-size:10.5px;line-height:16px;text-align:center;vertical-align:1px}
+.panel{display:none;padding-top:18px}
+.panel.on{display:block}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.sec-title{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em;margin:24px 0 8px}
+.sec-title:first-child{margin-top:0}
+.sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:24px 0 8px}
+.sec-head:first-child{margin-top:0}
+.sec-head .t{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em}
+.hint{font-size:13px;color:var(--muted);line-height:1.55}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.spacer{flex:1}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:9px 14px;font-weight:500}
+.btn.ghost{background:transparent;color:var(--ac);border:1px solid var(--line-strong)}
+.btn.mini{padding:5px 10px;font-size:13px;border-radius:7px}
+.btn.icon{background:none;border:0;color:var(--muted);padding:2px 6px;font-size:18px;line-height:1.2}
+.btn.icon:hover{color:var(--ac)}
+.btn.warn{color:var(--clay);border-color:var(--clay-mid);background:transparent}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.saverow{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:10px}
+label.f{display:block;margin-bottom:10px}
+label.f > span{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px;font-weight:500}
+input[type=text],input[type=number],input[type=date],textarea,select{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+textarea{min-height:60px;resize:vertical;line-height:1.55}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 10px}
+@media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr 1fr}}
+.empty{border:1px dashed var(--line-strong);border-radius:var(--r);padding:22px 16px;text-align:center;color:var(--muted);font-size:14px}
+.pill{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:20px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);font-family:var(--mono)}
+.pill.pine{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
+.pill.amber{background:var(--amber-soft);border-color:var(--amber-mid);color:var(--amber)}
+.pill.clay{background:var(--clay-soft);border-color:var(--clay-mid);color:var(--clay)}
+button.pill{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+button.pill:hover{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
+.x{background:none;border:0;color:var(--faint);font-size:16px;line-height:1;padding:4px 6px}
+.x:hover{color:var(--clay)}
+details.fold > summary{cursor:pointer;list-style:none;font-size:13px;color:var(--ac);padding:4px 0;font-weight:500}
+details.fold > summary::-webkit-details-marker{display:none}
+details.fold.right > summary{text-align:right}
+.item{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px;margin-bottom:10px}
+.item h3{font-size:15px;margin-bottom:3px}
+.meta{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
+.cite{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:4px;padding-left:16px;text-indent:-16px}
+.bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;flex:1}
+.bar > i{display:block;height:100%;background:var(--ac);border-radius:2px}
+.barrow{display:flex;align-items:center;gap:9px;margin-top:8px}
+.barrow .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--muted);width:58px;flex:0 0 auto}
+.barrow .val{font-family:var(--mono);font-size:11.5px;color:var(--muted);flex:0 0 auto;min-width:56px;text-align:right}
+.srch{position:relative;flex:1;min-width:150px}
+.srch input{width:100%;padding:7px 28px 7px 10px;font-size:13.5px;border-radius:8px}
+.srch .clr{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--faint);font-size:14px;padding:2px 6px;cursor:pointer}
+.tagbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tagbar button{font-size:11.5px;padding:3px 9px;border-radius:20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);font-family:var(--mono)}
+.tagbar button[aria-pressed="true"]{background:var(--ac);border-color:var(--ac);color:#fff}
+.tagbar .cnt{opacity:.6;margin-left:4px}
+.theme{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-bottom:10px;overflow:hidden}
+.th-head{padding:12px 14px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.th-head:hover{background:var(--surface-2)}
+.th-emo{font-size:20px;line-height:1;flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:26px;height:26px}
+.th-name{flex:1;min-width:0}
+.th-name .en{font-size:14.5px;font-weight:600;line-height:1.3}
+.th-name .zh{font-size:12.5px;color:var(--muted)}
+.th-body{padding:0 14px 14px;display:none}
+.theme.open .th-body{display:block}
+.srcgrp{margin-top:10px}
+.srclab{font-size:11px;color:var(--faint);font-family:var(--mono);letter-spacing:.05em;margin-bottom:5px}
+.secs{display:flex;flex-direction:column;gap:4px}
+.secwrap{display:flex;gap:4px;align-items:stretch}
+.sec{display:flex;gap:8px;align-items:flex-start;text-align:left;flex:1;min-width:0;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:7px;padding:6px 9px;font-size:13px;line-height:1.4}
+.sec .num{font-family:var(--mono);font-size:11px;color:var(--faint);flex:0 0 auto;min-width:40px;padding-top:1px}
+.sec .ttl{flex:1}
+.sec .st{font-family:var(--mono);font-size:10px;flex:0 0 auto;color:var(--faint);padding-top:2px}
+.sec.s1{background:var(--amber-soft);border-color:var(--amber-mid)}
+.sec.s1 .num,.sec.s1 .st{color:var(--amber)}
+.sec.s2{background:var(--ac-soft);border-color:var(--ac-mid)}
+.sec.s2 .num,.sec.s2 .st,.sec.s2 .ttl{color:var(--ac)}
+.npen{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:0 9px;color:var(--faint);font-size:13px}
+.npen.has{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
+.npen[aria-expanded="true"]{background:var(--ac);border-color:var(--ac);color:#fff}
+.npanel{border:1px solid var(--line-strong);border-radius:8px;padding:11px 12px;margin:4px 0 6px;background:var(--surface-2)}
+.stagehdr{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line-strong)}
+.stagehdr .sn{font-size:15px;font-weight:700;color:var(--ink)}
+.stagehdr .sv{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;min-width:900px;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--surface-2);font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+td{min-width:130px;max-width:230px}
+.toolbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{background:transparent;border:0;padding:7px 12px;font-size:13px;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
+.seg.sm button{padding:5px 9px;font-size:12px}
+.ttwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table.tt{min-width:660px;width:100%;border-collapse:collapse;font-size:13px}
+table.tt th{background:var(--surface-2);text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
+table.tt td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:3px;min-width:112px;height:46px;vertical-align:top}
+table.tt td:last-child{border-right:0}
+table.tt td.ph{width:74px;min-width:74px;background:var(--surface-2);text-align:center;padding:5px 4px;vertical-align:middle}
+table.tt .pn{font-family:var(--mono);font-size:13px;font-weight:500;line-height:1.1}
+table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-height:1.2}
+.blk{width:100%;height:100%;border-radius:7px;padding:6px 7px;text-align:center;border:1px solid;font-size:12.5px;line-height:1.35;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.blk .nm{font-weight:600}
+.blk .rm{font-family:var(--mono);font-size:10.5px;opacity:.8}
+.blk.required{background:#E7EEE8;border-color:#C8D8CC;color:#3E6B4E}
+.blk.elective{background:#F6EEE0;border-color:#E7D5B6;color:#8A5C22}
+.blk.lab{background:#E5EBF0;border-color:#C3D2DE;color:#2F5670}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;align-items:center}
+.legend span.lg{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.legend i{width:11px;height:11px;border-radius:3px;border:1px solid;display:block}
+.legend i.required{background:#E7EEE8;border-color:#3E6B4E}
+.legend i.elective{background:#F6EEE0;border-color:#8A5C22}
+.legend i.lab{background:#E5EBF0;border-color:#2F5670}
+.kdgroup{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint);margin:16px 0 7px;display:flex;align-items:center;gap:9px}
+.kdgroup:first-child{margin-top:4px}
+.kdgroup::after{content:"";flex:1;height:1px;background:var(--line)}
+.kd{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-bottom:7px;overflow:hidden}
+.kd .cd{flex:0 0 74px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 4px;border-right:1px solid var(--line)}
+.kd .cd .n{font-family:var(--mono);font-size:19px;font-weight:500;line-height:1.05}
+.kd .cd .u{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;opacity:.75;margin-top:1px}
+.kd .bd{flex:1;min-width:0;padding:9px 12px;display:flex;flex-direction:column;justify-content:center}
+.kd .bd .ti{font-size:14px;font-weight:500;line-height:1.35}
+.kd .bd .dt{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:2px}
+.kd .rt{flex:0 0 auto;display:flex;align-items:center;padding-right:6px}
+.kd.u0 .cd{background:var(--clay);color:#fff}
+.kd.u1 .cd{background:var(--clay-soft);color:var(--clay)}
+.kd.u2 .cd{background:var(--amber-soft);color:var(--amber)}
+.kd.u3 .cd{background:var(--ac-soft);color:var(--ac)}
+.kd.past{opacity:.5}
+.kd.past .cd{background:var(--surface-2);color:var(--faint)}
+.warn{border:1px solid var(--clay-mid);background:var(--clay-soft);color:var(--clay);border-radius:var(--r);padding:11px 13px;font-size:13.5px;margin-bottom:12px}
+.bakrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px}
+.bakrow .d{font-family:var(--mono);color:var(--muted);flex:1}
+.help h4{font-size:14px;font-weight:600;margin:16px 0 6px;color:var(--ink)}
+.help h4:first-child{margin-top:4px}
+.help p{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0 0 8px}
+.help ul,.help ol{margin:0 0 8px;padding-left:20px;font-size:13.5px;color:var(--muted);line-height:1.65}
+.help table{min-width:0;width:100%;font-size:13px;margin:0 0 10px}
+.help th,.help td{padding:6px 8px}
+.help strong{color:var(--ink);font-weight:600}
+.help code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.twobox{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}
+@media(max-width:560px){.twobox{grid-template-columns:1fr}}
+.twobox > div{border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;background:var(--surface-2)}
+.twobox h5{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--ac)}
+.twobox ol{margin:0;padding-left:17px;font-size:13px;color:var(--muted);line-height:1.6}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;flex-direction:column;padding:16px}
+.ov.on{display:flex}
+.ov-top{display:flex;align-items:center;gap:10px;max-width:640px;margin:0 auto;width:100%}
+.ov-body{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:640px;margin:0 auto;width:100%;padding:12px 0;overflow-y:auto}
+.ov-q{font-size:20px;font-weight:600;line-height:1.45}
+.ov-a{margin-top:18px;padding-top:18px;border-top:1px solid var(--line-strong);white-space:pre-wrap;font-size:15.5px;display:none}
+.ov-a.on{display:block}
+.ov-foot{max-width:640px;margin:0 auto;width:100%;display:flex;gap:8px}
+.ov-foot .btn{flex:1;padding:14px}
+.chk{display:flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);font-size:13.5px;margin-bottom:5px;cursor:pointer}
+.chk input{width:auto}
+[data-hold]{background-image:linear-gradient(var(--clay),var(--clay));background-repeat:no-repeat;background-size:0% 100%;background-position:left center;border-radius:6px;
+  -webkit-touch-callout:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+[data-hold].on{background-size:100% 100%;transition:background-size 1.5s linear;color:#fff!important}
+.trashrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px}
+.trashrow .tt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.linkrow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.linkrow.top{align-items:flex-start}
+.linkrow .lb{flex:0 0 auto;font-size:12.5px;color:var(--muted);font-weight:500}
+.linkrow textarea{flex:1;min-width:0}
+.grid4{display:grid;grid-template-columns:2fr 1fr 2fr 2fr;gap:0 10px}
+@media(max-width:640px){.grid4{grid-template-columns:1fr 1fr}}
+.linkrow .ic{flex:0 0 auto;font-size:15px;line-height:1}
+.linkrow input{flex:1;min-width:0}
+.oneline{font-size:13.5px;color:var(--ac);margin-top:5px;line-height:1.45}
+.acts{display:flex;gap:5px;align-items:center}
+.acts button{background:none;border:0;padding:2px 5px;font-size:15px;line-height:1.3;color:var(--muted)}
+.lchip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;padding:4px 10px;border-radius:20px;
+  background:var(--ac-soft);border:1px solid var(--ac-mid);color:var(--ac);max-width:100%}
+.lchip:hover{background:var(--ac);color:#fff}
+.lrow{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.lrow input{min-width:0}
+.acts button:hover{color:var(--ac)}
+.iconb{background:none;border:0;padding:2px 6px;font-size:16px;line-height:1.3;color:var(--muted)}
+.iconb:hover{color:var(--ac)}
+.rv{cursor:pointer}
+.rv .ans{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);white-space:pre-wrap;font-size:14.5px;line-height:1.6}
+.grade{display:flex;gap:8px;margin-top:12px}
+.grade button{flex:1;padding:11px;border-radius:8px;font-weight:500;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--muted)}
+.grade button.good{background:var(--ac);border-color:var(--ac);color:#fff}
+.flipcue{font-size:12px;color:var(--faint);margin-top:8px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:20px;font-size:13.5px;z-index:120;opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand" style="display:flex;align-items:center;gap:9px"><h1>🎓 Epi_Yaxin</h1><button class="syncdot" id="syncDot" title="同步狀態">●</button></div>
+    <nav class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" data-p="reading" aria-selected="true">Reading</button>
+      <button class="tab" role="tab" data-p="textbooks" aria-selected="false">Textbooks</button>
+      <button class="tab" role="tab" data-p="courses" aria-selected="false">Courses</button>
+      <button class="tab" role="tab" data-p="review" aria-selected="false">Review</button>
+      <button class="tab" role="tab" data-p="ideas" aria-selected="false">Ideas</button>
+      <button class="tab" role="tab" data-p="calendar" aria-selected="false">Calendar</button>
+      <button class="tab" role="tab" data-p="settings" aria-selected="false">Settings</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ========== Reading ========== -->
+<section class="panel on" id="p-reading">
+  <div class="toolbar">
+    <div class="seg" id="paperSeg">
+      <button data-view="list" aria-pressed="true">Cards</button>
+      <button data-view="table" aria-pressed="false">Compare</button>
+    </div>
+    <span class="srch"><input type="text" id="qPaper" placeholder="搜尋任何欄位…"><button class="clr" data-clr="qPaper">✕</button></span>
+    <button class="iconb" id="tagBtn" title="tag 篩選">🏷️</button>
+    <button class="iconb" id="expMenuBtn" title="匯出目前篩選">⬇️</button>
+    <button class="iconb" id="importJsonBtn" title="貼上 JSON">📋</button>
+    <button class="iconb" id="addPaperBtn" title="新增">＋</button>
+  </div>
+  <div class="tagbar" id="tagbar" style="display:none"></div>
+  <div class="card" id="expMenu" style="display:none">
+    <p class="hint" style="margin-top:0">匯出<strong>目前篩選後</strong>的卡片。Markdown 貼進 Word 或 Notion 會保留結構，CSV 給 Excel 排序用。</p>
+    <div class="saverow"><button class="btn ghost mini" id="expCsv">CSV</button><button class="btn mini" id="expMd">Markdown</button></div>
+  </div>
+
+  <div class="card" id="jsonForm" style="display:none">
+    <textarea id="jsonBox" style="min-height:150px;font-family:var(--mono);font-size:13px"></textarea>
+    <div class="saverow"><button class="btn ghost" id="cancelJson">Cancel</button><button class="btn" id="doImportJson">Import</button></div>
+  </div>
+
+  <div class="card" id="paperForm" style="display:none">
+    <label class="f"><span>Title</span><input type="text" id="pf-title"></label>
+    <div class="grid4">
+      <label class="f"><span>Authors</span><input type="text" id="pf-authors"></label>
+      <label class="f"><span>Year</span><input type="text" id="pf-year"></label>
+      <label class="f"><span>Journal</span><input type="text" id="pf-journal"></label>
+      <label class="f"><span>🌐</span><input type="text" id="pf-url"></label>
+    </div>
+    <label class="f"><span>Citation (APA 7)</span><textarea id="pf-cite" style="min-height:52px"></textarea></label>
+    <div id="pfFields"></div>
+    <div class="linkrow"><span class="ic">🏷️</span><input type="text" id="pf-tags"><button class="iconb" id="tagPlus" title="tag 清單">＋</button></div>
+    <div id="tagPanel" style="display:none;margin-bottom:12px">
+      <div class="row" id="tagAll" style="margin-bottom:8px"></div>
+      <div class="row"><input type="text" id="newTag" placeholder="新增 tag" style="flex:1;min-width:150px"><button class="btn mini" id="addTagBtn">加入</button></div>
+      <p class="hint" style="margin:8px 0 0">點一下加入，長按三秒從清單刪除。</p>
+    </div>
+    <div class="linkrow"><span class="ic">🔗</span><input type="text" id="pf-file"></div>
+    <div class="saverow"><button class="btn ghost" id="cancelPaper">Cancel</button><button class="btn" id="savePaper">Save</button></div>
+  </div>
+
+  <div class="row" id="paperCount" style="margin-bottom:10px"></div>
+  <div id="paperList"></div>
+  <div id="paperTable" style="display:none"></div>
+</section>
+
+<!-- ========== Textbooks ========== -->
+<section class="panel" id="p-textbooks">
+  <div class="card">
+    <h2 style="font-size:15px">Progress</h2>
+    <div class="barrow"><span class="lbl">READ</span><span class="bar"><i id="mBarRead" style="background:var(--amber)"></i></span><span class="val" id="mValRead">0/0</span></div>
+    <div class="barrow"><span class="lbl">EXPLAIN</span><span class="bar"><i id="mBarExp"></i></span><span class="val" id="mValExp">0/0</span></div>
+  </div>
+  <div class="toolbar">
+    <div class="seg" id="mSeg">
+      <button data-f="book" aria-pressed="true">Book order</button>
+      <button data-f="course" aria-pressed="false">Course order</button>
+      <button data-f="active" aria-pressed="false">In progress</button>
+    </div>
+    <span class="srch"><input type="text" id="qSec" placeholder="搜尋章節…"><button class="clr" data-clr="qSec">✕</button></span>
+  </div>
+  <div id="themeList"></div>
+</section>
+
+
+<!-- ========== Courses ========== -->
+<section class="panel" id="p-courses">
+  <div class="sec-head"><span class="t">COURSES</span><span class="spacer"></span>
+    <div class="seg sm" id="clTermSeg"></div>
+    <button class="iconb" id="addClBtn" title="新增課程">＋</button></div>
+  <div class="card" id="clForm" style="display:none">
+    <label class="f"><span>Course</span><input type="text" id="cl-name"></label>
+    <div class="grid2">
+      <label class="f"><span>Teacher</span><input type="text" id="cl-teacher"></label>
+      <label class="f"><span>Term</span><select id="cl-term"></select></label>
+    </div>
+    <div class="saverow"><button class="btn ghost" id="cancelCl">Cancel</button><button class="btn" id="saveCl">Save</button></div>
+  </div>
+  <div id="clList"></div>
+</section>
+
+<!-- ========== Review ========== -->
+<section class="panel" id="p-review">
+  <div class="card">
+    <div class="row">
+      <div style="flex:1">
+        <div class="mono" style="font-size:12px;color:var(--muted)">DUE TODAY</div>
+        <div class="mono" style="font-size:28px;font-weight:500" id="dueCount">0</div>
+      </div>
+      <button class="btn" id="startReview">Start review</button>
+    </div>
+    <div class="row" style="margin-top:12px"><span class="mono" style="font-size:12px;color:var(--muted)" id="cardTotals"></span></div>
+  </div>
+  <details class="card fold"><summary>🎓 Exam mode</summary>
+    <div style="margin-top:10px">
+      <p class="hint" style="margin-top:0">整批跑選定主題的所有卡片，不會改動任何卡的到期日。</p>
+      <div id="examThemes" style="max-height:260px;overflow-y:auto;margin-top:10px"></div>
+      <div class="saverow"><button class="btn mini" id="startExam">Start</button></div>
+    </div>
+  </details>
+  <div class="toolbar">
+    <div class="seg" id="cSeg">
+      <button data-csort="due" aria-pressed="true">Due first</button>
+      <button data-csort="new" aria-pressed="false">Newest</button>
+      <button data-csort="theme" aria-pressed="false">By theme</button>
+    </div>
+    <span class="srch"><input type="text" id="qCard" placeholder="搜尋卡片…"><button class="clr" data-clr="qCard">✕</button></span>
+    <button class="iconb" id="addCardBtn" title="新增">＋</button>
+  </div>
+  <div class="card" id="cardForm" style="display:none">
+    <label class="f"><span>Question</span><textarea id="cf-q"></textarea></label>
+    <label class="f"><span>Answer</span><textarea id="cf-a" style="min-height:100px"></textarea></label>
+    <div class="linkrow"><span class="ic">🔻</span><select id="cf-theme"></select></div>
+    <div class="linkrow"><span class="ic">🔗</span><input type="text" id="cf-link"></div>
+    <div class="saverow"><button class="btn ghost" id="cancelCard">Cancel</button><button class="btn" id="saveCard">Save</button></div>
+  </div>
+  <div id="cardList"></div>
+</section>
+
+<!-- ========== Ideas ========== -->
+<section class="panel" id="p-ideas">
+  <div class="sec-head"><span class="t">QUESTIONS</span><span class="spacer"></span>
+    <div class="seg sm" id="qSeg">
+      <button data-qf="open" aria-pressed="true">Unresolved</button>
+      <button data-qf="all" aria-pressed="false">All</button>
+    </div>
+    <button class="iconb" id="addQBtn" title="新增">＋</button>
+  </div>
+  <div class="card" id="qForm" style="display:none">
+    <label class="f"><span>Question</span><textarea id="q-q"></textarea></label>
+    <div class="grid2">
+      <label class="f"><span>Kind</span><select id="q-kind">
+        <option value="mine">Mine</option>
+        <option value="study">Study</option>
+        <option value="field">Field</option></select></label>
+      <label class="f"><span>Source</span><input type="text" id="q-src"></label>
+    </div>
+    <div id="fieldOnly" style="display:none">
+      <label class="f"><span>Side A</span><textarea id="q-a1"></textarea></label>
+      <label class="f"><span>Side B</span><textarea id="q-b1"></textarea></label>
+    </div>
+    <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
+  </div>
+  <div id="qList"></div>
+
+  <div class="sec-head"><span class="t">RESEARCH IDEAS</span><span class="spacer"></span>
+    <div class="seg sm" id="riSeg">
+      <button data-rf2="all" aria-pressed="true">All</button>
+      <button data-rf2="explore" aria-pressed="false">Exploring</button>
+      <button data-rf2="main" aria-pressed="false">Main</button>
+      <button data-rf2="killed" aria-pressed="false">Killed</button>
+    </div>
+    <button class="iconb" id="addRIBtn" title="新增">＋</button></div>
+  <div class="card" id="riForm" style="display:none">
+    <label class="f"><span>Idea</span><input type="text" id="ri-title"></label>
+    <label class="f"><span>Why it matters</span><textarea id="ri-why"></textarea></label>
+    <label class="f"><span>Who has done it</span><textarea id="ri-who"></textarea></label>
+    <label class="f"><span>Kill criteria</span><textarea id="ri-kill"></textarea></label>
+    <div class="saverow"><button class="btn ghost" id="cancelRI">Cancel</button><button class="btn" id="addRI">Save</button></div>
+  </div>
+  <div id="riList"></div>
+</section>
+
+<!-- ========== Calendar ========== -->
+<section class="panel" id="p-calendar">
+  <div class="sec-head"><span class="t">TIMETABLE</span><span class="spacer"></span><div class="seg sm" id="termSeg"></div></div>
+  <div class="ttwrap"><table class="tt" id="ttTable"></table></div>
+  <div class="legend">
+    <span class="lg"><i class="required"></i>必修</span>
+    <span class="lg"><i class="elective"></i>選修</span>
+    <span class="lg"><i class="lab"></i>Lab meeting</span>
+    <span class="spacer"></span>
+    <button class="btn icon" id="toggleCS">＋</button>
+  </div>
+  <div class="card" id="csForm" style="display:none;margin-top:12px">
+    <label class="f"><span>Course name</span><input type="text" id="cs-name"></label>
+    <div class="grid2">
+      <label class="f"><span>Term</span><select id="cs-term"></select></label>
+      <label class="f"><span>Type</span><select id="cs-type">
+        <option value="required">必修</option><option value="elective">選修</option><option value="lab">Lab meeting</option></select></label>
+    </div>
+    <div class="grid3">
+      <label class="f"><span>Day</span><select id="cs-day">
+        <option value="0">Mon</option><option value="1">Tue</option><option value="2">Wed</option><option value="3">Thu</option><option value="4">Fri</option></select></label>
+      <label class="f"><span>From</span><select id="cs-from"></select></label>
+      <label class="f"><span>To</span><select id="cs-to"></select></label>
+    </div>
+    <label class="f"><span>Room</span><input type="text" id="cs-room"></label>
+    <div class="saverow"><button class="btn warn" id="delCS" style="display:none;margin-right:auto" title="長按三秒刪除">Delete</button>
+      <button class="btn ghost" id="cancelCS">Cancel</button><button class="btn" id="addCS">Save</button></div>
+  </div>
+
+  <div class="sec-head"><span class="t">KEY DATES</span><span class="spacer"></span>
+    <button class="btn icon" id="toggleKD">＋</button></div>
+  <div class="card" id="kdForm" style="display:none">
+    <div class="grid2">
+      <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
+      <label class="f"><span>Type</span><select id="kd-type">
+        <option value="deadline">Deadline</option><option value="exam">Exam</option>
+        <option value="todo">To do</option><option value="school">School</option>
+        <option value="other">Other</option></select></label>
+    </div>
+    <label class="f"><span>Title</span><input type="text" id="kd-title"></label>
+    <div class="saverow"><button class="btn ghost" id="cancelKD">Cancel</button><button class="btn" id="addKD">Save</button></div>
+  </div>
+  <div id="kdList"></div>
+  <div class="row" id="kdPastRow" style="margin-top:4px"></div>
+  <div id="kdPastList"></div>
+
+  <div class="sec-title">GOOGLE CALENDAR</div>
+  <div class="card">
+    <label class="f"><span>Embed URL</span><input type="text" id="gcUrl" placeholder="https://calendar.google.com/calendar/embed?src=..."></label>
+    <p class="hint" style="margin-top:0">Google 日曆 → 設定 → 該日曆 → 整合日曆 → 複製嵌入程式碼裡 <span class="mono">src="…"</span> 的網址。</p>
+    <div class="saverow"><button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button></div>
+  </div>
+  <div id="gcBox"></div>
+</section>
+
+<!-- ========== Settings ========== -->
+<section class="panel" id="p-settings">
+  <div class="sec-title">DATA</div>
+  <div id="expWarn"></div>
+  <div class="card">
+    <p class="hint" style="margin-top:0">匯出會下載一個 <span class="mono">notes.json</span>，裡面是你全部的資料。存到雲端硬碟或 GitHub 才算真正的備份。</p>
+    <div class="row" style="margin-top:10px">
+      <button class="btn ghost mini" id="impBtn">📥 合併匯入</button>
+      <button class="btn ghost mini" id="impRepBtn">覆蓋匯入</button>
+      <input type="file" id="impFile" accept=".json" style="display:none">
+      <span class="spacer"></span>
+      <button class="btn mini" id="expBtn">📤 Export</button>
+    </div>
+    <p class="hint" style="margin:10px 0 0" id="expInfo"></p>
+  </div>
+
+  <div class="sec-title">自動存檔</div>
+  <div class="card">
+    <p class="hint" style="margin-top:0">每天第一次開啟時，系統會把你當下的所有資料<strong>複製一份存起來</strong>，保留最近三份。手殘刪錯東西時可以整包還原。<br>
+    注意：這份副本跟本體存在同一個地方，所以它擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</p>
+    <div id="bakList" style="margin-top:10px"></div>
+    <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
+  </div>
+
+  <div class="sec-title">☁️ GitHub 同步</div>
+  <div class="card">
+    <p class="hint" style="margin-top:0">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
+    <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong></p>
+    <div class="grid2" style="margin-top:10px">
+      <label class="f"><span>Owner／使用者名稱</span><input type="text" id="gh-owner"></label>
+      <label class="f"><span>私密 repo 名稱</span><input type="text" id="gh-repo"></label>
+    </div>
+    <div class="grid2">
+      <label class="f"><span>Branch</span><input type="text" id="gh-branch" placeholder="main"></label>
+      <label class="f"><span>檔案路徑</span><input type="text" id="gh-path" placeholder="data/notes.json"></label>
+    </div>
+    <label class="f"><span>Fine-grained token</span><input type="password" id="gh-token" autocomplete="off"></label>
+    <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="gh-auto"><span style="flex:1">開啟自動同步</span></label>
+    <div class="row">
+      <button class="btn ghost mini" id="ghPullBtn">⬇ 下載合併</button>
+      <button class="btn ghost mini" id="ghPushBtn">⬆ 上傳</button>
+      <span class="spacer"></span>
+      <button class="btn mini" id="ghSave">儲存設定</button>
+    </div>
+    <p class="hint" style="margin:10px 0 0" id="ghState"></p>
+  </div>
+
+  <div class="sec-title">🗑️ 最近刪除</div>
+  <div class="card">
+    <p class="hint" style="margin-top:0">刪掉的東西會先放這裡，保留 30 天。過期會自動清掉。</p>
+    <div id="trashList" style="margin-top:10px"></div>
+  </div>
+
+  <div class="sec-title">HELP</div>
+  <div id="helpBox"></div>
+</section>
+
+</div>
+
+<div class="ov" id="ov">
+  <div class="ov-top">
+    <span class="mono" id="ovProg" style="font-size:13px;color:var(--muted)"></span>
+    <span class="spacer"></span><span class="pill" id="ovTheme"></span>
+    <button class="x" id="ovClose" style="font-size:20px">✕</button>
+  </div>
+  <div class="ov-body">
+    <div class="ov-q" id="ovQ"></div><div class="ov-a" id="ovA"></div>
+    <div id="ovLink" style="margin-top:14px"></div>
+  </div>
+  <div class="ov-foot" id="ovFoot"></div>
+</div>
+<div class="ov" id="fv" style="--ac:#3E6B4E">
+  <div class="ov-top">
+    <span class="mono" id="fvName" style="font-size:12.5px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+    <button class="x" id="fvClose" style="font-size:20px">✕</button>
+  </div>
+  <div style="flex:1;margin-top:10px;min-height:0">
+    <iframe id="fvFrame" sandbox="allow-popups"
+      style="width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const store=(typeof window!=='undefined'&&window.storage&&typeof window.storage.get==='function')
+  ? window.storage
+  : {
+      async get(k){const v=localStorage.getItem(k);if(v===null)throw new Error('missing');return{key:k,value:v}},
+      async set(k,v){localStorage.setItem(k,v);return{key:k,value:v}},
+      async delete(k){localStorage.removeItem(k);return{key:k,deleted:true}},
+      async list(p){const a=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!p||k.indexOf(p)===0)a.push(k)}return{keys:a}}
+    };
+const KEY='epi-yaxin';
+const GHKEY='epi-yaxin-gh';
+const BAK=['epi-yaxin-bak0','epi-yaxin-bak1','epi-yaxin-bak2'];
+const ST=['Unread','Read','Explain'];
+const IVL=[1,3,7,14,30,60,120];
+const DAY=86400000;
+const TTDAYS=['Mon','Tue','Wed','Thu','Fri'];
+const PERIODS=[['1','8:10–9:00'],['2','9:10–10:00'],['3','10:20–11:10'],['4','11:20–12:10'],
+ ['5','12:20–13:10'],['6','13:20–14:10'],['7','14:20–15:10'],['8','15:30–16:20'],['9','16:30–17:20'],
+ ['10','17:30–18:20'],['A','18:25–19:15'],['B','19:20–20:10']];
+const TERMS=[
+ {id:'p1a',label:'PhD1 上',from:'2026-08-01',to:'2027-01-01'},
+ {id:'p1b',label:'PhD1 下',from:'2027-01-02',to:'2027-06-30'},
+ {id:'p2a',label:'PhD2 上',from:'2027-07-01',to:'2028-01-01'},
+ {id:'p2b',label:'PhD2 下',from:'2028-01-02',to:'2028-06-30'}];
+const DEFAULT_TAGS=['HBV','HCV','HCC'];
+const QK={mine:'Mine',study:'Study',field:'Field'};
+const RIS={explore:'Exploring',main:'Main',killed:'Killed'};
+const KDT={deadline:'Deadline',exam:'Exam',todo:'To do',school:'School',other:'Other'};
+const PF=[['sum','📌'],['q','研究問題/目標'],['design','研究設計與資料來源'],['pop','研究對象'],
+ ['def','暴露與結果的定義'],['analysis','分析'],['result','主要結果'],['interp','解釋'],
+ ['gap','Gap'],['note','Note']];
+
+const C=[
+{s:1,core:1,e:'🧭',w:'上 W1',en:'Causation & Causal Inference',zh:'因果推論',
+ me:[['1','The Scope of Epidemiology'],['2','Causal Inference and Scientific Reasoning'],['3','Formal Causal Models']],
+ hr:[['1.1','Individual causal effects'],['1.2','Average causal effects'],['1.3','Measures of causal effect'],['1.4','Random variability'],['1.5','Causation versus association']]},
+{s:1,core:1,e:'📏',w:'上 W2',en:'Measures of Occurrence & Effect',zh:'疾病頻率及相關性測量',
+ me:[['4','Measures of Occurrence'],['5','Measures of Effect and Measures of Association']],hr:[]},
+{s:1,core:1,e:'🏗️',w:'上 W3',en:'Study Design',zh:'研究設計',
+ me:[['6','Epidemiologic Study Design With Validity and Efficiency Considerations']],hr:[]},
+{s:1,core:1,e:'👥',w:'上 W4',en:'Cohort Studies',zh:'世代追蹤研究',
+ me:[['7','Cohort Studies']],hr:[]},
+{s:1,core:1,e:'🔄',w:'上 W5',en:'Case-Control Studies',zh:'病例對照研究',
+ me:[['8','Case-Control Studies']],hr:[]},
+{s:1,core:1,e:'🌀',w:'上 W6',en:'Confounding',zh:'干擾作用',
+ me:[['12','Confounding and Confounders']],
+ hr:[['7.1','The structure of confounding'],['7.2','Confounding and exchangeability'],['7.3','Confounding and the backdoor criterion'],['7.4','Confounding and confounders'],['7.5','Single-world intervention graphs'],['7.6','Confounding adjustment']]},
+{s:1,core:1,e:'📐',w:'上 W7',en:'Measurement Error',zh:'測量誤差',
+ me:[['13','Measurement and Measurement Error']],
+ hr:[['9.1','Measurement error'],['9.2','The structure of measurement error'],['9.3','Mismeasured confounders and colliders'],['9.4','Causal diagrams without mismeasured variables?'],['9.5','Many proposed causal diagrams include noncausal arrows'],['9.6','Does it matter that many proposed diagrams include noncausal arrows?']]},
+{s:1,core:1,e:'🕳️',w:'上 W8',en:'Selection Bias',zh:'選擇偏差',
+ me:[['14','Selection Bias and Generalizability']],
+ hr:[['8.1','The structure of selection bias'],['8.2','Examples of selection bias'],['8.3','Selection bias and confounding'],['8.4','Selection bias and censoring'],['8.5','How to adjust for selection bias'],['8.6','Selection without bias']]},
+{s:1,core:1,e:'🎯',w:'上 W9',en:'Random Error',zh:'隨機誤差',
+ me:[['15','Precision and Study Size']],
+ hr:[['10.1','Identification versus estimation'],['10.2','Estimation of causal effects'],['10.3','The myth of the super-population'],['10.4','The conditionality "principle"'],['10.5','The curse of dimensionality']]},
+{s:1,core:1,e:'🔍',w:'上 W10',en:'Bias Analysis',zh:'偏差分析',
+ me:[['29','Bias Analysis']],hr:[]},
+{s:1,core:1,e:'🧮',w:'上 W11',en:'Data Analysis I',zh:'資料分析 I',
+ me:[['16','Fundamentals of Epidemiologic Data Analysis'],['17','Introduction to Categorical Statistics']],hr:[]},
+{s:1,core:1,e:'🧱',w:'上 W12',en:'Data Analysis II',zh:'資料分析 II',
+ me:[['18','Stratification and Standardization'],['19','Categorical Analysis of Polytomous Exposures and Outcomes']],hr:[]},
+{s:1,core:1,e:'📈',w:'上 W13–14',en:'Regression Analysis',zh:'迴歸分析',
+ me:[['20','Regression Analysis Part I: Model Specification'],['21','Regression Analysis Part II: Model Fitting and Assessment']],
+ hr:[['11.1','Data cannot speak for themselves'],['11.2','Parametric estimators of the conditional mean'],['11.3','Nonparametric estimators of the conditional mean'],['11.4','Smoothing'],['11.5','The bias-variance trade-off'],['15.1','Outcome regression'],['15.2','Propensity scores'],['15.3','Propensity stratification and standardization'],['15.4','Propensity matching'],['15.5','Propensity models, structural models, predictive models']]},
+{s:1,core:1,e:'⏳',w:'上 W15',en:'Time-To-Event Analysis',zh:'存活分析',
+ me:[['22','Time-To-Event Analysis']],
+ hr:[['17.1','Hazards and risks'],['17.2','From hazards to risks'],['17.3','Why censoring matters'],['17.4','IP weighting of marginal structural models'],['17.5','The parametric g-formula'],['17.6','G-estimation of structural nested models']]},
+{s:1,core:1,e:'🌊',w:'上 W15 補',en:'Longitudinal & Time-Varying',zh:'縱貫資料與時間變動暴露',
+ me:[['24','Longitudinal and Cluster-Correlated Data Analysis'],['25','Causal Inference With Time-Varying Exposures']],
+ hr:[['12.1','The causal question'],['12.2','Estimating IP weights via modeling'],['12.3','Stabilized IP weights'],['12.4','Marginal structural models'],['12.5','Effect modification and marginal structural models'],['12.6','Censoring and missing data'],['13.1','Standardization as an alternative to IP weighting'],['13.2','Estimating the mean outcome via modeling'],['13.3','Standardizing the mean outcome to the confounder distribution'],['13.4','IP weighting or standardization?'],['13.5','How seriously do we take our estimates?'],['14.3','Structural nested mean models'],['14.5','G-estimation'],['18.2','Variables that induce or amplify bias'],['18.4','Doubly robust machine learning estimators'],['19.1','The causal effect of time-varying treatments'],['19.2','Treatment strategies'],['19.3','Sequentially randomized experiments'],['19.4','Sequential exchangeability'],['19.5','Identifiability under some but not all treatment strategies'],['19.6','Time-varying confounding and time-varying confounders'],['20.1','The elements of treatment-confounder feedback'],['20.2','The bias of traditional methods'],['20.3','Why traditional methods fail'],['20.4','Why traditional methods cannot be fixed'],['20.5','Adjusting for past treatment'],['21.1','The g-formula for time-varying treatments'],['21.2','IP weighting for time-varying treatments'],['21.3','A doubly robust estimator for time-varying treatments'],['21.4','G-estimation for time-varying treatments'],['21.5','Censoring is a time-varying treatment'],['21.6','The big g-formula']]},
+{s:1,core:1,e:'🎻',w:'上 W15 補',en:'Instrumental Variables',zh:'工具變數及準實驗研究',
+ me:[['28','Instrumental Variables and Quasi-Experimental Approaches']],
+ hr:[['16.1','The three instrumental conditions'],['16.2','The usual IV estimand'],['16.3','A fourth identifying condition: homogeneity'],['16.4','An alternative fourth condition: monotonicity'],['16.5','The three instrumental conditions revisited'],['16.6','Instrumental variable estimation versus other methods']]},
+
+{s:2,core:1,e:'🔮',w:'下 W2',en:'Bayesian Inference',zh:'貝氏推論',
+ me:[['23','Introduction to Bayesian Statistics']],hr:[]},
+{s:2,core:1,e:'🔗',w:'下 W3',en:'Causal Mediation Analysis',zh:'中介分析',
+ me:[['27','Mediation Analysis']],
+ hr:[['23.1','Mediation analysis under attack'],['23.2','A defense of mediation analysis'],['23.3','Empirically verifiable mediation'],['23.4','An interventionist theory of mediation']]},
+{s:2,core:1,e:'✳️',w:'下 W4',en:'Causal Pie & Interaction',zh:'因果派餅與交互作用',
+ me:[['26','Analysis of Interaction']],
+ hr:[['4.1','Heterogeneity of treatment effects'],['4.2','Stratification to identify effect modification'],['4.3','Why care about effect modification'],['4.4','Stratification as a form of adjustment'],['4.5','Matching as another form of adjustment'],['4.6','Effect modification and adjustment methods'],['5.1','Interaction requires a joint intervention'],['5.2','Identifying interaction'],['5.3','Counterfactual response types and interaction'],['5.4','Sufficient causes'],['5.5','Sufficient cause interaction'],['5.6','Counterfactuals or sufficient-component causes?']]},
+{s:2,core:1,e:'📡',w:'下 W5',en:'Public Health Surveillance',zh:'公衛監測',
+ me:[['9','Public Health Surveillance']],hr:[]},
+{s:2,core:1,e:'🗄️',w:'下 W6',en:'Using Secondary Data',zh:'次級資料',
+ me:[['11','Studies Relying on Secondary Data']],hr:[]},
+{s:2,core:1,e:'🦠',w:'下 W8–10',en:'Infectious Disease Epidemiology',zh:'感染症流行病學',
+ me:[['32','Infectious Disease Epidemiology']],hr:[]},
+
+{s:3,core:1,e:'🔑',w:'自修',en:'Identifiability',zh:'可辨識性',me:[],
+ hr:[['2.1','Randomization'],['2.2','Conditional randomization'],['2.3','Standardization'],['2.4','Inverse probability weighting'],['3.1','Identifiability conditions'],['3.2','Exchangeability'],['3.3','Positivity'],['3.4','Consistency: define the counterfactual outcome'],['3.5','Consistency: link counterfactuals to observed data']]},
+{s:3,core:1,e:'🕸️',w:'自修',en:'Causal Diagrams',zh:'因果圖 DAG',me:[],
+ hr:[['6.1','Causal diagrams'],['6.2','Causal diagrams and marginal independence'],['6.3','Causal diagrams and conditional independence'],['6.4','Positivity and consistency in causal diagrams'],['6.5','A structural classification of bias'],['6.6','The structure of effect modification']]},
+{s:3,core:1,e:'🧪',w:'自修',en:'Target Trial Emulation',zh:'目標試驗模擬',me:[],
+ hr:[['3.6','The target trial'],['22.1','Intention-to-treat effect and per-protocol effect'],['22.2','A target trial with sustained treatment strategies'],['22.3','Emulating a target trial with sustained strategies'],['22.4','Time zero'],['22.5','A unified approach to answer What If questions with data']]},
+
+{s:4,core:0,e:'🧬',w:'',en:'Molecular & Genetic Epidemiology',zh:'分子與遺傳流行病學',
+ me:[['36','Molecular Epidemiology'],['37','Genetic Epidemiology']],hr:[]},
+{s:4,core:0,e:'🩺',w:'',en:'Clinical Epidemiology',zh:'臨床流行病學',me:[['35','Clinical Epidemiology']],hr:[]},
+{s:4,core:0,e:'💊',w:'',en:'Pharmacoepidemiology',zh:'藥物流行病學',me:[['43','Pharmacoepidemiology']],hr:[]},
+{s:4,core:0,e:'🌍',w:'',en:'Ecologic & Agent-Based',zh:'生態研究與代理人模型',
+ me:[['30','Ecologic Studies and Analysis'],['31','Agent-Based Modeling']],hr:[]},
+{s:4,core:0,e:'📚',w:'',en:'Other Special Topics',zh:'其他專題',
+ me:[['10','Field Methods'],['33','Reproductive Epidemiology'],['34','Psychiatric Epidemiology'],['38','Injury and Violence Epidemiology'],['39','Social Epidemiology'],['40','Environmental Epidemiology'],['41','Occupational Epidemiology'],['42','Nutritional Epidemiology']],hr:[]}
+];
+const STAGE=['','Stage 1 · 上學期 Sep–Dec','Stage 2 · 下學期 Feb–Jun','Stage 3 · 自修因果推論','Stage 4 · 專題（未排課）'];
+const PART=['Causal Inference: What If · 自修','Part I · Foundations','Part II · Study Design & Interpretation','Part III · Data Analysis','Part IV · Special Topics'];
+
+function minCh(c){return c.me.length?Math.min.apply(null,c.me.map(x=>parseInt(x[0],10))):9999}
+function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=15)return 2;if(m<=31)return 3;return 4}
+
+let S=null,paperView='list',cardSort='due',mFilter='book',qFilter='open';
+let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
+const flipped=new Set();let editCard=null,riFilter='all';
+let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
+
+function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],kd:[],courses:[],classes:[],gc:'',trash:[],
+  tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
+function uid(){return Math.random().toString(36).slice(2,9)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function norm(x){return String(x==null?'':x).toLowerCase()}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1700)}
+function safeUrl(u){
+  u=String(u||'').trim();
+  if(!u)return'';
+  if(/^https?:\/\//i.test(u))return u;
+  if(/^[a-z][a-z0-9+.\-]*:/i.test(u))return'';
+  return u;
+}
+function linkHTML(v){if(!v)return'';return /^https?:\/\//.test(v)?`<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>`:`<span class="mono" style="font-size:12.5px;color:var(--muted)">${esc(v)}</span>`}
+function show(id,on){document.getElementById(id).style.display=on?'':'none'}
+function toggle(id){const e=document.getElementById(id);e.style.display=e.style.display==='none'?'':'none';return e.style.display!=='none'}
+function currentTerm(){const d=new Date().toISOString().slice(0,10);
+  const t=TERMS.find(x=>d>=x.from&&d<=x.to);return t?t.id:(d<TERMS[0].from?TERMS[0].id:TERMS[TERMS.length-1].id)}
+
+async function load(){
+  try{const r=await store.get(KEY);S=r&&r.value?JSON.parse(r.value):defaults()}catch(e){S=defaults()}
+  S=Object.assign(defaults(),S||{});
+  if(!Array.isArray(S.tagLib))S.tagLib=DEFAULT_TAGS.slice();
+  activeTerm=classTerm=currentTerm();
+  if(!Array.isArray(S.classes))S.classes=[];
+}
+let t_=null;
+function save(){clearTimeout(t_);t_=setTimeout(async()=>{try{await store.set(KEY,JSON.stringify(S))}catch(e){toast('存檔失敗，請先匯出備份')}},250);if(typeof ghQueue==='function')ghQueue()}
+function saved(){save();toast('已儲存')}
+
+let hT=null,hEl=null,hX=0,hY=0;
+function holdCancel(){if(hT){clearTimeout(hT);hT=null}if(hEl){hEl.classList.remove('on');hEl=null}}
+document.addEventListener('pointerup',holdCancel);
+document.addEventListener('pointercancel',holdCancel);
+document.addEventListener('pointermove',e=>{
+  if(!hEl)return;
+  if(Math.abs(e.clientX-hX)>10||Math.abs(e.clientY-hY)>10)holdCancel();
+},{passive:true});
+window.addEventListener('scroll',holdCancel,true);
+document.addEventListener('contextmenu',e=>{if(e.target.closest('[data-hold]'))e.preventDefault()});
+document.addEventListener('pointerdown',e=>{
+  const b=e.target.closest('[data-hold]');if(!b)return;
+  hEl=b;hX=e.clientX;hY=e.clientY;b.classList.add('on');
+  hT=setTimeout(()=>{b.classList.remove('on');hEl=null;hT=null;doHold(b.dataset.hold)},1500);
+});
+let fvBlob=null;
+function fvShow(name,html){
+  document.getElementById('fvName').textContent=name;
+  document.getElementById('fvFrame').srcdoc=html;
+  document.getElementById('fv').classList.add('on');
+}
+document.getElementById('fvClose').onclick=()=>{
+  document.getElementById('fv').classList.remove('on');
+  document.getElementById('fvFrame').srcdoc='';
+};
+async function openRepoFile(path){
+  if(!ghOn()){toast('這是 repo 內的路徑，請先設定 GitHub 同步');return}
+  const ext=(path.split('.').pop()||'').toLowerCase();
+  setDot('pend','讀取檔案中…');
+  try{
+    const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+      +'/contents/'+path.split('/').map(encodeURIComponent).join('/')+'?ref='+encodeURIComponent(GH.branch);
+    const r=await fetch(url,{headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github.raw'}});
+    if(r.status===404){setDot('err','找不到檔案：'+path);toast('repo 裡沒有這個檔案');return}
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    if(ext==='html'||ext==='htm'||ext==='md'||ext==='txt'){
+      const t=await r.text();
+      fvShow(path, (ext==='html'||ext==='htm') ? t
+        : '<pre style="white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:14px;padding:18px;line-height:1.6">'
+          +t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))+'</pre>');
+    }else{
+      const b=await r.blob();
+      if(fvBlob)URL.revokeObjectURL(fvBlob);
+      fvBlob=URL.createObjectURL(b);
+      window.open(fvBlob,'_blank','noopener');
+    }
+    setDot('ok','已開啟 '+path);
+  }catch(e){setDot('err','讀取失敗：'+e.message);toast('讀取失敗')}
+}
+document.addEventListener('click',e=>{
+  const o=e.target.closest('[data-open]');if(!o)return;
+  e.preventDefault();
+  const u=safeUrl(o.dataset.open);
+  if(!u){toast('這個連結格式不安全');return}
+  if(/^https?:\/\//i.test(u)){window.open(u,'_blank','noopener');return}
+  if(ghOn()){openRepoFile(u.replace(/^\.?\//,''));return}
+  window.open(u,'_blank','noopener');
+});
+const BIN={paper:['papers','精讀卡片','title'],card:['cards','複習卡','q'],
+  q:['qs','Question','q'],ri:['ri','Research idea','title'],
+  kd:['kd','Key date','title'],cs:['courses','課表','name'],cls:['classes','課程','name']};
+function bin(type,obj){
+  if(!Array.isArray(S.trash))S.trash=[];
+  S.trash.unshift({tid:uid(),type,at:Date.now(),data:obj});
+  if(S.trash.length>200)S.trash.length=200;
+}
+function purgeTrash(){
+  if(!Array.isArray(S.trash))S.trash=[];
+  const cut=Date.now()-30*DAY;
+  const n=S.trash.length;
+  S.trash=S.trash.filter(x=>x.at>=cut);
+  if(S.trash.length!==n)save();
+}
+function renderTrash(){
+  const el=document.getElementById('trashList');if(!el)return;
+  const a=S.trash||[];
+  if(!a.length){el.innerHTML=`<p class="hint" style="margin:0">回收桶是空的。</p>`;return}
+  el.innerHTML=a.map(x=>{
+    const m=BIN[x.type];if(!m)return'';
+    const label=(x.data&&x.data[m[2]])||'（無標題）';
+    const d=Math.floor((Date.now()-x.at)/DAY);
+    return `<div class="trashrow"><span class="pill">${m[1]}</span>
+      <span class="tt">${esc(label)}</span>
+      <span class="pill">${30-d} 天後清除</span>
+      <button class="btn ghost mini" data-undel="${x.tid}">還原</button></div>`}).join('');
+}
+async function doHold(spec){
+  const i=spec.indexOf('|'),t=spec.slice(0,i),id=spec.slice(i+1);
+  if(BIN[t]){
+    const arr=BIN[t][0],o=S[arr].find(x=>x.id===id);
+    if(o){bin(t,o);S[arr]=S[arr].filter(x=>x.id!==id)}
+  }
+  if(t==='paper'){save();renderPapers();renderTrash();toast('已移到回收桶')}
+  else if(t==='card'){save();renderCards();updateBadge();renderTrash();toast('已移到回收桶')}
+  else if(t==='creset'){const c=S.cards.find(x=>x.id===id);if(c){c.level=0;c.due=Date.now();c.n=0;c.last=null;save();renderCards();updateBadge();toast('排程已重設')}}
+  else if(t==='q'){save();renderQ();renderTrash();toast('已移到回收桶')}
+  else if(t==='ri'){save();renderRI();renderTrash();toast('已移到回收桶')}
+  else if(t==='kd'){save();renderKD();renderTrash();toast('已移到回收桶')}
+  else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
+  else if(t==='cls'){save();renderCl();renderTrash();toast('已移到回收桶')}
+  else if(t==='clink'){const[cid,lid]=id.split(':');const c=S.classes.find(x=>x.id===cid);
+    if(c){c.links=(c.links||[]).filter(l=>l.id!==lid);c.mtime=Date.now();save();renderCl();toast('已刪除連結')}}
+  else if(t==='tag'){S.tagLib=S.tagLib.filter(x=>x!==id);save();renderTags();toast('已從清單刪除')}
+  else if(t==='restore'){
+    try{const r=await store.get(BAK[+id]);const o=JSON.parse(r.value);
+      S=Object.assign(defaults(),o.data);save();renderAll();toast('已還原')}catch(x){toast('還原失敗')}}
+}
+function updateBadge(){
+  const n=dueCards().length;
+  const t=document.querySelector('.tab[data-p="review"]');
+  if(t)t.innerHTML='Review'+(n?`<span class="badge">${n}</span>`:'');
+}
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t===b));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p));
+  window.scrollTo({top:0});
+});
+
+/* ================= TEXTBOOKS ================= */
+function th(i){if(!S.themes[i])S.themes[i]={sec:{},sn:{},note:''};if(!S.themes[i].sn)S.themes[i].sn={};return S.themes[i]}
+function themeStat(i){
+  const t=S.themes[i]||{},sec=t.sec||{},c=C[i],keys=[];
+  c.me.forEach((_,j)=>keys.push('me-'+j));c.hr.forEach((_,j)=>keys.push('hr-'+j));
+  let r=0,x=0;keys.forEach(k=>{const v=sec[k]||0;if(v>=1)r++;if(v===2)x++});
+  return{n:keys.length,r,x};
+}
+function renderMethod(){
+  let tot=0,tr=0,tx=0;
+  C.forEach((c,i)=>{const st=themeStat(i);tot+=st.n;tr+=st.r;tx+=st.x});
+  document.getElementById('mValRead').textContent=tr+'/'+tot;
+  document.getElementById('mValExp').textContent=tx+'/'+tot;
+  document.getElementById('mBarRead').style.width=(tr/tot*100)+'%';
+  document.getElementById('mBarExp').style.width=(tx/tot*100)+'%';
+
+  const byBook=mFilter==='book';
+  let idx=C.map((c,i)=>i);
+  if(byBook)idx.sort((a,b)=>{const pa=partOf(C[a]),pb=partOf(C[b]);
+    if(pa!==pb)return (pa||9)-(pb||9);return minCh(C[a])-minCh(C[b])});
+  if(mFilter==='active')idx=idx.filter(i=>{const st=themeStat(i);return st.r>0&&st.x<st.n});
+
+  const gk=i=>byBook?partOf(C[i]):C[i].s, gl=k=>byBook?PART[k]:STAGE[k];
+  const tt={},rr={},xx={};
+  idx.forEach(i=>{const st=themeStat(i),k=gk(i);
+    tt[k]=(tt[k]||0)+st.n;rr[k]=(rr[k]||0)+st.r;xx[k]=(xx[k]||0)+st.x});
+
+  let html='',cur=null;
+  idx.forEach(i=>{
+    const c=C[i],t=th(i),k=gk(i);
+    if(mFilter!=='active'&&!qSec&&k!==cur){cur=k;
+      html+=`<div class="stagehdr"><span class="sn">${gl(k)}</span>
+        <span class="sv">Read ${rr[k]}/${tt[k]} · Explain ${xx[k]}/${tt[k]}</span></div>`}
+    const secs=(src,arr)=>{
+      let es=arr.map((a,j)=>({a,j}));
+      if(qSec)es=es.filter(o=>norm((src==='me'?'ME ':'HR ')+o.a[0]+' '+o.a[1]).includes(norm(qSec)));
+      if(!es.length)return '';
+      return `<div class="srcgrp"><div class="srclab">${src==='me'?'MODERN EPIDEMIOLOGY 4E':'CAUSAL INFERENCE: WHAT IF'}</div><div class="secs">${
+        es.map(o=>{
+          const kk=src+'-'+o.j,v=t.sec[kk]||0,nt=t.sn[kk]||{},has=(nt.n||nt.l)?' has':'';
+          const sid=i+'|'+kk,op=openSec===sid;
+          return `<div class="secwrap">
+            <button class="sec s${v}" data-t="${i}" data-k="${kk}"><span class="num">${src==='me'?'ME '+o.a[0]:'HR '+o.a[0]}</span><span class="ttl">${esc(o.a[1])}</span><span class="st">${ST[v]}</span></button>
+            <button class="npen${has}" data-note="${sid}" aria-expanded="${op}" title="筆記">✎</button></div>
+            ${op?`<div class="npanel">
+              <div class="linkrow top"><span class="ic">📝</span><textarea data-nf="${sid}|n" style="min-height:70px">${esc(nt.n||'')}</textarea></div>
+              <div class="linkrow"><span class="ic">🔗</span><input type="text" data-nf="${sid}|l" value="${esc(nt.l||'')}">
+                ${nt.l&&/^https?:/.test(nt.l)?`<button class="btn ghost mini" data-open="${esc(nt.l)}">開啟</button>`:''}</div>
+              <div class="saverow"><button class="btn mini" data-nsave="${sid}">Save</button></div></div>`:''}`;
+        }).join('')}</div></div>`};
+    const body=secs('me',c.me)+secs('hr',c.hr);
+    if(qSec&&!body)return;
+    html+=`<div class="theme${(t.open||qSec)?' open':''}">
+      <div class="th-head" data-toggle="${i}">
+        <span class="th-emo">${c.e}</span>
+        <div class="th-name"><div class="en">${esc(c.en)}</div><div class="zh">${esc(c.zh)}</div></div>
+      </div>
+      <div class="th-body">${body}
+        <div class="srcgrp"><div class="srclab">主題總結</div>
+          <textarea data-tnote="${i}">${esc(t.note)}</textarea>
+          <div class="saverow"><button class="btn mini" data-tsave="${i}">Save</button></div></div>
+      </div></div>`;
+  });
+  document.getElementById('themeList').innerHTML=html||`<div class="empty">沒有符合的主題。</div>`;
+}
+document.getElementById('themeList').addEventListener('click',e=>{
+  const sv=e.target.closest('[data-nsave]');
+  if(sv){openSec=null;saved();renderMethod();return}
+  const tv=e.target.closest('[data-tsave]');
+  if(tv){saved();return}
+  const np=e.target.closest('[data-note]');
+  if(np){openSec=openSec===np.dataset.note?null:np.dataset.note;renderMethod();return}
+  const sc=e.target.closest('.sec');
+  if(sc){const t=th(+sc.dataset.t);t.sec[sc.dataset.k]=((t.sec[sc.dataset.k]||0)+1)%3;save();renderMethod();return}
+  const h=e.target.closest('[data-toggle]');
+  if(h){const i=+h.dataset.toggle;th(i).open=!th(i).open;save();renderMethod()}
+});
+document.getElementById('themeList').addEventListener('input',e=>{
+  const nf=e.target.closest('[data-nf]');
+  if(nf){const parts=nf.dataset.nf.split('|');const i=+parts[0],kk=parts[1],fld=parts[2];
+    const t=th(i);if(!t.sn[kk])t.sn[kk]={};t.sn[kk][fld]=nf.value;save();return}
+  const tn=e.target.closest('[data-tnote]');
+  if(tn){th(+tn.dataset.tnote).note=tn.value;save()}
+});
+document.getElementById('mSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;mFilter=b.dataset.f;
+  document.querySelectorAll('#mSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderMethod();
+});
+
+/* ================= TAGS ================= */
+function renderTags(){
+  document.getElementById('tagAll').innerHTML=S.tagLib.length
+    ? S.tagLib.map(t=>`<button type="button" class="pill" data-tag="${esc(t)}" data-hold="tag|${esc(t)}" title="點一下加入，長按三秒刪除">${esc(t)}</button>`).join('')
+    : `<span class="hint">清單是空的，先在下面新增。</span>`;
+}
+function addTagToInput(t){
+  const inp=document.getElementById('pf-tags');
+  const cur=inp.value.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!cur.includes(t))cur.push(t);
+  inp.value=cur.join(', ');
+}
+const pForm=document.getElementById('paperForm');
+pForm.addEventListener('contextmenu',e=>{if(e.target.closest('[data-tag]'))e.preventDefault()});
+pForm.addEventListener('click',e=>{const b=e.target.closest('[data-tag]');if(!b)return;
+  e.preventDefault();if(!hEl)addTagToInput(b.dataset.tag)});
+document.getElementById('tagPlus').onclick=()=>toggle('tagPanel');
+document.getElementById('addTagBtn').onclick=()=>{
+  const v=document.getElementById('newTag').value.trim();if(!v)return;
+  if(!S.tagLib.includes(v))S.tagLib.push(v);
+  document.getElementById('newTag').value='';
+  save();renderTags();addTagToInput(v);toast('已加入');
+};
+
+/* ================= PAPERS ================= */
+function renderPFFields(){
+  document.getElementById('pfFields').innerHTML=PF.map(f=>f[0]==='sum'
+    ? `<div class="linkrow"><span class="ic">📌</span><input type="text" id="pf-sum"></div>`
+    : `<label class="f"><span>${f[1]}</span><textarea id="pf-${f[0]}"></textarea></label>`).join('');
+}
+function paperMatch(p){
+  if(tagFilter.size){const t=new Set(p.tags||[]);for(const x of tagFilter)if(!t.has(x))return false}
+  if(!qPaper)return true;
+  return norm([p.title,p.authors,p.year,p.journal,p.cite,p.file,(p.tags||[]).join(' ')]
+    .concat(PF.map(f=>p[f[0]])).join(' ')).includes(norm(qPaper));
+}
+function renderTagbar(){
+  const cnt={};S.papers.forEach(p=>(p.tags||[]).forEach(t=>cnt[t]=(cnt[t]||0)+1));
+  const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b));
+  document.getElementById('tagbar').innerHTML=ks.length
+    ? ks.map(t=>`<button data-tf="${esc(t)}" aria-pressed="${tagFilter.has(t)}">${esc(t)}<span class="cnt">${cnt[t]}</span></button>`).join('')
+      +(tagFilter.size?`<button data-tf="__clear" style="color:var(--clay)">清除</button>`:'')
+    : `<span class="hint">還沒有用過任何 tag。</span>`;
+}
+function renderPapers(){
+  const list=document.getElementById('paperList'),tbl=document.getElementById('paperTable');
+  list.style.display=paperView==='list'?'':'none';tbl.style.display=paperView==='table'?'':'none';
+  renderTagbar();
+  const info=document.getElementById('paperCount');
+  if(!S.papers.length){list.innerHTML=`<div class="empty">還沒有精讀卡片。</div>`;tbl.innerHTML='';info.innerHTML='';return}
+  const a=S.papers.filter(paperMatch).sort((x,y)=>y.created-x.created);
+  info.innerHTML=(qPaper||tagFilter.size)
+    ? `<span class="pill ${a.length?'pine':'clay'}">${a.length} / ${S.papers.length} 篇</span>`
+    : `<span class="pill">${S.papers.length} 篇</span>`;
+  if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
+  list.innerHTML=a.map(p=>`<div class="item">
+    <div class="row"><div style="flex:1;min-width:0"><h3>${esc(p.title)}</h3>
+      <div class="meta">${esc(p.authors||'—')}${p.year?' · '+esc(p.year):''}${p.journal?' · '+esc(p.journal):''}${p.url?` <button class="iconb" data-open="${esc(p.url)}" title="原文連結" style="font-size:13px;padding:0 4px">🌐</button>`:''}</div>
+      ${p.sum?`<div class="oneline">📌 ${esc(p.sum)}</div>`:''}</div>
+      <button class="x" data-hold="paper|${p.id}" title="長按三秒刪除">✕</button></div>
+    <div class="row" style="margin-top:8px">
+      ${p.file?`<span class="acts"><button data-open="${esc(p.file)}" title="精讀 HTML">🔗</button></span>`:''}
+      ${(p.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('')}
+      ${!p.note?`<span class="pill clay">Note 未填</span>`:''}</div>
+    <details class="fold right"><summary title="編輯">✎</summary>
+      ${PF.map(f=>f[0]==='sum'
+        ? `<div class="linkrow"><span class="ic">📌</span><input type="text" data-pf="${p.id}|sum" value="${esc(p.sum||'')}"></div>`
+        : `<label class="f"><span>${f[1]}</span><textarea data-pf="${p.id}|${f[0]}">${esc(p[f[0]]||'')}</textarea></label>`).join('')}
+      <details class="fold"><summary>書目與檔案</summary>
+        <label class="f"><span>Title</span><input type="text" data-pf="${p.id}|title" value="${esc(p.title)}"></label>
+        <div class="grid4">
+          <label class="f"><span>Authors</span><input type="text" data-pf="${p.id}|authors" value="${esc(p.authors||'')}"></label>
+          <label class="f"><span>Year</span><input type="text" data-pf="${p.id}|year" value="${esc(p.year||'')}"></label>
+          <label class="f"><span>Journal</span><input type="text" data-pf="${p.id}|journal" value="${esc(p.journal||'')}"></label>
+          <label class="f"><span>🌐</span><input type="text" data-pf="${p.id}|url" value="${esc(p.url||'')}"></label>
+        </div>
+        <label class="f"><span>Citation (APA 7)</span><textarea data-pf="${p.id}|cite" style="min-height:52px">${esc(p.cite||'')}</textarea></label>
+        <div class="linkrow"><span class="ic">🏷️</span><input type="text" data-pft="${p.id}" value="${esc((p.tags||[]).join(', '))}"></div>
+        <div class="linkrow"><span class="ic">🔗</span><input type="text" data-pf="${p.id}|file" value="${esc(p.file||'')}"></div>
+      </details>
+      <div class="saverow"><button class="btn" data-psave="${p.id}">Save</button></div>
+    </details></div>`).join('');
+  const cols=[['title','Title'],['sum','📌 一句話'],['design','Design'],['pop','Participants'],['def','Definitions'],
+    ['analysis','Analysis'],['result','Results'],['gap','Gap'],['note','Note']];
+  tbl.innerHTML=`<div class="tablewrap"><table><thead><tr>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${
+    a.map(p=>`<tr>${cols.map(c=>`<td>${esc(p[c[0]])||'—'}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+document.getElementById('paperList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-pf]');
+  if(f){const[id,k]=f.dataset.pf.split('|');const p=S.papers.find(x=>x.id===id);if(p){p[k]=f.value;p.mtime=Date.now();save()}return}
+  const t=e.target.closest('[data-pft]');
+  if(t){const p=S.papers.find(x=>x.id===t.dataset.pft);if(p){p.tags=t.value.split(',').map(s=>s.trim()).filter(Boolean);p.mtime=Date.now();save()}}
+});
+document.getElementById('paperList').addEventListener('click',e=>{
+  const sv=e.target.closest('[data-psave]');
+  if(sv){saved();renderPapers()}
+});
+document.getElementById('paperSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;paperView=b.dataset.view;
+  document.querySelectorAll('#paperSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderPapers();
+});
+document.getElementById('tagBtn').onclick=()=>toggle('tagbar');
+document.getElementById('addPaperBtn').onclick=()=>{if(toggle('paperForm'))document.getElementById('pf-title').focus()};
+document.getElementById('cancelPaper').onclick=()=>show('paperForm',false);
+document.getElementById('importJsonBtn').onclick=()=>{if(toggle('jsonForm'))document.getElementById('jsonBox').focus()};
+document.getElementById('cancelJson').onclick=()=>show('jsonForm',false);
+document.getElementById('doImportJson').onclick=()=>{
+  let d;try{d=JSON.parse(document.getElementById('jsonBox').value)}catch(e){toast('JSON 格式有誤');return}
+  const arr=Array.isArray(d)?d:[d];
+  arr.forEach(o=>S.papers.push(Object.assign({id:uid(),created:Date.now(),tags:[],note:''},o)));
+  document.getElementById('jsonBox').value='';show('jsonForm',false);
+  save();renderPapers();toast('匯入 '+arr.length+' 筆');
+};
+function dl(name,text,mime){
+  const b=new Blob([text],{type:mime+';charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();
+  URL.revokeObjectURL(a.href);
+}
+function stamp(){return new Date().toISOString().slice(0,10)}
+function filteredPapers(){return S.papers.filter(paperMatch).sort((x,y)=>y.created-x.created)}
+function expMarkdown(){
+  const a=filteredPapers();
+  if(!a.length){toast('沒有可匯出的卡片');return}
+  const bits=[];
+  bits.push('# 精讀卡片（'+a.length+' 篇）\n');
+  const f=[];
+  if(qPaper)f.push('關鍵字：'+qPaper);
+  if(tagFilter.size)f.push('tag：'+[...tagFilter].join(', '));
+  if(f.length)bits.push('> '+f.join('　·　')+'\n');
+  bits.push('匯出於 '+stamp()+'\n');
+  a.forEach((p,i)=>{
+    bits.push('\n---\n');
+    bits.push('## '+(i+1)+'. '+(p.title||'（無標題）')+'\n');
+    const meta=[p.authors,p.year,p.journal].filter(Boolean).join(' · ');
+    if(meta)bits.push('**'+meta+'**  \n');
+    if(p.url)bits.push('<'+p.url+'>  \n');
+    if(p.cite)bits.push('\n> '+p.cite+'\n');
+    if(p.sum)bits.push('\n📌 '+p.sum+'\n');
+    if((p.tags||[]).length)bits.push('\n`'+p.tags.join('` `')+'`\n');
+    PF.forEach(fd=>{
+      if(fd[0]==='sum')return;
+      const v=(p[fd[0]]||'').trim();if(!v)return;
+      bits.push('\n### '+fd[1]+'\n\n'+v+'\n');
+    });
+  });
+  dl('epi-reading-'+stamp()+'.md',bits.join(''),'text/markdown');
+  toast('已匯出 '+a.length+' 篇');
+}
+function csvCell(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}
+function expCsvFile(){
+  const a=filteredPapers();
+  if(!a.length){toast('沒有可匯出的卡片');return}
+  const cols=[['title','Title'],['authors','Authors'],['year','Year'],['journal','Journal'],
+    ['url','Link'],['tags','Tags'],['sum','一句話']].concat(PF.filter(f=>f[0]!=='sum'));
+  const rows=[cols.map(c=>csvCell(c[1])).join(',')];
+  a.forEach(p=>rows.push(cols.map(c=>csvCell(c[0]==='tags'?(p.tags||[]).join('; '):p[c[0]])).join(',')));
+  dl('epi-reading-'+stamp()+'.csv','\ufeff'+rows.join('\r\n'),'text/csv');
+  toast('已匯出 '+a.length+' 篇');
+}
+document.getElementById('expMenuBtn').onclick=()=>toggle('expMenu');
+document.getElementById('expMd').onclick=()=>{expMarkdown();show('expMenu',false)};
+document.getElementById('expCsv').onclick=()=>{expCsvFile();show('expMenu',false)};
+document.getElementById('savePaper').onclick=()=>{
+  const g=i=>{const el=document.getElementById(i);return el?el.value.trim():''};
+  if(!g('pf-title')){toast('請填標題');return}
+  const o={id:uid(),created:Date.now(),title:g('pf-title'),authors:g('pf-authors'),year:g('pf-year'),
+    journal:g('pf-journal'),cite:g('pf-cite'),url:g('pf-url'),file:g('pf-file'),
+    tags:g('pf-tags').split(',').map(s=>s.trim()).filter(Boolean)};
+  PF.forEach(f=>o[f[0]]=g('pf-'+f[0]));
+  S.papers.push(o);
+  ['pf-title','pf-authors','pf-year','pf-journal','pf-cite','pf-url','pf-tags','pf-file']
+    .concat(PF.map(f=>'pf-'+f[0])).forEach(i=>{const el=document.getElementById(i);if(el)el.value=''});
+  show('paperForm',false);saved();renderPapers();
+};
+
+/* ================= REVIEW ================= */
+function dueCards(){const n=Date.now();return S.cards.filter(c=>!c.due||c.due<=n)}
+function renderCards(){
+  const due=dueCards();
+  document.getElementById('dueCount').textContent=due.length;
+  document.getElementById('startReview').disabled=!due.length;
+  document.getElementById('cardTotals').textContent=`共 ${S.cards.length} 張 · 已成熟 ${S.cards.filter(c=>(c.level||0)>=4).length} 張`;
+  const sel=document.getElementById('cf-theme');
+  if(!sel.options.length)sel.innerHTML='<option value="-1">— none —</option>'+C.map((c,i)=>`<option value="${i}">${c.e} ${esc(c.en)}</option>`).join('');
+  document.getElementById('examThemes').innerHTML=C.map((c,i)=>{
+    const n=S.cards.filter(x=>x.theme===i).length;if(!n)return'';
+    return `<label class="chk"><input type="checkbox" value="${i}"><span style="flex:1">${c.e} ${esc(c.en)}</span><span class="pill">${n}</span></label>`}).join('')||`<p class="hint">還沒有綁定主題的卡片。</p>`;
+  const el=document.getElementById('cardList');
+  if(!S.cards.length){el.innerHTML=`<div class="empty">還沒有卡片。</div>`;return}
+  let a=S.cards.filter(c=>!qCard||norm([c.q,c.a,c.link,(c.theme>=0&&C[c.theme])?C[c.theme].en+' '+C[c.theme].zh:''].join(' ')).includes(norm(qCard)));
+  if(!a.length){el.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;return}
+  a=[...a];
+  if(cardSort==='due')a.sort((x,y)=>(x.due||0)-(y.due||0));
+  else if(cardSort==='new')a.sort((x,y)=>y.created-x.created);
+  else a.sort((x,y)=>(x.theme==null?99:x.theme)-(y.theme==null?99:y.theme));
+  el.innerHTML=a.map(c=>{
+    const overdue=!c.due||c.due<=Date.now();
+    const d=c.due?Math.ceil((c.due-Date.now())/DAY):0;
+    const flip=flipped.has(c.id), ed=editCard===c.id;
+    return `<div class="item rv" data-flip="${c.id}">
+      <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(c.q)}</div>
+        <span class="acts"><button data-cedit="${c.id}" title="編輯">✎</button></span>
+        <button class="x" data-hold="card|${c.id}" title="長按三秒刪除">✕</button></div>
+      <div class="row" style="margin-top:6px">
+        ${c.theme>=0&&C[c.theme]?`<span class="pill pine">${C[c.theme].e} ${esc(C[c.theme].en)}</span>`:''}
+        <span class="pill ${overdue?'clay':''}">${overdue?'今天要複習':d+' 天後'}</span>
+        <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span></div>
+      ${flip?`<div class="ans">${esc(c.a)||'（沒寫答案）'}</div>
+        ${c.link?`<div style="margin-top:8px"><button class="iconb" data-open="${esc(c.link)}" title="連結">🔗</button></div>`:''}
+        <div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`
+        :`<div class="flipcue">點卡片看答案</div>`}
+      ${ed?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
+        <label class="f"><span>Question</span><textarea data-cf="${c.id}|q">${esc(c.q)}</textarea></label>
+        <label class="f"><span>Answer</span><textarea data-cf="${c.id}|a" style="min-height:90px">${esc(c.a||'')}</textarea></label>
+        <div class="linkrow"><span class="ic">🔻</span><select data-cft="${c.id}">
+          <option value="-1"${c.theme<0?' selected':''}>— none —</option>
+          ${C.map((x,ix)=>`<option value="${ix}"${c.theme===ix?' selected':''}>${x.e} ${esc(x.en)}</option>`).join('')}
+        </select></div>
+        <div class="linkrow"><span class="ic">🔗</span><input type="text" data-cf="${c.id}|link" value="${esc(c.link||'')}"></div>
+        <div class="saverow"><button class="btn ghost mini" data-hold="creset|${c.id}" title="長按三秒重設" style="margin-right:auto">重設排程</button>
+          <button class="btn" data-csave="${c.id}">Save</button></div></div>`:''}
+      </div>`}).join('');
+}
+document.getElementById('cardList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-cf]');if(!f)return;
+  const[id,k]=f.dataset.cf.split('|');const c=S.cards.find(x=>x.id===id);if(c){c[k]=f.value;c.mtime=Date.now();save()}
+});
+document.getElementById('cardList').addEventListener('change',e=>{
+  const t=e.target.closest('[data-cft]');if(!t)return;
+  const c=S.cards.find(x=>x.id===t.dataset.cft);if(c){c.theme=+t.value;save()}
+});
+function gradeCard(c,ok){
+  c.n=(c.n||0)+1;c.last=Date.now();
+  c.level=ok?Math.min((c.level||0)+1,IVL.length-1):Math.max((c.level||0)-2,0);
+  c.due=Date.now()+IVL[c.level]*DAY;
+  flipped.delete(c.id);save();renderCards();updateBadge();
+  toast(ok?'下次 '+IVL[c.level]+' 天後':'退兩級，'+IVL[c.level]+' 天後再見');
+}
+document.getElementById('cardList').addEventListener('click',e=>{
+  if(hEl)return;
+  const sv=e.target.closest('[data-csave]');
+  if(sv){editCard=null;saved();renderCards();return}
+  const ed=e.target.closest('[data-cedit]');
+  if(ed){editCard=editCard===ed.dataset.cedit?null:ed.dataset.cedit;renderCards();return}
+  const g=e.target.closest('[data-grade]');
+  if(g){const[id,ok]=g.dataset.grade.split('|');gradeCard(S.cards.find(x=>x.id===id),ok==='1');return}
+  if(e.target.closest('button')||e.target.closest('textarea')||e.target.closest('select')||e.target.closest('input'))return;
+  const f=e.target.closest('[data-flip]');
+  if(f){const id=f.dataset.flip;flipped.has(id)?flipped.delete(id):flipped.add(id);renderCards()}
+});
+document.getElementById('cSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;cardSort=b.dataset.csort;
+  document.querySelectorAll('#cSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderCards();
+});
+document.getElementById('addCardBtn').onclick=()=>{if(toggle('cardForm'))document.getElementById('cf-q').focus()};
+document.getElementById('cancelCard').onclick=()=>show('cardForm',false);
+document.getElementById('saveCard').onclick=()=>{
+  const q=document.getElementById('cf-q').value.trim();if(!q){toast('請填問題');return}
+  S.cards.push({id:uid(),created:Date.now(),q,a:document.getElementById('cf-a').value.trim(),
+    theme:+document.getElementById('cf-theme').value,link:document.getElementById('cf-link').value.trim(),
+    level:0,due:Date.now(),last:null,n:0});
+  ['cf-q','cf-a','cf-link'].forEach(i=>document.getElementById(i).value='');
+  show('cardForm',false);saved();renderCards();updateBadge();
+};
+
+const ov=document.getElementById('ov');
+function startQueue(list,exam){if(!list.length){toast('沒有卡片');return}queue=list.slice();qi=0;examMode=!!exam;ov.classList.add('on');showCard()}
+function showCard(){
+  if(qi>=queue.length){ov.classList.remove('on');renderCards();updateBadge();toast(examMode?'這一輪結束':'複習完成');return}
+  const c=queue[qi];
+  document.getElementById('ovProg').textContent=(qi+1)+' / '+queue.length;
+  document.getElementById('ovTheme').textContent=c.theme>=0&&C[c.theme]?C[c.theme].e+' '+C[c.theme].en:'—';
+  document.getElementById('ovQ').textContent=c.q;
+  const a=document.getElementById('ovA');a.textContent=c.a||'（沒寫答案）';a.classList.remove('on');
+  document.getElementById('ovLink').innerHTML='';
+  document.getElementById('ovFoot').innerHTML=`<button class="btn" id="ovShow">看答案</button>`;
+  document.getElementById('ovShow').onclick=()=>{
+    a.classList.add('on');
+    if(c.link)document.getElementById('ovLink').innerHTML=linkHTML(c.link);
+    document.getElementById('ovFoot').innerHTML=`<button class="btn ghost" id="ovBad">不會</button><button class="btn" id="ovGood">會</button>`;
+    document.getElementById('ovBad').onclick=()=>grade(false);
+    document.getElementById('ovGood').onclick=()=>grade(true);
+  };
+}
+function grade(ok){
+  const c=queue[qi];
+  if(!examMode){
+    const real=S.cards.find(x=>x.id===c.id);
+    if(real){real.n=(real.n||0)+1;real.last=Date.now();
+      real.level=ok?Math.min((real.level||0)+1,IVL.length-1):Math.max((real.level||0)-2,0);
+      real.due=Date.now()+IVL[real.level]*DAY}
+    if(!ok)queue.push(c);
+    save();
+  }
+  qi++;showCard();
+}
+document.getElementById('startReview').onclick=()=>startQueue(dueCards(),false);
+document.getElementById('startExam').onclick=()=>{
+  const sel=[...document.querySelectorAll('#examThemes input:checked')].map(x=>+x.value);
+  if(!sel.length){toast('先選主題');return}
+  startQueue(S.cards.filter(c=>sel.includes(c.theme)),true);
+};
+document.getElementById('ovClose').onclick=()=>{ov.classList.remove('on');renderCards();updateBadge()};
+
+/* ================= IDEAS ================= */
+document.getElementById('q-kind').onchange=e=>show('fieldOnly',e.target.value==='field');
+document.getElementById('addQBtn').onclick=()=>{if(toggle('qForm'))document.getElementById('q-q').focus()};
+document.getElementById('cancelQ').onclick=()=>show('qForm',false);
+document.getElementById('qSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;qFilter=b.dataset.qf;
+  document.querySelectorAll('#qSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderQ();
+});
+document.getElementById('addQ').onclick=()=>{
+  const q=document.getElementById('q-q').value.trim();if(!q){toast('請填問題');return}
+  S.qs.push({id:uid(),created:Date.now(),kind:document.getElementById('q-kind').value,q,
+    src:document.getElementById('q-src').value.trim(),a:'',done:false,
+    s1:document.getElementById('q-a1').value.trim(),s2:document.getElementById('q-b1').value.trim()});
+  ['q-q','q-src','q-a1','q-b1'].forEach(i=>document.getElementById(i).value='');
+  show('qForm',false);saved();renderQ();
+};
+function renderQ(){
+  const el=document.getElementById('qList');
+  let a=S.qs.filter(x=>qFilter==='all'||!x.done);
+  if(!a.length){el.innerHTML=`<div class="empty">${qFilter==='open'?'沒有未解決的問題。':'還沒有問題。'}</div>`;return}
+  a=[...a].sort((x,y)=>(x.done?1:0)-(y.done?1:0)||y.created-x.created);
+  el.innerHTML=a.map(q=>`<div class="item" style="${q.done?'opacity:.6':''}">
+    <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(q.q)}</div><button class="x" data-hold="q|${q.id}" title="長按三秒刪除">✕</button></div>
+    <div class="row" style="margin-top:7px">
+      <span class="pill ${q.kind==='field'?'pine':''}">${QK[q.kind]||q.kind}</span>
+      <span class="pill ${q.done?'pine':'amber'}">${q.done?'Resolved':'Unresolved'}</span></div>
+    ${q.src?`<div class="meta" style="margin-top:5px">${esc(q.src)}</div>`:''}
+    ${q.a?`<div style="margin-top:9px;font-size:14px;white-space:pre-wrap;border-left:2px solid var(--pine-mid);padding-left:10px">${esc(q.a)}</div>`:''}
+    <details class="fold right"><summary title="編輯">✎</summary>
+      <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
+      <div class="linkrow"><span class="ic">🔻</span><select data-qk="${q.id}">
+        ${Object.keys(QK).map(k=>`<option value="${k}"${q.kind===k?' selected':''}>${QK[k]}</option>`).join('')}</select></div>
+      <label class="f"><span>Source</span><input type="text" data-qf="${q.id}|src" value="${esc(q.src||'')}"></label>
+      ${q.kind==='field'?`<label class="f"><span>Side A</span><textarea data-qf="${q.id}|s1">${esc(q.s1||'')}</textarea></label>
+      <label class="f"><span>Side B</span><textarea data-qf="${q.id}|s2">${esc(q.s2||'')}</textarea></label>`:''}
+      <label class="f"><span>${q.kind==='field'?'My take':'Answer'}</span><textarea data-qf="${q.id}|a" style="min-height:80px">${esc(q.a||'')}</textarea></label>
+      <div class="saverow">
+        <button class="btn ghost mini" data-qd="${q.id}" style="margin-right:auto">${q.done?'Reopen':'Resolve'}</button>
+        <button class="btn ghost mini" data-qc="${q.id}">↑ Card</button>
+        <button class="btn ghost mini" data-qr="${q.id}">↑ Idea</button>
+        <button class="btn" data-qsave="${q.id}">Save</button></div>
+    </details></div>`).join('');
+}
+document.getElementById('qList').addEventListener('change',e=>{
+  const k=e.target.closest('[data-qk]');if(!k)return;
+  const q=S.qs.find(x=>x.id===k.dataset.qk);if(q){q.kind=k.value;save();renderQ()}
+});
+document.getElementById('qList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-qf]');if(!f)return;
+  const[id,k]=f.dataset.qf.split('|');const q=S.qs.find(x=>x.id===id);if(q){q[k]=f.value;q.mtime=Date.now();save()}
+});
+document.getElementById('qList').addEventListener('click',e=>{
+  const sv=e.target.closest('[data-qsave]');
+  if(sv){saved();renderQ();return}
+  const k=e.target.closest('[data-qd]');
+  if(k){const q=S.qs.find(x=>x.id===k.dataset.qd);q.done=!q.done;save();renderQ();return}
+  const c=e.target.closest('[data-qc]');
+  if(c){const q=S.qs.find(x=>x.id===c.dataset.qc);
+    S.cards.push({id:uid(),created:Date.now(),q:q.q,a:q.a||'',theme:-1,link:q.src||'',level:0,due:Date.now(),last:null,n:0});
+    save();renderCards();updateBadge();toast('已變成複習卡');return}
+  const r=e.target.closest('[data-qr]');if(!r)return;
+  const q=S.qs.find(x=>x.id===r.dataset.qr);
+  S.ri.push({id:uid(),created:Date.now(),updated:Date.now(),title:q.q,status:'explore',why:q.a||'',who:q.s1||'',kill:''});
+  save();renderRI();toast('已送進 Research ideas');
+});
+
+document.getElementById('addRIBtn').onclick=()=>{if(toggle('riForm'))document.getElementById('ri-title').focus()};
+document.getElementById('cancelRI').onclick=()=>show('riForm',false);
+document.getElementById('addRI').onclick=()=>{
+  const t=document.getElementById('ri-title').value.trim();if(!t){toast('請填題目');return}
+  S.ri.push({id:uid(),created:Date.now(),updated:Date.now(),title:t,status:'explore',
+    why:document.getElementById('ri-why').value.trim(),who:document.getElementById('ri-who').value.trim(),
+    kill:document.getElementById('ri-kill').value.trim()});
+  ['ri-title','ri-why','ri-who','ri-kill'].forEach(i=>document.getElementById(i).value='');
+  show('riForm',false);saved();renderRI();
+};
+function renderRI(){
+  const el=document.getElementById('riList');
+  const a=S.ri.filter(t=>riFilter==='all'||t.status===riFilter);
+  if(!a.length){el.innerHTML=`<div class="empty">${S.ri.length?'這個分類沒有題目。':'還沒有候選題目。'}</div>`;return}
+  el.innerHTML=a.map(t=>`<div class="item" style="${t.status==='killed'?'opacity:.55':''}">
+    <div class="row"><h3 style="flex:1">${esc(t.title)}</h3><button class="x" data-hold="ri|${t.id}" title="長按三秒刪除">✕</button></div>
+    ${!t.kill?`<div class="row" style="margin-top:7px"><span class="pill clay">no kill criteria</span></div>`:''}
+    <details class="fold right"><summary title="編輯">✎</summary>
+      <label class="f"><span>Idea</span><input type="text" data-rf="${t.id}|title" value="${esc(t.title)}"></label>
+      <div class="linkrow"><span class="ic">🔻</span><select data-rs="${t.id}">
+        ${Object.keys(RIS).map(k=>`<option value="${k}"${t.status===k?' selected':''}>${RIS[k]}</option>`).join('')}</select></div>
+      <label class="f"><span>Why it matters</span><textarea data-rf="${t.id}|why">${esc(t.why||'')}</textarea></label>
+      <label class="f"><span>Who has done it</span><textarea data-rf="${t.id}|who">${esc(t.who||'')}</textarea></label>
+      <label class="f"><span>Kill criteria</span><textarea data-rf="${t.id}|kill">${esc(t.kill||'')}</textarea></label>
+      <div class="saverow"><button class="btn" data-rsave="${t.id}">Save</button></div>
+    </details></div>`).join('');
+}
+document.getElementById('riSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;riFilter=b.dataset.rf2;
+  document.querySelectorAll('#riSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderRI();
+});
+document.getElementById('riList').addEventListener('change',e=>{
+  const t=e.target.closest('[data-rs]');if(!t)return;
+  const r=S.ri.find(x=>x.id===t.dataset.rs);if(r){r.status=t.value;r.updated=Date.now();save();renderRI()}
+});
+document.getElementById('riList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-rf]');if(!f)return;
+  const[id,k]=f.dataset.rf.split('|');const t=S.ri.find(x=>x.id===id);
+  if(t){t[k]=f.value;t.updated=Date.now();t.mtime=Date.now();save()}
+});
+document.getElementById('riList').addEventListener('click',e=>{
+  const sv=e.target.closest('[data-rsave]');
+  if(sv){saved();renderRI();return}
+});
+
+/* ================= COURSES ================= */
+function renderCl(){
+  document.getElementById('clTermSeg').innerHTML=TERMS.map(t=>
+    `<button data-clterm="${t.id}" aria-pressed="${t.id===classTerm}">${t.label}</button>`).join('');
+  const sel=document.getElementById('cl-term');
+  if(!sel.options.length)sel.innerHTML=TERMS.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
+  const el=document.getElementById('clList');
+  const a=S.classes.filter(c=>(c.term||'p1a')===classTerm);
+  if(!a.length){el.innerHTML=`<div class="empty">這個學期還沒有課程。按右上角 ＋ 新增。</div>`;return}
+  el.innerHTML=a.map(c=>`<div class="item">
+    <div class="row"><div style="flex:1;min-width:0"><h3>${esc(c.name)}</h3>
+      ${c.teacher?`<div class="meta">${esc(c.teacher)}</div>`:''}</div>
+      <button class="x" data-hold="cls|${c.id}" title="長按刪除">✕</button></div>
+    <div class="row" style="margin-top:9px">
+      ${(c.links||[]).length?(c.links||[]).map(l=>
+        `<button class="lchip" data-open="${esc(l.url)}">🔗 ${esc(l.label||l.url)}</button>`).join('')
+        :`<span class="hint">還沒有連結。展開 ✎ 新增。</span>`}</div>
+    ${c.note?`<div style="margin-top:9px;font-size:13.5px;white-space:pre-wrap;border-left:2px solid var(--ac-mid);padding-left:10px">${esc(c.note)}</div>`:''}
+    <details class="fold right"><summary title="編輯">✎</summary>
+      <label class="f"><span>Course</span><input type="text" data-cf2="${c.id}|name" value="${esc(c.name)}"></label>
+      <div class="grid2">
+        <label class="f"><span>Teacher</span><input type="text" data-cf2="${c.id}|teacher" value="${esc(c.teacher||'')}"></label>
+        <div class="linkrow"><span class="ic">🔻</span><select data-clt="${c.id}">
+          ${TERMS.map(t=>`<option value="${t.id}"${(c.term||'p1a')===t.id?' selected':''}>${t.label}</option>`).join('')}
+        </select></div>
+      </div>
+      <label class="f"><span>Note</span><textarea data-cf2="${c.id}|note">${esc(c.note||'')}</textarea></label>
+      <div class="srclab">連結</div>
+      ${(c.links||[]).map(l=>`<div class="lrow">
+        <input type="text" data-lf="${c.id}|${l.id}|label" value="${esc(l.label||'')}" placeholder="名稱" style="flex:1">
+        <span class="ic">🔗</span>
+        <input type="text" data-lf="${c.id}|${l.id}|url" value="${esc(l.url||'')}" style="flex:2">
+        <button class="x" data-hold="clink|${c.id}:${l.id}" title="長按刪除">✕</button></div>`).join('')}
+      <div class="row" style="margin-top:4px"><button class="btn ghost mini" data-addlink="${c.id}">＋ 連結</button></div>
+      <div class="saverow"><button class="btn" data-clsave="${c.id}">Save</button></div>
+    </details></div>`).join('');
+}
+document.getElementById('clTermSeg').addEventListener('click',e=>{
+  const b=e.target.closest('[data-clterm]');if(!b)return;
+  classTerm=b.dataset.clterm;renderCl();
+});
+document.getElementById('addClBtn').onclick=()=>{
+  if(toggle('clForm')){document.getElementById('cl-term').value=classTerm;document.getElementById('cl-name').focus()}
+};
+document.getElementById('cancelCl').onclick=()=>show('clForm',false);
+document.getElementById('saveCl').onclick=()=>{
+  const n=document.getElementById('cl-name').value.trim();if(!n){toast('請填課名');return}
+  const term=document.getElementById('cl-term').value;
+  S.classes.push({id:uid(),created:Date.now(),mtime:Date.now(),name:n,
+    teacher:document.getElementById('cl-teacher').value.trim(),term,note:'',links:[]});
+  document.getElementById('cl-name').value='';document.getElementById('cl-teacher').value='';
+  show('clForm',false);classTerm=term;saved();renderCl();
+};
+document.getElementById('clList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-cf2]');
+  if(f){const[id,k]=f.dataset.cf2.split('|');const c=S.classes.find(x=>x.id===id);
+    if(c){c[k]=f.value;c.mtime=Date.now();save()}return}
+  const l=e.target.closest('[data-lf]');
+  if(l){const[cid,lid,k]=l.dataset.lf.split('|');const c=S.classes.find(x=>x.id===cid);
+    const lk=c&&(c.links||[]).find(x=>x.id===lid);
+    if(lk){lk[k]=l.value;c.mtime=Date.now();save()}}
+});
+document.getElementById('clList').addEventListener('change',e=>{
+  const t=e.target.closest('[data-clt]');if(!t)return;
+  const c=S.classes.find(x=>x.id===t.dataset.clt);
+  if(c){c.term=t.value;c.mtime=Date.now();classTerm=t.value;save();renderCl()}
+});
+document.getElementById('clList').addEventListener('click',e=>{
+  if(hEl)return;
+  const ad=e.target.closest('[data-addlink]');
+  if(ad){const c=S.classes.find(x=>x.id===ad.dataset.addlink);
+    if(c){if(!Array.isArray(c.links))c.links=[];c.links.push({id:uid(),label:'',url:''});c.mtime=Date.now();save();renderCl()}return}
+  const sv=e.target.closest('[data-clsave]');
+  if(sv){saved();renderCl()}
+});
+
+/* ================= CALENDAR ================= */
+function fillSelects(){
+  const o=PERIODS.map((p,i)=>`<option value="${i+1}">${p[0]} · ${p[1]}</option>`).join('');
+  document.getElementById('cs-from').innerHTML=o;
+  document.getElementById('cs-to').innerHTML=o;
+  document.getElementById('cs-term').innerHTML=TERMS.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
+  document.getElementById('termSeg').innerHTML=TERMS.map(t=>
+    `<button data-term="${t.id}" aria-pressed="${t.id===activeTerm}">${t.label}</button>`).join('');
+}
+document.getElementById('termSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  activeTerm=b.dataset.term;
+  document.querySelectorAll('#termSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  renderTT();
+});
+function renderTT(){
+  const occ={};
+  S.courses.filter(c=>(c.term||'p1a')===activeTerm).forEach(c=>{for(let p=c.from;p<=c.to;p++)occ[c.day+'-'+p]=c});
+  let rows='';
+  PERIODS.forEach((p,pi)=>{
+    const per=pi+1;let tds='';
+    TTDAYS.forEach((d,di)=>{
+      const c=occ[di+'-'+per];
+      if(c){if(c.from!==per)return;
+        tds+=`<td rowspan="${c.to-c.from+1}"><button class="blk ${esc(c.type)}" data-cs="${c.id}" title="點一下編輯">
+          <span class="nm">${esc(c.name)}</span>${c.room?`<span class="rm">${esc(c.room)}</span>`:''}</button></td>`;
+      }else tds+='<td></td>';
+    });
+    rows+=`<tr><td class="ph"><div class="pn">${p[0]}</div><div class="pt">${p[1]}</div></td>${tds}</tr>`;
+  });
+  document.getElementById('ttTable').innerHTML=
+    `<thead><tr><th></th>${TTDAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>${rows}</tbody>`;
+}
+function csOpen(c){
+  show('csForm',true);editCS=c?c.id:null;
+  const dc=document.getElementById('delCS');
+  dc.style.display=c?'':'none';
+  if(c)dc.dataset.hold='cs|'+c.id;else delete dc.dataset.hold;
+  document.getElementById('cs-name').value=c?c.name:'';
+  document.getElementById('cs-room').value=c?(c.room||''):'';
+  document.getElementById('cs-term').value=c?(c.term||activeTerm):activeTerm;
+  document.getElementById('cs-type').value=c?c.type:'required';
+  document.getElementById('cs-day').value=c?c.day:0;
+  document.getElementById('cs-from').value=c?c.from:1;
+  document.getElementById('cs-to').value=c?c.to:1;
+  document.getElementById('cs-name').focus();
+}
+document.getElementById('toggleCS').onclick=()=>{
+  const f=document.getElementById('csForm');
+  if(f.style.display!=='none'&&!editCS){show('csForm',false);return}
+  csOpen(null);
+};
+document.getElementById('cancelCS').onclick=()=>{show('csForm',false);editCS=null};
+
+document.getElementById('addCS').onclick=()=>{
+  const n=document.getElementById('cs-name').value.trim();if(!n){toast('請填課名');return}
+  const from=+document.getElementById('cs-from').value,to=+document.getElementById('cs-to').value;
+  if(to<from){toast('結束節次不能早於開始');return}
+  const day=+document.getElementById('cs-day').value,term=document.getElementById('cs-term').value;
+  const clash=S.courses.some(c=>c.id!==editCS&&(c.term||'p1a')===term&&c.day===day&&!(c.to<from||c.from>to));
+  const o={name:n,term,type:document.getElementById('cs-type').value,day,from,to,room:document.getElementById('cs-room').value.trim()};
+  if(editCS)Object.assign(S.courses.find(x=>x.id===editCS),o);
+  else S.courses.push(Object.assign({id:uid()},o));
+  editCS=null;show('csForm',false);
+  activeTerm=term;
+  document.querySelectorAll('#termSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.term===term));
+  saved();renderTT();
+  if(clash)toast('注意：這個時段有兩門課');
+};
+document.getElementById('ttTable').addEventListener('click',e=>{
+  const b=e.target.closest('[data-cs]');if(!b)return;
+  csOpen(S.courses.find(x=>x.id===b.dataset.cs));
+});
+
+let showPast=false;
+function kdRow(k,d){
+  const u=d<0?'past':d<=1?'u0':d<=7?'u1':d<=30?'u2':'u3';
+  const big=d<0?Math.abs(d):d, unit=d<0?'天前':(d===0?'':'天');
+  const dd=new Date(k.date), wd=['日','一','二','三','四','五','六'][dd.getDay()];
+  return `<div class="kd ${u}${d<0?' past':''}">
+    <div class="cd"><span class="n">${d===0?'今天':big}</span><span class="u">${unit}</span></div>
+    <div class="bd"><span class="ti">${esc(k.title)}</span>
+      <span class="dt">${esc(k.date)}（${wd}）· ${KDT[k.type]||esc(k.type)}</span></div>
+    <div class="rt"><button class="x" data-ed-kd="${k.id}" title="編輯" style="font-size:13px">✎</button>
+      <button class="x" data-hold="kd|${k.id}" title="長按三秒刪除">✕</button></div></div>`;
+}
+function kdRender(list){
+  let out='',mon='';
+  list.forEach(x=>{const m=x.k.date.slice(0,7);
+    if(m!==mon){mon=m;out+=`<div class="kdgroup">${m.replace('-',' 年 ')} 月</div>`}
+    out+=kdRow(x.k,x.d)});
+  return out;
+}
+function renderKD(){
+  const el=document.getElementById('kdList'),pel=document.getElementById('kdPastList'),prow=document.getElementById('kdPastRow');
+  const today=new Date();today.setHours(0,0,0,0);
+  const withD=S.kd.map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}));
+  const up=withD.filter(x=>x.d>=0).sort((a,b)=>a.d-b.d);
+  const past=withD.filter(x=>x.d<0).sort((a,b)=>b.d-a.d);
+  el.innerHTML=up.length?kdRender(up):`<div class="empty">沒有即將到來的日期。</div>`;
+  prow.innerHTML=past.length?`<button class="btn ghost mini" id="togglePast">${showPast?'隱藏':'顯示'}已過期（${past.length}）</button>`:'';
+  pel.innerHTML=showPast?kdRender(past):'';
+}
+document.getElementById('kdPastRow').addEventListener('click',e=>{
+  if(!e.target.closest('#togglePast'))return;showPast=!showPast;renderKD();
+});
+function kdReset(){editKD=null;
+  document.getElementById('kd-date').value='';document.getElementById('kd-title').value='';
+  document.getElementById('addKD').textContent='Save';}
+function kdClick(e){
+  const ed=e.target.closest('[data-ed-kd]');
+  if(ed){const k=S.kd.find(x=>x.id===ed.dataset.edKd);editKD=k.id;
+    show('kdForm',true);
+    document.getElementById('kd-date').value=k.date;
+    document.getElementById('kd-title').value=k.title;
+    document.getElementById('kd-type').value=k.type;
+    document.getElementById('addKD').textContent='Update';
+    document.getElementById('kd-title').focus();return}
+}
+document.getElementById('kdList').addEventListener('click',kdClick);
+document.getElementById('kdPastList').addEventListener('click',kdClick);
+document.getElementById('toggleKD').onclick=()=>{if(toggle('kdForm'))document.getElementById('kd-title').focus();else kdReset()};
+document.getElementById('cancelKD').onclick=()=>{show('kdForm',false);kdReset()};
+document.getElementById('addKD').onclick=()=>{
+  const d=document.getElementById('kd-date').value,t=document.getElementById('kd-title').value.trim();
+  if(!d||!t){toast('請填日期和標題');return}
+  const ty=document.getElementById('kd-type').value;
+  if(editKD)Object.assign(S.kd.find(x=>x.id===editKD),{date:d,title:t,type:ty});
+  else S.kd.push({id:uid(),date:d,title:t,type:ty});
+  kdReset();show('kdForm',false);saved();renderKD();
+};
+function renderGC(){
+  document.getElementById('gcUrl').value=S.gc||'';
+  document.getElementById('gcBox').innerHTML=S.gc?
+    `<iframe src="${esc(S.gc)}" style="width:100%;height:520px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)" loading="lazy"></iframe>`:'';
+}
+document.getElementById('saveGC').onclick=()=>{S.gc=document.getElementById('gcUrl').value.trim();saved();renderGC()};
+document.getElementById('clearGC').onclick=()=>{S.gc='';save();renderGC()};
+
+/* ================= DATA ================= */
+async function snapshot(manual){
+  const today=new Date().toISOString().slice(0,10);
+  if(!manual&&S.lastBak===today)return;
+  const i=(S.bakIdx||0)%3;
+  try{await store.set(BAK[i],JSON.stringify({date:today,at:Date.now(),data:S}));
+    S.lastBak=today;S.bakIdx=(i+1)%3;save();if(manual)toast('已存一份')}
+  catch(e){if(manual)toast('存檔失敗')}
+  renderBackups();
+}
+async function renderBackups(){
+  const el=document.getElementById('bakList');if(!el)return;
+  const rows=[];
+  for(let i=0;i<3;i++){
+    try{const r=await store.get(BAK[i]);
+      if(r&&r.value){const o=JSON.parse(r.value),d=o.data||{};
+        rows.push({i,date:o.date,n:(d.papers||[]).length,c:(d.cards||[]).length,at:o.at||0})}}
+    catch(e){}
+  }
+  rows.sort((a,b)=>b.at-a.at);
+  el.innerHTML=rows.length?rows.map(r=>
+    `<div class="bakrow"><span class="d">${esc(r.date)}</span>
+      <span class="pill">${r.n} 篇 · ${r.c} 卡</span>
+      <button class="btn ghost mini" data-hold="restore|${r.i}" title="長按三秒還原">還原</button></div>`).join('')
+    :`<p class="hint" style="margin:0">還沒有存檔。</p>`;
+}
+
+document.getElementById('bakNow').onclick=()=>snapshot(true);
+document.getElementById('trashList').addEventListener('click',e=>{
+  const b=e.target.closest('[data-undel]');if(!b)return;
+  const i=S.trash.findIndex(x=>x.tid===b.dataset.undel);if(i<0)return;
+  const x=S.trash[i],m=BIN[x.type];
+  if(m){if(!Array.isArray(S[m[0]]))S[m[0]]=[];S[m[0]].push(x.data)}
+  S.trash.splice(i,1);save();renderAll();toast('已還原');
+});
+function renderExportState(){
+  const w=document.getElementById('expWarn'),info=document.getElementById('expInfo');
+  const has=S.papers.length||S.cards.length||S.qs.length;
+  if(!S.lastExport){info.textContent='尚未匯出過。';
+    w.innerHTML=has?`<div class="warn">你已經有資料了，但從來沒有匯出過。<strong>現在按一次 Export。</strong></div>`:'';return}
+  const d=Math.floor((Date.now()-S.lastExport)/DAY);
+  info.textContent='上次匯出：'+new Date(S.lastExport).toISOString().slice(0,10)+'（'+d+' 天前）';
+  w.innerHTML=d>=7?`<div class="warn">已經 ${d} 天沒有匯出備份了。</div>`:'';
+}
+document.getElementById('expBtn').onclick=()=>{
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='notes.json';a.click();URL.revokeObjectURL(a.href);
+  S.lastExport=Date.now();save();renderExportState();toast('已匯出');
+};
+function mergeArr(cur,inc){
+  const m=new Map((cur||[]).map(x=>[x.id,x]));
+  (inc||[]).forEach(x=>{
+    if(!x||!x.id)return;
+    const e=m.get(x.id);
+    if(!e){m.set(x.id,x);return}
+    const a=e.mtime||e.created||0,b=x.mtime||x.created||0;
+    if(b>a)m.set(x.id,x);
+  });
+  return [...m.values()];
+}
+function mergeThemes(cur,inc){
+  const out=Object.assign({},cur||{});
+  Object.keys(inc||{}).forEach(k=>{
+    const a=out[k]||{sec:{},sn:{},note:''},b=inc[k]||{};
+    const sec=Object.assign({},a.sec||{});
+    Object.keys(b.sec||{}).forEach(x=>{sec[x]=Math.max(sec[x]||0,b.sec[x]||0)});
+    const sn=Object.assign({},a.sn||{});
+    Object.keys(b.sn||{}).forEach(x=>{
+      const p=sn[x]||{},q=b.sn[x]||{};
+      sn[x]={n:(q.n||'').length>(p.n||'').length?q.n:(p.n||''),
+             l:(q.l||'').length>(p.l||'').length?q.l:(p.l||'')};
+    });
+    out[k]={sec,sn,note:(b.note||'').length>(a.note||'').length?b.note:(a.note||''),open:a.open};
+  });
+  return out;
+}
+function mergeState(inc){
+  S.papers=mergeArr(S.papers,inc.papers);
+  S.cards=mergeArr(S.cards,inc.cards);
+  S.qs=mergeArr(S.qs,inc.qs);
+  S.ri=mergeArr(S.ri,inc.ri);
+  S.kd=mergeArr(S.kd,inc.kd);
+  S.courses=mergeArr(S.courses,inc.courses);
+  S.classes=mergeArr(S.classes,inc.classes);
+  S.themes=mergeThemes(S.themes,inc.themes);
+  (inc.tagLib||[]).forEach(t=>{if(!S.tagLib.includes(t))S.tagLib.push(t)});
+  if(!S.gc&&inc.gc)S.gc=inc.gc;
+  if(inc.lastExport&&(!S.lastExport||inc.lastExport>S.lastExport))S.lastExport=inc.lastExport;
+}
+let impMode='merge';
+document.getElementById('impBtn').onclick=()=>{impMode='merge';document.getElementById('impFile').click()};
+document.getElementById('impRepBtn').onclick=()=>{impMode='replace';document.getElementById('impFile').click()};
+document.getElementById('impFile').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{
+    let inc;try{inc=JSON.parse(r.result)}catch(x){toast('檔案讀不出來');return}
+    if(impMode==='replace'){S=Object.assign(defaults(),inc);toast('已覆蓋匯入')}
+    else{
+      const before=S.papers.length+S.cards.length+S.qs.length+S.ri.length;
+      mergeState(inc);
+      const after=S.papers.length+S.cards.length+S.qs.length+S.ri.length;
+      toast('已合併，新增 '+(after-before)+' 筆');
+    }
+    save();renderAll();
+  };
+  r.readAsText(f);e.target.value='';
+};
+
+
+/* ================= GITHUB SYNC ================= */
+let GH={owner:'',repo:'',branch:'main',path:'data/notes.json',token:'',auto:false};
+let ghSha=null,ghTimer=null,ghBusy=false,ghQuiet=false;
+function ghOn(){return !!(GH.owner&&GH.repo&&GH.token)}
+function setDot(cls,msg){
+  const d=document.getElementById('syncDot');
+  if(d){d.className='syncdot'+(cls?' '+cls:'');d.title=msg||'同步狀態'}
+  const st=document.getElementById('ghState');
+  if(st&&msg)st.textContent=msg;
+}
+async function ghLoadCfg(){
+  try{const r=await store.get(GHKEY);if(r&&r.value)GH=Object.assign(GH,JSON.parse(r.value))}catch(e){}
+  document.getElementById('gh-owner').value=GH.owner||'';
+  document.getElementById('gh-repo').value=GH.repo||'';
+  document.getElementById('gh-branch').value=GH.branch||'main';
+  document.getElementById('gh-path').value=GH.path||'data/notes.json';
+  document.getElementById('gh-token').value=GH.token||'';
+  document.getElementById('gh-auto').checked=!!GH.auto;
+  setDot(ghOn()?'':'', ghOn()?(GH.auto?'自動同步已開啟':'已設定，未開啟自動同步'):'未設定同步');
+}
+async function ghSaveCfg(){
+  GH={owner:document.getElementById('gh-owner').value.trim(),
+      repo:document.getElementById('gh-repo').value.trim(),
+      branch:document.getElementById('gh-branch').value.trim()||'main',
+      path:document.getElementById('gh-path').value.trim()||'data/notes.json',
+      token:document.getElementById('gh-token').value.trim(),
+      auto:document.getElementById('gh-auto').checked};
+  try{await store.set(GHKEY,JSON.stringify(GH));toast('設定已儲存')}catch(e){toast('設定存不起來')}
+  setDot('',ghOn()?(GH.auto?'自動同步已開啟':'已設定'):'未設定同步');
+}
+function b64enc(str){
+  const bytes=new TextEncoder().encode(str);
+  let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));
+  return btoa(bin);
+}
+function b64dec(b64){
+  const bin=atob(b64.replace(/\s/g,''));
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function ghUrl(){
+  return 'https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+    +'/contents/'+GH.path.split('/').map(encodeURIComponent).join('/');
+}
+async function ghPull(silent){
+  if(!ghOn()){if(!silent)toast('請先填好設定');return false}
+  setDot('pend','下載中…');
+  try{
+    const r=await fetch(ghUrl()+'?ref='+encodeURIComponent(GH.branch),
+      {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
+    if(r.status===404){ghSha=null;setDot('ok','雲端還沒有檔案，之後上傳就會建立');return true}
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    ghSha=j.sha;
+    const inc=JSON.parse(b64dec(j.content||''));
+    mergeState(inc);save();renderAll();
+    setDot('ok','已下載並合併 · '+new Date().toLocaleTimeString());
+    if(!silent)toast('已下載合併');
+    return true;
+  }catch(e){setDot('err','下載失敗：'+e.message);if(!silent)toast('下載失敗');return false}
+}
+async function ghPush(silent){
+  if(!ghOn()){if(!silent)toast('請先填好設定');return false}
+  if(ghBusy)return false;
+  ghBusy=true;setDot('pend','上傳中…');
+  try{
+    if(ghSha===null){
+      const p=await fetch(ghUrl()+'?ref='+encodeURIComponent(GH.branch),
+        {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
+      if(p.ok){const pj=await p.json();ghSha=pj.sha}
+    }
+    const body={message:'update notes '+new Date().toISOString(),
+      content:b64enc(JSON.stringify(S,null,2)),branch:GH.branch};
+    if(ghSha)body.sha=ghSha;
+    const r=await fetch(ghUrl(),{method:'PUT',
+      headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)});
+    if(r.status===409||r.status===422){
+      setDot('err','雲端有更新的版本，請先按「下載合併」再上傳');
+      if(!silent)toast('有衝突，請先下載合併');ghBusy=false;return false;
+    }
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    ghSha=(j.content&&j.content.sha)||ghSha;
+    ghQuiet=true;S.lastExport=Date.now();save();ghQuiet=false;renderExportState();
+    setDot('ok','已上傳 · '+new Date().toLocaleTimeString());
+    if(!silent)toast('已上傳');
+    ghBusy=false;return true;
+  }catch(e){setDot('err','上傳失敗：'+e.message);if(!silent)toast('上傳失敗');ghBusy=false;return false}
+}
+function ghQueue(){
+  if(ghQuiet||!GH.auto||!ghOn())return;
+  clearTimeout(ghTimer);
+  setDot('pend','有變更，等待上傳…');
+  ghTimer=setTimeout(()=>ghPush(true),8000);
+}
+document.getElementById('ghSave').onclick=ghSaveCfg;
+document.getElementById('ghPullBtn').onclick=()=>ghPull(false);
+document.getElementById('ghPushBtn').onclick=()=>ghPush(false);
+document.getElementById('syncDot').onclick=()=>{
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.p==='settings'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-settings'));
+  window.scrollTo({top:0});
+};
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'&&GH.auto&&ghOn()&&ghTimer){clearTimeout(ghTimer);ghPush(true)}
+});
+
+/* ================= SEARCH ================= */
+let sT=null;
+function bindSearch(id,setter,fn){
+  const el=document.getElementById(id);
+  el.addEventListener('input',()=>{clearTimeout(sT);sT=setTimeout(()=>{setter(el.value.trim());fn()},160)});
+}
+bindSearch('qPaper',v=>qPaper=v,()=>renderPapers());
+bindSearch('qCard',v=>qCard=v,()=>renderCards());
+bindSearch('qSec',v=>qSec=v,()=>renderMethod());
+document.body.addEventListener('click',e=>{
+  const b=e.target.closest('[data-clr]');if(!b)return;
+  document.getElementById(b.dataset.clr).value='';
+  if(b.dataset.clr==='qPaper'){qPaper='';renderPapers()}
+  if(b.dataset.clr==='qCard'){qCard='';renderCards()}
+  if(b.dataset.clr==='qSec'){qSec='';renderMethod()}
+});
+document.getElementById('tagbar').addEventListener('click',e=>{
+  const b=e.target.closest('[data-tf]');if(!b)return;
+  const t=b.dataset.tf;
+  if(t==='__clear')tagFilter.clear();
+  else tagFilter.has(t)?tagFilter.delete(t):tagFilter.add(t);
+  renderPapers();
+});
+
+
+/* ================= HELP ================= */
+function renderHelp(){
+document.getElementById('helpBox').innerHTML=`
+<details class="card fold"><summary>🔄 一篇文獻的流程</summary><div class="help">
+<svg viewBox="0 0 680 740" style="width:100%;height:auto;margin:4px 0" role="img" aria-label="文獻流程圖">
+<defs><marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#9C978B" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
+<text x="30" y="22" font-size="12" fill="#6E6A60" font-family="IBM Plex Mono,monospace">桌機／筆電</text>
+<text x="252" y="22" font-size="12" fill="#6E6A60" font-family="IBM Plex Mono,monospace">iPad</text>
+<text x="404" y="22" font-size="12" fill="#6E6A60" font-family="IBM Plex Mono,monospace">Epi_Yaxin</text>
+<line x1="30" y1="32" x2="650" y2="32" stroke="#E3DED2"/>
+
+<rect x="30" y="52" width="200" height="68" rx="8" fill="#EDEBE6" stroke="#D6D2C8"/>
+<text x="130" y="74" text-anchor="middle" font-size="14" font-weight="600" fill="#5A574E">1 捕捉</text>
+<text x="130" y="92" text-anchor="middle" font-size="12" fill="#6E6A60">外掛存進 Inbox</text>
+<text x="130" y="109" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ Zotero 雲端</text>
+<line x1="130" y1="120" x2="130" y2="146" stroke="#9C978B" marker-end="url(#fa)"/>
+
+<rect x="30" y="148" width="200" height="68" rx="8" fill="#E7EEE8" stroke="#C8D8CC"/>
+<text x="130" y="170" text-anchor="middle" font-size="14" font-weight="600" fill="#3E6B4E">2 掃描分流</text>
+<text x="130" y="188" text-anchor="middle" font-size="12" fill="#4F7A5E">十分鐘，標主題 tag</text>
+<text x="130" y="205" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ Zotero 雲端</text>
+<line x1="130" y1="216" x2="130" y2="242" stroke="#9C978B" marker-end="url(#fa)"/>
+
+<rect x="30" y="244" width="200" height="68" rx="8" fill="#E7EEE8" stroke="#C8D8CC"/>
+<text x="130" y="266" text-anchor="middle" font-size="14" font-weight="600" fill="#3E6B4E">3 生成精讀稿</text>
+<text x="130" y="284" text-anchor="middle" font-size="12" fill="#4F7A5E">丟給 Claude，先不要看</text>
+<text x="130" y="301" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ papers/ 手動存</text>
+<line x1="230" y1="278" x2="250" y2="278" stroke="#9C978B" marker-end="url(#fa)"/>
+
+<rect x="250" y="244" width="190" height="68" rx="8" fill="#EFE8F0" stroke="#DAC9DC"/>
+<text x="345" y="266" text-anchor="middle" font-size="14" font-weight="600" fill="#6A4A6E">4 自己先讀</text>
+<text x="345" y="284" text-anchor="middle" font-size="12" fill="#7C5C80">五色 highlight</text>
+<text x="345" y="301" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ Zotero 雲端</text>
+<line x1="345" y1="312" x2="345" y2="338" stroke="#9C978B" marker-end="url(#fa)"/>
+
+<rect x="250" y="340" width="190" height="68" rx="8" fill="#EFE8F0" stroke="#DAC9DC"/>
+<text x="345" y="362" text-anchor="middle" font-size="14" font-weight="600" fill="#6A4A6E">5 對照精讀稿</text>
+<text x="345" y="380" text-anchor="middle" font-size="12" fill="#7C5C80">我漏了什麼</text>
+<text x="345" y="397" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">不產生檔案</text>
+<path d="M440 374 L468 374 L468 416" fill="none" stroke="#9C978B" marker-end="url(#fa)"/>
+
+<rect x="400" y="418" width="235" height="68" rx="8" fill="#F6EEE0" stroke="#E7D5B6"/>
+<text x="517" y="440" text-anchor="middle" font-size="14" font-weight="600" fill="#8A5C22">6 寫卡片 · 補方法 tag</text>
+<text x="517" y="458" text-anchor="middle" font-size="12" fill="#9A6A2C">Note 自己寫</text>
+<text x="517" y="475" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ epi-data 自動</text>
+<line x1="517" y1="486" x2="517" y2="512" stroke="#9C978B" marker-end="url(#fa)"/>
+
+<rect x="400" y="514" width="235" height="68" rx="8" fill="#F6EEE0" stroke="#E7D5B6"/>
+<text x="517" y="536" text-anchor="middle" font-size="14" font-weight="600" fill="#8A5C22">7 疑問進 Ideas</text>
+<text x="517" y="554" text-anchor="middle" font-size="12" fill="#9A6A2C">複習卡或候選題目</text>
+<text x="517" y="571" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ epi-data 自動</text>
+<path d="M400 548 L362 548 L362 656 L232 656" fill="none" stroke="#9C978B" marker-end="url(#fa)"/>
+
+<rect x="30" y="622" width="200" height="68" rx="8" fill="#E5EBF0" stroke="#C3D2DE"/>
+<text x="130" y="644" text-anchor="middle" font-size="14" font-weight="600" fill="#2F5670">8 沉澱與引用</text>
+<text x="130" y="662" text-anchor="middle" font-size="12" fill="#3F6684">移出資料夾，Word 引用</text>
+<text x="130" y="679" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ Zotero 文庫</text>
+
+<line x1="30" y1="712" x2="650" y2="712" stroke="#E3DED2"/>
+<text x="30" y="732" font-size="12" fill="#6E6A60">綠 = Zotero 桌機　紫 = 閱讀與判斷　黃 = 產出判斷與題目　藍 = 寫作</text>
+</svg>
+<p><strong>第 4 步一定要在第 5 步之前。</strong>先看我的拆解，你就會用我的框架讀那篇論文。精讀稿的角色是<strong>答案卷</strong>，不是導讀。</p>
+<p>tag 分兩次標：分流時標<strong>主題 tag</strong>（HBV、cohort、NHIRD），精讀後才補<strong>方法 tag</strong>（immortal-time、competing-risk）。</p>
+<h4>🔁 什麼會自動、什麼要手動</h4>
+<table><thead><tr><th>東西</th><th>怎麼同步</th></tr></thead><tbody>
+  <tr><td>PDF 與標註</td><td>Zotero 自動</td></tr>
+  <tr><td>卡片資料</td><td>網頁自動讀寫 epi-data</td></tr>
+  <tr><td>精讀 HTML、手寫圖</td><td><strong>手動</strong> commit 上去</td></tr>
+</tbody></table>
+<h4>💻 裝置分工</h4>
+<table><thead><tr><th></th><th>桌機／筆電</th><th>iPad</th></tr></thead><tbody>
+  <tr><td>Zotero</td><td>整理、Word 外掛</td><td>讀 PDF、highlight</td></tr>
+  <tr><td>Epi_Yaxin</td><td>全部功能</td><td>全部功能</td></tr>
+  <tr><td>GoodNotes</td><td>-</td><td>手寫推導、畫 DAG</td></tr>
+</tbody></table>
+<p>GoodNotes 不能同步到 Windows，所以只當<strong>拋棄式練習場</strong>——關鍵圖匯出 PDF 收進 figures/。</p>
+</div></details>
+
+<details class="card fold"><summary>🎛️ 介面約定</summary><div class="help">
+  <p><strong>✎</strong> 編輯　<strong>🔗</strong> 開精讀 HTML　<strong>🌐</strong> 開原文　<strong>📌</strong> 一句話　<strong>🏷️</strong> tag　<strong>📝</strong> 筆記　<strong>🔻</strong> 下拉選單　<strong>＋</strong> 新增。圖示鍵一律沒有外框。</p>
+  <p>每個編輯區塊右下角有 <strong>Save</strong>，但底下還有一層保險：<strong>你打的每個字都會自動存</strong>，忘記按也不會掉。</p>
+  <h4>🗑️ 刪除與回收桶</h4>
+  <p>所有 ✕ 都要<strong>長按 1.5 秒</strong>，按住時紅色填滿當進度，手指移動就取消。刪掉的東西會進 Settings 的<strong>最近刪除</strong>，保留 30 天可還原。</p>
+  <h4>🎨 顏色</h4>
+  <p>每個分頁一個色：Reading 森綠、Textbooks 板岩藍、Review 梅紫、Ideas 赭黃、Calendar 陶紅、Settings 暖灰。按鈕、切換鍵、進度條都跟著換。</p>
+</div></details>
+
+<details class="card fold"><summary>📖 Reading</summary><div class="help">
+  <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
+  <div class="twobox">
+    <div><h5>貼 JSON（推薦）</h5><ol>
+      <li>PDF 丟給 Claude 說「精讀這篇」</li>
+      <li>按 <code>📋</code> 貼上 → Import</li>
+      <li>展開補 Note</li></ol></div>
+    <div><h5>手動新增</h5><ol>
+      <li>按 <code>＋</code></li>
+      <li>自己填</li>
+      <li>臨時用</li></ol></div>
+  </div>
+  <p><strong>搜尋</strong>搜所有欄位，不用按 Enter。<code>🏷️</code> 展開實際用過的 tag，<strong>可複選，條件是「同時具備」</strong>。搜尋和 tag 會一起套用到 Cards 和 Compare。</p>
+  <p><code>🔗</code> 填相對路徑（<code>papers/2026-chen.html</code>）。設定好 GitHub 同步後，<strong>點下去會直接從私密 repo 抓檔案顯示</strong>——HTML 在閱讀視窗渲染、PDF 開新分頁。檔案全程沒有離開私密 repo。</p>
+  <h4>⬇️ 匯出</h4>
+  <p><code>⬇️</code> 會匯出<strong>目前搜尋和 tag 篩選後</strong>的卡片。<br>
+  <strong>Markdown</strong> 給寫作用——貼進 Word、Notion、GitHub 都保留結構，適合當 literature review 的初稿骨架。<br>
+  <strong>CSV</strong> 給 Excel 用——排序、篩選、做表格。</p>
+</div></details>
+
+<details class="card fold"><summary>📚 Textbooks</summary><div class="help">
+  <p>點小節循環：<code>Unread</code> → <code>Read</code> → <code>Explain</code>。<br>
+  <strong>Explain 的判準</strong>：闔上書，白紙上把核心論證重畫一次。做不到就還在 Read。</p>
+  <p>每個小節右邊的 <code>✎</code> 可以寫<strong>該節筆記</strong>和一個連結（<code>notes/hr-07-3.html</code>）。有內容時 ✎ 會變色。主題底部另有<strong>主題總結</strong>。</p>
+  <p><code>Book order</code> 按 ME4 的四個 Part；<code>Course order</code> 按上下學期。兩者不同——課程把偏差分析（ME 29）提前到上學期第 10 週。</p>
+  <p><strong>建議</strong>：第 6 週的干擾作用之前先把自修的 DAG 讀完。</p>
+</div></details>
+
+<details class="card fold"><summary>🎒 Courses</summary><div class="help">
+  <p>每學期的課程儀表板：課名、老師，加上一串<strong>可以直接點開的連結</strong>——講義、GoodNotes 匯出的筆記、錄影、作業繳交頁面都放這裡。</p>
+  <p>右上四個學期按鈕會<strong>依系統日期自動選中當前學期</strong>。展開 ✎ 可以改課名、老師、學期、備註，以及新增／編輯連結。</p>
+  <p>連結可以是網址，也可以是相對路徑（<code>notes/me-12.html</code>、<code>figures/me-12.pdf</code>）。跟 Textbooks 的小節筆記一樣，<strong>放在同一個資料夾裡才點得開</strong>。</p>
+  <p>這頁跟 Calendar 的 TIMETABLE 是分開的：課表管「星期幾幾點在哪間教室」，這頁管「這門課的東西放在哪」。</p>
+</div></details>
+
+<details class="card fold"><summary>🔁 Review</summary><div class="help">
+  <table><thead><tr><th>動作</th><th>結果</th></tr></thead><tbody>
+    <tr><td>答對</td><td>升一級：1 → 3 → 7 → 14 → 30 → 60 → 120 天</td></tr>
+    <tr><td>答錯</td><td><strong>退兩級</strong>，並當場排回佇列尾端再問一次</td></tr>
+  </tbody></table>
+  <p><code>Lv3 · 複習 8 次</code> ＝ 目前第 3 級（下次 14 天後），總共複習過 8 次。</p>
+  <p><strong>點卡片 = 翻面看答案</strong>，下方出現「不會 / 會」即可評分。要一次跑完今天全部就按 <code>Start review</code>。分頁上的紅色數字是今天的量。</p>
+  <p><code>Exam mode</code> 勾主題整批跑，<strong>不會改動到期日</strong>。</p>
+</div></details>
+
+<details class="card fold"><summary>💡 Ideas</summary><div class="help">
+  <p><strong>Mine</strong> 我不懂的　<strong>Study</strong> 課堂與教科書　<strong>Field</strong> 領域爭議（多出正方／反方）</p>
+  <p>展開後可以 <code>Resolve</code>、<code>↑ Card</code> 變複習卡、<code>↑ Idea</code> 變候選題目。</p>
+  <p>Research ideas 沒填 <strong>Kill criteria</strong> 會出現紅色提示。狀態在編輯區的 🔻 改，上方分頁可篩選。</p>
+</div></details>
+
+<details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
+  <p>課表<strong>依系統日期自動跳到對應學期</strong>。點色塊 = 編輯。必修綠、選修黃、Lab meeting 藍。</p>
+  <p>Key dates 按月分組，左邊方塊是倒數：一天內深紅、七天內淺紅、三十天內琥珀、更遠淺綠。過期的收在按鈕後。</p>
+</div></details>
+
+<details class="card fold"><summary>🗂️ Zotero</summary><div class="help">
+  <p><code>00_Inbox</code>　<code>01_DeepRead_Queue</code>　<code>02_InProgress</code></p>
+  <p>處理完就從資料夾移除，它會留在「我的文庫」。<strong>資料夾只是檢視窗口。</strong>主題分類一律用 tag ＋ Saved Search。</p>
+  <h4>🖍️ 五色標註</h4>
+  <table><thead><tr><th>顏色</th><th>意義</th></tr></thead><tbody>
+    <tr><td>黃</td><td>研究問題與設計</td></tr>
+    <tr><td>綠</td><td>結果數字</td></tr>
+    <tr><td><strong>紅</strong></td><td><strong>我懷疑的地方</strong></td></tr>
+    <tr><td><strong>藍</strong></td><td><strong>我可以拿來用的方法或句型</strong></td></tr>
+    <tr><td>紫</td><td>要追的引用</td></tr>
+  </tbody></table>
+  <p>紅藍兩色是回桌機後寫 Note 的原料。</p>
+  <p><strong>引用完全不看資料夾</strong>：Word 外掛按 Add Citation，搜的是整個文庫。</p>
+  <p>免費帳號只有 300 MB。不要用「連結檔案」省空間，那種檔案在 iPad 上看不到。</p>
+</div></details>
+
+<details class="card fold"><summary>🚀 GitHub 與多裝置</summary><div class="help">
+  <h4>🖥️ 桌機要裝什麼</h4>
+  <p><strong>在上 GitHub 之前什麼都不用裝。</strong>建一個 <code>epi-reading</code> 資料夾，HTML 存成 <code>index.html</code>，再建 <code>papers/</code>、<code>notes/</code>、<code>figures/</code>，雙擊就能用。</p>
+  <p>要上 GitHub 時只需裝 <strong>GitHub Desktop</strong>——圖形介面，不用打指令：看到「有 2 個檔案變更了」，寫一句話，按 Commit、按 Push。你那個資料夾直接變成 repo，不用搬東西。</p>
+  <p><code>epi-app</code>（公開）只放 <code>index.html</code>，開 Pages 產生網址。<br>
+     <code>epi-data</code>（私密）放 <code>notes.json</code>、<code>papers/</code>、<code>notes/</code>、<code>figures/</code>。</p>
+  <p><strong>公開的只是空殼，你的內容全在私密 repo。</strong>全部免費。</p>
+  <p>檔名用「書-章-節-關鍵字」，因為你會用檔名搜尋而不是點資料夾。GoodNotes 匯出用 <strong>PDF 而非 PNG</strong>。<strong>教科書本身的 PDF 不要放進 repo。</strong></p>
+  <h4>☁️ 自動同步（Settings 上方）</h4>
+  <p>填好 owner、私密 repo 名稱、branch、路徑、token，勾「開啟自動同步」，之後就<strong>不用再按匯出匯入</strong>：打開網頁自動下載合併，編輯完 8 秒自動上傳。</p>
+  <p>標題旁邊的圓點是狀態：<strong>灰</strong>沒設定、<strong>黃</strong>等待上傳、<strong>綠</strong>已同步、<strong>紅</strong>出錯。點它會跳到設定。</p>
+  <p>如果另一台先改過，上傳會被 GitHub 擋下來並顯示紅點，<strong>按「下載合併」再上傳就好</strong>——不會靜默覆蓋。</p>
+  <h4>📄 檔案怎麼開</h4>
+  <p>網頁在公開的 <code>epi-app</code>，但 <code>papers/</code>、<code>notes/</code>、<code>figures/</code> 在私密的 <code>epi-data</code>。所以 🔗 不是用瀏覽器直接連，而是<strong>網頁拿 token 去私密 repo 把檔案抓下來顯示</strong>。沒有 token 的人點不開，也看不到。</p>
+  <p>HTML 在<strong>完全沙箱化的閱讀視窗</strong>裡渲染，不執行任何腳本，也碰不到你的 token；PDF 則開新分頁。</p>
+
+  <h4>🔑 token 安全</h4>
+  <p>token 只存在<strong>這台裝置的瀏覽器</strong>，不會寫進 HTML、不會被 Export、不會上傳。產生時請選 <strong>Fine-grained</strong>、只授權那一個私密 repo、權限只給 <strong>Contents: Read and write</strong>、並設到期日。</p>
+  <p>手動的 <code>📥 合併匯入</code> 仍然保留，逐筆比對 id 和修改時間；「覆蓋匯入」只在要完整還原某個時間點時用。</p>
+</div></details>
+
+<details class="card fold"><summary>🔧 常見狀況</summary><div class="help">
+  <h4>資料不見了</h4><p>先看 Settings 的<strong>最近刪除</strong>和<strong>自動存檔</strong>。換版本是不同儲存空間，要舊版 Export、新版 Import。</p>
+  <h4>Google 日曆空白</h4><p>在 Claude 預覽視窗會被擋，存成檔案用瀏覽器開就正常。</p>
+  <h4>iPad 看不到 PDF</h4><p>檢查 Zotero 附件是「儲存的副本」而非「連結的檔案」。</p>
+</div></details>`;
+}
+function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
+  renderCards();renderQ();renderRI();renderCl();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
+(async()=>{
+  await load();purgeTrash();renderAll();
+  await ghLoadCfg();
+  if(GH.auto&&ghOn())await ghPull(true);
+  await snapshot(false);renderBackups();
+})();
+</script>
+</body>
+</html>
