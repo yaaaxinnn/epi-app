@@ -542,7 +542,8 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
 
   <div class="sec-title">🗑️ 最近刪除</div>
   <div class="card">
-    <p class="hint" style="margin-top:0">刪掉的東西會先放這裡，保留 30 天。過期會自動清掉。</p>
+    <p class="hint" style="margin-top:0">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
+    <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——刪除紀錄就存在這裡，清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></p>
     <div id="trashList" style="margin-top:10px"></div>
   </div>
 
@@ -720,7 +721,7 @@ async function load(){
   if(!Array.isArray(S.classes))S.classes=[];
 }
 let t_=null;
-function save(){clearTimeout(t_);t_=setTimeout(async()=>{try{await store.set(KEY,JSON.stringify(S))}catch(e){toast('存檔失敗，請先匯出備份')}},250);if(typeof ghQueue==='function')ghQueue()}
+function save(){clearTimeout(t_);t_=setTimeout(async()=>{try{await store.set(KEY,JSON.stringify(S))}catch(e){toast('存檔失敗，請先匯出備份')}},250);if(typeof ghMark==='function')ghMark()}
 function saved(){save();toast('已儲存')}
 
 let hT=null,hEl=null,hX=0,hY=0;
@@ -807,7 +808,9 @@ function renderTrash(){
     return `<div class="trashrow"><span class="pill">${m[1]}</span>
       <span class="tt">${esc(label)}</span>
       <span class="pill">${30-d} 天後清除</span>
-      <button class="btn ghost mini" data-undel="${x.tid}">還原</button></div>`}).join('');
+      <button class="btn ghost mini" data-undel="${x.tid}">還原</button>
+      <button class="x" data-hold="purge1|${x.tid}" title="長按永久刪除">✕</button></div>`}).join('')
+    +`<div class="saverow"><button class="btn ghost mini" data-hold="purgeall|1" title="長按清空">清空回收桶（${a.length}）</button></div>`;
 }
 async function doHold(spec){
   const i=spec.indexOf('|'),t=spec.slice(0,i),id=spec.slice(i+1);
@@ -823,6 +826,8 @@ async function doHold(spec){
   else if(t==='kd'){save();renderKD();renderTrash();toast('已移到回收桶')}
   else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
   else if(t==='cls'){save();renderCl();renderTrash();toast('已移到回收桶')}
+  else if(t==='purge1'){S.trash=(S.trash||[]).filter(x=>x.tid!==id);save();renderTrash();toast('已永久刪除')}
+  else if(t==='purgeall'){S.trash=[];save();renderTrash();toast('回收桶已清空')}
   else if(t==='clink'){const[cid,lid]=id.split(':');const c=S.classes.find(x=>x.id===cid);
     if(c){c.links=(c.links||[]).filter(l=>l.id!==lid);c.mtime=Date.now();save();renderCl();toast('已刪除連結')}}
   else if(t==='tag'){S.tagLib=S.tagLib.filter(x=>x!==id);save();renderTags();toast('已從清單刪除')}
@@ -1637,14 +1642,36 @@ function mergeThemes(cur,inc){
   });
   return out;
 }
+function mergeTrash(cur,inc){
+  const m=new Map((cur||[]).map(x=>[x.tid,x]));
+  (inc||[]).forEach(x=>{if(x&&x.tid&&!m.has(x.tid))m.set(x.tid,x)});
+  return [...m.values()].sort((a,b)=>b.at-a.at).slice(0,200);
+}
+function tombMap(){
+  const m=new Map();
+  (S.trash||[]).forEach(x=>{
+    const id=x.data&&x.data.id;if(!id)return;
+    if((m.get(id)||0)<x.at)m.set(id,x.at);
+  });
+  return m;
+}
+function applyTombs(arr,tm){
+  return (arr||[]).filter(o=>{
+    const t=tm.get(o.id);
+    if(!t)return true;
+    return (o.mtime||o.created||0)>t;
+  });
+}
 function mergeState(inc){
-  S.papers=mergeArr(S.papers,inc.papers);
-  S.cards=mergeArr(S.cards,inc.cards);
-  S.qs=mergeArr(S.qs,inc.qs);
-  S.ri=mergeArr(S.ri,inc.ri);
-  S.kd=mergeArr(S.kd,inc.kd);
-  S.courses=mergeArr(S.courses,inc.courses);
-  S.classes=mergeArr(S.classes,inc.classes);
+  S.trash=mergeTrash(S.trash,inc.trash);
+  const tm=tombMap();
+  S.papers=applyTombs(mergeArr(S.papers,inc.papers),tm);
+  S.cards=applyTombs(mergeArr(S.cards,inc.cards),tm);
+  S.qs=applyTombs(mergeArr(S.qs,inc.qs),tm);
+  S.ri=applyTombs(mergeArr(S.ri,inc.ri),tm);
+  S.kd=applyTombs(mergeArr(S.kd,inc.kd),tm);
+  S.courses=applyTombs(mergeArr(S.courses,inc.courses),tm);
+  S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
   S.themes=mergeThemes(S.themes,inc.themes);
   (inc.tagLib||[]).forEach(t=>{if(!S.tagLib.includes(t))S.tagLib.push(t)});
   if(!S.gc&&inc.gc)S.gc=inc.gc;
@@ -1672,7 +1699,7 @@ document.getElementById('impFile').onchange=e=>{
 
 /* ================= GITHUB SYNC ================= */
 let GH={owner:'',repo:'',branch:'main',path:'data/notes.json',token:'',auto:false};
-let ghSha=null,ghTimer=null,ghBusy=false,ghQuiet=false;
+let ghSha=null,ghTimer=null,ghBusy=false,ghQuiet=false,ghPulled=false,ghLastPull=0,ghDirty=false;
 function ghOn(){return !!(GH.owner&&GH.repo&&GH.token)}
 function setDot(cls,msg){
   const d=document.getElementById('syncDot');
@@ -1688,7 +1715,7 @@ async function ghLoadCfg(){
   document.getElementById('gh-path').value=GH.path||'data/notes.json';
   document.getElementById('gh-token').value=GH.token||'';
   document.getElementById('gh-auto').checked=!!GH.auto;
-  setDot(ghOn()?'':'', ghOn()?(GH.auto?'自動同步已開啟':'已設定，未開啟自動同步'):'未設定同步');
+  setDot('', ghOn()?'已設定，尚未同步':'未設定同步');
 }
 async function ghSaveCfg(){
   GH={owner:document.getElementById('gh-owner').value.trim(),
@@ -1721,12 +1748,13 @@ async function ghPull(silent){
   try{
     const r=await fetch(ghUrl()+'?ref='+encodeURIComponent(GH.branch),
       {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
-    if(r.status===404){ghSha=null;setDot('ok','雲端還沒有檔案，之後上傳就會建立');return true}
+    if(r.status===404){ghSha=null;ghPulled=true;setDot('ok','雲端還沒有檔案，之後上傳就會建立');return true}
     if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();
     ghSha=j.sha;
     const inc=JSON.parse(b64dec(j.content||''));
-    mergeState(inc);save();renderAll();
+    ghQuiet=true;mergeState(inc);save();ghQuiet=false;renderAll();
+    ghPulled=true;ghLastPull=Date.now();
     setDot('ok','已下載並合併 · '+new Date().toLocaleTimeString());
     if(!silent)toast('已下載合併');
     return true;
@@ -1735,6 +1763,10 @@ async function ghPull(silent){
 async function ghPush(silent){
   if(!ghOn()){if(!silent)toast('請先填好設定');return false}
   if(ghBusy)return false;
+  if(!ghPulled&&!S.papers.length&&!S.cards.length&&!S.qs.length){
+    setDot('err','這台裝置還是空的，請先按「下載合併」再上傳');
+    if(!silent)toast('請先下載合併，避免覆蓋雲端資料');return false;
+  }
   ghBusy=true;setDot('pend','上傳中…');
   try{
     if(ghSha===null){
@@ -1756,13 +1788,21 @@ async function ghPush(silent){
     const j=await r.json();
     ghSha=(j.content&&j.content.sha)||ghSha;
     ghQuiet=true;S.lastExport=Date.now();save();ghQuiet=false;renderExportState();
-    setDot('ok','已上傳 · '+new Date().toLocaleTimeString());
+    ghDirty=false;
+    setDot('ok','已同步 · '+new Date().toLocaleTimeString());
     if(!silent)toast('已上傳');
     ghBusy=false;return true;
   }catch(e){setDot('err','上傳失敗：'+e.message);if(!silent)toast('上傳失敗');ghBusy=false;return false}
 }
+function ghMark(){
+  if(ghQuiet||!ghOn())return;
+  ghDirty=true;
+  if(GH.auto)ghQueue();
+  else setDot('pend','有未上傳的變更，請按 ⬆ 上傳');
+}
 function ghQueue(){
   if(ghQuiet||!GH.auto||!ghOn())return;
+  if(!ghPulled){setDot('pend','尚未下載雲端資料，暫不上傳');return}
   clearTimeout(ghTimer);
   setDot('pend','有變更，等待上傳…');
   ghTimer=setTimeout(()=>ghPush(true),8000);
@@ -1775,8 +1815,22 @@ document.getElementById('syncDot').onclick=()=>{
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-settings'));
   window.scrollTo({top:0});
 };
+setInterval(()=>{
+  if(!GH.auto||!ghOn())return;
+  if(document.visibilityState!=='visible')return;
+  if(ghDirty||ghBusy)return;
+  const ae=document.activeElement;
+  if(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))return;
+  if(Date.now()-ghLastPull<55000)return;
+  ghPull(true);
+},60000);
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='hidden'&&GH.auto&&ghOn()&&ghTimer){clearTimeout(ghTimer);ghPush(true)}
+  if(!GH.auto||!ghOn())return;
+  if(document.visibilityState==='hidden'){
+    if(ghTimer){clearTimeout(ghTimer);ghTimer=null;ghPush(true)}
+  }else if(Date.now()-ghLastPull>30000){
+    ghPull(true);
+  }
 });
 
 /* ================= SEARCH ================= */
@@ -1976,6 +2030,19 @@ document.getElementById('helpBox').innerHTML=`
   <p>填好 owner、私密 repo 名稱、branch、路徑、token，勾「開啟自動同步」，之後就<strong>不用再按匯出匯入</strong>：打開網頁自動下載合併，編輯完 8 秒自動上傳。</p>
   <p>標題旁邊的圓點是狀態：<strong>灰</strong>沒設定、<strong>黃</strong>等待上傳、<strong>綠</strong>已同步、<strong>紅</strong>出錯。點它會跳到設定。</p>
   <p>如果另一台先改過，上傳會被 GitHub 擋下來並顯示紅點，<strong>按「下載合併」再上傳就好</strong>——不會靜默覆蓋。</p>
+  <h4>🗑️ 刪除也會同步</h4>
+  <p>刪掉的東西會留下一筆紀錄跟著同步，所以<strong>在一台刪掉，另一台下載後也會消失</strong>。這筆紀錄跟著回收桶存 30 天，之後才真正清掉。</p>
+  <h4>⏱️ 多久同步一次</h4>
+  <p><strong>上傳</strong>：停止編輯 8 秒後自動送；切到別的分頁或關掉視窗時立刻送。<br>
+  <strong>下載</strong>：打開網頁時、切回這個分頁時、以及開著的時候每分鐘檢查一次（正在打字時會跳過，不會打斷你）。想立刻抓就按 <code>⬇ 下載合併</code>。</p>
+  <h4>🚦 燈號的意思</h4>
+  <table><thead><tr><th>顏色</th><th>意思</th></tr></thead><tbody>
+    <tr><td>灰</td><td>沒設定，或剛開啟還沒同步過</td></tr>
+    <tr><td>黃</td><td><strong>有變更還沒上雲端</strong>（自動同步會在 8 秒後送；沒開自動就要自己按 ⬆）</td></tr>
+    <tr><td>綠</td><td>已同步，本機和雲端一致</td></tr>
+    <tr><td>紅</td><td>出錯，點圓點看說明</td></tr>
+  </tbody></table>
+  <p><strong>換新裝置時的順序很重要</strong>：先填設定 → 按 <code>⬇ 下載合併</code> → 確認資料出現 → 才勾自動同步。系統也會擋：沒下載過就不讓空白的裝置上傳，避免蓋掉雲端。</p>
   <h4>📄 檔案怎麼開</h4>
   <p>網頁在公開的 <code>epi-app</code>，但 <code>papers/</code>、<code>notes/</code>、<code>figures/</code> 在私密的 <code>epi-data</code>。所以 🔗 不是用瀏覽器直接連，而是<strong>網頁拿 token 去私密 repo 把檔案抓下來顯示</strong>。沒有 token 的人點不開，也看不到。</p>
   <p>HTML 在<strong>完全沙箱化的閱讀視窗</strong>裡渲染，不執行任何腳本，也碰不到你的 token；PDF 則開新分頁。</p>
