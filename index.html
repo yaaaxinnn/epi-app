@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light only">
 <meta name="theme-color" content="#E8E2D3">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABLElEQVR42u3bKw7CQBSF4TsTdlSHQJAUQ0JA4nCIOhYAFkGCanBsAFeLq8AhcQgQCFZAwIDAAGlL24Do3P/q0uR8c6aPhBopMI2gc5cKTBxGJu+xxpXQZTGsy+HzZDCuBs/bBqslfFo2qyV8WkYrysdqWv2krFZb+E8EtoB2AKOx/jQAAAAAAACA59T+deJBqyf9Zvsn59od9zJaTGkAAAAAUJ2LYNastxuZrZY0AAAAAABA5V3A9+rie/Xcx3fHgVxuVxoAAAAA8ChMAwAAAAAAAFD2LiAiMpxP5HA+0QAAAADgp8NfZNgCAAAAAACaAYp8YOTaxGFkaAAAUuw7O5fq/9YATQivWdkCaTIaVj+xAS4jJGXLDOvKq3LWotqyP3Qh/NcGVLURRRbuAZjAXdg9m6t6AAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAACvklEQVR42u3dPy7EQRjH4ZmJjsSNHGHPoLaNlkSr0WwkK9GpFMq9gS3pNFQKjUKcgVbEv10/OzOv57nA8ssn37wrrJwasDUevSS6N5/Ocu2vIQuYSIFnERMp7ixiIsWdhUyksIuYifTDgCxkIq11ETOR1joLmUhrXcRMpLUuYiZS1EXMRIq6iJlIURcxEynqImYiRV3ETKSoi8dEJMU6E2mli5iJFLWTg/gnh3Wm15UuYiZS1E4O4p4c1pneV9pCE/9NIXQftHODCGeHhcbJAU0H7dwgytlhoXFygKBhBbL7GQsNggZBg6ARNAgaBA2CBkEjaBA0CBoEDYJG0CBoqG/tv37jm+sb6eJgEvJ7u7q7SQdnxxYaBA2CBkGDoBE0CBoEDYIGQSNoEDQIGgQNH1jzCIaze3KYbh/uPQgLDYIGQSNoEDQIGgQNgkbQIGgQNAgaBI2goWF+fXRAk539qq9/eXOdDs9PLTQIGgQNggZBI2gQNAgaBA2CRtAgaBA0CBq+4NdHB+TTRy00CBoEjaBB0CBoEDQIGkGDoEHQIGgQNIIGQYOgQdAgaKLxJ1gDqv0J/m89Pj+l7aM9Cw2CBkGDoEHQCBoEDYIGQYOgETQIGgQNgoZ38tZ49OIxYKFB0CBoEDSCBkGDoEHQIGgEDYIGQYOgQdAIGgQNgobhgp5PZ9ljIIL5dJYtNE4OEDSsKmh3NBHuZwuNkwO6CNrZQe/nhoXGyQHdBO3soOdzw0IT/+Sw0vS6zp8utKjpMWYnB/FPDitNr+v87UKLmp5idnLwf04OK01v6/zjhRY1PcS80MkhalqPeeEbWtS0HPNSbwpFTasxLxW0qGk15qWDFjUtxpxSSoNE6d8rUzvkXy+0taa1mAdbaGtNK2NYWv8CEXPVhbbW1By9la2puEW8itepch6IW8Shgha4gP/KK6zw1tiysX5yAAAAAElFTkSuQmCC">
+<meta name="apple-mobile-web-app-title" content="Epi_Yaxin">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Epi_Yaxin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,7 +79,7 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .btn{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:9px 14px;font-weight:500}
 .btn.ghost{background:transparent;color:var(--ac);border:1px solid var(--line-strong)}
 .btn.mini{padding:5px 10px;font-size:13px;border-radius:7px}
-.btn.icon{background:none;border:0;color:var(--muted);padding:2px 6px;font-size:18px;line-height:1.2}
+.btn.icon{background:none;border:0;color:var(--muted);padding:7px 10px;font-size:22px;line-height:1.2;min-width:42px;min-height:40px}
 .btn.icon:hover{color:var(--ac)}
 .btn.warn{color:var(--clay);border-color:var(--clay-mid);background:transparent}
 .btn:active{transform:translateY(1px)}
@@ -95,11 +99,11 @@ textarea{min-height:60px;resize:vertical;line-height:1.55}
 .pill.clay{background:var(--clay-soft);border-color:var(--clay-mid);color:var(--clay)}
 button.pill{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 button.pill:hover{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
-.x{background:none;border:0;color:var(--faint);font-size:16px;line-height:1;padding:4px 6px}
+.x{background:none;border:0;color:var(--faint);font-size:19px;line-height:1;padding:8px 9px;min-width:38px}
 .x:hover{color:var(--clay)}
 details.fold > summary{cursor:pointer;list-style:none;font-size:13px;color:var(--ac);padding:4px 0;font-weight:500}
 details.fold > summary::-webkit-details-marker{display:none}
-details.fold.right > summary{text-align:right}
+details.fold.right > summary{text-align:right;font-size:21px;padding:7px 2px;line-height:1.15}
 .item{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px;margin-bottom:10px}
 .item h3{font-size:15px;margin-bottom:3px}
 .meta{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
@@ -137,7 +141,7 @@ details.fold.right > summary{text-align:right}
 .sec.s1 .num,.sec.s1 .st{color:var(--amber)}
 .sec.s2{background:var(--ac-soft);border-color:var(--ac-mid)}
 .sec.s2 .num,.sec.s2 .st,.sec.s2 .ttl{color:var(--ac)}
-.npen{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:0 9px;color:var(--faint);font-size:13px}
+.npen{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:0 13px;color:var(--faint);font-size:17px;min-width:44px}
 .npen.has{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
 .npen[aria-expanded="true"]{background:var(--ac);border-color:var(--ac);color:#fff}
 .npanel{border:1px solid var(--line-strong);border-radius:8px;padding:11px 12px;margin:4px 0 6px;background:var(--surface-2)}
@@ -153,7 +157,7 @@ td{min-width:130px;max-width:230px}
 .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{background:transparent;border:0;padding:7px 12px;font-size:13px;color:var(--muted);white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
-.seg.sm button{padding:5px 9px;font-size:12px}
+.seg.sm button{padding:8px 11px;font-size:12.5px}
 .ttwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 table.tt{min-width:660px;width:100%;border-collapse:collapse;font-size:13px}
 table.tt th{background:var(--surface-2);text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
@@ -233,14 +237,14 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
 .linkrow input{flex:1;min-width:0}
 .oneline{font-size:13.5px;color:var(--ac);margin-top:5px;line-height:1.45}
 .acts{display:flex;gap:5px;align-items:center}
-.acts button{background:none;border:0;padding:2px 5px;font-size:15px;line-height:1.3;color:var(--muted)}
+.acts button{background:none;border:0;padding:6px 8px;font-size:19px;line-height:1.2;color:var(--muted);min-width:38px}
 .lchip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;padding:4px 10px;border-radius:20px;
   background:var(--ac-soft);border:1px solid var(--ac-mid);color:var(--ac);max-width:100%}
 .lchip:hover{background:var(--ac);color:#fff}
 .lrow{display:flex;gap:6px;align-items:center;margin-bottom:6px}
 .lrow input{min-width:0}
 .acts button:hover{color:var(--ac)}
-.iconb{background:none;border:0;padding:2px 6px;font-size:16px;line-height:1.3;color:var(--muted)}
+.iconb{background:none;border:0;padding:7px 10px;font-size:20px;line-height:1.2;color:var(--muted);min-width:42px;min-height:40px}
 .iconb:hover{color:var(--ac)}
 .rv{cursor:pointer}
 .rv .ans{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);white-space:pre-wrap;font-size:14.5px;line-height:1.6}
@@ -484,12 +488,6 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
   <div class="row" id="kdPastRow" style="margin-top:4px"></div>
   <div id="kdPastList"></div>
 
-  <div class="sec-title">GOOGLE CALENDAR</div>
-  <div class="card">
-    <label class="f"><span>Embed URL</span><input type="text" id="gcUrl" placeholder="https://calendar.google.com/calendar/embed?src=..."></label>
-    <p class="hint" style="margin-top:0">Google 日曆 → 設定 → 該日曆 → 整合日曆 → 複製嵌入程式碼裡 <span class="mono">src="…"</span> 的網址。</p>
-    <div class="saverow"><button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button></div>
-  </div>
   <div id="gcBox"></div>
 </section>
 
@@ -515,6 +513,13 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
     注意：這份副本跟本體存在同一個地方，所以它擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</p>
     <div id="bakList" style="margin-top:10px"></div>
     <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
+  </div>
+
+  <div class="sec-title">GOOGLE 日曆</div>
+  <div class="card">
+    <p class="hint" style="margin-top:0">貼上嵌入網址後，會顯示在 Calendar 分頁最下面。取得方式見下方 HELP。</p>
+    <div class="linkrow" style="margin-top:10px"><span class="ic">🔗</span><input type="text" id="gcUrl"></div>
+    <div class="saverow"><button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button></div>
   </div>
 
   <div class="sec-title">☁️ GitHub 同步</div>
@@ -691,10 +696,10 @@ function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=1
 
 let S=null,paperView='list',cardSort='due',mFilter='book',qFilter='open';
 let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
-const flipped=new Set();let editCard=null,riFilter='all';
+const flipped=new Set(),clOpen=new Set();let editCard=null,riFilter='all';
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],kd:[],courses:[],classes:[],gc:'',trash:[],
+function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,trash:[],
   tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -1369,7 +1374,7 @@ function renderCl(){
         `<button class="lchip" data-open="${esc(l.url)}">🔗 ${esc(l.label||l.url)}</button>`).join('')
         :`<span class="hint">還沒有連結。展開 ✎ 新增。</span>`}</div>
     ${c.note?`<div style="margin-top:9px;font-size:13.5px;white-space:pre-wrap;border-left:2px solid var(--ac-mid);padding-left:10px">${esc(c.note)}</div>`:''}
-    <details class="fold right"><summary title="編輯">✎</summary>
+    <details class="fold right" data-cd="${c.id}"${clOpen.has(c.id)?' open':''}><summary title="編輯">✎</summary>
       <label class="f"><span>Course</span><input type="text" data-cf2="${c.id}|name" value="${esc(c.name)}"></label>
       <div class="grid2">
         <label class="f"><span>Teacher</span><input type="text" data-cf2="${c.id}|teacher" value="${esc(c.teacher||'')}"></label>
@@ -1388,6 +1393,10 @@ function renderCl(){
       <div class="saverow"><button class="btn" data-clsave="${c.id}">Save</button></div>
     </details></div>`).join('');
 }
+document.getElementById('clList').addEventListener('toggle',e=>{
+  const d=e.target.closest('[data-cd]');if(!d)return;
+  d.open?clOpen.add(d.dataset.cd):clOpen.delete(d.dataset.cd);
+},true);
 document.getElementById('clTermSeg').addEventListener('click',e=>{
   const b=e.target.closest('[data-clterm]');if(!b)return;
   classTerm=b.dataset.clterm;renderCl();
@@ -1558,13 +1567,18 @@ document.getElementById('addKD').onclick=()=>{
   else S.kd.push({id:uid(),date:d,title:t,type:ty});
   kdReset();show('kdForm',false);saved();renderKD();
 };
+let gcCur=null;
 function renderGC(){
-  document.getElementById('gcUrl').value=S.gc||'';
+  const inp=document.getElementById('gcUrl');
+  if(inp&&document.activeElement!==inp)inp.value=S.gc||'';
+  if(gcCur===(S.gc||''))return;
+  gcCur=S.gc||'';
   document.getElementById('gcBox').innerHTML=S.gc?
-    `<iframe src="${esc(S.gc)}" style="width:100%;height:520px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)" loading="lazy"></iframe>`:'';
+    `<iframe src="${esc(S.gc)}" style="width:100%;height:520px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)" loading="lazy"></iframe>`
+    :'<div class="empty" style="margin-top:18px">還沒設定 Google 日曆。到 Settings 貼上嵌入網址。</div>';
 }
-document.getElementById('saveGC').onclick=()=>{S.gc=document.getElementById('gcUrl').value.trim();saved();renderGC()};
-document.getElementById('clearGC').onclick=()=>{S.gc='';save();renderGC()};
+document.getElementById('saveGC').onclick=()=>{S.gc=document.getElementById('gcUrl').value.trim();S.gcAt=Date.now();saved();renderGC()};
+document.getElementById('clearGC').onclick=()=>{S.gc='';S.gcAt=Date.now();save();renderGC()};
 
 /* ================= DATA ================= */
 async function snapshot(manual){
@@ -1674,7 +1688,8 @@ function mergeState(inc){
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
   S.themes=mergeThemes(S.themes,inc.themes);
   (inc.tagLib||[]).forEach(t=>{if(!S.tagLib.includes(t))S.tagLib.push(t)});
-  if(!S.gc&&inc.gc)S.gc=inc.gc;
+  if((inc.gcAt||0)>(S.gcAt||0)){S.gc=inc.gc||'';S.gcAt=inc.gcAt||0}
+  else if(!S.gc&&inc.gc){S.gc=inc.gc;S.gcAt=inc.gcAt||0}
   if(inc.lastExport&&(!S.lastExport||inc.lastExport>S.lastExport))S.lastExport=inc.lastExport;
 }
 let impMode='merge';
@@ -1726,6 +1741,7 @@ async function ghSaveCfg(){
       auto:document.getElementById('gh-auto').checked};
   try{await store.set(GHKEY,JSON.stringify(GH));toast('設定已儲存')}catch(e){toast('設定存不起來')}
   setDot('',ghOn()?(GH.auto?'自動同步已開啟':'已設定'):'未設定同步');
+  if(GH.auto&&ghOn()&&!ghPulled)await ghPull(true);
 }
 function b64enc(str){
   const bytes=new TextEncoder().encode(str);
@@ -1787,6 +1803,7 @@ async function ghPush(silent){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();
     ghSha=(j.content&&j.content.sha)||ghSha;
+    ghPulled=true;
     ghQuiet=true;S.lastExport=Date.now();save();ghQuiet=false;renderExportState();
     ghDirty=false;
     setDot('ok','已同步 · '+new Date().toLocaleTimeString());
@@ -1802,7 +1819,7 @@ function ghMark(){
 }
 function ghQueue(){
   if(ghQuiet||!GH.auto||!ghOn())return;
-  if(!ghPulled){setDot('pend','尚未下載雲端資料，暫不上傳');return}
+  if(!ghPulled){setDot('pend','正在取得雲端狀態…');ghPull(true).then(()=>{if(ghDirty)ghQueue()});return}
   clearTimeout(ghTimer);
   setDot('pend','有變更，等待上傳…');
   ghTimer=setTimeout(()=>ghPush(true),8000);
@@ -2000,6 +2017,10 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <p>課表<strong>依系統日期自動跳到對應學期</strong>。點色塊 = 編輯。必修綠、選修黃、Lab meeting 藍。</p>
   <p>Key dates 按月分組，左邊方塊是倒數：一天內深紅、七天內淺紅、三十天內琥珀、更遠淺綠。過期的收在按鈕後。</p>
+  <h4>🔗 Google 日曆</h4>
+  <p>設定在 <strong>Settings → GOOGLE 日曆</strong>，日曆本身顯示在 Calendar 分頁最下面。</p>
+  <p>取得網址：Google 日曆 → 設定 → 左側選那個日曆 → <strong>整合日曆</strong> → 找到「嵌入程式碼」，複製裡面 <code>src="…"</code> 引號內那一段。</p>
+  <p>日曆需設為公開，或你在同一個瀏覽器已登入 Google 帳號。</p>
 </div></details>
 
 <details class="card fold"><summary>🗂️ Zotero</summary><div class="help">
