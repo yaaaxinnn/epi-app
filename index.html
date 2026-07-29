@@ -225,9 +225,10 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
 .ov-foot .btn{flex:1;padding:14px}
 .chk{display:flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);font-size:13.5px;margin-bottom:5px;cursor:pointer}
 .chk input{width:auto}
-[data-hold]{background-image:linear-gradient(var(--clay),var(--clay));background-repeat:no-repeat;background-size:0% 100%;background-position:left center;border-radius:6px;
+[data-hold]{background-image:linear-gradient(var(--clay),var(--clay))!important;background-repeat:no-repeat!important;
+  background-size:0% 100%!important;background-position:left center!important;border-radius:7px;
   -webkit-touch-callout:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
-[data-hold].on{background-size:100% 100%;transition:background-size 1.5s linear;color:#fff!important}
+[data-hold].on{background-size:100% 100%!important;transition:background-size 1.5s linear;color:#fff!important;border-color:var(--clay)!important}
 .trashrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px}
 .trashrow .tt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .linkrow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
@@ -519,13 +520,6 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
     <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
   </div>
 
-  <div class="sec-title">GOOGLE 日曆</div>
-  <div class="card">
-    <p class="hint" style="margin-top:0">貼上嵌入網址後，會顯示在 Calendar 分頁最下面。取得方式見下方 HELP。</p>
-    <div class="linkrow" style="margin-top:10px"><span class="ic">🔗</span><input type="text" id="gcUrl"></div>
-    <div class="saverow"><button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button></div>
-  </div>
-
   <div class="sec-title">☁️ GitHub 同步</div>
   <div class="card">
     <p class="hint" style="margin-top:0">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
@@ -558,6 +552,14 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
 
   <div class="sec-title">HELP</div>
   <div id="helpBox"></div>
+
+  <div class="sec-title">GOOGLE 日曆</div>
+  <div class="card">
+    <p class="hint" style="margin-top:0">貼上嵌入網址後，會顯示在 Calendar 分頁最下面。取得方式見下方 HELP。</p>
+    <div class="linkrow" style="margin-top:10px"><span class="ic">🔗</span><input type="text" id="gcUrl"></div>
+    <div class="saverow"><button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button></div>
+  </div>
+
 </section>
 
 </div>
@@ -718,21 +720,26 @@ function linkChips(list){
     .map(l=>`<button class="lchip" data-open="${esc(l.url)}">🔗 ${esc(l.label||l.url)}</button>`).join('');
 }
 function linkEditor(kind,oid,list){
-  return (list||[]).map(l=>`<div class="lrow">
+  return `<div class="row" style="align-items:center;margin-bottom:6px">
+      <span class="srclab" style="margin:0">🔗</span><span class="spacer"></span>
+      <button class="iconb" data-addlk="${kind}|${oid}" title="新增連結">＋</button></div>`
+    +(list||[]).map(l=>`<div class="lrow">
     <input type="text" data-lk="${kind}|${oid}|${l.id}|label" value="${esc(l.label||'')}" placeholder="名稱" style="flex:1">
     <span class="ic">🔗</span>
     <input type="text" data-lk="${kind}|${oid}|${l.id}|url" value="${esc(l.url||'')}" style="flex:2">
     <button class="x" data-hold="lk|${kind}:${oid}:${l.id}" title="長按 1.5 秒刪除">✕</button></div>`).join('')
-    +`<div class="row" style="margin-top:2px"><button class="btn ghost mini" data-addlk="${kind}|${oid}">＋ 連結</button></div>`;
+    ;
 }
 function linkHost(kind,oid){
   if(kind==='card')return S.cards.find(x=>x.id===oid);
+  if(kind==='q')return S.qs.find(x=>x.id===oid);
   if(kind==='cls')return S.classes.find(x=>x.id===oid);
   if(kind==='sec'){const p=oid.split('~'),t=th(+p[0]);if(!t.sn[p[1]])t.sn[p[1]]={};t.sn[p[1]].mtime=Date.now();return t.sn[p[1]]}
   return null;
 }
 function linkRender(kind){
   if(kind==='card')renderCards();
+  else if(kind==='q')renderQ();
   else if(kind==='cls')renderCl();
   else renderMethod();
 }
@@ -772,6 +779,7 @@ async function load(){
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
   (S.cards||[]).forEach(c=>{if(!Array.isArray(c.links)){c.links=c.link?[{id:uid(),label:'',url:c.link}]:[]}});
+  (S.qs||[]).forEach(q=>{if(!Array.isArray(q.links))q.links=[]});
   Object.values(S.themes||{}).forEach(t=>{Object.values(t.sn||{}).forEach(n=>{
     if(!Array.isArray(n.links)){n.links=n.l?[{id:uid(),label:'',url:n.l}]:[]}})});
 }
@@ -890,6 +898,8 @@ async function doHold(spec){
   else if(t==='kd'){save();renderKD();renderTrash();toast('已移到回收桶')}
   else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
   else if(t==='cls'){save();renderCl();renderTrash();toast('已移到回收桶')}
+  else if(t==='secnote'){const p=id.split('|'),ti=+p[0],kk=p[1],t2=th(ti);
+    if(t2.sn[kk]){t2.sn[kk]={n:'',links:[],mtime:Date.now()};openSec=null;save();renderMethod();toast('已清除筆記')}}
   else if(t==='purge1'){S.trash=(S.trash||[]).filter(x=>x.tid!==id);save();renderTrash();toast('已永久刪除')}
   else if(t==='purgeall'){S.trash=[];save();renderTrash();toast('回收桶已清空')}
   else if(t==='lk'){const[kind,oid,lid]=id.split(':');const h=linkHost(kind,oid);
@@ -957,9 +967,9 @@ function renderMethod(){
             <button class="npen${has}" data-note="${sid}" aria-expanded="${op}" title="筆記">✎</button></div>
             ${op?`<div class="npanel">
               <div class="linkrow top"><span class="ic">📝</span><textarea data-nf="${sid}|n" style="min-height:70px">${esc(nt.n||'')}</textarea></div>
-              <div class="srclab">連結</div>
               ${linkEditor('sec',i+'~'+kk,nt.links)}
-              <div class="saverow"><button class="btn mini" data-nsave="${sid}">Save</button></div></div>`:''}`;
+              <div class="saverow"><button class="btn ghost mini" data-hold="secnote|${sid}" title="長按 1.5 秒清除" style="margin-right:auto">Clear</button>
+                <button class="btn mini" data-nsave="${sid}">Save</button></div></div>`:''}`;
         }).join('')}</div></div>`};
     const body=secs('me',c.me)+secs('hr',c.hr);
     if(qSec&&!body)return;
@@ -1231,8 +1241,7 @@ function renderCards(){
           <option value="-1"${c.theme<0?' selected':''}>— none —</option>
           ${C.map((x,ix)=>`<option value="${ix}"${c.theme===ix?' selected':''}>${x.e} ${esc(x.en)}</option>`).join('')}
         </select></div>
-        <div class="srclab">連結</div>
-        ${linkEditor('card',c.id,c.links)}
+          ${linkEditor('card',c.id,c.links)}
         <div class="saverow"><button class="btn ghost mini" data-hold="creset|${c.id}" title="長按 1.5 秒重設" style="margin-right:auto">重設排程</button>
           <button class="btn" data-csave="${c.id}">Save</button></div></div>`:''}
       </div>`}).join('');
@@ -1329,7 +1338,7 @@ document.getElementById('qSeg').addEventListener('click',e=>{
 document.getElementById('addQ').onclick=()=>{
   const q=document.getElementById('q-q').value.trim();if(!q){toast('請填問題');return}
   S.qs.push({id:uid(),created:Date.now(),kind:document.getElementById('q-kind').value,q,
-    src:document.getElementById('q-src').value.trim(),a:'',done:false,
+    src:document.getElementById('q-src').value.trim(),a:'',done:false,links:[],
     s1:document.getElementById('q-a1').value.trim(),s2:document.getElementById('q-b1').value.trim()});
   ['q-q','q-src','q-a1','q-b1'].forEach(i=>document.getElementById(i).value='');
   show('qForm',false);saved();renderQ();
@@ -1347,7 +1356,8 @@ function renderQ(){
       <span class="pill ${q.kind==='field'?'pine':''}">${QK[q.kind]||q.kind}</span>
       <span class="pill ${q.done?'pine':'amber'}">${q.done?'Resolved':'Unresolved'}</span></div>
     ${q.src?`<div class="meta" style="margin-top:5px">${esc(q.src)}</div>`:''}
-    ${q.a?`<div style="margin-top:9px;font-size:14px;white-space:pre-wrap;border-left:2px solid var(--pine-mid);padding-left:10px">${esc(q.a)}</div>`:''}
+    ${q.a?`<div style="margin-top:9px;font-size:14px;white-space:pre-wrap;border-left:2px solid var(--ac-mid);padding-left:10px">${esc(q.a)}</div>`:''}
+    ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:9px">${linkChips(q.links)}</div>`:''}
     ${openQ.has(q.id)?`<div class="editbox">
       <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
       <div class="linkrow"><span class="ic">🔻</span><select data-qk="${q.id}">
@@ -1356,6 +1366,7 @@ function renderQ(){
       ${q.kind==='field'?`<label class="f"><span>Side A</span><textarea data-qf="${q.id}|s1">${esc(q.s1||'')}</textarea></label>
       <label class="f"><span>Side B</span><textarea data-qf="${q.id}|s2">${esc(q.s2||'')}</textarea></label>`:''}
       <label class="f"><span>${q.kind==='field'?'My take':'Answer'}</span><textarea data-qf="${q.id}|a" style="min-height:80px">${esc(q.a||'')}</textarea></label>
+      ${linkEditor('q',q.id,q.links)}
       <div class="saverow">
         <button class="btn ghost mini" data-qd="${q.id}" style="margin-right:auto">${q.done?'Reopen':'Resolve'}</button>
         <button class="btn ghost mini" data-qc="${q.id}">↑ Card</button>
@@ -1454,7 +1465,7 @@ function renderCl(){
       <span class="acts"><button data-cledit="${c.id}" title="編輯">✎</button></span>
       <button class="x" data-hold="cls|${c.id}" title="長按 1.5 秒刪除">✕</button></div>
     <div class="row" style="margin-top:9px">
-      ${(c.links||[]).filter(l=>l.url).length?linkChips(c.links):`<span class="hint">還沒有連結。按 ✎ 新增。</span>`}</div>
+      ${linkChips(c.links)}</div>
     ${c.note?`<div style="margin-top:9px;font-size:13.5px;white-space:pre-wrap;border-left:2px solid var(--ac-mid);padding-left:10px">${esc(c.note)}</div>`:''}
     ${clOpen.has(c.id)?`<div class="editbox">
       <label class="f"><span>Course</span><input type="text" data-cf2="${c.id}|name" value="${esc(c.name)}"></label>
@@ -1465,7 +1476,6 @@ function renderCl(){
         </select></div>
       </div>
       <label class="f"><span>Note</span><textarea data-cf2="${c.id}|note">${esc(c.note||'')}</textarea></label>
-      <div class="srclab">連結</div>
       ${linkEditor('cls',c.id,c.links)}
       <div class="saverow"><button class="btn" data-clsave="${c.id}">Save</button></div>
     </div>`:''}</div>`).join('');
@@ -2054,19 +2064,27 @@ document.getElementById('helpBox').innerHTML=`
   <tr><td>精讀 HTML、手寫圖</td><td><strong>手動</strong> commit 上去</td></tr>
 </tbody></table>
 <h4>💻 裝置分工</h4>
+<p><strong>Epi_Yaxin 本身在兩台裝置上完全一樣</strong>——同一個網址、同一份資料、全部功能都能用。真正有差別的是<strong>其他三個工具</strong>：</p>
 <table><thead><tr><th></th><th>桌機／筆電</th><th>iPad</th></tr></thead><tbody>
-  <tr><td>Zotero</td><td>整理、Word 外掛</td><td>讀 PDF、highlight</td></tr>
-  <tr><td>Epi_Yaxin</td><td>全部功能</td><td>全部功能</td></tr>
+  <tr><td>Epi_Yaxin</td><td colspan="2" style="text-align:center">一模一樣</td></tr>
+  <tr><td>Zotero</td><td>整理、Word 引用、Saved Search</td><td>讀 PDF、畫線（沒有 Word 外掛）</td></tr>
   <tr><td>GoodNotes</td><td>-</td><td>手寫推導、畫 DAG</td></tr>
+  <tr><td>上傳檔案到 GitHub</td><td>好操作</td><td>可以但較麻煩</td></tr>
 </tbody></table>
+<p>所以實務上的分工是：<strong>iPad 讀 PDF、畫線、隨手補 Note；桌機做整理、寫長篇 Note、上傳檔案、寫論文引用。</strong>不是系統限制，是鍵盤和螢幕的差別。</p>
 <p>GoodNotes 不能同步到 Windows，所以只當<strong>拋棄式練習場</strong>——關鍵圖匯出 PDF 收進 figures/。</p>
 </div></details>
 
 <details class="card fold"><summary>🎛️ 介面約定</summary><div class="help">
   <p><strong>✎</strong> 編輯　<strong>🔗</strong> 開精讀 HTML　<strong>🌐</strong> 開原文　<strong>📌</strong> 一句話　<strong>🏷️</strong> tag　<strong>📝</strong> 筆記　<strong>🔻</strong> 下拉選單　<strong>＋</strong> 新增。圖示鍵一律沒有外框。</p>
   <p>每個編輯區塊右下角有 <strong>Save</strong>，但底下還有一層保險：<strong>你打的每個字都會自動存</strong>，忘記按也不會掉。</p>
-  <h4>🗑️ 刪除與回收桶</h4>
-  <p>所有 ✕ 都要<strong>長按 1.5 秒</strong>，按住時紅色填滿當進度，手指移動就取消。刪掉的東西會進 Settings 的<strong>最近刪除</strong>，保留 30 天可還原。</p>
+  <h4>🗑️ 刪除的兩層</h4>
+  <p><strong>凡是長按才會執行的按鈕，按住時都會被紅色由左往右填滿</strong>當進度條，手指移開或移動超過一點就取消。包括所有 ✕、清除筆記、重設排程、還原、清空回收桶。</p>
+  <table><thead><tr><th>動作</th><th>結果</th></tr></thead><tbody>
+    <tr><td>在卡片上長按 ✕</td><td><strong>軟刪除</strong>：畫面看不到了，但完整內容躺在「最近刪除」裡，30 天內隨時還原</td></tr>
+    <tr><td>在回收桶長按 ✕ 或「清空回收桶」</td><td><strong>真的刪掉</strong>：內容永久消失，救不回來</td></tr>
+  </tbody></table>
+  <p>清空之後系統仍會保留一筆<strong>「這個 id 在某時被刪過」的極輕量紀錄</strong>（只有 id 和時間，沒有內容），存 180 天。這是為了讓其他裝置知道該刪，不會把舊資料送回來。</p>
   <h4>🎨 顏色</h4>
   <p>每個分頁一個色：Reading 森綠、Textbooks 板岩藍、Review 梅紫、Ideas 赭黃、Calendar 陶紅、Settings 暖灰。按鈕、切換鍵、進度條都跟著換。</p>
 </div></details>
@@ -2148,12 +2166,16 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>
 
 <details class="card fold"><summary>🚀 GitHub 與多裝置</summary><div class="help">
-  <h4>🖥️ 桌機要裝什麼</h4>
-  <p><strong>在上 GitHub 之前什麼都不用裝。</strong>建一個 <code>epi-reading</code> 資料夾，HTML 存成 <code>index.html</code>，再建 <code>papers/</code>、<code>notes/</code>、<code>figures/</code>，雙擊就能用。</p>
-  <p>要上 GitHub 時只需裝 <strong>GitHub Desktop</strong>——圖形介面，不用打指令：看到「有 2 個檔案變更了」，寫一句話，按 Commit、按 Push。你那個資料夾直接變成 repo，不用搬東西。</p>
-  <p><code>epi-app</code>（公開）只放 <code>index.html</code>，開 Pages 產生網址。<br>
-     <code>epi-data</code>（私密）放 <code>notes.json</code>、<code>papers/</code>、<code>notes/</code>、<code>figures/</code>。</p>
-  <p><strong>公開的只是空殼，你的內容全在私密 repo。</strong>全部免費。</p>
+  <h4>📦 兩個 repo</h4>
+  <p><code>epi-app</code>　<span class="pill">公開</span><br>
+    └ <code>index.html</code>　← 只有這一個，開 Pages 產生網址</p>
+  <p><code>epi-data</code>　<span class="pill clay">私密</span><br>
+    ├ <code>data/notes.json</code>　卡片、筆記、進度（自動同步）<br>
+    ├ <code>papers/</code>　精讀 HTML<br>
+    ├ <code>notes/</code>　小節筆記 HTML<br>
+    └ <code>figures/</code>　GoodNotes 匯出的 PDF</p>
+  <p><strong>公開的只是空殼，你的內容全在私密 repo。</strong>沒有 token 的人打開網址只會看到空白系統。全部免費。</p>
+  <p>桌機<strong>不需要安裝任何軟體</strong>，也不需要本機檔案——三台裝置都開同一個網址。要放檔案時用 GitHub 網頁的 <code>Add file</code> → <code>Create new file</code>，檔名打 <code>papers/2026-chen.html</code>（斜線會自動建資料夾），把內容貼進去即可。PDF 則用 <code>Upload files</code> 拖曳。</p>
   <p>檔名用「書-章-節-關鍵字」，因為你會用檔名搜尋而不是點資料夾。GoodNotes 匯出用 <strong>PDF 而非 PNG</strong>。<strong>教科書本身的 PDF 不要放進 repo。</strong></p>
   <h4>☁️ 自動同步（Settings 上方）</h4>
   <p>填好 owner、私密 repo 名稱、branch、路徑、token，勾「開啟自動同步」，之後就<strong>不用再按匯出匯入</strong>：打開網頁自動下載合併，編輯完 8 秒自動上傳。</p>
