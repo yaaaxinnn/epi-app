@@ -162,16 +162,16 @@ td[data-cell] > div.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-o
 .seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
 .seg.sm button{padding:8px 11px;font-size:12.5px}
 .ttwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
-table.tt{min-width:660px;width:100%;border-collapse:collapse;font-size:13px}
+table.tt{min-width:504px;width:100%;border-collapse:collapse;font-size:12.5px}
 table.tt th{background:var(--surface-2);text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
-table.tt td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:3px;min-width:112px;height:46px;vertical-align:top}
+table.tt td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:3px;min-width:84px;height:42px;vertical-align:top}
 table.tt td:last-child{border-right:0}
-table.tt td.ph{width:74px;min-width:74px;background:var(--surface-2);text-align:center;padding:5px 4px;vertical-align:middle}
-table.tt .pn{font-family:var(--mono);font-size:13px;font-weight:500;line-height:1.1}
-table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-height:1.2}
-.blk{width:100%;height:100%;border-radius:7px;padding:6px 7px;text-align:center;border:1px solid;font-size:12.5px;line-height:1.35;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+table.tt td.ph{width:58px;min-width:58px;background:var(--surface-2);text-align:center;padding:4px 3px;vertical-align:middle}
+table.tt .pn{font-family:var(--mono);font-size:12px;font-weight:500;line-height:1.1}
+table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-height:1.15}
+.blk{width:100%;height:100%;border-radius:6px;padding:4px 5px;text-align:center;border:1px solid;font-size:11.5px;line-height:1.3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 .blk .nm{font-weight:600}
-.blk .rm{font-family:var(--mono);font-size:10.5px;opacity:.8}
+.blk .rm{font-family:var(--mono);font-size:9.5px;opacity:.8}
 .blk.required{background:#E7EEE8;border-color:#C8D8CC;color:#3E6B4E}
 .blk.elective{background:#F6EEE0;border-color:#E7D5B6;color:#8A5C22}
 .blk.lab{background:#E5EBF0;border-color:#C3D2DE;color:#2F5670}
@@ -201,6 +201,18 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
 .warn{border:1px solid var(--clay-mid);background:var(--clay-soft);color:var(--clay);border-radius:var(--r);padding:11px 13px;font-size:13.5px;margin-bottom:12px}
 .bakrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px}
 .bakrow .d{font-family:var(--mono);color:var(--muted);flex:1}
+.cardhead{display:flex;align-items:flex-start;gap:8px}
+.cardhead .spacer{flex:1}
+.qm{flex:0 0 auto;background:none;border:0;color:var(--faint);font-size:15px;line-height:1;padding:2px 4px;cursor:pointer}
+.qm:hover{color:var(--ac)}
+.qm[aria-expanded="true"]{color:var(--ac)}
+.tip{display:none;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
+  padding:10px 13px;font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 12px}
+.tip.on{display:block}
+.tip strong{color:var(--ink)}
+#drop{border:2px dashed var(--line-strong);border-radius:12px;padding:20px 16px;text-align:center;
+  cursor:pointer;background:var(--surface-2);transition:background .15s,border-color .15s}
+#drop:hover,#drop.over{border-color:var(--ac);background:var(--ac-soft)}
 .help h4{font-size:14px;font-weight:600;margin:16px 0 6px;color:var(--ink)}
 .help h4:first-child{margin-top:4px}
 .help p{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0 0 8px}
@@ -290,19 +302,33 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
     </div>
     <span class="srch"><input type="text" id="qPaper" placeholder="搜尋任何欄位…"><button class="clr" data-clr="qPaper">✕</button></span>
     <button class="iconb" id="tagBtn" title="tag 篩選">🏷️</button>
-    <button class="iconb" id="expMenuBtn" title="匯出目前篩選">⬇️</button>
-    <button class="iconb" id="importJsonBtn" title="貼上 JSON">📋</button>
+    <button class="iconb" id="importJsonBtn" title="從 Claude 匯入">📥</button>
     <button class="iconb" id="addPaperBtn" title="新增">＋</button>
   </div>
   <div class="tagbar" id="tagbar" style="display:none"></div>
-  <div class="card" id="expMenu" style="display:none">
-    <p class="hint" style="margin-top:0">匯出<strong>目前篩選後</strong>的卡片。Markdown 貼進 Word 或 Notion 會保留結構，CSV 給 Excel 排序用。</p>
-    <div class="saverow"><button class="btn ghost mini" id="expCsv">CSV</button><button class="btn mini" id="expMd">Markdown</button></div>
-  </div>
+
 
   <div class="card" id="jsonForm" style="display:none">
-    <textarea id="jsonBox" style="min-height:150px;font-family:var(--mono);font-size:13px"></textarea>
-    <div class="saverow"><button class="btn ghost" id="cancelJson">Cancel</button><button class="btn" id="doImportJson">Import</button></div>
+    <div class="srclab">① 卡片 JSON</div>
+    <textarea id="jsonBox" style="min-height:110px;font-family:var(--mono);font-size:12.5px" placeholder='{ "title": … }'></textarea>
+    <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="jsonState"></span>
+      <button class="btn mini" id="doImportJson">建立卡片</button></div>
+
+    <div class="srclab" style="margin-top:18px">② 精讀 HTML</div>
+    <div id="drop">
+      <div style="font-size:30px;line-height:1">📄</div>
+      <div style="font-weight:500;margin-top:5px">把檔案拖進來，或點一下選檔案</div>
+    </div>
+    <input type="file" id="hf-file" accept=".html,.htm" style="display:none">
+    <div id="hfPicked" style="display:none;margin-top:12px">
+      <label class="f"><span>存成</span><input type="text" id="hf-path"></label>
+      <label class="f" style="margin-bottom:6px"><span>對應卡片</span><select id="hf-card"></select></label>
+      <p class="hint" style="margin:0 0 4px" id="hfInfo"></p>
+    </div>
+    <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="hfState"></span>
+      <button class="btn mini" id="doPushHtml" disabled>上傳</button></div>
+
+    <div class="saverow" style="margin-top:14px"><button class="btn ghost" id="cancelJson">關閉</button></div>
   </div>
 
   <div class="card" id="paperForm" style="display:none">
@@ -326,6 +352,11 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
   </div>
 
   <div class="row" id="paperCount" style="margin-bottom:10px"></div>
+  <div class="row" id="expRow" style="display:none;margin-bottom:10px">
+    <span class="hint" style="flex:1">匯出目前篩選後的卡片</span>
+    <button class="btn ghost mini" id="expCsv">CSV</button>
+    <button class="btn ghost mini" id="expMd">Markdown</button>
+  </div>
   <div id="paperList"></div>
   <div id="paperTable" style="display:none"></div>
 </section>
@@ -477,7 +508,20 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
   </div>
 
   <div class="sec-head"><span class="t">KEY DATES</span><span class="spacer"></span>
+    <button class="iconb" id="icsBtn" title="從 Google 日曆匯入">📅</button>
     <button class="btn icon" id="toggleKD">＋</button></div>
+  <div class="card" id="icsForm" style="display:none">
+    <p class="hint" style="margin-top:0">Google 日曆 → 設定 → 匯入及匯出 → <strong>匯出</strong>，下載的 zip 解開後是 <span class="mono">.ics</span> 檔。拖進來或點一下選檔案。</p>
+    <div id="icsDrop" style="border:2px dashed var(--line-strong);border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;background:var(--surface-2)">
+      <div style="font-size:30px;line-height:1">📅</div>
+      <div style="font-weight:500;margin-top:5px">選 .ics 檔案</div>
+    </div>
+    <input type="file" id="icsFile" accept=".ics,text/calendar" style="display:none">
+    <label class="f" style="margin-top:12px"><span>只匯入標題開頭是</span><input type="text" id="icsPrefix" value="*"></label>
+    <label class="chk"><input type="checkbox" id="icsFuture" checked><span style="flex:1">只匯入今天以後的</span></label>
+    <div id="icsPreview" style="margin-top:10px"></div>
+    <div class="saverow"><button class="btn ghost" id="cancelIcs">Cancel</button><button class="btn" id="doIcs" disabled>匯入</button></div>
+  </div>
   <div class="card" id="kdForm" style="display:none">
     <div class="grid2">
       <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
@@ -501,8 +545,10 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
   <div class="sec-title">DATA</div>
   <div id="expWarn"></div>
   <div class="card">
-    <p class="hint" style="margin-top:0">匯出會下載一個 <span class="mono">notes.json</span>，裡面是你全部的資料。存到雲端硬碟或 GitHub 才算真正的備份。</p>
-    <div class="row" style="margin-top:10px">
+    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipData" aria-expanded="false">ⓘ</button></div>
+    <div class="tip" id="tipData">匯出會下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。<br>
+    <strong>它跟 GitHub 同步防的不是同一件事</strong>：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，存到硬碟或雲端硬碟，十年後用記事本都打得開。</div>
+    <div class="row">
       <button class="btn ghost mini" id="impBtn">📥 合併匯入</button>
       <button class="btn ghost mini" id="impRepBtn">覆蓋匯入</button>
       <input type="file" id="impFile" accept=".json" style="display:none">
@@ -514,17 +560,19 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
 
   <div class="sec-title">自動存檔</div>
   <div class="card">
-    <p class="hint" style="margin-top:0">每天第一次開啟時，系統會把你當下的所有資料<strong>複製一份存起來</strong>，保留最近三份。手殘刪錯東西時可以整包還原。<br>
-    注意：這份副本跟本體存在同一個地方，所以它擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</p>
-    <div id="bakList" style="margin-top:10px"></div>
+    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipBak" aria-expanded="false">ⓘ</button></div>
+    <div class="tip" id="tipBak">每天第一次開啟時，系統會把當下的所有資料<strong>複製一份存起來</strong>，保留最近三份。手殘刪錯東西時可以整包還原。<br>
+    注意：這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</div>
+    <div id="bakList"></div>
     <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
   </div>
 
   <div class="sec-title">☁️ GitHub 同步</div>
   <div class="card">
-    <p class="hint" style="margin-top:0">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
-    <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong></p>
-    <div class="grid2" style="margin-top:10px">
+    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipGh" aria-expanded="false">ⓘ</button></div>
+    <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
+    <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
+    <div class="grid2">
       <label class="f"><span>Owner／使用者名稱</span><input type="text" id="gh-owner"></label>
       <label class="f"><span>私密 repo 名稱</span><input type="text" id="gh-repo"></label>
     </div>
@@ -545,8 +593,9 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
 
   <div class="sec-title">🗑️ 最近刪除</div>
   <div class="card">
-    <p class="hint" style="margin-top:0">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
-    <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——刪除紀錄就存在這裡，清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></p>
+    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
+    <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
+    <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></div>
     <div id="trashList" style="margin-top:10px"></div>
   </div>
 
@@ -557,7 +606,23 @@ table.tt .pt{font-family:var(--mono);font-size:9.5px;color:var(--faint);line-hei
   <div class="card">
     <p class="hint" style="margin-top:0">貼上嵌入網址後，會顯示在 Calendar 分頁最下面。取得方式見下方 HELP。</p>
     <div class="linkrow" style="margin-top:10px"><span class="ic">🔗</span><input type="text" id="gcUrl"></div>
-    <div class="saverow"><button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button></div>
+
+    <div class="srclab" style="margin-top:16px">自動抓 KEY DATES</div>
+    <div class="grid2">
+      <label class="f"><span>日曆 ID</span><input type="text" id="gc-id" placeholder="…@group.calendar.google.com"></label>
+      <label class="f"><span>API 金鑰</span><input type="password" id="gc-key" autocomplete="off"></label>
+    </div>
+    <div class="grid2">
+      <label class="f"><span>只抓開頭是</span><input type="text" id="gc-prefix" value="*"></label>
+      <label class="f"><span>往後幾個月</span><input type="number" id="gc-months" value="12" min="1" max="36"></label>
+    </div>
+    <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="gc-auto"><span style="flex:1">開啟自動抓取</span></label>
+    <div class="row">
+      <button class="btn ghost mini" id="gcFetch">立刻抓一次</button>
+      <span class="spacer"></span>
+      <button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button>
+    </div>
+    <p class="hint" style="margin:10px 0 0" id="gcState"></p>
   </div>
 
 </section>
@@ -709,7 +774,7 @@ const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,trash:[],tomb:{},
+function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
   tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -1058,6 +1123,7 @@ function renderTagbar(){
 function renderPapers(){
   const list=document.getElementById('paperList'),tbl=document.getElementById('paperTable');
   list.style.display=paperView==='list'?'':'none';tbl.style.display=paperView==='table'?'':'none';
+  document.getElementById('expRow').style.display=paperView==='table'?'':'none';
   renderTagbar();
   const info=document.getElementById('paperCount');
   if(!S.papers.length){list.innerHTML=`<div class="empty">還沒有精讀卡片。</div>`;tbl.innerHTML='';info.innerHTML='';return}
@@ -1127,14 +1193,17 @@ document.getElementById('paperSeg').addEventListener('click',e=>{
 document.getElementById('tagBtn').onclick=()=>toggle('tagbar');
 document.getElementById('addPaperBtn').onclick=()=>{if(toggle('paperForm'))document.getElementById('pf-title').focus()};
 document.getElementById('cancelPaper').onclick=()=>show('paperForm',false);
-document.getElementById('importJsonBtn').onclick=()=>{if(toggle('jsonForm'))document.getElementById('jsonBox').focus()};
+document.getElementById('importJsonBtn').onclick=()=>{if(toggle('jsonForm')){hfReset();document.getElementById('jsonState').textContent='';document.getElementById('jsonBox').focus()}};
 document.getElementById('cancelJson').onclick=()=>show('jsonForm',false);
 document.getElementById('doImportJson').onclick=()=>{
-  let d;try{d=JSON.parse(document.getElementById('jsonBox').value)}catch(e){toast('JSON 格式有誤');return}
+  let d;try{d=JSON.parse(document.getElementById('jsonBox').value)}catch(e){
+    document.getElementById('jsonState').textContent='JSON 格式有誤';toast('JSON 格式有誤');return}
   const arr=Array.isArray(d)?d:[d];
   arr.forEach(o=>S.papers.push(Object.assign({id:uid(),created:Date.now(),tags:[],note:''},o)));
-  document.getElementById('jsonBox').value='';show('jsonForm',false);
-  save();renderPapers();toast('匯入 '+arr.length+' 筆');
+  document.getElementById('jsonBox').value='';
+  save();renderPapers();hfCards(S.papers[S.papers.length-1].id);
+  document.getElementById('jsonState').textContent='已建立 '+arr.length+' 張卡片，接著上傳 HTML';
+  toast('已建立 '+arr.length+' 張卡片');
 };
 function dl(name,text,mime){
   const b=new Blob([text],{type:mime+';charset=utf-8'});
@@ -1182,9 +1251,79 @@ function expCsvFile(){
   dl('epi-reading-'+stamp()+'.csv','\ufeff'+rows.join('\r\n'),'text/csv');
   toast('已匯出 '+a.length+' 篇');
 }
-document.getElementById('expMenuBtn').onclick=()=>toggle('expMenu');
-document.getElementById('expMd').onclick=()=>{expMarkdown();show('expMenu',false)};
-document.getElementById('expCsv').onclick=()=>{expCsvFile();show('expMenu',false)};
+document.getElementById('expMd').onclick=()=>expMarkdown();
+document.getElementById('expCsv').onclick=()=>expCsvFile();
+let hfText='';
+function hfReset(){
+  hfText='';
+  document.getElementById('hf-file').value='';
+  show('hfPicked',false);
+  document.getElementById('doPushHtml').disabled=true;
+  document.getElementById('hfState').textContent='';
+}
+function hfCards(sel){
+  const a=[...S.papers].sort((x,y)=>y.created-x.created);
+  document.getElementById('hf-card').innerHTML='<option value="">— 不綁定卡片 —</option>'
+    +a.map(p=>`<option value="${p.id}"${p.id===sel?' selected':''}>${esc(p.title.slice(0,60))}</option>`).join('');
+}
+function hfTake(file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    hfText=r.result;
+    let name=file.name.replace(/[^A-Za-z0-9._-]/g,'-');
+    if(!/\.html?$/i.test(name))name+='.html';
+    const guess=S.papers.filter(p=>p.file).find(p=>p.file.split('/').pop()===name);
+    const recent=[...S.papers].sort((x,y)=>y.created-x.created)[0];
+    const card=guess||recent;
+    document.getElementById('hf-path').value=(card&&card.file)||('papers/'+name);
+    hfCards(card?card.id:'');
+    document.getElementById('hfInfo').textContent=file.name+' · '+Math.round(file.size/1024)+' KB';
+    show('hfPicked',true);
+    document.getElementById('doPushHtml').disabled=false;
+  };
+  r.readAsText(file);
+}
+document.getElementById('drop').onclick=()=>document.getElementById('hf-file').click();
+document.getElementById('hf-file').onchange=e=>hfTake(e.target.files[0]);
+['dragenter','dragover'].forEach(ev=>document.getElementById('drop').addEventListener(ev,e=>{
+  e.preventDefault();document.getElementById('drop').classList.add('over')}));
+['dragleave','drop'].forEach(ev=>document.getElementById('drop').addEventListener(ev,e=>{
+  e.preventDefault();document.getElementById('drop').classList.remove('over')}));
+document.getElementById('drop').addEventListener('drop',e=>{
+  const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)hfTake(f)});
+document.getElementById('hf-card').onchange=e=>{
+  const p=S.papers.find(x=>x.id===e.target.value);
+  if(p&&p.file)document.getElementById('hf-path').value=p.file;
+};
+document.getElementById('doPushHtml').onclick=async()=>{
+  const st=document.getElementById('hfState');
+  if(!ghOn()){st.textContent='請先在 Settings 設定 GitHub 同步';return}
+  let path=document.getElementById('hf-path').value.trim().replace(/^\.?\//,'');
+  if(!path||!hfText){st.textContent='請先選檔案';return}
+  if(!/\.html?$/i.test(path))path+='.html';
+  st.textContent='上傳中…';
+  const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+    +'/contents/'+path.split('/').map(encodeURIComponent).join('/');
+  try{
+    let sha=null;
+    const r0=await fetch(url+'?ref='+encodeURIComponent(GH.branch),
+      {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
+    if(r0.ok){const j0=await r0.json();sha=j0.sha}
+    const payload={message:'add '+path,content:b64enc(hfText),branch:GH.branch};
+    if(sha)payload.sha=sha;
+    const r=await fetch(url,{method:'PUT',
+      headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify(payload)});
+    if(!r.ok){const t=await r.text().catch(()=>'');throw new Error('HTTP '+r.status+(t?' · '+t.slice(0,100):''))}
+    const cid=document.getElementById('hf-card').value;
+    const p=cid?S.papers.find(x=>x.id===cid):S.papers.find(x=>x.file===path);
+    if(p){p.file=path;p.pushed=Date.now();p.mtime=Date.now();save();renderPapers()}
+    hfReset();
+    document.getElementById('hfState').textContent=(sha?'已覆蓋 ':'已上傳 ')+path;
+    toast(sha?'已覆蓋':'已上傳');
+  }catch(e){st.textContent='上傳失敗：'+e.message;toast('上傳失敗')}
+};
 document.getElementById('savePaper').onclick=()=>{
   const g=i=>{const el=document.getElementById(i);return el?el.value.trim():''};
   if(!g('pf-title')){toast('請填標題');return}
@@ -1650,16 +1789,128 @@ document.getElementById('addKD').onclick=()=>{
   kdReset();show('kdForm',false);saved();renderKD();
 };
 let gcCur=null;
+let icsFound=[];
+function icsUnfold(t){return t.replace(/\r\n/g,'\n').replace(/\r/g,'\n').replace(/\n[ \t]/g,'')}
+function icsUnesc(v){return v.replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\')}
+function icsDate(v){
+  const m=v.match(/(\d{4})(\d{2})(\d{2})/);
+  return m?m[1]+'-'+m[2]+'-'+m[3]:'';
+}
+function icsParse(txt){
+  const out=[];let cur=null;
+  icsUnfold(txt).split('\n').forEach(l=>{
+    if(l.startsWith('BEGIN:VEVENT')){cur={};return}
+    if(l.startsWith('END:VEVENT')){if(cur&&cur.date&&cur.title)out.push(cur);cur=null;return}
+    if(!cur)return;
+    const i=l.indexOf(':');if(i<0)return;
+    const key=l.slice(0,i).split(';')[0].toUpperCase(),val=l.slice(i+1);
+    if(key==='SUMMARY')cur.title=icsUnesc(val).trim();
+    else if(key==='DTSTART')cur.date=icsDate(val);
+  });
+  return out;
+}
+function icsRender(){
+  const pre=(document.getElementById('icsPrefix').value||'').trim();
+  const fut=document.getElementById('icsFuture').checked;
+  const today=new Date().toISOString().slice(0,10);
+  const have=new Set(S.kd.map(k=>k.date+'|'+k.title));
+  const list=icsFound.filter(e=>(!pre||e.title.startsWith(pre))&&(!fut||e.date>=today))
+    .map(e=>({date:e.date,title:pre&&e.title.startsWith(pre)?e.title.slice(pre.length).trim():e.title}))
+    .filter(e=>e.title&&!have.has(e.date+'|'+e.title))
+    .sort((a,b)=>a.date.localeCompare(b.date));
+  const el=document.getElementById('icsPreview');
+  el.innerHTML=list.length
+    ? `<p class="hint" style="margin:0 0 6px">找到 ${list.length} 筆（已排除重複）</p>`
+      +list.slice(0,12).map(e=>`<div class="trashrow"><span class="d">${esc(e.date)}</span><span class="tt">${esc(e.title)}</span></div>`).join('')
+      +(list.length>12?`<p class="hint" style="margin:4px 0 0">…另外 ${list.length-12} 筆</p>`:'')
+    : (icsFound.length?`<p class="hint" style="margin:0">沒有符合的事件。</p>`:'');
+  document.getElementById('doIcs').disabled=!list.length;
+  return list;
+}
+document.getElementById('icsBtn').onclick=()=>{if(toggle('icsForm')){icsFound=[];document.getElementById('icsPreview').innerHTML='';document.getElementById('doIcs').disabled=true}};
+document.getElementById('cancelIcs').onclick=()=>show('icsForm',false);
+document.getElementById('icsDrop').onclick=()=>document.getElementById('icsFile').click();
+['dragover','dragenter'].forEach(ev=>document.getElementById('icsDrop').addEventListener(ev,e=>e.preventDefault()));
+document.getElementById('icsDrop').addEventListener('drop',e=>{
+  e.preventDefault();const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
+  if(f){const r=new FileReader();r.onload=()=>{icsFound=icsParse(r.result);icsRender()};r.readAsText(f)}
+});
+document.getElementById('icsFile').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{icsFound=icsParse(r.result);icsRender()};r.readAsText(f);
+};
+document.getElementById('icsPrefix').oninput=icsRender;
+document.getElementById('icsFuture').onchange=icsRender;
+document.getElementById('doIcs').onclick=()=>{
+  const list=icsRender();if(!list.length)return;
+  list.forEach(e=>S.kd.push({id:uid(),date:e.date,title:e.title,type:'other',mtime:Date.now()}));
+  show('icsForm',false);icsFound=[];saved();renderKD();toast('已匯入 '+list.length+' 筆');
+};
+async function gcFetchEvents(silent){
+  const st=document.getElementById('gcState');
+  const id=(S.gcId||'').trim(),key=(S.gcKey||'').trim();
+  if(!id||!key){if(!silent)st.textContent='請先填日曆 ID 與 API 金鑰';return 0}
+  const pre=(S.gcPrefix==null?'*':S.gcPrefix);
+  const months=+(S.gcMonths||12);
+  const now=new Date(),max=new Date(now.getTime()+months*30.5*DAY);
+  const url='https://www.googleapis.com/calendar/v3/calendars/'+encodeURIComponent(id)
+    +'/events?key='+encodeURIComponent(key)
+    +'&singleEvents=true&orderBy=startTime&maxResults=250'
+    +'&timeMin='+encodeURIComponent(new Date(now.getTime()-DAY).toISOString())
+    +'&timeMax='+encodeURIComponent(max.toISOString());
+  if(!silent)st.textContent='抓取中…';
+  try{
+    const r=await fetch(url);
+    if(!r.ok){const t=await r.text().catch(()=>'');throw new Error('HTTP '+r.status+(t?' · '+t.slice(0,90):''))}
+    const j=await r.json();
+    const evs=(j.items||[]).map(e=>({
+      gid:e.id,
+      title:(e.summary||'').trim(),
+      date:((e.start&&(e.start.date||e.start.dateTime))||'').slice(0,10)
+    })).filter(e=>e.date&&e.title&&(!pre||e.title.startsWith(pre)))
+      .map(e=>({...e,title:pre?e.title.slice(pre.length).trim():e.title}))
+      .filter(e=>e.title);
+    let add=0,upd=0;
+    const seen=new Set();
+    evs.forEach(e=>{
+      seen.add(e.gid);
+      const ex=S.kd.find(k=>k.gid===e.gid);
+      if(ex){if(ex.date!==e.date||ex.title!==e.title){ex.date=e.date;ex.title=e.title;ex.mtime=Date.now();upd++}}
+      else{S.kd.push({id:uid(),gid:e.gid,date:e.date,title:e.title,type:'other',mtime:Date.now()});add++}
+    });
+    const before=S.kd.length;
+    S.kd=S.kd.filter(k=>!k.gid||seen.has(k.gid));
+    const del=before-S.kd.length;
+    S.gcLast=Date.now();save();renderKD();
+    const msg='新增 '+add+' · 更新 '+upd+(del?' · 移除 '+del:'')+'　'+new Date().toLocaleTimeString();
+    st.textContent=msg;
+    if(!silent&&(add||upd||del))toast(msg);
+    return add+upd+del;
+  }catch(e){st.textContent='抓取失敗：'+e.message;if(!silent)toast('抓取失敗');return 0}
+}
+document.getElementById('gcFetch').onclick=()=>{gcSaveCfg();gcFetchEvents(false)};
+function gcSaveCfg(){
+  S.gcId=document.getElementById('gc-id').value.trim();
+  S.gcKey=document.getElementById('gc-key').value.trim();
+  S.gcPrefix=document.getElementById('gc-prefix').value;
+  S.gcMonths=+document.getElementById('gc-months').value||12;
+  S.gcAuto=document.getElementById('gc-auto').checked;
+  S.gcAt=Date.now();save();
+}
 function renderGC(){
   const inp=document.getElementById('gcUrl');
   if(inp&&document.activeElement!==inp)inp.value=S.gc||'';
+  const set=(id,v)=>{const el=document.getElementById(id);if(el&&document.activeElement!==el)el.value=v};
+  set('gc-id',S.gcId||'');set('gc-key',S.gcKey||'');
+  set('gc-prefix',S.gcPrefix==null?'*':S.gcPrefix);set('gc-months',S.gcMonths||12);
+  const a=document.getElementById('gc-auto');if(a)a.checked=!!S.gcAuto;
   if(gcCur===(S.gc||''))return;
   gcCur=S.gc||'';
   document.getElementById('gcBox').innerHTML=S.gc?
     `<iframe src="${esc(S.gc)}" style="width:100%;height:520px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)" loading="lazy"></iframe>`
     :'<div class="empty" style="margin-top:18px">還沒設定 Google 日曆。到 Settings 貼上嵌入網址。</div>';
 }
-document.getElementById('saveGC').onclick=()=>{S.gc=document.getElementById('gcUrl').value.trim();S.gcAt=Date.now();saved();renderGC()};
+document.getElementById('saveGC').onclick=()=>{S.gc=document.getElementById('gcUrl').value.trim();gcSaveCfg();saved();renderGC()};
 document.getElementById('clearGC').onclick=()=>{S.gc='';S.gcAt=Date.now();save();renderGC()};
 
 /* ================= DATA ================= */
@@ -1690,6 +1941,11 @@ async function renderBackups(){
 }
 
 document.getElementById('bakNow').onclick=()=>snapshot(true);
+document.body.addEventListener('click',e=>{
+  const q=e.target.closest('[data-tip]');if(!q)return;
+  const t=document.getElementById(q.dataset.tip);if(!t)return;
+  const on=t.classList.toggle('on');q.setAttribute('aria-expanded',on);
+});
 document.getElementById('trashList').addEventListener('click',e=>{
   if(hEl)return;
   const tg=e.target.closest('[data-trall]');
@@ -1726,8 +1982,9 @@ function renderExportState(){
   info.textContent='上次匯出：'+new Date(S.lastExport).toISOString().slice(0,10)+'（'+d+' 天前）';
   w.innerHTML=d>=7?`<div class="warn">已經 ${d} 天沒有匯出備份了。</div>`:'';
 }
+function exportable(){const o=Object.assign({},S);delete o.gcKey;return o}
 document.getElementById('expBtn').onclick=()=>{
-  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const b=new Blob([JSON.stringify(exportable(),null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='notes.json';a.click();URL.revokeObjectURL(a.href);
   S.lastExport=Date.now();save();renderExportState();toast('已匯出');
 };
@@ -1802,7 +2059,9 @@ function mergeState(inc){
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
   S.themes=mergeThemes(S.themes,inc.themes);
   (inc.tagLib||[]).forEach(t=>{if(!S.tagLib.includes(t))S.tagLib.push(t)});
-  if((inc.gcAt||0)>(S.gcAt||0)){S.gc=inc.gc||'';S.gcAt=inc.gcAt||0}
+  if((inc.gcAt||0)>(S.gcAt||0)){S.gc=inc.gc||'';S.gcAt=inc.gcAt||0;
+    S.gcId=inc.gcId||'';S.gcPrefix=inc.gcPrefix==null?'*':inc.gcPrefix;
+    S.gcMonths=inc.gcMonths||12;S.gcAuto=!!inc.gcAuto}
   else if(!S.gc&&inc.gc){S.gc=inc.gc;S.gcAt=inc.gcAt||0}
   if(inc.lastExport&&(!S.lastExport||inc.lastExport>S.lastExport))S.lastExport=inc.lastExport;
 }
@@ -1905,7 +2164,7 @@ async function ghPush(silent,retry){
       if(p.ok){const pj=await p.json();ghSha=pj.sha}
     }
     const body={message:'update notes '+new Date().toISOString(),
-      content:b64enc(JSON.stringify(S,null,2)),branch:GH.branch};
+      content:b64enc(JSON.stringify(exportable(),null,2)),branch:GH.branch};
     if(ghSha)body.sha=ghSha;
     const r=await fetch(ghUrl(),{method:'PUT',
       headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
@@ -2091,20 +2350,17 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
-  <div class="twobox">
-    <div><h5>貼 JSON（推薦）</h5><ol>
-      <li>PDF 丟給 Claude 說「精讀這篇」</li>
-      <li>按 <code>📋</code> 貼上 → Import</li>
-      <li>展開補 Note</li></ol></div>
-    <div><h5>手動新增</h5><ol>
-      <li>按 <code>＋</code></li>
-      <li>自己填</li>
-      <li>臨時用</li></ol></div>
-  </div>
+  <h4>📥 從 Claude 匯入</h4>
+  <p>丟 PDF 給 Claude 說「精讀這篇」，會拿到<strong>一段 JSON</strong>和<strong>一個 HTML 檔</strong>。按工具列的 <code>📥</code>，一個面板兩件事都做完：</p>
+  <ol>
+    <li>JSON 貼進上半 → <strong>建立卡片</strong>，九個欄位自動填好，Note 留白</li>
+    <li>HTML 檔案拖進下半 → <strong>上傳</strong>，直接存進私密 repo 的 <span class="mono">papers/</span></li>
+  </ol>
+  <p>檔名和對應卡片會自動猜好，通常直接按上傳。同名直接覆蓋，改版重傳即可。臨時要記一篇不做精讀的，按 <code>＋</code> 手動新增。</p>
   <p><strong>搜尋</strong>搜所有欄位，不用按 Enter。<code>🏷️</code> 展開實際用過的 tag，<strong>可複選，條件是「同時具備」</strong>。搜尋和 tag 會一起套用到 Cards 和 Compare。</p>
   <p><code>🔗</code> 填相對路徑（<code>papers/2026-chen.html</code>）。設定好 GitHub 同步後，<strong>點下去會直接從私密 repo 抓檔案顯示</strong>——HTML 在閱讀視窗渲染、PDF 開新分頁。檔案全程沒有離開私密 repo。</p>
   <h4>⬇️ 匯出</h4>
-  <p><code>⬇️</code> 會匯出<strong>目前搜尋和 tag 篩選後</strong>的卡片。<br>
+  <p>切到 <code>Compare</code> 檢視時，上方會出現 CSV 與 Markdown 兩個匯出鍵，匯出的是<strong>目前搜尋和 tag 篩選後</strong>的卡片。<br>
   <strong>Markdown</strong> 給寫作用——貼進 Word、Notion、GitHub 都保留結構，適合當 literature review 的初稿骨架。<br>
   <strong>CSV</strong> 給 Excel 用——排序、篩選、做表格。</p>
 </div></details>
@@ -2143,7 +2399,12 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <p>課表<strong>依系統日期自動跳到對應學期</strong>。點色塊 = 編輯。必修綠、選修黃、Lab meeting 藍。</p>
   <p>Key dates 按月分組，左邊方塊是倒數：一天內深紅、七天內淺紅、三十天內琥珀、更遠淺綠。過期的收在按鈕後。</p>
-  <h4>🔗 Google 日曆</h4>
+  <h4>📅 從 Google 日曆匯入</h4>
+  <p>嵌入的日曆是一個獨立的框，<strong>網頁讀不到裡面的內容</strong>（瀏覽器的跨來源限制），所以改用匯入檔案。</p>
+  <p>Google 日曆 → 設定 → 匯入及匯出 → <strong>匯出</strong>，下載的 zip 解開後是 <span class="mono">.ics</span>。按 KEY DATES 旁的 <code>📅</code> 選那個檔，預設<strong>只匯入標題以 <code>*</code> 開頭的事件</strong>，並自動把星號去掉。已經存在的不會重複匯入。</p>
+  <p>前綴可以改成任何符號，也可以清空表示全部匯入。</p>
+
+  <h4>🔗 Google 日曆嵌入</h4>
   <p>設定在 <strong>Settings → GOOGLE 日曆</strong>，日曆本身顯示在 Calendar 分頁最下面。</p>
   <p>取得網址：Google 日曆 → 設定 → 左側選那個日曆 → <strong>整合日曆</strong> → 找到「嵌入程式碼」，複製裡面 <code>src="…"</code> 引號內那一段。</p>
   <p>日曆需設為公開，或你在同一個瀏覽器已登入 Google 帳號。</p>
@@ -2214,6 +2475,7 @@ function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
+  if(S.gcAuto&&S.gcId&&S.gcKey&&Date.now()-(S.gcLast||0)>6*3600*1000)gcFetchEvents(true);
   if(GH.auto&&ghOn())await ghPull(true);
   await snapshot(false);renderBackups();
 })();
