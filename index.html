@@ -647,7 +647,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <button class="x" id="fvClose" style="font-size:20px">✕</button>
   </div>
   <div style="flex:1;margin-top:10px;min-height:0">
-    <iframe id="fvFrame" sandbox="allow-popups"
+    <iframe id="fvFrame" sandbox="allow-popups allow-scripts allow-same-origin"
       style="width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
   </div>
 </div>
@@ -870,7 +870,10 @@ document.addEventListener('pointerdown',e=>{
 let fvBlob=null;
 function fvShow(name,html){
   document.getElementById('fvName').textContent=name;
-  document.getElementById('fvFrame').srcdoc=html;
+  // Ensure charset is declared so Chinese characters render correctly in srcdoc
+  const safeHtml=html.indexOf('<meta charset')!==-1?html
+    :html.replace(/(<head[^>]*>)/i,'$1<meta charset="utf-8">');
+  document.getElementById('fvFrame').srcdoc=safeHtml;
   document.getElementById('fv').classList.add('on');
 }
 document.getElementById('fvClose').onclick=()=>{
