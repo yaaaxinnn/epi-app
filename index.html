@@ -284,7 +284,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <button class="tab" role="tab" data-p="textbooks" aria-selected="false">Textbooks</button>
       <button class="tab" role="tab" data-p="courses" aria-selected="false">Courses</button>
       <button class="tab" role="tab" data-p="review" aria-selected="false">Review</button>
-      <button class="tab" role="tab" data-p="ideas" aria-selected="false">Ideas</button>
+      <button class="tab" role="tab" data-p="ideas" aria-selected="false">Meeting</button>
       <button class="tab" role="tab" data-p="calendar" aria-selected="false">Calendar</button>
       <button class="tab" role="tab" data-p="settings" aria-selected="false">Settings</button>
     </nav>
@@ -460,22 +460,65 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
   <div id="qList"></div>
 
-  <div class="sec-head"><span class="t">RESEARCH IDEAS</span><span class="spacer"></span>
-    <div class="seg sm" id="riSeg">
-      <button data-rf2="all" aria-pressed="true">All</button>
-      <button data-rf2="explore" aria-pressed="false">Exploring</button>
-      <button data-rf2="main" aria-pressed="false">Main</button>
-      <button data-rf2="killed" aria-pressed="false">Killed</button>
+  <div class="sec-head"><span class="t">TO-DO · 未完成的 Action Items</span></div>
+  <div id="mtTodo"></div>
+
+  <div class="sec-head"><span class="t">MEETINGS</span><span class="spacer"></span>
+    <button class="iconb" id="addMTBtn" title="新增 meeting 紀錄">＋</button></div>
+  <div class="card" id="mtForm" style="display:none">
+    <div class="grid2">
+      <label class="f"><span>日期</span><input type="date" id="mt-date"></label>
+      <label class="f"><span>標題（選填）</span><input type="text" id="mt-title" placeholder="e.g. 每週 meeting"></label>
     </div>
-    <button class="iconb" id="addRIBtn" title="新增">＋</button></div>
-  <div class="card" id="riForm" style="display:none">
-    <label class="f"><span>Idea</span><input type="text" id="ri-title"></label>
-    <label class="f"><span>Why it matters</span><textarea id="ri-why"></textarea></label>
-    <label class="f"><span>Who has done it</span><textarea id="ri-who"></textarea></label>
-    <label class="f"><span>Kill criteria</span><textarea id="ri-kill"></textarea></label>
-    <div class="saverow"><button class="btn ghost" id="cancelRI">Cancel</button><button class="btn" id="addRI">Save</button></div>
+    <label class="f"><span>會議紀錄</span><textarea id="mt-topics" style="min-height:110px" placeholder="NotebookLM 轉出的紀錄直接貼這裡"></textarea></label>
+    <label class="f"><span>Action items（一行一項）</span><textarea id="mt-actions" placeholder="回去要做的事，每行一項"></textarea></label>
+    <div class="f">
+      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">我提供的資料（PPT／PDF）</span>
+        <button class="btn icon" id="mtMatToggle" type="button">＋</button></div>
+      <div id="mtNewMats" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
+      <div id="mtMatInputs" class="grid2" style="gap:6px;display:none">
+        <input type="text" id="mt-mat-name" placeholder="名稱，e.g. 進度簡報">
+        <div style="display:flex;gap:6px">
+          <input type="text" id="mt-mat-url" placeholder="https://... 按 Enter 加入" style="flex:1">
+          <button class="btn icon" id="mtAddMat" type="button">✓</button>
+        </div>
+      </div>
+    </div>
+    <div class="f">
+      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">老師給的參考文獻／附件</span>
+        <button class="btn icon" id="mtRefToggle" type="button">＋</button></div>
+      <div id="mtNewRefs" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
+      <div id="mtRefInputs" class="grid2" style="gap:6px;display:none">
+        <input type="text" id="mt-ref-name" placeholder="名稱，e.g. Wong 2023 IPDMA">
+        <div style="display:flex;gap:6px">
+          <input type="text" id="mt-ref-url" placeholder="https://... 按 Enter 加入" style="flex:1">
+          <button class="btn icon" id="mtAddRef" type="button">✓</button>
+        </div>
+      </div>
+    </div>
+    <div class="saverow"><button class="btn ghost" id="cancelMT">Cancel</button><button class="btn" id="addMT">Save</button></div>
   </div>
-  <div id="riList"></div>
+  <div id="mtList"></div>
+
+  <div class="sec-head"><span class="t">RESEARCH DIRECTIONS</span><span class="spacer"></span>
+    <div class="seg sm" id="dirSeg">
+      <button data-dirf="active" aria-pressed="true">進行中</button>
+      <button data-dirf="all" aria-pressed="false">All</button>
+      <button data-dirf="done" aria-pressed="false">完成</button>
+    </div>
+    <button class="iconb" id="addDIRBtn" title="新增方向">＋</button></div>
+  <div class="card" id="dirForm" style="display:none">
+    <label class="f"><span>方向／題目</span><input type="text" id="dir-title" placeholder="老師給的研究方向"></label>
+    <div class="grid2">
+      <label class="f"><span>來源日期</span><input type="date" id="dir-date"></label>
+      <label class="f"><span>狀態</span><select id="dir-status">
+        <option value="todo">未開始</option><option value="doing">進行中</option>
+        <option value="paused">暫停</option><option value="done">完成</option></select></label>
+    </div>
+    <label class="f"><span>下一步（選填）</span><input type="text" id="dir-next" placeholder="e.g. 先做 systematic search"></label>
+    <div class="saverow"><button class="btn ghost" id="cancelDIR">Cancel</button><button class="btn" id="addDIR">Save</button></div>
+  </div>
+  <div id="dirList"></div>
 </section>
 
 <!-- ========== Calendar ========== -->
@@ -508,20 +551,8 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
 
   <div class="sec-head"><span class="t">KEY DATES</span><span class="spacer"></span>
-    <button class="iconb" id="icsBtn" title="從 Google 日曆匯入">📅</button>
     <button class="btn icon" id="toggleKD">＋</button></div>
-  <div class="card" id="icsForm" style="display:none">
-    <p class="hint" style="margin-top:0">Google 日曆 → 設定 → 匯入及匯出 → <strong>匯出</strong>，下載的 zip 解開後是 <span class="mono">.ics</span> 檔。拖進來或點一下選檔案。</p>
-    <div id="icsDrop" style="border:2px dashed var(--line-strong);border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;background:var(--surface-2)">
-      <div style="font-size:30px;line-height:1">📅</div>
-      <div style="font-weight:500;margin-top:5px">選 .ics 檔案</div>
-    </div>
-    <input type="file" id="icsFile" accept=".ics,text/calendar" style="display:none">
-    <label class="f" style="margin-top:12px"><span>只匯入標題開頭是</span><input type="text" id="icsPrefix" value="*"></label>
-    <label class="chk"><input type="checkbox" id="icsFuture" checked><span style="flex:1">只匯入今天以後的</span></label>
-    <div id="icsPreview" style="margin-top:10px"></div>
-    <div class="saverow"><button class="btn ghost" id="cancelIcs">Cancel</button><button class="btn" id="doIcs" disabled>匯入</button></div>
-  </div>
+  
   <div class="card" id="kdForm" style="display:none">
     <div class="grid2">
       <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
@@ -549,13 +580,14 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="tip" id="tipData">匯出會下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。<br>
     <strong>它跟 GitHub 同步防的不是同一件事</strong>：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，存到硬碟或雲端硬碟，十年後用記事本都打得開。</div>
     <div class="row">
-      <button class="btn ghost mini" id="impBtn">📥 合併匯入</button>
-      <button class="btn ghost mini" id="impRepBtn">覆蓋匯入</button>
+      <button class="btn ghost mini" id="impBtn" title="把檔案裡的資料併進現有資料，不會刪東西">⇊ Merge</button>
+      <button class="btn ghost mini" id="impRepBtn" title="整包換掉，現有資料會全部消失">⟳ Replace</button>
       <input type="file" id="impFile" accept=".json" style="display:none">
       <span class="spacer"></span>
-      <button class="btn mini" id="expBtn">📤 Export</button>
+      <button class="btn mini" id="expBtn">⇈ Export</button>
     </div>
-    <p class="hint" style="margin:10px 0 0" id="expInfo"></p>
+    <p class="hint" style="margin:10px 0 0"><strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。</p>
+    <p class="hint" style="margin:6px 0 0" id="expInfo"></p>
   </div>
 
   <div class="sec-title">自動存檔</div>
@@ -567,8 +599,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
   </div>
 
-  <div class="sec-title">☁️ GitHub 同步</div>
-  <div class="card">
+  <details class="card fold" id="ghFold"><summary style="font-size:15px;font-weight:600;color:var(--ink)">☁️ GitHub 同步 ▾</summary>
     <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipGh" aria-expanded="false">ⓘ</button></div>
     <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
     <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
@@ -589,22 +620,10 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <button class="btn mini" id="ghSave">儲存設定</button>
     </div>
     <p class="hint" style="margin:10px 0 0" id="ghState"></p>
-  </div>
+  </details>
 
-  <div class="sec-title">🗑️ 最近刪除</div>
-  <div class="card">
-    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
-    <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
-    <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></div>
-    <div id="trashList" style="margin-top:10px"></div>
-  </div>
-
-  <div class="sec-title">HELP</div>
-  <div id="helpBox"></div>
-
-  <div class="sec-title">GOOGLE 日曆</div>
-  <div class="card">
-    <p class="hint" style="margin-top:0">貼上嵌入網址後，會顯示在 Calendar 分頁最下面。取得方式見下方 HELP。</p>
+  <details class="card fold"><summary style="font-size:15px;font-weight:600;color:var(--ink)">📆 GOOGLE 日曆 ▾</summary>
+    <p class="hint" style="margin-top:0">貼上嵌入網址後，會顯示在 Calendar 分頁最下面。取得方式見 HELP。</p>
     <div class="linkrow" style="margin-top:10px"><span class="ic">🔗</span><input type="text" id="gcUrl"></div>
 
     <div class="srclab" style="margin-top:16px">自動抓 KEY DATES</div>
@@ -623,7 +642,21 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button>
     </div>
     <p class="hint" style="margin:10px 0 0" id="gcState"></p>
+  </details>
+
+  <div class="sec-title">🗑️ 最近刪除</div>
+  <div class="card">
+    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
+    <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
+    <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></div>
+    <div id="trashList" style="margin-top:10px"></div>
   </div>
+
+  <details class="card fold"><summary style="font-size:15px;font-weight:600;color:var(--ink)">📘 HELP ▾</summary>
+    <div id="helpBox" style="margin-top:8px"></div>
+  </details>
+
+
 
 </section>
 
@@ -774,7 +807,7 @@ const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
+function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],mt:[],dirs:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
   tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -840,6 +873,44 @@ function currentTerm(){const d=new Date().toISOString().slice(0,10);
 async function load(){
   try{const r=await store.get(KEY);S=r&&r.value?JSON.parse(r.value):defaults()}catch(e){S=defaults()}
   S=Object.assign(defaults(),S||{});
+  (function migrateLinks(){
+    (S.mt||[]).forEach(m=>{
+      ['mats','refs'].forEach(k=>{
+        const kl=k+'L';
+        if(!Array.isArray(m[kl]))m[kl]=[];
+        if(typeof m[k]==='string'&&m[k].trim()){
+          m[k].split('\n').map(s=>s.trim()).filter(Boolean).forEach(line=>{
+            const mm=line.match(/^(.+?)[:：]\s*(https?:\/\/\S+)$/);
+            if(mm)m[kl].push({name:mm[1],url:mm[2]});
+            else if(/^https?:\/\//.test(line))m[kl].push({name:line.slice(0,30),url:line});
+            else m[kl].push({name:line,url:''});
+          });
+          delete m[k];
+        }
+      });
+    });
+  })();
+  (function migrateDirs(){
+    if(!S.dirs)S.dirs=[];
+    (S.mt||[]).forEach(m=>{
+      if(m.dir){
+        m.dir.split('\n').map(s=>s.trim()).filter(Boolean).forEach(line=>{
+          if(!S.dirs.some(d=>d.title===line))
+            S.dirs.push({id:uid(),created:Date.now(),mtime:Date.now(),title:line,date:m.date||'',status:'todo',log:''});
+        });
+        delete m.dir;
+      }
+    });
+  })();
+  (function dedupeKD(){
+    const seen={},keep=[];
+    (S.kd||[]).forEach(k=>{
+      const key=k.date+'|'+k.title;
+      if(!seen[key]){seen[key]=k;keep.push(k)}
+      else if(k.gid&&!seen[key].gid){const i=keep.indexOf(seen[key]);keep[i]=k;seen[key]=k}
+    });
+    if(keep.length!==(S.kd||[]).length)S.kd=keep;
+  })();
   if(!Array.isArray(S.tagLib))S.tagLib=DEFAULT_TAGS.slice();
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
@@ -906,6 +977,7 @@ async function openRepoFile(path){
 }
 document.addEventListener('click',e=>{
   const o=e.target.closest('[data-open]');if(!o)return;
+  if(!document.contains(o))return;
   e.preventDefault();
   const u=safeUrl(o.dataset.open);
   if(!u){toast('這個連結格式不安全');return}
@@ -915,7 +987,7 @@ document.addEventListener('click',e=>{
 });
 const BIN={paper:['papers','精讀卡片','title'],card:['cards','複習卡','q'],
   q:['qs','Question','q'],ri:['ri','Research idea','title'],
-  kd:['kd','Key date','title'],cs:['courses','課表','name'],cls:['classes','課程','name']};
+  mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],kd:['kd','Key date','title'],cs:['courses','課表','name'],cls:['classes','課程','name']};
 function bin(type,obj){
   if(!Array.isArray(S.trash))S.trash=[];
   if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
@@ -963,6 +1035,11 @@ async function doHold(spec){
   else if(t==='creset'){const c=S.cards.find(x=>x.id===id);if(c){c.level=0;c.due=Date.now();c.n=0;c.last=null;save();renderCards();updateBadge();toast('排程已重設')}}
   else if(t==='q'){save();renderQ();renderTrash();toast('已移到回收桶')}
   else if(t==='ri'){save();renderRI();renderTrash();toast('已移到回收桶')}
+  else if(t==='mt'){save();renderMT();renderTrash();toast('已移到回收桶')}
+  else if(t==='dir'){save();renderDIR();renderTrash();toast('已移到回收桶')}
+  else if(t==='nmlk'){newMats.splice(+id,1);renderNewLinks();toast('已刪除')}
+  else if(t==='nrlk'){newRefs.splice(+id,1);renderNewLinks();toast('已刪除')}
+
   else if(t==='kd'){save();renderKD();renderTrash();toast('已移到回收桶')}
   else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
   else if(t==='cls'){save();renderCl();renderTrash();toast('已移到回收桶')}
@@ -1130,22 +1207,36 @@ function renderPapers(){
   renderTagbar();
   const info=document.getElementById('paperCount');
   if(!S.papers.length){list.innerHTML=`<div class="empty">還沒有精讀卡片。</div>`;tbl.innerHTML='';info.innerHTML='';return}
-  const a=S.papers.filter(paperMatch).sort((x,y)=>y.created-x.created);
+  const a=S.papers.filter(paperMatch).sort((x,y)=>((y.star?1:0)-(x.star?1:0))||(y.created-x.created));
   info.innerHTML=(qPaper||tagFilter.size)
     ? `<span class="pill ${a.length?'pine':'clay'}">${a.length} / ${S.papers.length} 篇</span>`
     : `<span class="pill">${S.papers.length} 篇</span>`;
   if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
-  list.innerHTML=a.map(p=>`<div class="item">
-    <div class="row"><div style="flex:1;min-width:0"><h3>${esc(p.title)}</h3>
+  const CATS={teacher:['老師指定','#B0472E','#F7E5DE'],course:['課程','#2E5FB0','#DEE9F7']};
+  list.innerHTML=a.map(p=>`<div class="item"${p.star?' style="border-color:#D9A62E;box-shadow:0 0 0 1px #E8C662 inset"':''}>
+    <div class="row">
+      <button class="x" data-pstar="${p.id}" title="${p.star?'取消置頂':'標星置頂'}" style="font-size:17px;padding:0 2px;flex:0 0 auto;color:${p.star?'#D9A62E':'var(--faint)'}">${p.star?'★':'☆'}</button>
+      <div style="flex:1;min-width:0"><h3>${esc(p.title)}</h3>
       <div class="meta">${esc(p.authors||'—')}${p.year?' · '+esc(p.year):''}${p.journal?' · '+esc(p.journal):''}${p.url?` <button class="iconb" data-open="${esc(p.url)}" title="原文連結" style="font-size:13px;padding:0 4px">🌐</button>`:''}</div>
-      ${p.sum?`<div class="oneline">📌 ${esc(p.sum)}</div>`:''}</div>
+      ${p.sum?`<div class="oneline">📌 ${esc(p.sum)}</div>`:''}
+      ${p.snote?`<div class="oneline" style="color:#8A6A1E">📝 ${esc(p.snote)}</div>`:''}
+      <div class="row" style="margin-top:8px">
+        ${p.file?`<span class="acts"><button data-open="${esc(p.file)}" title="精讀 HTML">🔗</button></span>`:''}
+        ${p.cat&&CATS[p.cat]?`<span class="pill" style="color:${CATS[p.cat][1]};background:${CATS[p.cat][2]};border-color:${CATS[p.cat][1]}40">${CATS[p.cat][0]}</span>`:''}
+        ${(p.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('')}
+        ${!p.note?`<span class="pill clay">Note 未填</span>`:''}</div>
+      </div>
       <span class="acts"><button data-pedit="${p.id}" title="編輯">✎</button></span>
       <button class="x" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button></div>
-    <div class="row" style="margin-top:8px">
-      ${p.file?`<span class="acts"><button data-open="${esc(p.file)}" title="精讀 HTML">🔗</button></span>`:''}
-      ${(p.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('')}
-      ${!p.note?`<span class="pill clay">Note 未填</span>`:''}</div>
     ${openP.has(p.id)?`<div class="editbox">
+      <div class="grid2" style="margin-bottom:8px">
+        <label class="f"><span>分類標籤</span><select data-pcat="${p.id}">
+          <option value=""${!p.cat?' selected':''}>— 無 —</option>
+          <option value="teacher"${p.cat==='teacher'?' selected':''}>老師指定</option>
+          <option value="course"${p.cat==='course'?' selected':''}>課程</option>
+        </select></label>
+        <label class="f"><span>簡短備註</span><input type="text" data-pf="${p.id}|snote" value="${esc(p.snote||'')}" placeholder="e.g. meeting 前要讀完"></label>
+      </div>
       ${PF.map(f=>f[0]==='sum'
         ? `<div class="linkrow"><span class="ic">📌</span><input type="text" data-pf="${p.id}|sum" value="${esc(p.sum||'')}"></div>`
         : `<label class="f"><span>${f[1]}</span><textarea data-pf="${p.id}|${f[0]}">${esc(p[f[0]]||'')}</textarea></label>`).join('')}
@@ -1170,6 +1261,11 @@ function renderPapers(){
     <div class="tablewrap"><table><thead><tr>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${
     a.map(p=>`<tr>${cols.map(c=>`<td data-cell><div class="clamp">${esc(p[c[0]])||'—'}</div></td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
+document.getElementById('paperList').addEventListener('change',e=>{
+  const cs=e.target.closest('[data-pcat]');
+  if(cs){const p=S.papers.find(x=>x.id===cs.dataset.pcat);
+    if(p){p.cat=cs.value;p.mtime=Date.now();save();renderPapers()}}
+});
 document.getElementById('paperList').addEventListener('input',e=>{
   const f=e.target.closest('[data-pf]');
   if(f){const[id,k]=f.dataset.pf.split('|');const p=S.papers.find(x=>x.id===id);if(p){p[k]=f.value;p.mtime=Date.now();save()}return}
@@ -1178,6 +1274,9 @@ document.getElementById('paperList').addEventListener('input',e=>{
 });
 document.getElementById('paperList').addEventListener('click',e=>{
   if(hEl)return;
+  const st=e.target.closest('[data-pstar]');
+  if(st){const p=S.papers.find(x=>x.id===st.dataset.pstar);
+    if(p){p.star=!p.star;p.mtime=Date.now();save();renderPapers()}return}
   const ed=e.target.closest('[data-pedit]');
   if(ed){const id=ed.dataset.pedit;openP.has(id)?openP.delete(id):openP.add(id);renderPapers();return}
   const sv=e.target.closest('[data-psave]');
@@ -1312,7 +1411,12 @@ document.getElementById('doPushHtml').onclick=async()=>{
     let sha=null;
     const r0=await fetch(url+'?ref='+encodeURIComponent(GH.branch),
       {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
-    if(r0.ok){const j0=await r0.json();sha=j0.sha}
+    if(r0.ok){
+      try{const j0=await r0.json();sha=j0.sha}catch(e){}
+    }else if(r0.status!==404){
+      const errTxt=await r0.text().catch(()=>'');
+      throw new Error('HTTP '+r0.status+(errTxt&&!errTxt.trim().startsWith('<')?' · '+errTxt.slice(0,100):''))
+    }
     const payload={message:'add '+path,content:b64enc(hfText),branch:GH.branch};
     if(sha)payload.sha=sha;
     const r=await fetch(url,{method:'PUT',
@@ -1512,7 +1616,7 @@ function renderQ(){
       <div class="saverow">
         <button class="btn ghost mini" data-qd="${q.id}" style="margin-right:auto">${q.done?'Reopen':'Resolve'}</button>
         <button class="btn ghost mini" data-qc="${q.id}">↑ Card</button>
-        <button class="btn ghost mini" data-qr="${q.id}">↑ Idea</button>
+        <button class="btn ghost mini" data-qr="${q.id}">↑ 方向</button>
         <button class="btn" data-qsave="${q.id}">Save</button></div>
     </div>`:''}</div>`).join('');
 }
@@ -1538,59 +1642,373 @@ document.getElementById('qList').addEventListener('click',e=>{
     save();renderCards();updateBadge();toast('已變成複習卡');return}
   const r=e.target.closest('[data-qr]');if(!r)return;
   const q=S.qs.find(x=>x.id===r.dataset.qr);
-  S.ri.push({id:uid(),created:Date.now(),updated:Date.now(),title:q.q,status:'explore',why:q.a||'',who:q.s1||'',kill:''});
-  save();renderRI();toast('已送進 Research ideas');
+  if(S.dirs.some(d=>d.title===q.q)){toast('這個方向已存在');return}
+  S.dirs.push({id:uid(),created:Date.now(),mtime:Date.now(),title:q.q,date:new Date().toISOString().slice(0,10),status:'todo',log:q.a||''});
+  save();renderDIR();toast('已加入 Research directions');
 });
 
-document.getElementById('addRIBtn').onclick=()=>{if(toggle('riForm'))document.getElementById('ri-title').focus()};
-document.getElementById('cancelRI').onclick=()=>show('riForm',false);
-document.getElementById('addRI').onclick=()=>{
-  const t=document.getElementById('ri-title').value.trim();if(!t){toast('請填題目');return}
-  S.ri.push({id:uid(),created:Date.now(),updated:Date.now(),title:t,status:'explore',
-    why:document.getElementById('ri-why').value.trim(),who:document.getElementById('ri-who').value.trim(),
-    kill:document.getElementById('ri-kill').value.trim()});
-  ['ri-title','ri-why','ri-who','ri-kill'].forEach(i=>document.getElementById(i).value='');
-  show('riForm',false);saved();renderRI();
+document.getElementById('addMTBtn').onclick=()=>{
+  if(toggle('mtForm')){
+    document.getElementById('mt-date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('mt-topics').focus();
+  }
 };
-function renderRI(){
-  const el=document.getElementById('riList');
-  const a=S.ri.filter(t=>riFilter==='all'||t.status===riFilter);
-  if(!a.length){el.innerHTML=`<div class="empty">${S.ri.length?'這個分類沒有題目。':'還沒有候選題目。'}</div>`;return}
-  el.innerHTML=a.map(t=>`<div class="item" style="${t.status==='killed'?'opacity:.55':''}">
-    <div class="row"><h3 style="flex:1">${esc(t.title)}</h3>
-      <span class="acts"><button data-redit="${t.id}" title="編輯">✎</button></span>
-      <button class="x" data-hold="ri|${t.id}" title="長按 1.5 秒刪除">✕</button></div>
-    ${openR.has(t.id)?`<div class="editbox">
-      <label class="f"><span>Idea</span><input type="text" data-rf="${t.id}|title" value="${esc(t.title)}"></label>
-      <div class="linkrow"><span class="ic">🔻</span><select data-rs="${t.id}">
-        ${Object.keys(RIS).map(k=>`<option value="${k}"${t.status===k?' selected':''}>${RIS[k]}</option>`).join('')}</select></div>
-      <label class="f"><span>Why it matters</span><textarea data-rf="${t.id}|why">${esc(t.why||'')}</textarea></label>
-      <label class="f"><span>Who has done it</span><textarea data-rf="${t.id}|who">${esc(t.who||'')}</textarea></label>
-      <label class="f" style="margin-bottom:4px"><span>Kill criteria</span><textarea data-rf="${t.id}|kill">${esc(t.kill||'')}</textarea></label>
-      ${!t.kill?`<p class="hint" style="margin:0 0 10px">還沒填。沒有淘汰條件的候選會一直留在清單上。</p>`:''}
-      <div class="saverow"><button class="btn" data-rsave="${t.id}">Save</button></div>
-    </div>`:''}</div>`).join('');
+document.getElementById('cancelMT').onclick=()=>show('mtForm',false);
+let newMats=[],newRefs=[];
+function renderNewLinks(){
+  document.getElementById('mtNewMats').innerHTML=newMats.map((l,i)=>
+    `<span class="pill" data-hold="nmlk|${i}" title="長按 1.5 秒刪除">📊 ${esc(l.name)}</span>`).join(' ');
+  document.getElementById('mtNewRefs').innerHTML=newRefs.map((l,i)=>
+    `<span class="pill" data-hold="nrlk|${i}" title="長按 1.5 秒刪除">📄 ${esc(l.name)}</span>`).join(' ');
 }
-document.getElementById('riSeg').addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;riFilter=b.dataset.rf2;
-  document.querySelectorAll('#riSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderRI();
+function grabLink(nameId,urlId){
+  const name=document.getElementById(nameId).value.trim();
+  const url=document.getElementById(urlId).value.trim();
+  if(!url){toast('請貼網址');return null}
+  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return null}
+  document.getElementById(nameId).value='';document.getElementById(urlId).value='';
+  return {name:name||url.slice(0,30),url};
+}
+document.getElementById('mtMatToggle').onclick=()=>{const el=document.getElementById('mtMatInputs');
+  const on=el.style.display==='none';el.style.display=on?'':'none';
+  document.getElementById('mtMatToggle').textContent=on?'−':'＋';
+  if(on)document.getElementById('mt-mat-name').focus()};
+document.getElementById('mtRefToggle').onclick=()=>{const el=document.getElementById('mtRefInputs');
+  const on=el.style.display==='none';el.style.display=on?'':'none';
+  document.getElementById('mtRefToggle').textContent=on?'−':'＋';
+  if(on)document.getElementById('mt-ref-name').focus()};
+document.getElementById('mtAddMat').onclick=()=>{const l=grabLink('mt-mat-name','mt-mat-url');if(l){newMats.push(l);renderNewLinks();document.getElementById('mt-mat-name').focus()}};
+document.getElementById('mtAddRef').onclick=()=>{const l=grabLink('mt-ref-name','mt-ref-url');if(l){newRefs.push(l);renderNewLinks();document.getElementById('mt-ref-name').focus()}};
+document.getElementById('mt-mat-url').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('mtAddMat').click()}});
+document.getElementById('mt-ref-url').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('mtAddRef').click()}});
+document.getElementById('addMT').onclick=()=>{
+  const d=document.getElementById('mt-date').value;
+  const topics=document.getElementById('mt-topics').value.trim();
+  if(!d){toast('請填日期');return}
+  S.mt.push({id:uid(),created:Date.now(),mtime:Date.now(),
+    date:d,title:document.getElementById('mt-title').value.trim(),
+    topics:topics,
+    actions:document.getElementById('mt-actions').value.split('\n').map(s=>s.trim()).filter(Boolean).map(t=>({text:t,done:false})),
+    matsL:newMats.slice(),refsL:newRefs.slice()});
+  ['mt-title','mt-topics','mt-actions'].forEach(i=>document.getElementById(i).value='');
+  newMats=[];newRefs=[];renderNewLinks();
+  show('mtForm',false);saved();renderMT();
+};
+
+function mtLinkEditor(m,key,label,icon){
+  const arr=m[key]||[];
+  return `<details class="fold" style="margin-bottom:8px"><summary>${label}（${arr.length}）▾</summary>
+    <div style="margin:6px 0 4px">
+    ${arr.map((l,i)=>`<div class="linkrow" style="margin-bottom:4px">
+      <span class="ic">${icon}</span>
+      <input type="text" data-mlname="${m.id}|${key}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 34%">
+      <input type="text" data-mlurl="${m.id}|${key}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
+      <button class="x" data-mldel="${m.id}|${key}|${i}" style="font-size:12px" title="刪除">✕</button>
+    </div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有附件。</p>'}
+    </div>
+    <div class="linkrow">
+      <input type="text" data-mladd-name="${m.id}|${key}" placeholder="名稱" style="flex:0 0 30%">
+      <input type="text" data-mladd-url="${m.id}|${key}" placeholder="https://..." style="flex:1">
+      <button class="btn icon" data-mladd-go="${m.id}|${key}" title="加入">＋</button>
+    </div>
+  </details>`;
+}
+const openM=new Set();
+function mtProgress(m){
+  const total=(m.actions||[]).length;
+  if(!total)return'';
+  const done=(m.actions||[]).filter(a=>a.done).length;
+  return `<span class="pill ${done===total?'pine':''}">${done}/${total}</span>`;
+}
+function renderMTTodo(){
+  const el=document.getElementById('mtTodo');
+  const rows=[];
+  [...(S.mt||[])].sort((x,y)=>(y.date||'').localeCompare(x.date||'')).forEach(m=>{
+    (m.actions||[]).forEach((a,ai)=>{if(!a.done)rows.push({m,a,ai})});
+  });
+  if(!rows.length){el.innerHTML=`<div class="empty" style="padding:14px">🎉 沒有未完成的待辦。</div>`;return}
+  el.innerHTML=`<div class="card" style="padding:10px 14px">`+rows.map(r=>
+    `<label class="chk" style="margin-bottom:4px">
+      <input type="checkbox" data-tdact="${r.m.id}|${r.ai}">
+      <span style="flex:1">${esc(r.a.text)}</span>
+      <span class="pill" style="font-size:10.5px">${esc(r.m.date)}</span>
+    </label>`).join('')+`</div>`;
+}
+function renderMT(){
+  renderMTTodo();
+  const el=document.getElementById('mtList');
+  if(!S.mt||!S.mt.length){el.innerHTML=`<div class="empty">還沒有 meeting 紀錄。點右上 ＋ 新增。</div>`;renderDIR();return}
+  const a=[...S.mt].sort((x,y)=>(y.date||'').localeCompare(x.date||''));
+  el.innerHTML=a.map(m=>{
+    const open=openM.has(m.id);
+    const chip=(l,i,key,icon)=>l.url
+      ?`<span class="pill" data-open="${esc(l.url)}" data-mstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">${icon} ${esc(l.name)}</span>`
+      :`<span class="pill">${icon} ${esc(l.name)}</span>`;
+    const matBtns=(m.matsL||[]).map((l,i)=>chip(l,i,'matsL','📊')).join(' ');
+    const refBtns=(m.refsL||[]).map((l,i)=>chip(l,i,'refsL','📄')).join(' ');
+    const linkRow=(matBtns||refBtns)?`<div data-mstop="1" style="cursor:default">
+      ${matBtns?`<div class="row" style="margin-top:7px;flex-wrap:wrap;gap:5px"><span style="font-size:11px;color:var(--muted);flex:0 0 auto">我的資料</span>${matBtns}</div>`:''}
+      ${refBtns?`<div class="row" style="margin-top:5px;flex-wrap:wrap;gap:5px"><span style="font-size:11px;color:var(--muted);flex:0 0 auto">老師文獻</span>${refBtns}</div>`:''}
+    </div>`:'';
+    return `<div class="item" data-mcard="${m.id}" style="cursor:pointer">
+    <div class="row">
+      <div style="flex:1;min-width:0">
+        <h3><span class="mono" style="font-size:13px;color:var(--muted)">${esc(m.date)}</span>${m.title?`　${esc(m.title)}`:''}</h3>
+      </div>
+      ${mtProgress(m)}
+      <button class="x" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
+    </div>
+    ${linkRow}
+    ${open?`<div class="editbox" data-mstop="1" style="cursor:default">
+      <div class="grid2">
+        <label class="f"><span>日期</span><input type="date" data-mf="${m.id}|date" value="${esc(m.date||'')}"></label>
+        <label class="f"><span>標題</span><input type="text" data-mf="${m.id}|title" value="${esc(m.title||'')}"></label>
+      </div>
+      <label class="f"><span>會議紀錄</span><textarea data-mf="${m.id}|topics" style="min-height:110px">${esc(m.topics||'')}</textarea></label>
+      <details class="fold" style="margin-bottom:8px"><summary>Action items（${(m.actions||[]).filter(x=>!x.done).length} 待辦 / ${(m.actions||[]).length}）▾</summary>
+        <div style="margin-top:6px">
+        ${(m.actions||[]).map((act,ai)=>`<label class="chk" style="margin-bottom:4px">
+          <input type="checkbox" data-mact="${m.id}|${ai}" ${act.done?'checked':''}>
+          <span style="flex:1;${act.done?'text-decoration:line-through;opacity:.55':''}">${esc(act.text)}</span>
+          <button class="x" data-mdel-act="${m.id}|${ai}" style="font-size:12px" title="刪除">✕</button>
+        </label>`).join('')||'<p class="hint" style="margin:0">還沒有待辦。</p>'}
+        </div>
+        <div class="linkrow" style="margin-top:6px"><span class="ic">＋</span>
+          <input type="text" data-mnew-act="${m.id}" placeholder="新增一項，按 Enter"></div>
+      </details>
+      ${mtLinkEditor(m,'matsL','我提供的資料（PPT／PDF）','📊')}
+      ${mtLinkEditor(m,'refsL','老師給的參考文獻／附件','📄')}
+      <div class="saverow"><button class="btn" data-msave="${m.id}">收合</button></div>
+    </div>`:''}</div>`}).join('');
+  renderDIR();
+}
+document.getElementById('mtTodo').addEventListener('change',e=>{
+  const cb=e.target.closest('[data-tdact]');if(!cb)return;
+  const[id,ai]=cb.dataset.tdact.split('|');const m=S.mt.find(x=>x.id===id);
+  if(m&&m.actions[+ai]){m.actions[+ai].done=true;m.mtime=Date.now();save();
+    setTimeout(renderMT,220)}
 });
-document.getElementById('riList').addEventListener('change',e=>{
-  const t=e.target.closest('[data-rs]');if(!t)return;
-  const r=S.ri.find(x=>x.id===t.dataset.rs);if(r){r.status=t.value;r.updated=Date.now();save();renderRI()}
-});
-document.getElementById('riList').addEventListener('input',e=>{
-  const f=e.target.closest('[data-rf]');if(!f)return;
-  const[id,k]=f.dataset.rf.split('|');const t=S.ri.find(x=>x.id===id);
-  if(t){t[k]=f.value;t.updated=Date.now();t.mtime=Date.now();save()}
-});
-document.getElementById('riList').addEventListener('click',e=>{
+document.getElementById('mtList').addEventListener('click',e=>{
   if(hEl)return;
-  const ed=e.target.closest('[data-redit]');
-  if(ed){const id=ed.dataset.redit;openR.has(id)?openR.delete(id):openR.add(id);renderRI();return}
-  const sv=e.target.closest('[data-rsave]');
-  if(sv){openR.delete(sv.dataset.rsave);saved();renderRI();return}
+  if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
+  const sv=e.target.closest('[data-msave]');
+  if(sv){openM.delete(sv.dataset.msave);saved();renderMT();return}
+  const da=e.target.closest('[data-mdel-act]');
+  if(da){const[id,ai]=da.dataset.mdelAct.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m){m.actions.splice(+ai,1);m.mtime=Date.now();save();renderMT()}return}
+  const lg=e.target.closest('[data-mladd-go]');
+  if(lg){addMtLink(lg.dataset.mladdGo);return}
+  const ld=e.target.closest('[data-mldel]');
+  if(ld){const[id,key,i]=ld.dataset.mldel.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m&&m[key]){m[key].splice(+i,1);m.mtime=Date.now();save();renderMT()}return}
+  if(e.target.closest('[data-mstop]'))return;
+  const card=e.target.closest('[data-mcard]');
+  if(card){const id=card.dataset.mcard;openM.has(id)?openM.delete(id):openM.add(id);renderMT()}
 });
+document.getElementById('mtList').addEventListener('change',e=>{
+  const cb=e.target.closest('[data-mact]');
+  if(cb){const[id,ai]=cb.dataset.mact.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m&&m.actions[+ai]){m.actions[+ai].done=cb.checked;m.mtime=Date.now();save();renderMT()}return}
+});
+document.getElementById('mtList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-mf]');
+  if(f){const[id,k]=f.dataset.mf.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m){m[k]=f.value;m.mtime=Date.now();save()}return}
+  const ln=e.target.closest('[data-mlname]');
+  if(ln){const[id,key,i]=ln.dataset.mlname.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m&&m[key]&&m[key][+i]){m[key][+i].name=ln.value;m.mtime=Date.now();save()}return}
+  const lu=e.target.closest('[data-mlurl]');
+  if(lu){const[id,key,i]=lu.dataset.mlurl.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m&&m[key]&&m[key][+i]){m[key][+i].url=lu.value;m.mtime=Date.now();save()}return}
+});
+document.getElementById('mtList').addEventListener('keydown',e=>{
+  const na=e.target.closest('[data-mnew-act]');
+  if(na&&e.key==='Enter'){
+    e.preventDefault();
+    const t=na.value.trim();if(!t)return;
+    const m=S.mt.find(x=>x.id===na.dataset.mnewAct);
+    if(m){m.actions=m.actions||[];m.actions.push({text:t,done:false});m.mtime=Date.now();save();renderMT();
+      const el=document.querySelector(`[data-mnew-act="${m.id}"]`);if(el)el.focus()}
+    return;
+  }
+  const la=e.target.closest('[data-mladd-url],[data-mladd-name]');
+  if(la&&e.key==='Enter'){e.preventDefault();addMtLink(la.dataset.mladdUrl||la.dataset.mladdName)}
+});
+function addMtLink(spec){
+  const[id,key]=spec.split('|');
+  const nameEl=document.querySelector(`[data-mladd-name="${id}|${key}"]`);
+  const urlEl=document.querySelector(`[data-mladd-url="${id}|${key}"]`);
+  const url=(urlEl?urlEl.value.trim():''),name=(nameEl?nameEl.value.trim():'');
+  if(!url){toast('請貼網址');if(urlEl)urlEl.focus();return}
+  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return}
+  const m=S.mt.find(x=>x.id===id);
+  if(m){m[key]=m[key]||[];m[key].push({name:name||url.slice(0,30),url});m.mtime=Date.now();save();renderMT();
+    const el=document.querySelector(`[data-mladd-name="${id}|${key}"]`);
+    if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}}
+}
+
+/* ===== RESEARCH DIRECTIONS ===== */
+const DIRSTAT={todo:['未開始','var(--muted)','var(--surface-2)'],doing:['進行中','#2E5FB0','#DEE9F7'],paused:['暫停','#9A6A2C','#F6EEE0'],done:['完成','#3E6B4E','#E2EEE6']};
+const openD=new Set();
+let dirFilter='active';
+document.getElementById('addDIRBtn').onclick=()=>{
+  if(toggle('dirForm')){
+    document.getElementById('dir-date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('dir-title').focus();
+  }
+};
+document.getElementById('cancelDIR').onclick=()=>show('dirForm',false);
+document.getElementById('addDIR').onclick=()=>{
+  const t=document.getElementById('dir-title').value.trim();
+  if(!t){toast('請填方向');return}
+  S.dirs.push({id:uid(),created:Date.now(),mtime:Date.now(),title:t,
+    date:document.getElementById('dir-date').value,
+    status:document.getElementById('dir-status').value,
+    next:document.getElementById('dir-next').value.trim(),
+    log:[],links:[]});
+  document.getElementById('dir-title').value='';document.getElementById('dir-next').value='';
+  show('dirForm',false);saved();renderDIR();
+};
+document.getElementById('dirSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;dirFilter=b.dataset.dirf;
+  document.querySelectorAll('#dirSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderDIR();
+});
+function dirDays(d){
+  if(!d.date)return'';
+  const days=Math.round((Date.now()-new Date(d.date))/DAY);
+  return days>0?`<span class="pill" style="font-size:10.5px" title="從老師給題至今">${days} 天</span>`:'';
+}
+function renderDIR(){
+  const el=document.getElementById('dirList');if(!el)return;
+  if(!S.dirs||!S.dirs.length){el.innerHTML=`<div class="empty">還沒有研究方向。老師給題目時點 ＋ 記下來。</div>`;return}
+  let a=[...S.dirs];
+  if(dirFilter==='active')a=a.filter(d=>d.status!=='done');
+  else if(dirFilter==='done')a=a.filter(d=>d.status==='done');
+  if(!a.length){el.innerHTML=`<div class="empty">這個分類沒有方向。</div>`;return}
+  const order={doing:0,todo:1,paused:2,done:3};
+  a.sort((x,y)=>(order[x.status]??9)-(order[y.status]??9)||(y.created-x.created));
+  el.innerHTML=a.map(d=>{
+    // migrate old string log to array on the fly
+    if(typeof d.log==='string'){d.log=d.log.trim()?[{ts:d.created||Date.now(),text:d.log.trim()}]:[]}
+    if(!Array.isArray(d.links))d.links=[];
+    const st=DIRSTAT[d.status]||DIRSTAT.todo;
+    const open=openD.has(d.id);
+    const lastLog=(d.log&&d.log.length)?d.log[d.log.length-1]:null;
+    const linkBtns=d.links.map((l,i)=>l.url
+      ?`<span class="pill" data-open="${esc(l.url)}" data-dstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">📎 ${esc(l.name)}</span>`
+      :`<span class="pill">📎 ${esc(l.name)}</span>`).join(' ');
+    return `<div class="item" data-dcard="${d.id}" style="cursor:pointer;${d.status==='done'?'opacity:.6':''}">
+    <div class="row">
+      <h3 style="flex:1;min-width:0">${esc(d.title)}</h3>
+      ${dirDays(d)}
+      <span class="pill" style="color:${st[1]};background:${st[2]};flex:0 0 auto">${st[0]}</span>
+      <button class="x" data-hold="dir|${d.id}" title="長按 1.5 秒刪除">✕</button>
+    </div>
+    ${!open&&d.next?`<div class="oneline" style="margin-top:4px">👉 ${esc(d.next)}</div>`:''}
+    ${!open&&lastLog?`<div class="oneline" style="margin-top:2px;color:var(--muted)">📈 ${esc(lastLog.text)}</div>`:''}
+    ${linkBtns?`<div class="row" data-dstop="1" style="margin-top:6px;flex-wrap:wrap;gap:5px;cursor:default">${linkBtns}</div>`:''}
+    ${open?`<div class="editbox" data-dstop="1" style="cursor:default">
+      <label class="f"><span>方向／題目</span><input type="text" data-df="${d.id}|title" value="${esc(d.title)}"></label>
+      <div class="grid2">
+        <label class="f"><span>來源日期</span><input type="date" data-df="${d.id}|date" value="${esc(d.date||'')}"></label>
+        <label class="f"><span>狀態</span><select data-ds="${d.id}">
+          ${Object.keys(DIRSTAT).map(k=>`<option value="${k}"${d.status===k?' selected':''}>${DIRSTAT[k][0]}</option>`).join('')}</select></label>
+      </div>
+      <label class="f"><span>下一步</span><input type="text" data-df="${d.id}|next" value="${esc(d.next||'')}" placeholder="現在該做什麼"></label>
+      <details class="fold" style="margin-bottom:8px"><summary>進度紀錄（${(d.log||[]).length}）▾</summary>
+        <div style="margin:6px 0 4px">
+        ${(d.log||[]).slice().reverse().map((en,ri)=>`<div class="linkrow" style="margin-bottom:3px">
+          <span class="mono" style="font-size:11px;color:var(--muted);flex:0 0 auto">${new Date(en.ts).toISOString().slice(5,10)}</span>
+          <span style="flex:1;font-size:13.5px">${esc(en.text)}</span>
+          <button class="x" data-dlogdel="${d.id}|${(d.log||[]).length-1-ri}" style="font-size:12px" title="刪除">✕</button></div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有進度紀錄。</p>'}
+        </div>
+        <div class="linkrow">
+          <input type="text" data-dnew-log="${d.id}" placeholder="記一筆進度，自動帶日期" style="flex:1">
+          <button class="btn icon" data-dlog-go="${d.id}" title="加入">＋</button></div>
+      </details>
+      <details class="fold" style="margin-bottom:8px"><summary>相關連結（${d.links.length}）▾</summary>
+        <div style="margin:6px 0 4px">
+        ${d.links.map((l,i)=>`<div class="linkrow" style="margin-bottom:4px">
+          <span class="ic">📎</span>
+          <input type="text" data-dlname="${d.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 30%">
+          <input type="text" data-dlurl="${d.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
+          <button class="x" data-dldel2="${d.id}|${i}" style="font-size:12px" title="刪除">✕</button>
+        </div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有連結。</p>'}
+        </div>
+        <div class="linkrow">
+          <input type="text" data-dladd-name="${d.id}" placeholder="名稱" style="flex:0 0 30%">
+          <input type="text" data-dladd-url="${d.id}" placeholder="https://..." style="flex:1">
+          <button class="btn icon" data-dladd-go="${d.id}" title="加入">＋</button>
+        </div>
+      </details>
+      <div class="saverow"><button class="btn" data-dsave="${d.id}">收合</button></div>
+    </div>`:''}</div>`}).join('');
+}
+document.getElementById('dirList').addEventListener('click',e=>{
+  if(hEl)return;
+  if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
+  const sv=e.target.closest('[data-dsave]');
+  if(sv){openD.delete(sv.dataset.dsave);saved();renderDIR();return}
+  const lg=e.target.closest('[data-dlog-go]');
+  if(lg){addDirLog(lg.dataset.dlogGo);return}
+  const la=e.target.closest('[data-dladd-go]');
+  if(la){addDirLink(la.dataset.dladdGo);return}
+  const gd=e.target.closest('[data-dlogdel]');
+  if(gd){const[id,i]=gd.dataset.dlogdel.split('|');const d=S.dirs.find(x=>x.id===id);
+    if(d&&d.log){d.log.splice(+i,1);d.mtime=Date.now();save();renderDIR()}return}
+  const kd=e.target.closest('[data-dldel2]');
+  if(kd){const[id,i]=kd.dataset.dldel2.split('|');const d=S.dirs.find(x=>x.id===id);
+    if(d&&d.links){d.links.splice(+i,1);d.mtime=Date.now();save();renderDIR()}return}
+  if(e.target.closest('[data-dstop]'))return;
+  const card=e.target.closest('[data-dcard]');
+  if(card){const id=card.dataset.dcard;openD.has(id)?openD.delete(id):openD.add(id);renderDIR()}
+});
+document.getElementById('dirList').addEventListener('change',e=>{
+  const ds=e.target.closest('[data-ds]');
+  if(ds){const d=S.dirs.find(x=>x.id===ds.dataset.ds);
+    if(d){d.status=ds.value;d.mtime=Date.now();save();renderDIR()}}
+});
+document.getElementById('dirList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-df]');
+  if(f){const[id,k]=f.dataset.df.split('|');const d=S.dirs.find(x=>x.id===id);
+    if(d){d[k]=f.value;d.mtime=Date.now();save()}return}
+  const ln=e.target.closest('[data-dlname]');
+  if(ln){const[id,i]=ln.dataset.dlname.split('|');const d=S.dirs.find(x=>x.id===id);
+    if(d&&d.links&&d.links[+i]){d.links[+i].name=ln.value;d.mtime=Date.now();save()}return}
+  const lu=e.target.closest('[data-dlurl]');
+  if(lu){const[id,i]=lu.dataset.dlurl.split('|');const d=S.dirs.find(x=>x.id===id);
+    if(d&&d.links&&d.links[+i]){d.links[+i].url=lu.value;d.mtime=Date.now();save()}return}
+});
+document.getElementById('dirList').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const lg=e.target.closest('[data-dnew-log]');
+  if(lg){e.preventDefault();addDirLog(lg.dataset.dnewLog);return}
+  const la=e.target.closest('[data-dladd-url],[data-dladd-name]');
+  if(la){e.preventDefault();addDirLink(la.dataset.dladdUrl||la.dataset.dladdName)}
+});
+function keepOpen(sel){
+  const el=document.querySelector(sel);
+  if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}
+}
+function addDirLog(id){
+  const el=document.querySelector(`[data-dnew-log="${id}"]`);
+  const t=el?el.value.trim():'';
+  if(!t){toast('請輸入進度');if(el)el.focus();return}
+  const d=S.dirs.find(x=>x.id===id);
+  if(d){if(typeof d.log==='string')d.log=[];d.log=d.log||[];
+    d.log.push({ts:Date.now(),text:t});d.mtime=Date.now();save();renderDIR();
+    keepOpen(`[data-dnew-log="${id}"]`)}
+}
+function addDirLink(id){
+  const nameEl=document.querySelector(`[data-dladd-name="${id}"]`);
+  const urlEl=document.querySelector(`[data-dladd-url="${id}"]`);
+  const url=(urlEl?urlEl.value.trim():''),name=(nameEl?nameEl.value.trim():'');
+  if(!url){toast('請貼網址');if(urlEl)urlEl.focus();return}
+  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return}
+  const d=S.dirs.find(x=>x.id===id);
+  if(d){d.links=d.links||[];d.links.push({name:name||url.slice(0,30),url});d.mtime=Date.now();save();renderDIR();
+    keepOpen(`[data-dladd-name="${id}"]`)}
+}
 
 /* ================= COURSES ================= */
 function renderCl(){
@@ -1792,63 +2210,7 @@ document.getElementById('addKD').onclick=()=>{
   kdReset();show('kdForm',false);saved();renderKD();
 };
 let gcCur=null;
-let icsFound=[];
-function icsUnfold(t){return t.replace(/\r\n/g,'\n').replace(/\r/g,'\n').replace(/\n[ \t]/g,'')}
-function icsUnesc(v){return v.replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\')}
-function icsDate(v){
-  const m=v.match(/(\d{4})(\d{2})(\d{2})/);
-  return m?m[1]+'-'+m[2]+'-'+m[3]:'';
-}
-function icsParse(txt){
-  const out=[];let cur=null;
-  icsUnfold(txt).split('\n').forEach(l=>{
-    if(l.startsWith('BEGIN:VEVENT')){cur={};return}
-    if(l.startsWith('END:VEVENT')){if(cur&&cur.date&&cur.title)out.push(cur);cur=null;return}
-    if(!cur)return;
-    const i=l.indexOf(':');if(i<0)return;
-    const key=l.slice(0,i).split(';')[0].toUpperCase(),val=l.slice(i+1);
-    if(key==='SUMMARY')cur.title=icsUnesc(val).trim();
-    else if(key==='DTSTART')cur.date=icsDate(val);
-  });
-  return out;
-}
-function icsRender(){
-  const pre=(document.getElementById('icsPrefix').value||'').trim();
-  const fut=document.getElementById('icsFuture').checked;
-  const today=new Date().toISOString().slice(0,10);
-  const have=new Set(S.kd.map(k=>k.date+'|'+k.title));
-  const list=icsFound.filter(e=>(!pre||e.title.startsWith(pre))&&(!fut||e.date>=today))
-    .map(e=>({date:e.date,title:pre&&e.title.startsWith(pre)?e.title.slice(pre.length).trim():e.title}))
-    .filter(e=>e.title&&!have.has(e.date+'|'+e.title))
-    .sort((a,b)=>a.date.localeCompare(b.date));
-  const el=document.getElementById('icsPreview');
-  el.innerHTML=list.length
-    ? `<p class="hint" style="margin:0 0 6px">找到 ${list.length} 筆（已排除重複）</p>`
-      +list.slice(0,12).map(e=>`<div class="trashrow"><span class="d">${esc(e.date)}</span><span class="tt">${esc(e.title)}</span></div>`).join('')
-      +(list.length>12?`<p class="hint" style="margin:4px 0 0">…另外 ${list.length-12} 筆</p>`:'')
-    : (icsFound.length?`<p class="hint" style="margin:0">沒有符合的事件。</p>`:'');
-  document.getElementById('doIcs').disabled=!list.length;
-  return list;
-}
-document.getElementById('icsBtn').onclick=()=>{if(toggle('icsForm')){icsFound=[];document.getElementById('icsPreview').innerHTML='';document.getElementById('doIcs').disabled=true}};
-document.getElementById('cancelIcs').onclick=()=>show('icsForm',false);
-document.getElementById('icsDrop').onclick=()=>document.getElementById('icsFile').click();
-['dragover','dragenter'].forEach(ev=>document.getElementById('icsDrop').addEventListener(ev,e=>e.preventDefault()));
-document.getElementById('icsDrop').addEventListener('drop',e=>{
-  e.preventDefault();const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
-  if(f){const r=new FileReader();r.onload=()=>{icsFound=icsParse(r.result);icsRender()};r.readAsText(f)}
-});
-document.getElementById('icsFile').onchange=e=>{
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();r.onload=()=>{icsFound=icsParse(r.result);icsRender()};r.readAsText(f);
-};
-document.getElementById('icsPrefix').oninput=icsRender;
-document.getElementById('icsFuture').onchange=icsRender;
-document.getElementById('doIcs').onclick=()=>{
-  const list=icsRender();if(!list.length)return;
-  list.forEach(e=>S.kd.push({id:uid(),date:e.date,title:e.title,type:'other',mtime:Date.now()}));
-  show('icsForm',false);icsFound=[];saved();renderKD();toast('已匯入 '+list.length+' 筆');
-};
+
 async function gcFetchEvents(silent){
   const st=document.getElementById('gcState');
   const id=(S.gcId||'').trim(),key=(S.gcKey||'').trim();
@@ -1877,7 +2239,8 @@ async function gcFetchEvents(silent){
     const seen=new Set();
     evs.forEach(e=>{
       seen.add(e.gid);
-      const ex=S.kd.find(k=>k.gid===e.gid);
+      let ex=S.kd.find(k=>k.gid===e.gid);
+      if(!ex){ex=S.kd.find(k=>!k.gid&&k.date===e.date&&k.title===e.title);if(ex){ex.gid=e.gid;ex.mtime=Date.now()}}
       if(ex){if(ex.date!==e.date||ex.title!==e.title){ex.date=e.date;ex.title=e.title;ex.mtime=Date.now();upd++}}
       else{S.kd.push({id:uid(),gid:e.gid,date:e.date,title:e.title,type:'other',mtime:Date.now()});add++}
     });
@@ -1970,6 +2333,8 @@ document.getElementById('trashList').addEventListener('click',e=>{
     else if(x.type==='card'){renderCards();updateBadge()}
     else if(x.type==='q')renderQ();
     else if(x.type==='ri')renderRI();
+    else if(x.type==='mt')renderMT();
+    else if(x.type==='dir')renderDIR();
     else if(x.type==='kd')renderKD();
     else if(x.type==='cs')renderTT();
     else if(x.type==='cls')renderCl();
@@ -2057,6 +2422,8 @@ function mergeState(inc){
   S.cards=applyTombs(mergeArr(S.cards,inc.cards),tm);
   S.qs=applyTombs(mergeArr(S.qs,inc.qs),tm);
   S.ri=applyTombs(mergeArr(S.ri,inc.ri),tm);
+  S.mt=applyTombs(mergeArr(S.mt,inc.mt),tm);
+  S.dirs=applyTombs(mergeArr(S.dirs,inc.dirs),tm);
   S.kd=applyTombs(mergeArr(S.kd,inc.kd),tm);
   S.courses=applyTombs(mergeArr(S.courses,inc.courses),tm);
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
@@ -2077,9 +2444,9 @@ document.getElementById('impFile').onchange=e=>{
     let inc;try{inc=JSON.parse(r.result)}catch(x){toast('檔案讀不出來');return}
     if(impMode==='replace'){S=Object.assign(defaults(),inc);toast('已覆蓋匯入')}
     else{
-      const before=S.papers.length+S.cards.length+S.qs.length+S.ri.length;
+      const before=S.papers.length+S.cards.length+S.qs.length+S.ri.length+(S.mt||[]).length+(S.dirs||[]).length;
       mergeState(inc);
-      const after=S.papers.length+S.cards.length+S.qs.length+S.ri.length;
+      const after=S.papers.length+S.cards.length+S.qs.length+S.ri.length+(S.mt||[]).length+(S.dirs||[]).length;
       toast('已合併，新增 '+(after-before)+' 筆');
     }
     save();renderAll();
@@ -2304,7 +2671,7 @@ document.getElementById('helpBox').innerHTML=`
 <line x1="517" y1="486" x2="517" y2="512" stroke="#9C978B" marker-end="url(#fa)"/>
 
 <rect x="400" y="514" width="235" height="68" rx="8" fill="#F6EEE0" stroke="#E7D5B6"/>
-<text x="517" y="536" text-anchor="middle" font-size="14" font-weight="600" fill="#8A5C22">7 疑問進 Ideas</text>
+<text x="517" y="536" text-anchor="middle" font-size="14" font-weight="600" fill="#8A5C22">7 疑問進 Meeting</text>
 <text x="517" y="554" text-anchor="middle" font-size="12" fill="#9A6A2C">複習卡或候選題目</text>
 <text x="517" y="571" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ epi-data 自動</text>
 <path d="M400 548 L362 548 L362 656 L232 656" fill="none" stroke="#9C978B" marker-end="url(#fa)"/>
@@ -2340,6 +2707,9 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🎛️ 介面約定</summary><div class="help">
   <p><strong>✎</strong> 編輯　<strong>🔗</strong> 開精讀 HTML　<strong>🌐</strong> 開原文　<strong>📌</strong> 一句話　<strong>🏷️</strong> tag　<strong>📝</strong> 筆記　<strong>🔻</strong> 下拉選單　<strong>＋</strong> 新增。圖示鍵一律沒有外框。</p>
   <p>每個編輯區塊右下角有 <strong>Save</strong>，但底下還有一層保險：<strong>你打的每個字都會自動存</strong>，忘記按也不會掉。</p>
+  <h4>💾 Merge vs Replace</h4>
+  <p><strong>Merge（合併匯入）</strong>：把檔案的資料併進現有資料，同一筆取較新版本，現有東西不會消失。換裝置、還原漏掉的資料用這個。</p>
+  <p><strong>Replace（覆蓋匯入）</strong>：整包換掉，現有資料<strong>全部清空</strong>。只在確定要還原到某個備份時用。</p>
   <h4>🗑️ 刪除的兩層</h4>
   <p><strong>凡是長按才會執行的按鈕，按住時都會被紅色由左往右填滿</strong>當進度條，手指移開或移動超過一點就取消。包括所有 ✕、清除筆記、重設排程、還原、清空回收桶。</p>
   <table><thead><tr><th>動作</th><th>結果</th></tr></thead><tbody>
@@ -2348,11 +2718,12 @@ document.getElementById('helpBox').innerHTML=`
   </tbody></table>
   <p>清空之後系統仍會保留一筆<strong>「這個 id 在某時被刪過」的極輕量紀錄</strong>（只有 id 和時間，沒有內容），存 180 天。這是為了讓其他裝置知道該刪，不會把舊資料送回來。</p>
   <h4>🎨 顏色</h4>
-  <p>每個分頁一個色：Reading 森綠、Textbooks 板岩藍、Review 梅紫、Ideas 赭黃、Calendar 陶紅、Settings 暖灰。按鈕、切換鍵、進度條都跟著換。</p>
+  <p>每個分頁一個色：Reading 森綠、Textbooks 板岩藍、Review 梅紫、Meeting 赭黃、Calendar 陶紅、Settings 暖灰。按鈕、切換鍵、進度條都跟著換。</p>
 </div></details>
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
+  <p><strong>☆ 星號</strong>：點一下置頂（金框標示）。<strong>分類標籤</strong>在編輯區選：「老師指定」紅棕／「課程」藍。<strong>簡短備註</strong>會以 📝 顯示在卡片上，記「meeting 前要讀完」這類提醒。</p>
   <h4>📥 從 Claude 匯入</h4>
   <p>丟 PDF 給 Claude 說「精讀這篇」，會拿到<strong>一段 JSON</strong>和<strong>一個 HTML 檔</strong>。按工具列的 <code>📥</code>，一個面板兩件事都做完：</p>
   <ol>
@@ -2393,19 +2764,32 @@ document.getElementById('helpBox').innerHTML=`
   <p><code>Exam mode</code> 勾主題整批跑，<strong>不會改動到期日</strong>。</p>
 </div></details>
 
-<details class="card fold"><summary>💡 Ideas</summary><div class="help">
-  <p><strong>Mine</strong> 我不懂的　<strong>Study</strong> 課堂與教科書　<strong>Field</strong> 領域爭議（多出正方／反方）</p>
-  <p>展開後可以 <code>Resolve</code>、<code>↑ Card</code> 變複習卡、<code>↑ Idea</code> 變候選題目。</p>
-  <p>Research ideas 沒填 <strong>Kill criteria</strong> 會出現紅色提示。狀態在編輯區的 🔻 改，上方分頁可篩選。</p>
+<details class="card fold"><summary>💬 Meeting</summary><div class="help">
+  <p><strong>To-do</strong>：所有 meeting 未完成的 action items 集中在最上面，附來源日期，打勾就完成、從清單消失。全部完成會顯示 🎉。</p>
+  <p><strong>Questions</strong>：讀 paper 時的疑問。可以 <code>↑ Card</code> 變複習卡、<code>↑ 方向</code> 升級成研究方向。</p>
+  <h4>📋 Meetings</h4>
+  <p><strong>點卡片展開／收合</strong>。收合時只顯示日期、標題、附件標籤；會議紀錄（NotebookLM 轉的文字直接貼）展開才看得到。</p>
+  <p>展開後的 <strong>Action items</strong>、<strong>我提供的資料</strong>、<strong>老師給的參考文獻</strong>各自是收合的小區塊（標題後有數量），點標題才展開，刪除都在裡面做。</p>
+  <p>附件加入方式：填名稱＋網址，按 <code>＋</code> 或在任一欄按 Enter。加入後以 <strong>📊 我的資料／📄 老師文獻</strong>分列顯示在卡片上，<strong>點一下開啟</strong>（不會誤刪）。</p>
+  <p>老師給的 PDF：上傳到 repo 的 <span class="mono">meetings/</span> 資料夾，把檔案網址貼進附件即可跨裝置開啟。</p>
+  <h4>🎯 Research directions</h4>
+  <p>老師給的方向獨立管理，不綁定單次 meeting。狀態篩選：<strong>進行中</strong>（預設，藏起已完成）／All／完成。</p>
+  <p>每個方向有：</p>
+  <ul>
+    <li><strong>👉 下一步</strong>：現在該做什麼，收合也看得到</li>
+    <li><strong>📈 進度紀錄</strong>：每做完一件事記一筆（自動蓋日期），累積成這個方向的軌跡；收合時顯示最新一筆，一眼看出上次做到哪</li>
+    <li><strong>📎 相關連結</strong>：掛 paper 或筆記，點一下開啟</li>
+    <li><strong>天數計數</strong>：距離老師給題已過幾天，提醒別讓方向躺太久</li>
+  </ul>
+  <p>狀態標籤顯示在卡片右側。進度紀錄和相關連結都是收合的小區塊，點開才編輯。</p>
 </div></details>
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <p>課表<strong>依系統日期自動跳到對應學期</strong>。點色塊 = 編輯。必修綠、選修黃、Lab meeting 藍。</p>
   <p>Key dates 按月分組，左邊方塊是倒數：一天內深紅、七天內淺紅、三十天內琥珀、更遠淺綠。過期的收在按鈕後。</p>
-  <h4>📅 從 Google 日曆匯入</h4>
-  <p>嵌入的日曆是一個獨立的框，<strong>網頁讀不到裡面的內容</strong>（瀏覽器的跨來源限制），所以改用匯入檔案。</p>
-  <p>Google 日曆 → 設定 → 匯入及匯出 → <strong>匯出</strong>，下載的 zip 解開後是 <span class="mono">.ics</span>。按 KEY DATES 旁的 <code>📅</code> 選那個檔，預設<strong>只匯入標題以 <code>*</code> 開頭的事件</strong>，並自動把星號去掉。已經存在的不會重複匯入。</p>
-  <p>前綴可以改成任何符號，也可以清空表示全部匯入。</p>
+  <h4>📅 KEY DATES 自動抓取</h4>
+  <p>設定在 <strong>Settings → GOOGLE 日曆 → 自動抓 KEY DATES</strong>：填日曆 ID 與 API 金鑰，預設只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。</p>
+  <p>同一事件<strong>不會重複匯入</strong>：以 Google 事件 ID 比對，事件改期或改名會自動更新；在 Google 日曆刪掉的事件，這裡也會跟著移除。</p>
 
   <h4>🔗 Google 日曆嵌入</h4>
   <p>設定在 <strong>Settings → GOOGLE 日曆</strong>，日曆本身顯示在 Calendar 分頁最下面。</p>
@@ -2474,7 +2858,7 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>`;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
-  renderCards();renderQ();renderRI();renderCl();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
+  renderCards();renderQ();renderMT();renderCl();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
