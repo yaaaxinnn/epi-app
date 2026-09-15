@@ -282,7 +282,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <nav class="tabs" role="tablist" id="tabs">
       <button class="tab" role="tab" data-p="reading" aria-selected="true">Reading</button>
       <button class="tab" role="tab" data-p="textbooks" aria-selected="false">Textbooks</button>
-      <button class="tab" role="tab" data-p="courses" aria-selected="false">Courses</button>
+      <button class="tab" role="tab" data-p="courses" aria-selected="false">Notes</button>
       <button class="tab" role="tab" data-p="review" aria-selected="false">Review</button>
       <button class="tab" role="tab" data-p="ideas" aria-selected="false">Meeting</button>
       <button class="tab" role="tab" data-p="calendar" aria-selected="false">Calendar</button>
@@ -380,20 +380,52 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 </section>
 
 
-<!-- ========== Courses ========== -->
+<!-- ========== Notes ========== -->
 <section class="panel" id="p-courses">
-  <div class="sec-head"><span class="t">COURSES</span><span class="spacer"></span>
-    <div class="seg sm" id="clTermSeg"></div>
-    <button class="iconb" id="addClBtn" title="新增課程">＋</button></div>
-  <div class="card" id="clForm" style="display:none">
-    <label class="f"><span>Course</span><input type="text" id="cl-name"></label>
-    <div class="grid2">
-      <label class="f"><span>Teacher</span><input type="text" id="cl-teacher"></label>
-      <label class="f"><span>Term</span><select id="cl-term"></select></label>
+  <div class="sec-head"><span class="t">QUESTIONS</span><span class="spacer"></span>
+    <div class="seg sm" id="qSeg">
+      <button data-qf="open" aria-pressed="true">Unresolved</button>
+      <button data-qf="all" aria-pressed="false">All</button>
     </div>
-    <div class="saverow"><button class="btn ghost" id="cancelCl">Cancel</button><button class="btn" id="saveCl">Save</button></div>
+    <button class="iconb" id="addQBtn" title="新增">＋</button>
   </div>
-  <div id="clList"></div>
+  <div class="card" id="qForm" style="display:none">
+    <label class="f"><span>Question</span><textarea id="q-q"></textarea></label>
+    <div class="grid2">
+      <label class="f"><span>Kind</span><select id="q-kind">
+        <option value="mine">Mine</option>
+        <option value="study">Study</option>
+        <option value="field">Field</option></select></label>
+      <label class="f"><span>Source</span><input type="text" id="q-src"></label>
+    </div>
+    <div id="fieldOnly" style="display:none">
+      <label class="f"><span>Side A</span><textarea id="q-a1"></textarea></label>
+      <label class="f"><span>Side B</span><textarea id="q-b1"></textarea></label>
+    </div>
+    <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
+  </div>
+  <div id="qList"></div>
+
+  <div class="sec-head" style="margin-top:18px"><span class="t">NOTES</span><span class="spacer"></span>
+    <button class="iconb" id="addNtBtn" title="新增筆記">＋</button></div>
+  <div class="card" id="ntForm" style="display:none">
+    <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
+    <label class="f"><span>內容／備忘</span><textarea id="nt-body" placeholder="想查的東西、重點、待整理的想法"></textarea></label>
+    <div class="f">
+      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">連結（Google Drive／網頁）</span>
+        <button class="btn icon" id="ntLinkToggle" type="button">＋</button></div>
+      <div id="ntNewLinks" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
+      <div id="ntLinkInputs" class="grid2" style="gap:6px;display:none">
+        <input type="text" id="nt-link-name" placeholder="名稱">
+        <div style="display:flex;gap:6px">
+          <input type="text" id="nt-link-url" placeholder="https://drive.google.com/..." style="flex:1">
+          <button class="btn icon" id="ntAddLink" type="button">✓</button>
+        </div>
+      </div>
+    </div>
+    <div class="saverow"><button class="btn ghost" id="cancelNt">Cancel</button><button class="btn" id="addNt">Save</button></div>
+  </div>
+  <div id="ntList"></div>
 </section>
 
 <!-- ========== Review ========== -->
@@ -436,33 +468,6 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Ideas ========== -->
 <section class="panel" id="p-ideas">
-  <div class="sec-head"><span class="t">QUESTIONS</span><span class="spacer"></span>
-    <div class="seg sm" id="qSeg">
-      <button data-qf="open" aria-pressed="true">Unresolved</button>
-      <button data-qf="all" aria-pressed="false">All</button>
-    </div>
-    <button class="iconb" id="addQBtn" title="新增">＋</button>
-  </div>
-  <div class="card" id="qForm" style="display:none">
-    <label class="f"><span>Question</span><textarea id="q-q"></textarea></label>
-    <div class="grid2">
-      <label class="f"><span>Kind</span><select id="q-kind">
-        <option value="mine">Mine</option>
-        <option value="study">Study</option>
-        <option value="field">Field</option></select></label>
-      <label class="f"><span>Source</span><input type="text" id="q-src"></label>
-    </div>
-    <div id="fieldOnly" style="display:none">
-      <label class="f"><span>Side A</span><textarea id="q-a1"></textarea></label>
-      <label class="f"><span>Side B</span><textarea id="q-b1"></textarea></label>
-    </div>
-    <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
-  </div>
-  <div id="qList"></div>
-
-  <div class="sec-head"><span class="t">TO-DO · 未完成的 Action Items</span></div>
-  <div id="mtTodo"></div>
-
   <div class="sec-head"><span class="t">MEETINGS</span><span class="spacer"></span>
     <button class="iconb" id="addMTBtn" title="新增 meeting 紀錄">＋</button></div>
   <div class="card" id="mtForm" style="display:none">
@@ -470,8 +475,17 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <label class="f"><span>日期</span><input type="date" id="mt-date"></label>
       <label class="f"><span>標題（選填）</span><input type="text" id="mt-title" placeholder="e.g. 每週 meeting"></label>
     </div>
-    <label class="f"><span>會議紀錄</span><textarea id="mt-topics" style="min-height:110px" placeholder="NotebookLM 轉出的紀錄直接貼這裡"></textarea></label>
-    <label class="f"><span>Action items（一行一項）</span><textarea id="mt-actions" placeholder="回去要做的事，每行一項"></textarea></label>
+    <label class="f"><span>重點（2–3 句，收合時會顯示）</span><textarea id="mt-topics" style="min-height:60px" placeholder="這次最重要的結論是什麼"></textarea></label>
+    <label class="f"><span>完整逐字稿（選填）</span><textarea id="mt-full" style="min-height:90px" placeholder="NotebookLM 轉出的紀錄貼這裡"></textarea></label>
+    <div class="f">
+      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">Action items</span>
+        <button class="btn icon" id="mtActToggle" type="button">＋</button></div>
+      <div id="mtNewActs" style="margin:6px 0 4px"></div>
+      <div id="mtActInputs" class="linkrow" style="display:none">
+        <input type="text" id="mt-act-text" placeholder="回去要做的事，按 Enter 加入" style="flex:1">
+        <button class="btn icon" id="mtAddAct" type="button">✓</button>
+      </div>
+    </div>
     <div class="f">
       <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">我提供的資料（PPT／PDF）</span>
         <button class="btn icon" id="mtMatToggle" type="button">＋</button></div>
@@ -519,10 +533,31 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="saverow"><button class="btn ghost" id="cancelDIR">Cancel</button><button class="btn" id="addDIR">Save</button></div>
   </div>
   <div id="dirList"></div>
+  <div class="sec-head"><span class="t">TO-DO · 未完成的 Action Items</span></div>
+  <div id="mtTodo"></div>
+
 </section>
 
 <!-- ========== Calendar ========== -->
 <section class="panel" id="p-calendar">
+  <div class="sec-head"><span class="t">KEY DATES</span><span class="spacer"></span>
+    <button class="btn icon" id="toggleKD">＋</button></div>
+  
+  <div class="card" id="kdForm" style="display:none">
+    <div class="grid2">
+      <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
+      <label class="f"><span>Type</span><select id="kd-type">
+        <option value="deadline">Deadline</option><option value="exam">Exam</option>
+        <option value="todo">To do</option><option value="school">School</option>
+        <option value="other">Other</option></select></label>
+    </div>
+    <label class="f"><span>Title</span><input type="text" id="kd-title"></label>
+    <div class="saverow"><button class="btn ghost" id="cancelKD">Cancel</button><button class="btn" id="addKD">Save</button></div>
+  </div>
+  <div id="kdList"></div>
+  <div class="row" id="kdPastRow" style="margin-top:4px"></div>
+  <div id="kdPastList"></div>
+
   <div class="sec-head"><span class="t">TIMETABLE</span><span class="spacer"></span><div class="seg sm" id="termSeg"></div></div>
   <div class="ttwrap"><table class="tt" id="ttTable"></table></div>
   <div class="legend">
@@ -545,28 +580,20 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <label class="f"><span>From</span><select id="cs-from"></select></label>
       <label class="f"><span>To</span><select id="cs-to"></select></label>
     </div>
-    <label class="f"><span>Room</span><input type="text" id="cs-room"></label>
+    <div class="grid2">
+      <label class="f"><span>Room</span><input type="text" id="cs-room"></label>
+      <label class="f"><span>學分</span><input type="number" id="cs-credits" value="2" min="0" max="10" step="0.5"></label>
+    </div>
+    <label class="f"><span>領域（選修才需要）</span><select id="cs-field">
+      <option value="">— 不指定 —</option>
+      <option value="infect">傳染病學領域</option>
+      <option value="chronic">慢性病學領域</option>
+      <option value="quant">數量方法／生物統計／生物資訊領域</option>
+    </select></label>
     <div class="saverow"><button class="btn warn" id="delCS" style="display:none;margin-right:auto" title="長按 1.5 秒刪除">Delete</button>
       <button class="btn ghost" id="cancelCS">Cancel</button><button class="btn" id="addCS">Save</button></div>
   </div>
 
-  <div class="sec-head"><span class="t">KEY DATES</span><span class="spacer"></span>
-    <button class="btn icon" id="toggleKD">＋</button></div>
-  
-  <div class="card" id="kdForm" style="display:none">
-    <div class="grid2">
-      <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
-      <label class="f"><span>Type</span><select id="kd-type">
-        <option value="deadline">Deadline</option><option value="exam">Exam</option>
-        <option value="todo">To do</option><option value="school">School</option>
-        <option value="other">Other</option></select></label>
-    </div>
-    <label class="f"><span>Title</span><input type="text" id="kd-title"></label>
-    <div class="saverow"><button class="btn ghost" id="cancelKD">Cancel</button><button class="btn" id="addKD">Save</button></div>
-  </div>
-  <div id="kdList"></div>
-  <div class="row" id="kdPastRow" style="margin-top:4px"></div>
-  <div id="kdPastList"></div>
 
   <div id="gcBox"></div>
 </section>
@@ -800,14 +827,14 @@ function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=1
 
 let S=null,paperView='list',cardSort='due',mFilter='book',qFilter='open';
 let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
-const flipped=new Set(),clOpen=new Set(),openP=new Set(),openQ=new Set(),openR=new Set();
+const flipped=new Set(),clOpen=new Set(),openP=new Set(),openT=new Set(),openQ=new Set(),openR=new Set();
 let editCard=null,riFilter='all',trashAll=false;
 const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['pop','Participants'],
   ['def','Definitions'],['analysis','Analysis'],['result','Results'],['gap','Gap'],['note','Note']];
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],mt:[],dirs:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
+function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],mt:[],dirs:[],notes:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
   tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -987,7 +1014,7 @@ document.addEventListener('click',e=>{
 });
 const BIN={paper:['papers','精讀卡片','title'],card:['cards','複習卡','q'],
   q:['qs','Question','q'],ri:['ri','Research idea','title'],
-  mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],kd:['kd','Key date','title'],cs:['courses','課表','name'],cls:['classes','課程','name']};
+  mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],note:['notes','Note','title'],kd:['kd','Key date','title'],cs:['courses','課表','name'],cls:['classes','課程','name']};
 function bin(type,obj){
   if(!Array.isArray(S.trash))S.trash=[];
   if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
@@ -1037,6 +1064,8 @@ async function doHold(spec){
   else if(t==='ri'){save();renderRI();renderTrash();toast('已移到回收桶')}
   else if(t==='mt'){save();renderMT();renderTrash();toast('已移到回收桶')}
   else if(t==='dir'){save();renderDIR();renderTrash();toast('已移到回收桶')}
+  else if(t==='note'){save();renderNt();renderTrash();toast('已移到回收桶')}
+  else if(t==='nntlk'){newNtLinks.splice(+id,1);renderNtNewLinks();toast('已刪除')}
   else if(t==='nmlk'){newMats.splice(+id,1);renderNewLinks();toast('已刪除')}
   else if(t==='nrlk'){newRefs.splice(+id,1);renderNewLinks();toast('已刪除')}
 
@@ -1103,7 +1132,20 @@ function renderMethod(){
       let es=arr.map((a,j)=>({a,j}));
       if(qSec)es=es.filter(o=>norm((src==='me'?'ME ':'HR ')+o.a[0]+' '+o.a[1]).includes(norm(qSec)));
       if(!es.length)return '';
-      return `<div class="srcgrp"><div class="srclab">${src==='me'?'MODERN EPIDEMIOLOGY 4E':'CAUSAL INFERENCE: WHAT IF'}</div><div class="secs">${
+      if(src==='hr')return `<details class="srcgrp fold" style="padding:0"><summary class="srclab" style="cursor:pointer">＋ CAUSAL INFERENCE: WHAT IF（補充 · ${es.length}）</summary><div class="secs">${
+        es.map(o=>{
+          const kk=src+'-'+o.j,v=t.sec[kk]||0,nt=t.sn[kk]||{},has=(nt.n||(nt.links||[]).some(l=>l.url))?' has':'';
+          const sid=i+'|'+kk,op=openSec===sid;
+          return `<div class="secwrap">
+            <button class="sec s${v}" data-t="${i}" data-k="${kk}"><span class="num">HR ${o.a[0]}</span><span class="ttl">${esc(o.a[1])}</span><span class="st">${ST[v]}</span></button>
+            <button class="npen${has}" data-note="${sid}" aria-expanded="${op}" title="筆記">✎</button></div>
+            ${op?`<div class="npanel">
+              <div class="linkrow top"><span class="ic">📝</span><textarea data-nf="${sid}|n" style="min-height:70px">${esc(nt.n||'')}</textarea></div>
+              ${linkEditor('sec',i+'~'+kk,nt.links)}
+              <div class="saverow"><button class="btn ghost mini" data-hold="secnote|${sid}" title="長按 1.5 秒清除" style="margin-right:auto">Clear</button>
+                <button class="btn mini" data-nsave="${sid}">Save</button></div></div>`:''}`;
+        }).join('')}</div></details>`;
+      return `<div class="srcgrp"><div class="srclab">MODERN EPIDEMIOLOGY 4E</div><div class="secs">${
         es.map(o=>{
           const kk=src+'-'+o.j,v=t.sec[kk]||0,nt=t.sn[kk]||{},has=(nt.n||(nt.links||[]).some(l=>l.url))?' has':'';
           const sid=i+'|'+kk,op=openSec===sid;
@@ -1123,19 +1165,13 @@ function renderMethod(){
         <span class="th-emo">${c.e}</span>
         <div class="th-name"><div class="en">${esc(c.en)}</div><div class="zh">${esc(c.zh)}</div></div>
       </div>
-      <div class="th-body">${body}
-        <div class="srcgrp"><div class="srclab">主題總結</div>
-          <textarea data-tnote="${i}">${esc(t.note)}</textarea>
-          <div class="saverow"><button class="btn mini" data-tsave="${i}">Save</button></div></div>
-      </div></div>`;
+      <div class="th-body">${body}</div></div>`;
   });
   document.getElementById('themeList').innerHTML=html||`<div class="empty">沒有符合的主題。</div>`;
 }
 document.getElementById('themeList').addEventListener('click',e=>{
   const sv=e.target.closest('[data-nsave]');
   if(sv){openSec=null;saved();renderMethod();return}
-  const tv=e.target.closest('[data-tsave]');
-  if(tv){saved();return}
   const np=e.target.closest('[data-note]');
   if(np){openSec=openSec===np.dataset.note?null:np.dataset.note;renderMethod();return}
   const sc=e.target.closest('.sec');
@@ -1148,8 +1184,6 @@ document.getElementById('themeList').addEventListener('input',e=>{
   const nf=e.target.closest('[data-nf]');
   if(nf){const parts=nf.dataset.nf.split('|');const i=+parts[0],kk=parts[1],fld=parts[2];
     const t=th(i);if(!t.sn[kk])t.sn[kk]={};t.sn[kk][fld]=nf.value;t.sn[kk].mtime=Date.now();save();return}
-  const tn=e.target.closest('[data-tnote]');
-  if(tn){const t=th(+tn.dataset.tnote);t.note=tn.value;t.noteAt=Date.now();save()}
 });
 document.getElementById('mSeg').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;mFilter=b.dataset.f;
@@ -1207,33 +1241,50 @@ function renderPapers(){
   renderTagbar();
   const info=document.getElementById('paperCount');
   if(!S.papers.length){list.innerHTML=`<div class="empty">還沒有精讀卡片。</div>`;tbl.innerHTML='';info.innerHTML='';return}
-  const a=S.papers.filter(paperMatch).sort((x,y)=>((y.star?1:0)-(x.star?1:0))||(y.created-x.created));
+  const a=S.papers.filter(paperMatch).sort((x,y)=>((y.star?1:0)-(x.star?1:0))||((y.year||0)-(x.year||0))||(y.created-x.created));
   info.innerHTML=(qPaper||tagFilter.size)
     ? `<span class="pill ${a.length?'pine':'clay'}">${a.length} / ${S.papers.length} 篇</span>`
     : `<span class="pill">${S.papers.length} 篇</span>`;
   if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
-  const CATS={teacher:['老師指定','#B0472E','#F7E5DE'],course:['課程','#2E5FB0','#DEE9F7']};
-  list.innerHTML=a.map(p=>`<div class="item"${p.star?' style="border-color:#D9A62E;box-shadow:0 0 0 1px #E8C662 inset"':''}>
-    <div class="row">
-      <button class="x" data-pstar="${p.id}" title="${p.star?'取消置頂':'標星置頂'}" style="font-size:17px;padding:0 2px;flex:0 0 auto;color:${p.star?'#D9A62E':'var(--faint)'}">${p.star?'★':'☆'}</button>
-      <div style="flex:1;min-width:0"><h3>${esc(p.title)}</h3>
-      <div class="meta">${esc(p.authors||'—')}${p.year?' · '+esc(p.year):''}${p.journal?' · '+esc(p.journal):''}${p.url?` <button class="iconb" data-open="${esc(p.url)}" title="原文連結" style="font-size:13px;padding:0 4px">🌐</button>`:''}</div>
-      ${p.sum?`<div class="oneline">📌 ${esc(p.sum)}</div>`:''}
-      ${p.snote?`<div class="oneline" style="color:#8A6A1E">📝 ${esc(p.snote)}</div>`:''}
-      <div class="row" style="margin-top:8px">
-        ${p.file?`<span class="acts"><button data-open="${esc(p.file)}" title="精讀 HTML">🔗</button></span>`:''}
-        ${p.cat&&CATS[p.cat]?`<span class="pill" style="color:${CATS[p.cat][1]};background:${CATS[p.cat][2]};border-color:${CATS[p.cat][1]}40">${CATS[p.cat][0]}</span>`:''}
-        ${(p.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('')}
-        ${!p.note?`<span class="pill clay">Note 未填</span>`:''}</div>
+  const CATS={teacher:['老師','#B0472E','#F7E5DE'],course:['課程','#2E5FB0','#DEE9F7'],explore:['探索','#7A5AA8','#EDE6F7'],publish:['發表','#2E7D5B','#DDEFE6']};
+  const CATORD=['teacher','course','explore','publish',''];
+  const CATNAME={teacher:'老師指定',course:'課程',explore:'探索',publish:'發表','':'未分類'};
+  const groups={};
+  a.forEach(p=>{const k=CATS[p.cat]?p.cat:'';(groups[k]=groups[k]||[]).push(p)});
+  const authShort=s=>{if(!s)return'—';const t=s.split(/[;,&]/)[0].trim();
+    return s.length>52?t+' et al.':s};
+  const card=p=>{
+    const tags=p.tags||[];const shown=tags.slice(0,2),rest=tags.slice(2);
+    return `<div class="item"${p.star?' style="border-color:#D9A62E;box-shadow:0 0 0 1px #E8C662 inset"':''}>
+    <div class="row" style="align-items:flex-start">
+      <button class="x" data-pstar="${p.id}" title="${p.star?'取消置頂':'標星置頂'}" style="font-size:16px;padding:0 2px;flex:0 0 auto;color:${p.star?'#D9A62E':'var(--faint)'}">${p.star?'★':'☆'}</button>
+      <div style="flex:1;min-width:0">
+        <h3 style="line-height:1.35">${esc(p.title)}</h3>
+        <div class="meta" style="font-size:11.5px;line-height:1.45;margin-top:2px">${esc(authShort(p.authors))}${p.year?' · '+esc(p.year):''}${p.journal?' · '+esc(p.journal):''}</div>
+        ${p.sum?`<div class="oneline" style="margin-top:5px">📌 ${esc(p.sum)}</div>`:''}
+        ${p.snote?`<div class="oneline" style="color:#8A6A1E;margin-top:2px">📝 ${esc(p.snote)}</div>`:''}
+        <div class="row" style="margin-top:7px;gap:5px;flex-wrap:wrap">
+          ${p.cat&&CATS[p.cat]?`<span class="pill" style="color:${CATS[p.cat][1]};background:${CATS[p.cat][2]};border-color:${CATS[p.cat][1]}40">${CATS[p.cat][0]}</span>`:''}
+          ${shown.map(t=>`<span class="pill">${esc(t)}</span>`).join('')}
+          ${rest.length?`<span class="pill" data-ptags="${p.id}" style="cursor:pointer;color:var(--ac)">+${rest.length}</span>`:''}
+          ${openT.has(p.id)?rest.map(t=>`<span class="pill">${esc(t)}</span>`).join(''):''}
+          ${!p.note?`<span class="pill clay">Note 未填</span>`:''}
+        </div>
       </div>
-      <span class="acts"><button data-pedit="${p.id}" title="編輯">✎</button></span>
-      <button class="x" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button></div>
+      <span class="acts" style="flex:0 0 auto">
+        ${p.url?`<button data-open="${esc(p.url)}" title="原文連結">🌐</button>`:''}
+        ${p.file?`<button data-open="${esc(p.file)}" title="精讀 HTML">🔗</button>`:''}
+        <button data-pedit="${p.id}" title="編輯">✎</button></span>
+      <button class="x" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button>
+    </div>
     ${openP.has(p.id)?`<div class="editbox">
       <div class="grid2" style="margin-bottom:8px">
         <label class="f"><span>分類標籤</span><select data-pcat="${p.id}">
           <option value=""${!p.cat?' selected':''}>— 無 —</option>
           <option value="teacher"${p.cat==='teacher'?' selected':''}>老師指定</option>
           <option value="course"${p.cat==='course'?' selected':''}>課程</option>
+          <option value="explore"${p.cat==='explore'?' selected':''}>探索</option>
+          <option value="publish"${p.cat==='publish'?' selected':''}>發表</option>
         </select></label>
         <label class="f"><span>簡短備註</span><input type="text" data-pf="${p.id}|snote" value="${esc(p.snote||'')}" placeholder="e.g. meeting 前要讀完"></label>
       </div>
@@ -1253,7 +1304,13 @@ function renderPapers(){
         <div class="linkrow"><span class="ic">🔗</span><input type="text" data-pf="${p.id}|file" value="${esc(p.file||'')}"></div>
       </details>
       <div class="saverow"><button class="btn" data-psave="${p.id}">Save</button></div>
-    </div>`:''}</div>`).join('');
+    </div>`:''}</div>`};
+  list.innerHTML=CATORD.filter(k=>groups[k]&&groups[k].length).map(k=>{
+    const col=CATS[k]?CATS[k][1]:'var(--muted)';
+    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${CATNAME[k]}</span>
+      <span class="pill" style="margin-left:6px">${groups[k].length}</span></div>
+    ${groups[k].map(card).join('')}`;
+  }).join('');
   const cols=CMPCOLS.filter(c=>cmpOn.has(c[0]));
   tbl.innerHTML=`<div class="tagbar" style="margin-bottom:10px">${
     CMPCOLS.map(c=>`<button data-cmp="${c[0]}" aria-pressed="${cmpOn.has(c[0])}">${c[1]}</button>`).join('')}</div>
@@ -1277,6 +1334,8 @@ document.getElementById('paperList').addEventListener('click',e=>{
   const st=e.target.closest('[data-pstar]');
   if(st){const p=S.papers.find(x=>x.id===st.dataset.pstar);
     if(p){p.star=!p.star;p.mtime=Date.now();save();renderPapers()}return}
+  const tg=e.target.closest('[data-ptags]');
+  if(tg){const id=tg.dataset.ptags;openT.has(id)?openT.delete(id):openT.add(id);renderPapers();return}
   const ed=e.target.closest('[data-pedit]');
   if(ed){const id=ed.dataset.pedit;openP.has(id)?openP.delete(id):openP.add(id);renderPapers();return}
   const sv=e.target.closest('[data-psave]');
@@ -1409,7 +1468,7 @@ document.getElementById('doPushHtml').onclick=async()=>{
     +'/contents/'+path.split('/').map(encodeURIComponent).join('/');
   try{
     let sha=null;
-    const r0=await fetch(url+'?ref='+encodeURIComponent(GH.branch),
+    const r0=await ghFetch(url+'?ref='+encodeURIComponent(GH.branch),
       {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
     if(r0.ok){
       try{const j0=await r0.json();sha=j0.sha}catch(e){}
@@ -1419,9 +1478,9 @@ document.getElementById('doPushHtml').onclick=async()=>{
     }
     const payload={message:'add '+path,content:b64enc(hfText),branch:GH.branch};
     if(sha)payload.sha=sha;
-    const r=await fetch(url,{method:'PUT',
+    const r=await ghFetch(url,{method:'PUT',
       headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
-      body:JSON.stringify(payload)});
+      body:JSON.stringify(payload)},40000);
     if(!r.ok){const t=await r.text().catch(()=>'');throw new Error('HTTP '+r.status+(t?' · '+t.slice(0,100):''))}
     const cid=document.getElementById('hf-card').value;
     const p=cid?S.papers.find(x=>x.id===cid):S.papers.find(x=>x.file===path);
@@ -1654,7 +1713,14 @@ document.getElementById('addMTBtn').onclick=()=>{
   }
 };
 document.getElementById('cancelMT').onclick=()=>show('mtForm',false);
-let newMats=[],newRefs=[];
+let newMats=[],newRefs=[],newActs=[];
+function renderNewActs(){
+  document.getElementById('mtNewActs').innerHTML=newActs.map((t,i)=>
+    `<div class="linkrow" style="margin-bottom:4px">
+      <span class="ic">☐</span><span style="flex:1;font-size:13.5px">${esc(t)}</span>
+      <button class="x" data-nact-del="${i}" style="font-size:12px" title="刪除">✕</button>
+    </div>`).join('')||'';
+}
 function renderNewLinks(){
   document.getElementById('mtNewMats').innerHTML=newMats.map((l,i)=>
     `<span class="pill" data-hold="nmlk|${i}" title="長按 1.5 秒刪除">📊 ${esc(l.name)}</span>`).join(' ');
@@ -1669,6 +1735,19 @@ function grabLink(nameId,urlId){
   document.getElementById(nameId).value='';document.getElementById(urlId).value='';
   return {name:name||url.slice(0,30),url};
 }
+document.getElementById('mtActToggle').onclick=()=>{const el=document.getElementById('mtActInputs');
+  const on=el.style.display==='none';el.style.display=on?'':'none';
+  document.getElementById('mtActToggle').textContent=on?'−':'＋';
+  if(on)document.getElementById('mt-act-text').focus()};
+document.getElementById('mtAddAct').onclick=()=>{
+  const el=document.getElementById('mt-act-text');const t=el.value.trim();
+  if(!t){toast('請輸入內容');el.focus();return}
+  newActs.push(t);el.value='';renderNewActs();el.focus()};
+document.getElementById('mt-act-text').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('mtAddAct').click()}});
+document.getElementById('mtNewActs').addEventListener('click',e=>{
+  const b=e.target.closest('[data-nact-del]');
+  if(b){newActs.splice(+b.dataset.nactDel,1);renderNewActs()}});
 document.getElementById('mtMatToggle').onclick=()=>{const el=document.getElementById('mtMatInputs');
   const on=el.style.display==='none';el.style.display=on?'':'none';
   document.getElementById('mtMatToggle').textContent=on?'−':'＋';
@@ -1685,13 +1764,15 @@ document.getElementById('addMT').onclick=()=>{
   const d=document.getElementById('mt-date').value;
   const topics=document.getElementById('mt-topics').value.trim();
   if(!d){toast('請填日期');return}
+  if(!topics&&!newActs.length&&!newMats.length&&!newRefs.length&&!document.getElementById('mt-full').value.trim()){
+    toast('至少填一項內容');return}
   S.mt.push({id:uid(),created:Date.now(),mtime:Date.now(),
     date:d,title:document.getElementById('mt-title').value.trim(),
-    topics:topics,
-    actions:document.getElementById('mt-actions').value.split('\n').map(s=>s.trim()).filter(Boolean).map(t=>({text:t,done:false})),
+    topics:topics,full:document.getElementById('mt-full').value.trim(),
+    actions:newActs.map(t=>({text:t,done:false})),
     matsL:newMats.slice(),refsL:newRefs.slice()});
-  ['mt-title','mt-topics','mt-actions'].forEach(i=>document.getElementById(i).value='');
-  newMats=[];newRefs=[];renderNewLinks();
+  ['mt-title','mt-topics','mt-full'].forEach(i=>document.getElementById(i).value='');
+  newMats=[];newRefs=[];newActs=[];renderNewLinks();renderNewActs();
   show('mtForm',false);saved();renderMT();
 };
 
@@ -1754,6 +1835,7 @@ function renderMT(){
     <div class="row">
       <div style="flex:1;min-width:0">
         <h3><span class="mono" style="font-size:13px;color:var(--muted)">${esc(m.date)}</span>${m.title?`　${esc(m.title)}`:''}</h3>
+        ${!open&&m.topics?`<div class="oneline" style="margin-top:3px">💬 ${esc(m.topics)}</div>`:''}
       </div>
       ${mtProgress(m)}
       <button class="x" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
@@ -1764,7 +1846,10 @@ function renderMT(){
         <label class="f"><span>日期</span><input type="date" data-mf="${m.id}|date" value="${esc(m.date||'')}"></label>
         <label class="f"><span>標題</span><input type="text" data-mf="${m.id}|title" value="${esc(m.title||'')}"></label>
       </div>
-      <label class="f"><span>會議紀錄</span><textarea data-mf="${m.id}|topics" style="min-height:110px">${esc(m.topics||'')}</textarea></label>
+      <label class="f"><span>重點</span><textarea data-mf="${m.id}|topics" style="min-height:60px">${esc(m.topics||'')}</textarea></label>
+      <details class="fold" style="margin-bottom:8px"><summary>完整逐字稿${m.full?`（${m.full.length} 字）`:'（空）'} ▾</summary>
+        <textarea data-mf="${m.id}|full" style="min-height:160px;margin-top:6px">${esc(m.full||'')}</textarea>
+      </details>
       <details class="fold" style="margin-bottom:8px"><summary>Action items（${(m.actions||[]).filter(x=>!x.done).length} 待辦 / ${(m.actions||[]).length}）▾</summary>
         <div style="margin-top:6px">
         ${(m.actions||[]).map((act,ai)=>`<label class="chk" style="margin-bottom:4px">
@@ -2010,73 +2095,124 @@ function addDirLink(id){
     keepOpen(`[data-dladd-name="${id}"]`)}
 }
 
-/* ================= COURSES ================= */
-function renderCl(){
-  document.getElementById('clTermSeg').innerHTML=TERMS.map(t=>
-    `<button data-clterm="${t.id}" aria-pressed="${t.id===classTerm}">${t.label}</button>`).join('');
-  const sel=document.getElementById('cl-term');
-  if(!sel.options.length)sel.innerHTML=TERMS.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
-  const el=document.getElementById('clList');
-  const a=S.classes.filter(c=>(c.term||'p1a')===classTerm);
-  if(!a.length){el.innerHTML=`<div class="empty">這個學期還沒有課程。按右上角 ＋ 新增。</div>`;return}
-  el.innerHTML=a.map(c=>`<div class="item">
-    <div class="row"><div style="flex:1;min-width:0"><h3>${esc(c.name)}</h3>
-      ${c.teacher?`<div class="meta">${esc(c.teacher)}</div>`:''}</div>
-      <span class="acts"><button data-cledit="${c.id}" title="編輯">✎</button></span>
-      <button class="x" data-hold="cls|${c.id}" title="長按 1.5 秒刪除">✕</button></div>
-    <div class="row" style="margin-top:9px">
-      ${linkChips(c.links)}</div>
-    ${c.note?`<div style="margin-top:9px;font-size:13.5px;white-space:pre-wrap;border-left:2px solid var(--ac-mid);padding-left:10px">${esc(c.note)}</div>`:''}
-    ${clOpen.has(c.id)?`<div class="editbox">
-      <label class="f"><span>Course</span><input type="text" data-cf2="${c.id}|name" value="${esc(c.name)}"></label>
-      <div class="grid2">
-        <label class="f"><span>Teacher</span><input type="text" data-cf2="${c.id}|teacher" value="${esc(c.teacher||'')}"></label>
-        <div class="linkrow"><span class="ic">🔻</span><select data-clt="${c.id}">
-          ${TERMS.map(t=>`<option value="${t.id}"${(c.term||'p1a')===t.id?' selected':''}>${t.label}</option>`).join('')}
-        </select></div>
-      </div>
-      <label class="f"><span>Note</span><textarea data-cf2="${c.id}|note">${esc(c.note||'')}</textarea></label>
-      ${linkEditor('cls',c.id,c.links)}
-      <div class="saverow"><button class="btn" data-clsave="${c.id}">Save</button></div>
-    </div>`:''}</div>`).join('');
+/* ================= NOTES ================= */
+let newNtLinks=[];
+const openNt=new Set();
+function renderNtNewLinks(){
+  document.getElementById('ntNewLinks').innerHTML=newNtLinks.map((l,i)=>
+    `<span class="pill" data-hold="nntlk|${i}" title="長按 1.5 秒刪除">🔗 ${esc(l.name)}</span>`).join(' ');
 }
-document.getElementById('clList').addEventListener('toggle',e=>{
-  const d=e.target.closest('[data-cd]');if(!d)return;
-  d.open?clOpen.add(d.dataset.cd):clOpen.delete(d.dataset.cd);
-},true);
-document.getElementById('clTermSeg').addEventListener('click',e=>{
-  const b=e.target.closest('[data-clterm]');if(!b)return;
-  classTerm=b.dataset.clterm;renderCl();
-});
-document.getElementById('addClBtn').onclick=()=>{
-  if(toggle('clForm')){document.getElementById('cl-term').value=classTerm;document.getElementById('cl-name').focus()}
+document.getElementById('ntLinkToggle').onclick=()=>{
+  const el=document.getElementById('ntLinkInputs');
+  const on=el.style.display==='none';el.style.display=on?'':'none';
+  document.getElementById('ntLinkToggle').textContent=on?'−':'＋';
+  if(on)document.getElementById('nt-link-name').focus();
 };
-document.getElementById('cancelCl').onclick=()=>show('clForm',false);
-document.getElementById('saveCl').onclick=()=>{
-  const n=document.getElementById('cl-name').value.trim();if(!n){toast('請填課名');return}
-  const term=document.getElementById('cl-term').value;
-  S.classes.push({id:uid(),created:Date.now(),mtime:Date.now(),name:n,
-    teacher:document.getElementById('cl-teacher').value.trim(),term,note:'',links:[]});
-  document.getElementById('cl-name').value='';document.getElementById('cl-teacher').value='';
-  show('clForm',false);classTerm=term;saved();renderCl();
+function grabNtLink(){
+  const name=document.getElementById('nt-link-name').value.trim();
+  const url=document.getElementById('nt-link-url').value.trim();
+  if(!url){toast('請貼網址');return null}
+  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return null}
+  document.getElementById('nt-link-name').value='';document.getElementById('nt-link-url').value='';
+  return {name:name||url.slice(0,30),url};
+}
+document.getElementById('ntAddLink').onclick=()=>{const l=grabNtLink();
+  if(l){newNtLinks.push(l);renderNtNewLinks();document.getElementById('nt-link-name').focus()}};
+document.getElementById('nt-link-url').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('ntAddLink').click()}});
+document.getElementById('addNtBtn').onclick=()=>{
+  if(toggle('ntForm'))document.getElementById('nt-title').focus()};
+document.getElementById('cancelNt').onclick=()=>show('ntForm',false);
+document.getElementById('addNt').onclick=()=>{
+  const t=document.getElementById('nt-title').value.trim();
+  const b=document.getElementById('nt-body').value.trim();
+  if(!t&&!b&&!newNtLinks.length){toast('請至少填標題或內容');return}
+  S.notes.push({id:uid(),created:Date.now(),mtime:Date.now(),
+    title:t||'(未命名)',body:b,links:newNtLinks.slice()});
+  document.getElementById('nt-title').value='';document.getElementById('nt-body').value='';
+  newNtLinks=[];renderNtNewLinks();show('ntForm',false);saved();renderNt();
 };
-document.getElementById('clList').addEventListener('input',e=>{
-  const f=e.target.closest('[data-cf2]');
-  if(f){const[id,k]=f.dataset.cf2.split('|');const c=S.classes.find(x=>x.id===id);
-    if(c){c[k]=f.value;c.mtime=Date.now();save()}return}
-});
-document.getElementById('clList').addEventListener('change',e=>{
-  const t=e.target.closest('[data-clt]');if(!t)return;
-  const c=S.classes.find(x=>x.id===t.dataset.clt);
-  if(c){c.term=t.value;c.mtime=Date.now();classTerm=t.value;save();renderCl()}
-});
-document.getElementById('clList').addEventListener('click',e=>{
+function renderNt(){
+  const el=document.getElementById('ntList');if(!el)return;
+  if(!S.notes||!S.notes.length){el.innerHTML=`<div class="empty">還沒有筆記。放你想查的東西、課程資料連結。</div>`;return}
+  const a=[...S.notes].sort((x,y)=>(y.mtime||y.created)-(x.mtime||x.created));
+  el.innerHTML=a.map(n=>{
+    if(!Array.isArray(n.links))n.links=[];
+    const open=openNt.has(n.id);
+    const chips=n.links.map((l,i)=>l.url
+      ?`<span class="pill" data-open="${esc(l.url)}" data-ntstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">🔗 ${esc(l.name)}</span>`
+      :`<span class="pill">🔗 ${esc(l.name)}</span>`).join(' ');
+    return `<div class="item" data-ntcard="${n.id}" style="cursor:pointer">
+    <div class="row">
+      <h3 style="flex:1;min-width:0">${esc(n.title)}</h3>
+      <button class="x" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button>
+    </div>
+    ${!open&&n.body?`<div class="oneline" style="margin-top:3px">${esc(n.body.split('\n')[0])}</div>`:''}
+    ${chips?`<div class="row" data-ntstop="1" style="margin-top:6px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
+    ${open?`<div class="editbox" data-ntstop="1" style="cursor:default">
+      <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
+      <label class="f"><span>內容</span><textarea data-ntf="${n.id}|body" style="min-height:110px">${esc(n.body||'')}</textarea></label>
+      <details class="fold" style="margin-bottom:8px"><summary>連結（${n.links.length}）▾</summary>
+        <div style="margin:6px 0 4px">
+        ${n.links.map((l,i)=>`<div class="linkrow" style="margin-bottom:4px">
+          <span class="ic">🔗</span>
+          <input type="text" data-ntlname="${n.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 30%">
+          <input type="text" data-ntlurl="${n.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
+          <button class="x" data-ntldel="${n.id}|${i}" style="font-size:12px" title="刪除">✕</button>
+        </div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有連結。</p>'}
+        </div>
+        <div class="linkrow">
+          <input type="text" data-ntladd-name="${n.id}" placeholder="名稱" style="flex:0 0 30%">
+          <input type="text" data-ntladd-url="${n.id}" placeholder="https://..." style="flex:1">
+          <button class="btn icon" data-ntladd-go="${n.id}" title="加入">＋</button>
+        </div>
+      </details>
+      <div class="saverow"><button class="btn" data-ntsave="${n.id}">收合</button></div>
+    </div>`:''}</div>`}).join('');
+}
+function addNtLink(id){
+  const nameEl=document.querySelector(`[data-ntladd-name="${id}"]`);
+  const urlEl=document.querySelector(`[data-ntladd-url="${id}"]`);
+  const url=(urlEl?urlEl.value.trim():''),name=(nameEl?nameEl.value.trim():'');
+  if(!url){toast('請貼網址');if(urlEl)urlEl.focus();return}
+  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return}
+  const n=S.notes.find(x=>x.id===id);
+  if(n){n.links=n.links||[];n.links.push({name:name||url.slice(0,30),url});n.mtime=Date.now();save();renderNt();
+    const el=document.querySelector(`[data-ntladd-name="${id}"]`);
+    if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}}
+}
+document.getElementById('ntList').addEventListener('click',e=>{
   if(hEl)return;
-  const ed=e.target.closest('[data-cledit]');
-  if(ed){const id=ed.dataset.cledit;clOpen.has(id)?clOpen.delete(id):clOpen.add(id);renderCl();return}
-  const sv=e.target.closest('[data-clsave]');
-  if(sv){clOpen.delete(sv.dataset.clsave);saved();renderCl()}
+  if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
+  const sv=e.target.closest('[data-ntsave]');
+  if(sv){openNt.delete(sv.dataset.ntsave);saved();renderNt();return}
+  const go=e.target.closest('[data-ntladd-go]');
+  if(go){addNtLink(go.dataset.ntladdGo);return}
+  const dl=e.target.closest('[data-ntldel]');
+  if(dl){const[id,i]=dl.dataset.ntldel.split('|');const n=S.notes.find(x=>x.id===id);
+    if(n&&n.links){n.links.splice(+i,1);n.mtime=Date.now();save();renderNt()}return}
+  if(e.target.closest('[data-ntstop]'))return;
+  const card=e.target.closest('[data-ntcard]');
+  if(card){const id=card.dataset.ntcard;openNt.has(id)?openNt.delete(id):openNt.add(id);renderNt()}
 });
+document.getElementById('ntList').addEventListener('input',e=>{
+  const f=e.target.closest('[data-ntf]');
+  if(f){const[id,k]=f.dataset.ntf.split('|');const n=S.notes.find(x=>x.id===id);
+    if(n){n[k]=f.value;n.mtime=Date.now();save()}return}
+  const ln=e.target.closest('[data-ntlname]');
+  if(ln){const[id,i]=ln.dataset.ntlname.split('|');const n=S.notes.find(x=>x.id===id);
+    if(n&&n.links&&n.links[+i]){n.links[+i].name=ln.value;n.mtime=Date.now();save()}return}
+  const lu=e.target.closest('[data-ntlurl]');
+  if(lu){const[id,i]=lu.dataset.ntlurl.split('|');const n=S.notes.find(x=>x.id===id);
+    if(n&&n.links&&n.links[+i]){n.links[+i].url=lu.value;n.mtime=Date.now();save()}return}
+});
+document.getElementById('ntList').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const la=e.target.closest('[data-ntladd-url],[data-ntladd-name]');
+  if(la){e.preventDefault();addNtLink(la.dataset.ntladdUrl||la.dataset.ntladdName)}
+});
+function renderCl(){/* legacy no-op */}
+
 
 /* ================= CALENDAR ================= */
 function fillSelects(){
@@ -2118,6 +2254,8 @@ function csOpen(c){
   if(c)dc.dataset.hold='cs|'+c.id;else delete dc.dataset.hold;
   document.getElementById('cs-name').value=c?c.name:'';
   document.getElementById('cs-room').value=c?(c.room||''):'';
+  document.getElementById('cs-credits').value=c&&c.credits!=null?c.credits:2;
+  document.getElementById('cs-field').value=c?(c.field||''):'';
   document.getElementById('cs-term').value=c?(c.term||activeTerm):activeTerm;
   document.getElementById('cs-type').value=c?c.type:'required';
   document.getElementById('cs-day').value=c?c.day:0;
@@ -2138,7 +2276,8 @@ document.getElementById('addCS').onclick=()=>{
   if(to<from){toast('結束節次不能早於開始');return}
   const day=+document.getElementById('cs-day').value,term=document.getElementById('cs-term').value;
   const clash=S.courses.some(c=>c.id!==editCS&&(c.term||'p1a')===term&&c.day===day&&!(c.to<from||c.from>to));
-  const o={name:n,term,type:document.getElementById('cs-type').value,day,from,to,room:document.getElementById('cs-room').value.trim()};
+  const o={name:n,term,type:document.getElementById('cs-type').value,day,from,to,room:document.getElementById('cs-room').value.trim(),
+    credits:parseFloat(document.getElementById('cs-credits').value)||0,field:document.getElementById('cs-field').value};
   if(editCS)Object.assign(S.courses.find(x=>x.id===editCS),o);
   else S.courses.push(Object.assign({id:uid()},o));
   editCS=null;show('csForm',false);
@@ -2211,6 +2350,21 @@ document.getElementById('addKD').onclick=()=>{
 };
 let gcCur=null;
 
+
+/* 自動判斷 KEY DATE 類型：先看類型碼（*D / *E / *M / *T / *S），再用關鍵字 */
+const KDCODE={d:'deadline',e:'exam',m:'todo',t:'todo',s:'school',p:'school'};
+function kdAutoType(raw){
+  const m=raw.match(/^([A-Za-z])[\s\-·:：]/);
+  if(m){const t=KDCODE[m[1].toLowerCase()];if(t)return{type:t,title:raw.slice(m[0].length).trim(),explicit:true}}
+  const s=raw.toLowerCase();
+  const has=(...ws)=>ws.some(w=>s.includes(w)||raw.includes(w));
+  let type='other';
+  if(has('截止','繳交','deadline','due','投稿','送件','期限'))type='deadline';
+  else if(has('考','exam','quiz','口試','資格'))type='exam';
+  else if(has('meeting','討論','報告','presentation','journal club','演講','seminar'))type='todo';
+  else if(has('註冊','選課','開學','放假','校','學期','畢業'))type='school';
+  return{type,title:raw};
+}
 async function gcFetchEvents(silent){
   const st=document.getElementById('gcState');
   const id=(S.gcId||'').trim(),key=(S.gcKey||'').trim();
@@ -2241,8 +2395,13 @@ async function gcFetchEvents(silent){
       seen.add(e.gid);
       let ex=S.kd.find(k=>k.gid===e.gid);
       if(!ex){ex=S.kd.find(k=>!k.gid&&k.date===e.date&&k.title===e.title);if(ex){ex.gid=e.gid;ex.mtime=Date.now()}}
-      if(ex){if(ex.date!==e.date||ex.title!==e.title){ex.date=e.date;ex.title=e.title;ex.mtime=Date.now();upd++}}
-      else{S.kd.push({id:uid(),gid:e.gid,date:e.date,title:e.title,type:'other',mtime:Date.now()});add++}
+      if(ex){const g=kdAutoType(e.title);
+        let ch=false;
+        if(ex.date!==e.date||ex.title!==g.title){ex.date=e.date;ex.title=g.title;ch=true}
+        if(g.explicit?ex.type!==g.type:(!ex.type||ex.type==='other')){ex.type=g.type;ch=true}
+        if(ch){ex.mtime=Date.now();upd++}}
+      else{const g=kdAutoType(e.title);
+        S.kd.push({id:uid(),gid:e.gid,date:e.date,title:g.title,type:g.type,mtime:Date.now()});add++}
     });
     const before=S.kd.length;
     S.kd=S.kd.filter(k=>!k.gid||seen.has(k.gid));
@@ -2335,6 +2494,7 @@ document.getElementById('trashList').addEventListener('click',e=>{
     else if(x.type==='ri')renderRI();
     else if(x.type==='mt')renderMT();
     else if(x.type==='dir')renderDIR();
+    else if(x.type==='note')renderNt();
     else if(x.type==='kd')renderKD();
     else if(x.type==='cs')renderTT();
     else if(x.type==='cls')renderCl();
@@ -2424,6 +2584,7 @@ function mergeState(inc){
   S.ri=applyTombs(mergeArr(S.ri,inc.ri),tm);
   S.mt=applyTombs(mergeArr(S.mt,inc.mt),tm);
   S.dirs=applyTombs(mergeArr(S.dirs,inc.dirs),tm);
+  S.notes=applyTombs(mergeArr(S.notes,inc.notes),tm);
   S.kd=applyTombs(mergeArr(S.kd,inc.kd),tm);
   S.courses=applyTombs(mergeArr(S.courses,inc.courses),tm);
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
@@ -2501,18 +2662,41 @@ function ghUrl(){
   return 'https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
     +'/contents/'+GH.path.split('/').map(encodeURIComponent).join('/');
 }
+async function ghFetch(url,opts,ms){
+  const ac=new AbortController();
+  const t=setTimeout(()=>ac.abort(),ms||25000);
+  try{return await fetch(url,Object.assign({},opts,{signal:ac.signal}))}
+  catch(e){
+    if(e.name==='AbortError')throw new Error('逾時（超過 '+Math.round((ms||25000)/1000)+' 秒沒回應），請檢查網路後再試');
+    throw new Error('連線失敗，請檢查網路');
+  }
+  finally{clearTimeout(t)}
+}
+function ghErrMsg(status){
+  if(status===401)return 'HTTP 401 · token 無效或已過期，請重新產生';
+  if(status===403)return 'HTTP 403 · 權限不足或觸發流量限制，確認 Contents 為 Read and write';
+  if(status===404)return 'HTTP 404 · 找不到 repo 或路徑，確認 owner／repo／branch';
+  if(status===409)return 'HTTP 409 · 版本衝突，請先按下載合併';
+  return 'HTTP '+status;
+}
 async function ghPull(silent){
   if(!ghOn()){if(!silent)toast('請先填好設定');return false}
   setDot('pend','下載中…');
   try{
-    const r=await fetch(ghUrl()+'?ref='+encodeURIComponent(GH.branch),
+    const r=await ghFetch(ghUrl()+'?ref='+encodeURIComponent(GH.branch),
       {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
     if(r.status===404){ghSha=null;ghPulled=true;setDot('ok','雲端還沒有檔案，之後上傳就會建立');return true}
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const j=await r.json();
+    if(!r.ok)throw new Error(ghErrMsg(r.status));
+    let j;
+    try{j=await r.json()}
+    catch(e){throw new Error('回應不是 JSON，通常是 token 失效被導向登入頁')}
     ghSha=j.sha;
-    const inc=JSON.parse(b64dec(j.content||''));
-    ghQuiet=true;mergeState(inc);save();ghQuiet=false;renderAll();
+    let inc;
+    try{inc=JSON.parse(b64dec(j.content||''))}
+    catch(e){throw new Error('雲端檔案損毀或不是有效的 JSON')}
+    ghQuiet=true;
+    try{mergeState(inc);save()}finally{ghQuiet=false}
+    try{renderAll()}catch(e){console.error('renderAll',e)}
     ghPulled=true;ghLastPull=Date.now();
     setDot('ok','已下載並合併 · '+new Date().toLocaleTimeString());
     if(!silent)toast('已下載合併');
@@ -2529,16 +2713,17 @@ async function ghPush(silent,retry){
   ghBusy=true;setDot('pend','上傳中…');
   try{
     if(ghSha===null){
-      const p=await fetch(ghUrl()+'?ref='+encodeURIComponent(GH.branch),
+      const p=await ghFetch(ghUrl()+'?ref='+encodeURIComponent(GH.branch),
         {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
-      if(p.ok){const pj=await p.json();ghSha=pj.sha}
+      if(p.ok){try{const pj=await p.json();ghSha=pj.sha}catch(e){}}
+      else if(p.status!==404)throw new Error(ghErrMsg(p.status));
     }
     const body={message:'update notes '+new Date().toISOString(),
       content:b64enc(JSON.stringify(exportable(),null,2)),branch:GH.branch};
     if(ghSha)body.sha=ghSha;
-    const r=await fetch(ghUrl(),{method:'PUT',
+    const r=await ghFetch(ghUrl(),{method:'PUT',
       headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
-      body:JSON.stringify(body)});
+      body:JSON.stringify(body)},40000);
     if(r.status===409||r.status===422){
       ghBusy=false;
       if(!retry){setDot('pend','雲端有新版本，正在合併…');
@@ -2547,8 +2732,8 @@ async function ghPush(silent,retry){
       setDot('err','雲端有更新的版本，請按「下載合併」再上傳');
       if(!silent)toast('有衝突，請先下載合併');return false;
     }
-    if(!r.ok){const tx=await r.text().catch(()=>'');throw new Error('HTTP '+r.status+(tx?' · '+tx.slice(0,120):''))}
-    const j=await r.json();
+    if(!r.ok)throw new Error(ghErrMsg(r.status));
+    let j={};try{j=await r.json()}catch(e){}
     ghSha=(j.content&&j.content.sha)||ghSha;
     ghPulled=true;
     ghQuiet=true;S.lastExport=Date.now();save();ghQuiet=false;renderExportState();
@@ -2723,7 +2908,9 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
-  <p><strong>☆ 星號</strong>：點一下置頂（金框標示）。<strong>分類標籤</strong>在編輯區選：「老師指定」紅棕／「課程」藍。<strong>簡短備註</strong>會以 📝 顯示在卡片上，記「meeting 前要讀完」這類提醒。</p>
+  <p><strong>☆ 星號</strong>：點一下置頂（金框標示）。<strong>簡短備註</strong>會以 📝 顯示在卡片上，記「meeting 前要讀完」這類提醒。</p>
+  <p><strong>卡片依分類分組</strong>：老師指定／課程／探索／發表／未分類，組內星號優先、再按年份新到舊。分類在編輯區的下拉選。</p>
+  <p>作者只顯示第一作者 et al.，完整名單在展開的「書目與檔案」裡。Tags 超過兩個會收成 <code>+N</code>，點一下展開。🌐 原文連結和 🔗 精讀 HTML 併在卡片右側。</p>
   <h4>📥 從 Claude 匯入</h4>
   <p>丟 PDF 給 Claude 說「精讀這篇」，會拿到<strong>一段 JSON</strong>和<strong>一個 HTML 檔</strong>。按工具列的 <code>📥</code>，一個面板兩件事都做完：</p>
   <ol>
@@ -2742,16 +2929,16 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>📚 Textbooks</summary><div class="help">
   <p>點小節循環：<code>Unread</code> → <code>Read</code> → <code>Explain</code>。<br>
   <strong>Explain 的判準</strong>：闔上書，白紙上把核心論證重畫一次。做不到就還在 Read。</p>
-  <p>每個小節右邊的 <code>✎</code> 可以寫<strong>該節筆記</strong>和一個連結（<code>notes/hr-07-3.html</code>）。有內容時 ✎ 會變色。主題底部另有<strong>主題總結</strong>。</p>
+  <p>每個小節右邊的 <code>✎</code> 可以寫<strong>該節筆記</strong>和連結（<code>notes/me-07-3.html</code>）。有內容時 ✎ 會變色。</p>
+  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>；Causal Inference: What If 收在「＋ 補充」的折疊區，需要時才展開。</p>
   <p><code>Book order</code> 按 ME4 的四個 Part；<code>Course order</code> 按上下學期。兩者不同——課程把偏差分析（ME 29）提前到上學期第 10 週。</p>
   <p><strong>建議</strong>：第 6 週的干擾作用之前先把自修的 DAG 讀完。</p>
 </div></details>
 
-<details class="card fold"><summary>🎒 Courses</summary><div class="help">
-  <p>每學期的課程儀表板：課名、老師，加上一串<strong>可以直接點開的連結</strong>——講義、GoodNotes 匯出的筆記、錄影、作業繳交頁面都放這裡。</p>
-  <p>右上四個學期按鈕會<strong>依系統日期自動選中當前學期</strong>。展開 ✎ 可以改課名、老師、學期、備註，以及新增／編輯連結。</p>
-  <p>連結可以是網址，也可以是相對路徑（<code>notes/me-12.html</code>、<code>figures/me-12.pdf</code>）。跟 Textbooks 的小節筆記一樣，<strong>放在同一個資料夾裡才點得開</strong>。</p>
-  <p>這頁跟 Calendar 的 TIMETABLE 是分開的：課表管「星期幾幾點在哪間教室」，這頁管「這門課的東西放在哪」。</p>
+<details class="card fold"><summary>📝 Notes</summary><div class="help">
+  <p><strong>Questions</strong>：讀 paper 或上課時的疑問。Kind 分 Mine（我不懂的）／Study（課堂與教科書）／Field（領域爭議，多出正反方）。可以 <code>↑ Card</code> 變複習卡、<code>↑ 方向</code> 升級成研究方向。</p>
+  <p><strong>Notes</strong>：想查的東西、課程資料、待整理的想法。每筆可以掛連結——<strong>Google Drive 的分享連結直接貼進來</strong>，點一下開啟，手機平板都能用。</p>
+  <p>連結加入方式：填名稱＋網址，按 <code>＋</code> 或在網址欄按 Enter。點卡片展開／收合。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
@@ -2765,13 +2952,16 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>
 
 <details class="card fold"><summary>💬 Meeting</summary><div class="help">
-  <p><strong>To-do</strong>：所有 meeting 未完成的 action items 集中在最上面，附來源日期，打勾就完成、從清單消失。全部完成會顯示 🎉。</p>
-  <p><strong>Questions</strong>：讀 paper 時的疑問。可以 <code>↑ Card</code> 變複習卡、<code>↑ 方向</code> 升級成研究方向。</p>
+  <p>順序：<strong>Meetings → Research directions → To-do</strong>。Questions 已搬到 <strong>Notes</strong> 分頁。</p>
   <h4>📋 Meetings</h4>
-  <p><strong>點卡片展開／收合</strong>。收合時只顯示日期、標題、附件標籤；會議紀錄（NotebookLM 轉的文字直接貼）展開才看得到。</p>
+  <p><strong>重點</strong>欄寫 2–3 句結論，收合時就看得到；NotebookLM 轉出的<strong>完整逐字稿</strong>貼在下方的折疊區，不佔版面。</p>
+  <p><strong>點卡片展開／收合</strong>。收合時顯示日期、標題、重點、附件標籤。</p>
   <p>展開後的 <strong>Action items</strong>、<strong>我提供的資料</strong>、<strong>老師給的參考文獻</strong>各自是收合的小區塊（標題後有數量），點標題才展開，刪除都在裡面做。</p>
+  <p>新增 meeting 時，<strong>Action items</strong> 按 <code>＋</code> 展開輸入框，一次打一項按 Enter，列成一條一條的清單。</p>
   <p>附件加入方式：填名稱＋網址，按 <code>＋</code> 或在任一欄按 Enter。加入後以 <strong>📊 我的資料／📄 老師文獻</strong>分列顯示在卡片上，<strong>點一下開啟</strong>（不會誤刪）。</p>
   <p>老師給的 PDF：上傳到 repo 的 <span class="mono">meetings/</span> 資料夾，把檔案網址貼進附件即可跨裝置開啟。</p>
+  <h4>✅ To-do</h4>
+  <p>所有 meeting 未完成的 action items 集中在分頁最下方，附來源日期，打勾就完成、從清單消失。全部完成會顯示 🎉。</p>
   <h4>🎯 Research directions</h4>
   <p>老師給的方向獨立管理，不綁定單次 meeting。狀態篩選：<strong>進行中</strong>（預設，藏起已完成）／All／完成。</p>
   <p>每個方向有：</p>
@@ -2787,8 +2977,16 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <p>課表<strong>依系統日期自動跳到對應學期</strong>。點色塊 = 編輯。必修綠、選修黃、Lab meeting 藍。</p>
   <p>Key dates 按月分組，左邊方塊是倒數：一天內深紅、七天內淺紅、三十天內琥珀、更遠淺綠。過期的收在按鈕後。</p>
-  <h4>📅 KEY DATES 自動抓取</h4>
-  <p>設定在 <strong>Settings → GOOGLE 日曆 → 自動抓 KEY DATES</strong>：填日曆 ID 與 API 金鑰，預設只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。</p>
+  <h4>📅 KEY DATES 自動抓取與自動分類</h4>
+  <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，預設只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。</p>
+  <p><strong>類型會自動判斷，不用再手動選</strong>。兩種方式：</p>
+  <ol>
+    <li><strong>類型碼（最準）</strong>：在 Google 日曆寫 <code>*D 論文計畫書截止</code>，星號後第一個字母就是類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> meeting/to-do、<code>S</code> school。抓進來後字母會自動去掉。</li>
+    <li><strong>關鍵字（沒寫類型碼時的備援）</strong>：含「截止／繳交／deadline／投稿」→ Deadline；含「考／口試／資格」→ Exam；含「meeting／討論／報告／seminar」→ To do；含「註冊／選課／開學／畢業」→ School。</li>
+  </ol>
+  <p><strong>寫了類型碼就一律照著套</strong>（那是你的明確指示，會覆蓋舊的分類）；沒寫類型碼、只靠關鍵字猜的，則只在類型還是 Other 時才填入，不會動你手動分好的。</p>
+  <p>要把舊事件改成自動分類：去 Google 日曆在標題補上 <code>*D</code> 這類字母，下次抓取就會生效。</p>
+
   <p>同一事件<strong>不會重複匯入</strong>：以 Google 事件 ID 比對，事件改期或改名會自動更新；在 Google 日曆刪掉的事件，這裡也會跟著移除。</p>
 
   <h4>🔗 Google 日曆嵌入</h4>
@@ -2858,7 +3056,7 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>`;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
-  renderCards();renderQ();renderMT();renderCl();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
+  renderCards();renderQ();renderMT();renderNt();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
