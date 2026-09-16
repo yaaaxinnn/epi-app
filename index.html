@@ -394,13 +394,8 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="grid2">
       <label class="f"><span>Kind</span><select id="q-kind">
         <option value="mine">Mine</option>
-        <option value="study">Study</option>
-        <option value="field">Field</option></select></label>
+        <option value="study">Study</option></select></label>
       <label class="f"><span>Source</span><input type="text" id="q-src"></label>
-    </div>
-    <div id="fieldOnly" style="display:none">
-      <label class="f"><span>Side A</span><textarea id="q-a1"></textarea></label>
-      <label class="f"><span>Side B</span><textarea id="q-b1"></textarea></label>
     </div>
     <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
   </div>
@@ -411,18 +406,14 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="card" id="ntForm" style="display:none">
     <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
     <label class="f"><span>內容／備忘</span><textarea id="nt-body" placeholder="想查的東西、重點、待整理的想法"></textarea></label>
-    <div class="f">
-      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">連結（Google Drive／網頁）</span>
-        <button class="btn icon" id="ntLinkToggle" type="button">＋</button></div>
+    <details class="fold" style="margin-bottom:10px"><summary><span id="ntLinkSum">連結（Google Drive／網頁）</span> ▾</summary>
       <div id="ntNewLinks" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
-      <div id="ntLinkInputs" class="grid2" style="gap:6px;display:none">
-        <input type="text" id="nt-link-name" placeholder="名稱">
-        <div style="display:flex;gap:6px">
-          <input type="text" id="nt-link-url" placeholder="https://drive.google.com/..." style="flex:1">
-          <button class="btn icon" id="ntAddLink" type="button">✓</button>
-        </div>
+      <div class="lrow">
+        <input type="text" id="nt-link-name" placeholder="名稱" style="flex:0 0 30%">
+        <input type="text" id="nt-link-url" placeholder="https://..." style="flex:1">
+        <button class="btn icon" id="ntAddLink" type="button">＋</button>
       </div>
-    </div>
+    </details>
     <div class="saverow"><button class="btn ghost" id="cancelNt">Cancel</button><button class="btn" id="addNt">Save</button></div>
   </div>
   <div id="ntList"></div>
@@ -473,7 +464,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="card" id="mtForm" style="display:none">
     <div class="grid2">
       <label class="f"><span>日期</span><input type="date" id="mt-date"></label>
-      <label class="f"><span>標題（選填）</span><input type="text" id="mt-title" placeholder="e.g. 每週 meeting"></label>
+      <label class="f"><span>標題（選填）</span><input type="text" id="mt-title"></label>
     </div>
     <label class="f"><span>重點</span><textarea id="mt-topics" style="min-height:60px"></textarea></label>
     <details class="fold" style="margin-bottom:10px"><summary>完整逐字稿 ▾</summary>
@@ -482,13 +473,13 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <details class="fold" style="margin-bottom:10px"><summary><span id="mtActSum">Action items</span> ▾</summary>
       <div id="mtNewActs" style="margin:6px 0 4px"></div>
       <div class="linkrow">
-        <input type="text" id="mt-act-text" placeholder="回去要做的事" style="flex:1">
+        <input type="text" id="mt-act-text" style="flex:1">
         <button class="btn icon" id="mtAddAct" type="button">＋</button>
       </div>
     </details>
     <details class="fold" style="margin-bottom:10px"><summary><span id="mtMatSum">我提供的資料（PPT／PDF）</span> ▾</summary>
       <div id="mtNewMats" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
-      <div class="linkrow">
+      <div class="lrow">
         <input type="text" id="mt-mat-name" placeholder="名稱" style="flex:0 0 30%">
         <input type="text" id="mt-mat-url" placeholder="https://..." style="flex:1">
         <button class="btn icon" id="mtAddMat" type="button">＋</button>
@@ -496,7 +487,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     </details>
     <details class="fold" style="margin-bottom:10px"><summary><span id="mtRefSum">老師給的參考文獻／附件</span> ▾</summary>
       <div id="mtNewRefs" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
-      <div class="linkrow">
+      <div class="lrow">
         <input type="text" id="mt-ref-name" placeholder="名稱" style="flex:0 0 30%">
         <input type="text" id="mt-ref-url" placeholder="https://..." style="flex:1">
         <button class="btn icon" id="mtAddRef" type="button">＋</button>
@@ -730,7 +721,7 @@ const TERMS=[
  {id:'p2a',label:'PhD2 上',from:'2027-07-01',to:'2028-01-01'},
  {id:'p2b',label:'PhD2 下',from:'2028-01-02',to:'2028-06-30'}];
 const DEFAULT_TAGS=['HBV','HCV','HCC'];
-const QK={mine:'Mine',study:'Study',field:'Field'};
+const QK={mine:'Mine',study:'Study'};
 const RIS={explore:'Exploring',main:'Main',killed:'Killed'};
 const KDT={deadline:'Deadline',exam:'Exam',todo:'To do',school:'School',other:'Other'};
 const PF=[['sum','📌'],['q','研究問題/目標'],['design','研究設計與資料來源'],['pop','研究對象'],
@@ -841,9 +832,8 @@ function linkEditor(kind,oid,list){
       <span class="srclab" style="margin:0">🔗</span><span class="spacer"></span>
       <button class="iconb" data-addlk="${kind}|${oid}" title="新增連結">＋</button></div>`
     +(list||[]).map(l=>`<div class="lrow">
-    <input type="text" data-lk="${kind}|${oid}|${l.id}|label" value="${esc(l.label||'')}" placeholder="名稱" style="flex:1">
-    <span class="ic">🔗</span>
-    <input type="text" data-lk="${kind}|${oid}|${l.id}|url" value="${esc(l.url||'')}" style="flex:2">
+    <input type="text" data-lk="${kind}|${oid}|${l.id}|label" value="${esc(l.label||'')}" placeholder="名稱" style="flex:0 0 30%">
+    <input type="text" data-lk="${kind}|${oid}|${l.id}|url" value="${esc(l.url||'')}" placeholder="https://..." style="flex:1">
     <button class="x" data-hold="lk|${kind}:${oid}:${l.id}" title="長按 1.5 秒刪除">✕</button></div>`).join('')
     ;
 }
@@ -1091,7 +1081,7 @@ document.getElementById('tabs').addEventListener('click',e=>{
 function th(i){if(!S.themes[i])S.themes[i]={sec:{},sn:{},tsec:{},note:''};const t=S.themes[i];if(!t.sn)t.sn={};if(!t.tsec)t.tsec={};return t}
 function themeStat(i){
   const t=S.themes[i]||{},sec=t.sec||{},c=C[i],keys=[];
-  c.me.forEach((_,j)=>keys.push('me-'+j));c.hr.forEach((_,j)=>keys.push('hr-'+j));
+  c.me.forEach((_,j)=>keys.push('me-'+j));
   let r=0,x=0;keys.forEach(k=>{const v=sec[k]||0;if(v>=1)r++;if(v===2)x++});
   return{n:keys.length,r,x};
 }
@@ -1263,16 +1253,17 @@ function renderPapers(){
         ${p.sum?`<div class="oneline" style="margin-top:5px">📌 ${esc(p.sum)}</div>`:''}
         ${p.snote?`<div class="oneline" style="color:#8A6A1E;margin-top:2px">📝 ${esc(p.snote)}</div>`:''}
         <div class="row" style="margin-top:7px;gap:5px;flex-wrap:wrap">
-          ${p.url?`<button class="pill" data-open="${esc(p.url)}" title="原文連結" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid);background:none">🌐 原文</button>`:''}
-          ${p.file?`<button class="pill" data-open="${esc(p.file)}" title="精讀 HTML" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid);background:none">🔗 精讀</button>`:''}
+          ${p.url?`<button class="pill" data-open="${esc(p.url)}" title="原文連結" style="cursor:pointer;border-color:var(--ac-mid);background:none;padding:2px 7px">🌐</button>`:''}
+          ${p.file?`<button class="pill" data-open="${esc(p.file)}" title="精讀 HTML" style="cursor:pointer;border-color:var(--ac-mid);background:none;padding:2px 7px">🔗</button>`:''}
           ${shown.map(t=>`<span class="pill">${esc(t)}</span>`).join('')}
           ${openT.has(p.id)?rest.map(t=>`<span class="pill">${esc(t)}</span>`).join(''):''}
           ${rest.length?`<span class="pill" data-ptags="${p.id}" style="cursor:pointer;color:var(--faint);background:var(--surface-2);border-color:var(--line)">${openT.has(p.id)?'−':'+'+rest.length}</span>`:''}
           ${!p.note?`<span class="pill clay">Note 未填</span>`:''}
+          <span style="flex:1"></span>
+          <button class="x" data-pedit="${p.id}" title="編輯" style="font-size:12px;padding:0 4px;flex:0 0 auto">✎</button>
+          <button class="x" data-hold="paper|${p.id}" title="長按 1.5 秒刪除" style="font-size:12px;padding:0 4px;flex:0 0 auto">✕</button>
         </div>
       </div>
-      <span class="acts" style="flex:0 0 auto"><button data-pedit="${p.id}" title="編輯">✎</button></span>
-      <button class="x" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${openP.has(p.id)?`<div class="editbox">
       <div class="grid2" style="margin-bottom:8px">
@@ -1637,7 +1628,6 @@ document.getElementById('startExam').onclick=()=>{
 document.getElementById('ovClose').onclick=()=>{ov.classList.remove('on');renderCards();updateBadge()};
 
 /* ================= IDEAS ================= */
-document.getElementById('q-kind').onchange=e=>show('fieldOnly',e.target.value==='field');
 document.getElementById('addQBtn').onclick=()=>{if(toggle('qForm'))document.getElementById('q-q').focus()};
 document.getElementById('cancelQ').onclick=()=>show('qForm',false);
 document.getElementById('qSeg').addEventListener('click',e=>{
@@ -1647,41 +1637,71 @@ document.getElementById('qSeg').addEventListener('click',e=>{
 document.getElementById('addQ').onclick=()=>{
   const q=document.getElementById('q-q').value.trim();if(!q){toast('請填問題');return}
   S.qs.push({id:uid(),created:Date.now(),kind:document.getElementById('q-kind').value,q,
-    src:document.getElementById('q-src').value.trim(),a:'',done:false,links:[],
-    s1:document.getElementById('q-a1').value.trim(),s2:document.getElementById('q-b1').value.trim()});
-  ['q-q','q-src','q-a1','q-b1'].forEach(i=>document.getElementById(i).value='');
+    src:document.getElementById('q-src').value.trim(),a:'',done:false,links:[]});
+  ['q-q','q-src'].forEach(i=>document.getElementById(i).value='');
   show('qForm',false);saved();renderQ();
 };
-function renderQ(){
-  const el=document.getElementById('qList');
-  let a=S.qs.filter(x=>qFilter==='all'||!x.done);
-  if(!a.length){el.innerHTML=`<div class="empty">${qFilter==='open'?'沒有未解決的問題。':'還沒有問題。'}</div>`;return}
-  a=[...a].sort((x,y)=>(x.done?1:0)-(y.done?1:0)||y.created-x.created);
-  el.innerHTML=a.map(q=>`<div class="item" style="${q.done?'opacity:.6':''}">
-    <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(q.q)}</div>
-      <span class="acts"><button data-qedit="${q.id}" title="編輯">✎</button></span>
-      <button class="x" data-hold="q|${q.id}" title="長按 1.5 秒刪除">✕</button></div>
-    <div class="row" style="margin-top:7px">
-      <span class="pill ${q.kind==='field'?'pine':''}">${QK[q.kind]||q.kind}</span>
-      <span class="pill ${q.done?'pine':'amber'}">${q.done?'Resolved':'Unresolved'}</span></div>
-    ${q.src?`<div class="meta" style="margin-top:5px">${esc(q.src)}</div>`:''}
-    ${q.a?`<div style="margin-top:9px;font-size:14px;white-space:pre-wrap;border-left:2px solid var(--ac-mid);padding-left:10px">${esc(q.a)}</div>`:''}
-    ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:9px">${linkChips(q.links)}</div>`:''}
+const QKORD=['mine','study'];
+const openQG=new Set(),openQD=new Set();
+function mdImg(s){
+  // 支援 ![](url) 與裸圖片網址 → 內嵌圖片
+  return esc(s||'')
+    .replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<img src="$2" alt="$1" style="max-width:100%;border-radius:6px;margin:6px 0;display:block">')
+    .replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp|svg))(?=\s|$)/gi,
+      '$1<img src="$2" style="max-width:100%;border-radius:6px;margin:6px 0;display:block">');
+}
+function qItem(q){
+  return `<div class="item" style="${q.done?'opacity:.6':''}">
+    <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(q.q)}</div></div>
+    ${q.a?`<div style="margin-top:8px;font-size:14px;white-space:pre-wrap;border-left:2px solid var(--ac-mid);padding-left:10px">${mdImg(q.a)}</div>`:''}
+    ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
+    <div class="row" style="margin-top:7px;gap:5px;flex-wrap:wrap">
+      <span class="pill ${q.done?'pine':'amber'}">${q.done?'Resolved':'Unresolved'}</span>
+      <span style="flex:1"></span>
+      <button class="x" data-qedit="${q.id}" title="編輯" style="font-size:12px;padding:0 4px;flex:0 0 auto">✎</button>
+      <button class="x" data-hold="q|${q.id}" title="長按 1.5 秒刪除" style="font-size:12px;padding:0 4px;flex:0 0 auto">✕</button>
+    </div>
     ${openQ.has(q.id)?`<div class="editbox">
       <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
-      <div class="linkrow"><span class="ic">🔻</span><select data-qk="${q.id}">
-        ${Object.keys(QK).map(k=>`<option value="${k}"${q.kind===k?' selected':''}>${QK[k]}</option>`).join('')}</select></div>
+      <label class="f"><span>分類</span><select data-qk="${q.id}">
+        ${QKORD.map(k=>`<option value="${k}"${q.kind===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
       <label class="f"><span>Source</span><input type="text" data-qf="${q.id}|src" value="${esc(q.src||'')}"></label>
-      ${q.kind==='field'?`<label class="f"><span>Side A</span><textarea data-qf="${q.id}|s1">${esc(q.s1||'')}</textarea></label>
-      <label class="f"><span>Side B</span><textarea data-qf="${q.id}|s2">${esc(q.s2||'')}</textarea></label>`:''}
-      <label class="f"><span>${q.kind==='field'?'My take':'Answer'}</span><textarea data-qf="${q.id}|a" style="min-height:80px">${esc(q.a||'')}</textarea></label>
+      <label class="f"><span>Answer（可貼圖片網址或 ![](網址) 內嵌圖片）</span><textarea data-qf="${q.id}|a" style="min-height:80px">${esc(q.a||'')}</textarea></label>
       ${linkEditor('q',q.id,q.links)}
       <div class="saverow">
         <button class="btn ghost mini" data-qd="${q.id}" style="margin-right:auto">${q.done?'Reopen':'Resolve'}</button>
         <button class="btn ghost mini" data-qc="${q.id}">↑ Card</button>
+        <button class="btn ghost mini" data-qn="${q.id}">↑ Note</button>
         <button class="btn ghost mini" data-qr="${q.id}">↑ 方向</button>
         <button class="btn" data-qsave="${q.id}">Save</button></div>
-    </div>`:''}</div>`).join('');
+    </div>`:''}</div>`;
+}
+function renderQ(){
+  const el=document.getElementById('qList');
+  const all=S.qs||[];
+  if(!all.length){el.innerHTML=`<div class="empty">還沒有問題。</div>`;return}
+  const openQs=all.filter(x=>!x.done),doneQs=all.filter(x=>x.done);
+  const groups={};QKORD.forEach(k=>groups[k]=[]);
+  openQs.forEach(q=>{const k=QKORD.includes(q.kind)?q.kind:'mine';groups[k].push(q)});
+  QKORD.forEach(k=>groups[k].sort((x,y)=>y.created-x.created));
+  const LIM=2;
+  let html=QKORD.filter(k=>groups[k].length).map(k=>{
+    const g=groups[k],more=g.length>LIM,op=openQG.has(k);
+    return `<div class="sec-head" style="margin-top:14px"><span class="t">${QK[k]}</span>
+      <span class="pill" style="margin-left:6px">${g.length}</span></div>`
+      +(op?g:g.slice(0,LIM)).map(qItem).join('')
+      +(more?`<div class="row" style="margin:2px 0 6px">
+        <button class="btn ghost mini" data-qgrp="${k}" style="width:100%">${op?'收合':'顯示其餘 '+(g.length-LIM)+' 項'}</button></div>`:'');
+  }).join('');
+  if(doneQs.length){
+    const op=openQG.has('__done');
+    html+=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:var(--muted)">Resolved</span>
+      <span class="pill" style="margin-left:6px">${doneQs.length}</span></div>
+      <div class="row" style="margin:2px 0 6px"><button class="btn ghost mini" data-qgrp="__done" style="width:100%">${op?'收合':'展開已解決 '+doneQs.length+' 項'}</button></div>`
+      +(op?doneQs.sort((x,y)=>y.created-x.created).map(qItem).join(''):'');
+  }
+  el.innerHTML=html||`<div class="empty">還沒有問題。</div>`;
 }
 document.getElementById('qList').addEventListener('change',e=>{
   const k=e.target.closest('[data-qk]');if(!k)return;
@@ -1693,6 +1713,16 @@ document.getElementById('qList').addEventListener('input',e=>{
 });
 document.getElementById('qList').addEventListener('click',e=>{
   if(hEl)return;
+  const gp=e.target.closest('[data-qgrp]');
+  if(gp){const k=gp.dataset.qgrp;openQG.has(k)?openQG.delete(k):openQG.add(k);renderQ();return}
+  const nb=e.target.closest('[data-qn]');
+  if(nb){const q=S.qs.find(x=>x.id===nb.dataset.qn);
+    if(!q){return}
+    S.notes.push({id:uid(),created:Date.now(),mtime:Date.now(),
+      title:q.q,body:(q.a||'')+(q.src?'\n\n來源：'+q.src:''),
+      links:(q.links||[]).filter(l=>l.url).map(l=>({name:l.label||l.url.slice(0,30),url:l.url}))});
+    if(!q.done){q.done=true;q.mtime=Date.now()}
+    save();renderQ();renderNt();toast('已轉成 Note');return}
   const ed=e.target.closest('[data-qedit]');
   if(ed){const id=ed.dataset.qedit;openQ.has(id)?openQ.delete(id):openQ.add(id);renderQ();return}
   const sv=e.target.closest('[data-qsave]');
@@ -1778,19 +1808,14 @@ document.getElementById('addMT').onclick=()=>{
 function mtLinkEditor(m,key,label,icon){
   const arr=m[key]||[];
   return `<details class="fold" style="margin-bottom:8px"><summary>${label}（${arr.length}）▾</summary>
-    <div style="margin:6px 0 4px">
-    ${arr.map((l,i)=>`<div class="linkrow" style="margin-bottom:4px">
-      <span class="ic">${icon}</span>
-      <input type="text" data-mlname="${m.id}|${key}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 34%">
+    <div class="row" style="align-items:center;margin:6px 0">
+      <span class="srclab" style="margin:0">🔗</span><span class="spacer"></span>
+      <button class="iconb" data-mlnew="${m.id}|${key}" title="新增連結">＋</button></div>
+    ${arr.map((l,i)=>`<div class="lrow">
+      <input type="text" data-mlname="${m.id}|${key}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 30%">
       <input type="text" data-mlurl="${m.id}|${key}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
       <button class="x" data-mldel="${m.id}|${key}|${i}" style="font-size:12px" title="刪除">✕</button>
-    </div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有附件。</p>'}
-    </div>
-    <div class="linkrow">
-      <input type="text" data-mladd-name="${m.id}|${key}" placeholder="名稱" style="flex:0 0 30%">
-      <input type="text" data-mladd-url="${m.id}|${key}" placeholder="https://..." style="flex:1">
-      <button class="btn icon" data-mladd-go="${m.id}|${key}" title="加入">＋</button>
-    </div>
+    </div>`).join('')}
   </details>`;
 }
 const openM=new Set();
@@ -1880,8 +1905,12 @@ document.getElementById('mtList').addEventListener('click',e=>{
   const da=e.target.closest('[data-mdel-act]');
   if(da){const[id,ai]=da.dataset.mdelAct.split('|');const m=S.mt.find(x=>x.id===id);
     if(m){m.actions.splice(+ai,1);m.mtime=Date.now();save();renderMT()}return}
-  const lg=e.target.closest('[data-mladd-go]');
-  if(lg){addMtLink(lg.dataset.mladdGo);return}
+  const ln=e.target.closest('[data-mlnew]');
+  if(ln){const[id,key]=ln.dataset.mlnew.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m){m[key]=m[key]||[];m[key].push({name:'',url:''});m.mtime=Date.now();save();renderMT();
+      const el=document.querySelector(`[data-mlname="${id}|${key}|${m[key].length-1}"]`);
+      if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}}
+    return}
   const ld=e.target.closest('[data-mldel]');
   if(ld){const[id,key,i]=ld.dataset.mldel.split('|');const m=S.mt.find(x=>x.id===id);
     if(m&&m[key]){m[key].splice(+i,1);m.mtime=Date.now();save();renderMT()}return}
@@ -2011,19 +2040,14 @@ function renderDIR(){
           <button class="btn icon" data-dlog-go="${d.id}" title="加入">＋</button></div>
       </details>
       <details class="fold" style="margin-bottom:8px"><summary>相關連結（${d.links.length}）▾</summary>
-        <div style="margin:6px 0 4px">
-        ${d.links.map((l,i)=>`<div class="linkrow" style="margin-bottom:4px">
-          <span class="ic">📎</span>
+        <div class="row" style="align-items:center;margin:6px 0">
+          <span class="srclab" style="margin:0">🔗</span><span class="spacer"></span>
+          <button class="iconb" data-dlnew="${d.id}" title="新增連結">＋</button></div>
+        ${d.links.map((l,i)=>`<div class="lrow">
           <input type="text" data-dlname="${d.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 30%">
           <input type="text" data-dlurl="${d.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
           <button class="x" data-dldel2="${d.id}|${i}" style="font-size:12px" title="刪除">✕</button>
-        </div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有連結。</p>'}
-        </div>
-        <div class="linkrow">
-          <input type="text" data-dladd-name="${d.id}" placeholder="名稱" style="flex:0 0 30%">
-          <input type="text" data-dladd-url="${d.id}" placeholder="https://..." style="flex:1">
-          <button class="btn icon" data-dladd-go="${d.id}" title="加入">＋</button>
-        </div>
+        </div>`).join('')}
       </details>
       <div class="saverow"><button class="btn" data-dsave="${d.id}">收合</button></div>
     </div>`:''}</div>`}).join('');
@@ -2035,8 +2059,12 @@ document.getElementById('dirList').addEventListener('click',e=>{
   if(sv){openD.delete(sv.dataset.dsave);saved();renderDIR();return}
   const lg=e.target.closest('[data-dlog-go]');
   if(lg){addDirLog(lg.dataset.dlogGo);return}
-  const la=e.target.closest('[data-dladd-go]');
-  if(la){addDirLink(la.dataset.dladdGo);return}
+  const dn=e.target.closest('[data-dlnew]');
+  if(dn){const d=S.dirs.find(x=>x.id===dn.dataset.dlnew);
+    if(d){d.links=d.links||[];d.links.push({name:'',url:''});d.mtime=Date.now();save();renderDIR();
+      const el=document.querySelector(`[data-dlname="${d.id}|${d.links.length-1}"]`);
+      if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}}
+    return}
   const gd=e.target.closest('[data-dlogdel]');
   if(gd){const[id,i]=gd.dataset.dlogdel.split('|');const d=S.dirs.find(x=>x.id===id);
     if(d&&d.log){d.log.splice(+i,1);d.mtime=Date.now();save();renderDIR()}return}
@@ -2098,15 +2126,11 @@ function addDirLink(id){
 let newNtLinks=[];
 const openNt=new Set();
 function renderNtNewLinks(){
+  const s=document.getElementById('ntLinkSum');
+  if(s)s.textContent='連結（Google Drive／網頁）'+(newNtLinks.length?`（${newNtLinks.length}）`:'');
   document.getElementById('ntNewLinks').innerHTML=newNtLinks.map((l,i)=>
     `<span class="pill" data-hold="nntlk|${i}" title="長按 1.5 秒刪除">🔗 ${esc(l.name)}</span>`).join(' ');
 }
-document.getElementById('ntLinkToggle').onclick=()=>{
-  const el=document.getElementById('ntLinkInputs');
-  const on=el.style.display==='none';el.style.display=on?'':'none';
-  document.getElementById('ntLinkToggle').textContent=on?'−':'＋';
-  if(on)document.getElementById('nt-link-name').focus();
-};
 function grabNtLink(){
   const name=document.getElementById('nt-link-name').value.trim();
   const url=document.getElementById('nt-link-url').value.trim();
@@ -2117,8 +2141,8 @@ function grabNtLink(){
 }
 document.getElementById('ntAddLink').onclick=()=>{const l=grabNtLink();
   if(l){newNtLinks.push(l);renderNtNewLinks();document.getElementById('nt-link-name').focus()}};
-document.getElementById('nt-link-url').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){e.preventDefault();document.getElementById('ntAddLink').click()}});
+['nt-link-name','nt-link-url'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('ntAddLink').click()}}));
 document.getElementById('addNtBtn').onclick=()=>{
   if(toggle('ntForm'))document.getElementById('nt-title').focus()};
 document.getElementById('cancelNt').onclick=()=>show('ntForm',false);
@@ -2147,24 +2171,20 @@ function renderNt(){
       <button class="x" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${!open&&n.body?`<div class="oneline" style="margin-top:3px">${esc(n.body.split('\n')[0])}</div>`:''}
+    ${open&&n.body?`<div data-ntstop="1" style="margin-top:8px;font-size:14px;white-space:pre-wrap;cursor:default">${mdImg(n.body)}</div>`:''}
     ${chips?`<div class="row" data-ntstop="1" style="margin-top:6px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open?`<div class="editbox" data-ntstop="1" style="cursor:default">
       <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
-      <label class="f"><span>內容</span><textarea data-ntf="${n.id}|body" style="min-height:110px">${esc(n.body||'')}</textarea></label>
+      <label class="f"><span>內容（可貼圖片網址或 ![](網址) 內嵌圖片）</span><textarea data-ntf="${n.id}|body" style="min-height:110px">${esc(n.body||'')}</textarea></label>
       <details class="fold" style="margin-bottom:8px"><summary>連結（${n.links.length}）▾</summary>
-        <div style="margin:6px 0 4px">
-        ${n.links.map((l,i)=>`<div class="linkrow" style="margin-bottom:4px">
-          <span class="ic">🔗</span>
+        <div class="row" style="align-items:center;margin:6px 0">
+          <span class="srclab" style="margin:0">🔗</span><span class="spacer"></span>
+          <button class="iconb" data-ntlnew="${n.id}" title="新增連結">＋</button></div>
+        ${n.links.map((l,i)=>`<div class="lrow">
           <input type="text" data-ntlname="${n.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 30%">
           <input type="text" data-ntlurl="${n.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
           <button class="x" data-ntldel="${n.id}|${i}" style="font-size:12px" title="刪除">✕</button>
-        </div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有連結。</p>'}
-        </div>
-        <div class="linkrow">
-          <input type="text" data-ntladd-name="${n.id}" placeholder="名稱" style="flex:0 0 30%">
-          <input type="text" data-ntladd-url="${n.id}" placeholder="https://..." style="flex:1">
-          <button class="btn icon" data-ntladd-go="${n.id}" title="加入">＋</button>
-        </div>
+        </div>`).join('')}
       </details>
       <div class="saverow"><button class="btn" data-ntsave="${n.id}">收合</button></div>
     </div>`:''}</div>`}).join('');
@@ -2185,8 +2205,12 @@ document.getElementById('ntList').addEventListener('click',e=>{
   if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
   const sv=e.target.closest('[data-ntsave]');
   if(sv){openNt.delete(sv.dataset.ntsave);saved();renderNt();return}
-  const go=e.target.closest('[data-ntladd-go]');
-  if(go){addNtLink(go.dataset.ntladdGo);return}
+  const nn=e.target.closest('[data-ntlnew]');
+  if(nn){const n=S.notes.find(x=>x.id===nn.dataset.ntlnew);
+    if(n){n.links=n.links||[];n.links.push({name:'',url:''});n.mtime=Date.now();save();renderNt();
+      const el=document.querySelector(`[data-ntlname="${n.id}|${n.links.length-1}"]`);
+      if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}}
+    return}
   const dl=e.target.closest('[data-ntldel]');
   if(dl){const[id,i]=dl.dataset.ntldel.split('|');const n=S.notes.find(x=>x.id===id);
     if(n&&n.links){n.links.splice(+i,1);n.mtime=Date.now();save();renderNt()}return}
@@ -2889,7 +2913,7 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>
 
 <details class="card fold"><summary>🎛️ 介面約定</summary><div class="help">
-  <p><strong>✎</strong> 編輯　<strong>🔗</strong> 開精讀 HTML　<strong>🌐</strong> 開原文　<strong>📌</strong> 一句話　<strong>🏷️</strong> tag　<strong>📝</strong> 筆記　<strong>🔻</strong> 下拉選單　<strong>＋</strong> 新增。圖示鍵一律沒有外框。</p>
+  <p><strong>✎</strong> 編輯　<strong>🔗</strong> 開精讀 HTML　<strong>🌐</strong> 開原文　<strong>📌</strong> 一句話　<strong>🏷️</strong> tag　<strong>📝</strong> 筆記　<strong>＋</strong> 新增。圖示鍵一律沒有外框。</p>
   <p>每個編輯區塊右下角有 <strong>Save</strong>，但底下還有一層保險：<strong>你打的每個字都會自動存</strong>，忘記按也不會掉。</p>
   <h4>💾 Merge vs Replace</h4>
   <p><strong>Merge（合併匯入）</strong>：把檔案的資料併進現有資料，同一筆取較新版本，現有東西不會消失。換裝置、還原漏掉的資料用這個。</p>
@@ -2930,15 +2954,17 @@ document.getElementById('helpBox').innerHTML=`
   <p>點小節循環：<code>Unread</code> → <code>Read</code> → <code>Explain</code>。<br>
   <strong>Explain 的判準</strong>：闔上書，白紙上把核心論證重畫一次。做不到就還在 Read。</p>
   <p>每個小節右邊的 <code>✎</code> 可以寫<strong>該節筆記</strong>和連結（<code>notes/me-07-3.html</code>）。有內容時 ✎ 會變色。</p>
-  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>；Causal Inference: What If 收在「＋ 補充」的折疊區，需要時才展開。</p>
+  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>；Causal Inference: What If 收在「＋ 補充」的折疊區，需要時才展開，<strong>不計入上方的 Progress 進度</strong>。</p>
   <p><code>Book order</code> 按 ME4 的四個 Part；<code>Course order</code> 按上下學期。兩者不同——課程把偏差分析（ME 29）提前到上學期第 10 週。</p>
   <p><strong>建議</strong>：第 6 週的干擾作用之前先把自修的 DAG 讀完。</p>
 </div></details>
 
 <details class="card fold"><summary>📝 Notes</summary><div class="help">
-  <p><strong>Questions</strong>：讀 paper 或上課時的疑問。Kind 分 Mine（我不懂的）／Study（課堂與教科書）／Field（領域爭議，多出正反方）。可以 <code>↑ Card</code> 變複習卡、<code>↑ 方向</code> 升級成研究方向。</p>
+  <p><strong>Questions</strong>：讀 paper 或上課時的疑問，依 <strong>Mine</strong>（我不懂的）／<strong>Study</strong>（課堂與教科書）分區顯示，每區最多 2 項，其餘和已解決的都折疊起來。</p>
+  <p>展開編輯後可以 <code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉成筆記（會帶走答案、來源、連結並自動標記已解決）、<code>↑ 方向</code> 升級成研究方向。</p>
+  <p><strong>內嵌圖片</strong>：在 Answer 或筆記內容貼圖片網址（.png/.jpg/.gif/.webp）會自動顯示；也可以用 <code>![](網址)</code> 語法。圖片建議上傳到 epi-data repo 或 Drive 後貼連結。</p>
   <p><strong>Notes</strong>：想查的東西、課程資料、待整理的想法。每筆可以掛連結——<strong>Google Drive 的分享連結直接貼進來</strong>，點一下開啟，手機平板都能用。</p>
-  <p>連結加入方式：填名稱＋網址，按 <code>＋</code> 或在網址欄按 Enter。點卡片展開／收合。</p>
+  <p><strong>連結</strong>：全 app 統一用 🔗 旁的 <code>＋</code> 新增一列，左邊短格填名稱、右邊長格貼網址。點卡片展開／收合。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
