@@ -141,9 +141,9 @@ details.fold.right > summary{text-align:right;font-size:21px;padding:7px 2px;lin
 .sec.s1 .num,.sec.s1 .st{color:var(--amber)}
 .sec.s2{background:var(--ac-soft);border-color:var(--ac-mid)}
 .sec.s2 .num,.sec.s2 .st,.sec.s2 .ttl{color:var(--ac)}
-.npen{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:0 13px;color:var(--faint);font-size:17px;min-width:44px}
-.npen.has{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
-.npen[aria-expanded="true"]{background:var(--ac);border-color:var(--ac);color:#fff}
+.npen{flex:0 0 auto;border:none;background:none;padding:0 6px;color:var(--faint);font-size:13px;min-width:0}
+.npen.has{color:var(--ac)}
+.npen[aria-expanded="true"]{color:var(--ac);font-weight:700}
 .npanel{border:1px solid var(--line-strong);border-radius:8px;padding:11px 12px;margin:4px 0 6px;background:var(--surface-2)}
 .stagehdr{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line-strong)}
 .stagehdr .sn{font-size:15px;font-weight:700;color:var(--ink)}
@@ -455,7 +455,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="card" id="cardForm" style="display:none">
     <label class="f"><span>Question</span><textarea id="cf-q"></textarea></label>
     <label class="f"><span>Answer</span><textarea id="cf-a" style="min-height:100px"></textarea></label>
-    <div class="linkrow"><span class="ic">🔻</span><select id="cf-theme"></select></div>
+    <div class="linkrow"><span class="ic" style="font-size:11px;color:var(--muted)">分類</span><select id="cf-theme"></select></div>
 
     <div class="saverow"><button class="btn ghost" id="cancelCard">Cancel</button><button class="btn" id="saveCard">Save</button></div>
   </div>
@@ -472,7 +472,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <label class="f"><span>標題（選填）</span><input type="text" id="mt-title"></label>
     </div>
     <div class="f"><div class="row" style="align-items:center">
-      <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">重點（支援 Markdown）</span>
+      <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">重點</span>
       <button class="iconb" id="mtImgBtn" type="button" title="插入圖片">🖼️</button></div>
       <textarea id="mt-topics" style="min-height:70px;margin-top:4px"></textarea></div>
     <details class="fold" style="margin-bottom:10px"><summary>✅Action items</summary>
@@ -723,6 +723,7 @@ const TERMS=[
  {id:'p2b',label:'PhD2 下',from:'2028-01-02',to:'2028-06-30'}];
 const DEFAULT_TAGS=['HBV','HCV','HCC'];
 const QK={mine:'Mine',study:'Study'};
+const QKCOL={mine:['#7A5AA8','#EDE6F7'],study:['#2E5FB0','#DEE9F7']};
 const RIS={explore:'Exploring',main:'Main',killed:'Killed'};
 const KDT={deadline:'Deadline',exam:'Exam',todo:'To do',school:'School',other:'Other'};
 const PF=[['sum','📌'],['q','研究問題/目標'],['design','研究設計與資料來源'],['pop','研究對象'],
@@ -818,7 +819,7 @@ const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],mt:[],dirs:[],notes:[],kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
+function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
   tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -896,6 +897,16 @@ function currentTerm(){const d=new Date().toISOString().slice(0,10);
 async function load(){
   try{const r=await store.get(KEY);S=r&&r.value?JSON.parse(r.value):defaults()}catch(e){S=defaults()}
   S=Object.assign(defaults(),S||{});
+  (function extractInlineImgs(){
+    if(!S.imgs||typeof S.imgs!=='object')S.imgs={};
+    const re=/!\[([^\]]*)\]\((data:image\/[a-z]+;base64,[A-Za-z0-9+/=]+)\)/g;
+    const conv=s=>{if(typeof s!=='string'||s.indexOf('data:image/')<0)return s;
+      return s.replace(re,(m,alt,d)=>{const id=uid();S.imgs[id]=d;return `![${alt}](img:${id})`})};
+    (S.qs||[]).forEach(q=>{q.a=conv(q.a)});
+    (S.notes||[]).forEach(n=>{n.body=conv(n.body)});
+    (S.mt||[]).forEach(m=>{m.topics=conv(m.topics);m.full=conv(m.full)});
+    (S.cards||[]).forEach(x=>{x.a=conv(x.a);x.q=conv(x.q)});
+  })();
   (function mergeMtLinks(){
     (S.mt||[]).forEach(m=>{
       if(!Array.isArray(m.linksL)){
@@ -933,6 +944,7 @@ async function load(){
       }
     });
   })();
+  gcImages();
   (function dedupeKD(){
     const seen={},keep=[];
     (S.kd||[]).forEach(k=>{
@@ -1278,7 +1290,9 @@ function renderPapers(){
       <div style="flex:1;min-width:0">
         <h3 style="line-height:1.35">${esc(p.title)}</h3>
         <div class="meta" style="font-size:11px;line-height:1.5;margin-top:2px">${authLine(p)}</div>
-        ${p.sum?`<div style="margin-top:6px;font-size:13.5px;line-height:1.55;color:var(--ink);border-left:3px solid var(--ac);padding-left:9px">${esc(p.sum)}</div>`:''}
+        ${p.sum?`<div style="margin-top:6px;display:flex;gap:9px;align-items:stretch">
+          <span style="flex:0 0 3px;background:var(--ac);border-radius:2px"></span>
+          <span style="flex:1;font-size:13.5px;line-height:1.55;color:var(--ink)">${esc(p.sum)}</span></div>`:''}
         ${p.snote?`<div class="oneline" style="color:#8A6A1E;margin-top:2px">📝 ${esc(p.snote)}</div>`:''}
         <div class="row" style="margin-top:7px;gap:5px;flex-wrap:wrap">
           ${p.url?`<button class="pill" data-open="${esc(p.url)}" title="原文連結" style="cursor:pointer;border-color:var(--ac-mid);background:none;padding:2px 7px">🌐</button>`:''}
@@ -1551,13 +1565,14 @@ function renderCards(){
     const d=c.due?Math.ceil((c.due-Date.now())/DAY):0;
     const flip=flipped.has(c.id), ed=editCard===c.id;
     return `<div class="item rv" data-flip="${c.id}">
-      <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(c.q)}</div>
-        <span class="acts"><button data-cedit="${c.id}" title="編輯">✎</button></span>
-        <button class="x" data-hold="card|${c.id}" title="長按 1.5 秒刪除">✕</button></div>
-      <div class="row" style="margin-top:6px">
+      <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(c.q)}</div></div>
+      <div class="row" style="margin-top:6px;gap:5px;flex-wrap:wrap">
         ${c.theme>=0&&C[c.theme]?`<span class="pill pine">${C[c.theme].e} ${esc(C[c.theme].en)}</span>`:''}
         <span class="pill ${overdue?'clay':''}">${overdue?'今天要複習':d+' 天後'}</span>
-        <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span></div>
+        <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span>
+        <span style="flex:1"></span>
+        <button class="x" data-cedit="${c.id}" title="編輯" style="font-size:11px;padding:0 3px;flex:0 0 auto">✎</button>
+        <button class="x" data-hold="card|${c.id}" title="長按 1.5 秒刪除" style="font-size:11px;padding:0 3px;flex:0 0 auto">✕</button></div>
       ${flip?`<div class="ans">${esc(c.a)||'（沒寫答案）'}</div>
         ${(c.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:10px">${linkChips(c.links)}</div>`:''}
         <div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`
@@ -1565,11 +1580,10 @@ function renderCards(){
       ${ed?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
         <label class="f"><span>Question</span><textarea data-cf="${c.id}|q">${esc(c.q)}</textarea></label>
         <label class="f"><span>Answer</span><textarea data-cf="${c.id}|a" style="min-height:90px">${esc(c.a||'')}</textarea></label>
-        <div class="linkrow"><span class="ic">🔻</span><select data-cft="${c.id}">
+        <div class="linkrow"><span class="ic" style="font-size:11px;color:var(--muted)">分類</span><select data-cft="${c.id}">
           <option value="-1"${c.theme<0?' selected':''}>— none —</option>
           ${C.map((x,ix)=>`<option value="${ix}"${c.theme===ix?' selected':''}>${x.e} ${esc(x.en)}</option>`).join('')}
         </select></div>
-          ${linkEditor('card',c.id,c.links)}
         <div class="saverow"><button class="btn ghost mini" data-hold="creset|${c.id}" title="長按 1.5 秒重設" style="margin-right:auto">重設排程</button>
           <button class="btn" data-csave="${c.id}">Save</button></div></div>`:''}
       </div>`}).join('');
@@ -1709,6 +1723,10 @@ function md(s){
 function mdImg(s){
   // ![](url) / ![](data:image/...) / 裸圖片網址 → 內嵌圖片
   return esc(s||'')
+    .replace(/!\[([^\]]*)\]\(img:([A-Za-z0-9_-]+)\)/g,(m,alt,id)=>{
+      const d=(S.imgs||{})[id];
+      return d?`<img src="${d}" alt="${alt}" style="max-width:100%;border-radius:6px;margin:8px 0;display:block">`
+              :'<span class="pill clay">圖片遺失</span>';})
     .replace(/!\[([^\]]*)\]\((data:image\/(?:png|jpeg|jpg|gif|webp);base64,[A-Za-z0-9+/=]+)\)/g,
       '<img src="$2" alt="$1" style="max-width:100%;border-radius:6px;margin:8px 0;display:block">')
     .replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g,
@@ -1752,9 +1770,25 @@ function handleImageFile(file,el){
     if(!d){toast('圖片讀取失敗');return}
     const kb=Math.round(d.length*0.75/1024);
     if(kb>900){toast('圖片太大（'+kb+' KB），建議先裁切');return}
-    insertAtCursor(el,`\n![](${d})\n`);
+    if(!S.imgs||typeof S.imgs!=='object')S.imgs={};
+    const id=uid();S.imgs[id]=d;save();
+    insertAtCursor(el,`\n![](img:${id})\n`);
     toast('已插入圖片 · '+kb+' KB');
   });
+}
+/* 清掉沒有被任何文字引用的圖片 */
+function gcImages(){
+  if(!S.imgs)return;
+  const used=new Set();
+  const scan=s=>{if(typeof s!=='string')return;
+    const re=/!\[[^\]]*\]\(img:([A-Za-z0-9_-]+)\)/g;let m;
+    while((m=re.exec(s)))used.add(m[1])};
+  (S.qs||[]).forEach(q=>scan(q.a));
+  (S.notes||[]).forEach(n=>scan(n.body));
+  (S.mt||[]).forEach(m=>{scan(m.topics);scan(m.full)});
+  (S.cards||[]).forEach(x=>{scan(x.a);scan(x.q)});
+  (S.dirs||[]).forEach(d=>{(d.log||[]).forEach(e=>scan(e.text))});
+  Object.keys(S.imgs).forEach(k=>{if(!used.has(k))delete S.imgs[k]});
 }
 function bindImagePaste(el){
   if(!el||el.dataset.pasteBound)return;
@@ -1772,7 +1806,13 @@ function qItem(q){
   return `<div class="item" style="${q.done?'opacity:.6':''}">
     <div class="row" style="align-items:flex-start">
       <div style="flex:1;font-weight:500;line-height:1.45">${esc(q.q)}</div>
-      <span class="pill ${q.done?'pine':'amber'}" style="font-size:9.5px;padding:1px 6px;flex:0 0 auto">${q.done?'Resolved':'Unresolved'}</span>
+      <span class="pill" style="font-size:9.5px;padding:1px 6px;flex:0 0 auto;${q.done
+        ?'color:#3E6B4E;background:#E2EEE6;border-color:#3E6B4E40'
+        :'color:#B5761E;background:#F8EEDC;border-color:#B5761E40'}">${q.done?'Resolved':'Unresolved'}</span>
+    </div>
+    <div class="row" style="margin-top:5px;gap:5px;flex-wrap:wrap">
+      <span class="pill" style="font-size:10px;color:${(QKCOL[q.kind]||QKCOL.mine)[0]};background:${(QKCOL[q.kind]||QKCOL.mine)[1]};border-color:${(QKCOL[q.kind]||QKCOL.mine)[0]}40">${QK[q.kind]||'Mine'}</span>
+      ${q.src?`<span class="pill" style="font-size:10px">${esc(q.src)}</span>`:''}
     </div>
     ${q.a?`<div style="margin-top:8px;font-size:14px;white-space:pre-wrap;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
     ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
@@ -1971,24 +2011,23 @@ function renderMT(){
       ?`<span class="pill" data-open="${esc(l.url)}" data-mstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">${icon} ${esc(l.name)}</span>`
       :`<span class="pill">${icon} ${esc(l.name)}</span>`;
     const allBtns=(m.linksL||[]).map((l,i)=>chip(l,i,'linksL','🔗')).join(' ');
-    const linkRow=allBtns?`<div class="row" data-mstop="1" style="margin-top:7px;flex-wrap:wrap;gap:5px;cursor:default">${allBtns}</div>`:'';
     return `<div class="item" data-mcard="${m.id}" style="cursor:pointer">
     <div class="row">
       <div style="flex:1;min-width:0">
         <h3><span class="mono" style="font-size:13px;color:var(--muted)">${esc(m.date)}</span>${m.title?`　${esc(m.title)}`:''}</h3>
         ${!open&&m.topics?`<div class="oneline" style="margin-top:3px">💬 ${esc(m.topics.replace(/[#*`>\-]/g,'').split('\n').filter(Boolean)[0]||'')}</div>`:''}
       </div>
+      ${allBtns?`<span class="row" data-mstop="1" style="flex:0 0 auto;gap:4px;cursor:default">${allBtns}</span>`:''}
       ${mtProgress(m)}
       <button class="x" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
-    ${linkRow}
     ${open?`<div class="editbox" data-mstop="1" style="cursor:default">
       <div class="grid2">
         <label class="f"><span>日期</span><input type="date" data-mf="${m.id}|date" value="${esc(m.date||'')}"></label>
         <label class="f"><span>標題</span><input type="text" data-mf="${m.id}|title" value="${esc(m.title||'')}"></label>
       </div>
       <div class="f"><div class="row" style="align-items:center">
-        <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">重點（支援 Markdown）</span>
+        <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">重點</span>
         <button class="iconb" data-mtimg="${m.id}" title="插入圖片">🖼️</button></div>
         <textarea data-mf="${m.id}|topics" data-mtb="${m.id}" style="min-height:90px;margin-top:4px">${esc(m.topics||'')}</textarea></div>
       ${m.topics?`<div class="mdview" style="margin:0 0 10px;font-size:13.5px;line-height:1.6;background:var(--surface-2);border-radius:6px;padding:9px 11px">${md(m.topics)}</div>`:''}
@@ -1998,7 +2037,7 @@ function renderMT(){
           <input type="checkbox" data-mact="${m.id}|${ai}" ${act.done?'checked':''}>
           <span style="flex:1;${act.done?'text-decoration:line-through;opacity:.55':''}">${esc(act.text)}</span>
           <button class="x" data-mdel-act="${m.id}|${ai}" style="font-size:12px" title="刪除">✕</button>
-        </label>`).join('')||'<p class="hint" style="margin:0">還沒有待辦。</p>'}
+        </label>`).join('')}
         </div>
         <div class="linkrow" style="margin-top:6px"><span class="ic">＋</span>
           <input type="text" data-mnew-act="${m.id}" placeholder="新增一項，按 Enter"></div>
@@ -2487,34 +2526,47 @@ function kdUrg(d){
   if(d<=21)return['u2','#2E5FB0','#DEE9F7'];
   return['u3','#3E6B4E','#E2EEE6'];
 }
-function kdRender(list){
+const openKG=new Set();
+function kdRender(list,pfx){
+  pfx=pfx||'u';
   const groups={};KDTORD.forEach(k=>groups[k]=[]);
   list.forEach(x=>{const t=KDTORD.includes(x.k.type)?x.k.type:'other';groups[t].push(x)});
-  return KDTORD.filter(t=>groups[t].length).map(t=>
-    `<div class="kdgroup">${KDTICON[t]} ${KDT[t]}<span class="pill" style="margin-left:6px;font-size:10px">${groups[t].length}</span></div>`
-    +groups[t].map(x=>kdRow(x.k,x.d)).join('')).join('');
+  const LIM=2;
+  return KDTORD.filter(t=>groups[t].length).map(t=>{
+    const g=groups[t],key=pfx+':'+t,op=openKG.has(key),more=g.length>LIM;
+    return `<div class="kdgroup">${KDTICON[t]} ${KDT[t]}<span class="pill" style="margin-left:6px;font-size:10px">${g.length}</span></div>`
+      +(op?g:g.slice(0,LIM)).map(x=>kdRow(x.k,x.d)).join('')
+      +(more?`<div class="row" style="margin:2px 0 6px"><button class="btn ghost mini" data-kgrp="${key}" style="width:100%">${op?'收合':'其餘 '+(g.length-LIM)+' 筆'}</button></div>`:'');
+  }).join('');
 }
 function renderKD(){
   const el=document.getElementById('kdList'),pel=document.getElementById('kdPastList'),prow=document.getElementById('kdPastRow');
   const today=new Date();today.setHours(0,0,0,0);
+  // 過期超過兩個月自動永久刪除
+  const cut=62;
+  const before=S.kd.length;
+  S.kd=S.kd.filter(k=>Math.round((new Date(k.date)-today)/DAY)>=-cut);
+  if(S.kd.length!==before)save();
   const withD=S.kd.map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}));
-  const LIMIT=62;
-  const up=withD.filter(x=>x.d>=0&&x.d<=LIMIT).sort((a,b)=>a.d-b.d);
-  const far=withD.filter(x=>x.d>LIMIT).sort((a,b)=>a.d-b.d);
+  const up=withD.filter(x=>x.d>=0&&x.d<=cut).sort((a,b)=>a.d-b.d);
+  const far=withD.filter(x=>x.d>cut).sort((a,b)=>a.d-b.d);
   const past=withD.filter(x=>x.d<0).sort((a,b)=>b.d-a.d);
-  el.innerHTML=(up.length?kdRender(up):`<div class="empty">未來兩個月沒有安排。</div>`)
-    +(far.length?`<div class="row" style="margin:8px 0 2px">
-      <button class="btn ghost mini" id="toggleFar" style="width:100%">${showFar?'收合':'顯示兩個月後 '+far.length+' 筆'}</button></div>`:'')
-    +(showFar&&far.length?kdRender(far):'');
-  prow.innerHTML=past.length?`<button class="btn ghost mini" id="togglePast">${showPast?'隱藏':'顯示'}已過期（${past.length}）</button>`:'';
-  pel.innerHTML=showPast?kdRender(past):'';
+  el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">未來兩個月沒有安排。</div>`;
+  prow.innerHTML=`<div class="row" style="gap:6px">
+    ${far.length?`<button class="btn ghost mini" id="toggleFar" style="flex:1">${showFar?'收合兩個月後':'兩個月後（'+far.length+'）'}</button>`:''}
+    ${past.length?`<button class="btn ghost mini" id="togglePast" style="flex:1">${showPast?'隱藏已過期':'已過期（'+past.length+'）'}</button>`:''}
+  </div>`;
+  pel.innerHTML=(showFar&&far.length?kdRender(far,'f'):'')+(showPast&&past.length?kdRender(past,'p'):'');
 }
-document.getElementById('kdList').addEventListener('click',e=>{
+
+document.getElementById('kdPastRow').addEventListener('click',e=>{
+  if(e.target.closest('#togglePast')){showPast=!showPast;renderKD();return}
   if(e.target.closest('#toggleFar')){showFar=!showFar;renderKD()}
 });
-document.getElementById('kdPastRow').addEventListener('click',e=>{
-  if(!e.target.closest('#togglePast'))return;showPast=!showPast;renderKD();
-});
+[['kdList'],['kdPastList']].forEach(([id])=>document.getElementById(id).addEventListener('click',e=>{
+  const g=e.target.closest('[data-kgrp]');
+  if(g){const k=g.dataset.kgrp;openKG.has(k)?openKG.delete(k):openKG.add(k);renderKD()}
+}));
 function kdReset(){editKD=null;
   document.getElementById('kd-date').value='';document.getElementById('kd-title').value='';
   document.getElementById('addKD').textContent='Save';}
@@ -2777,6 +2829,7 @@ function mergeState(inc){
   S.mt=applyTombs(mergeArr(S.mt,inc.mt),tm);
   S.dirs=applyTombs(mergeArr(S.dirs,inc.dirs),tm);
   S.notes=applyTombs(mergeArr(S.notes,inc.notes),tm);
+  if(inc.imgs)S.imgs=Object.assign({},inc.imgs,S.imgs||{});
   S.kd=applyTombs(mergeArr(S.kd,inc.kd),tm);
   S.courses=applyTombs(mergeArr(S.courses,inc.courses),tm);
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
@@ -3138,7 +3191,8 @@ document.getElementById('helpBox').innerHTML=`
     <li><strong>直接貼上</strong>——截圖後在輸入框按 Ctrl+V，同樣自動壓縮內嵌。</li>
     <li><strong>貼圖片網址</strong>——.png/.jpg/.gif/.webp 結尾的網址會自動顯示，也可用 <code>![](網址)</code> 語法。</li>
   </ol>
-  <p>前兩種會把圖片存成 base64 放在 notes.json 裡，單張超過 900 KB 會擋下來。大量高解析圖片建議改放 repo 或 Drive 再貼連結，避免資料檔過大。</p>
+  <p>圖片不會把一長串編碼塞進輸入框——存進去之後文字裡只留 <code>![](img:xxxx)</code> 這種短代號，實際內容另外存放。刪掉引用它的文字後，圖片會在下次開啟時自動清除。</p>
+  <p>單張超過 900 KB 會擋下來。大量高解析圖片建議改放 repo 或 Drive 再貼連結。</p>
   <p><strong>Notes</strong>：想查的東西、課程資料、待整理的想法。每筆可以掛連結——<strong>Google Drive 的分享連結直接貼進來</strong>，點一下開啟，手機平板都能用。</p>
   <p><strong>🔗附件</strong>：全 app 統一（Reading 卡片、Textbook 小節、Questions、Notes、Meetings、Research directions）。折疊區展開後預設一列空白（名稱短格＋網址長格），按 <code>＋</code> 再加一列，長按 ✕ 刪除。</p>
   <p><strong>Notes 也有 Mine／Study 分類</strong>，跟 Questions 一樣分區顯示、每區最多 2 項。</p>
@@ -3195,7 +3249,8 @@ document.getElementById('helpBox').innerHTML=`
   <p>同一事件<strong>不會重複匯入</strong>：以 Google 事件 ID 比對，事件改期或改名會自動更新；在 Google 日曆刪掉的事件，這裡也會跟著移除。</p>
   <h4>🗂️ KEY DATES 的顯示方式</h4>
   <p>預設只列<strong>未來兩個月</strong>，更遠的收在「顯示兩個月後 N 筆」按鈕裡。清單<strong>依 Type 分組</strong>（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other）。</p>
-  <p>左側色條依<strong>倒數天數</strong>變色：3 天內紅、7 天內橘、21 天內藍、更遠綠。</p>
+  <p>左側色條依<strong>倒數天數</strong>變色：3 天內紅、7 天內橘、21 天內藍、更遠綠。每個 Type <strong>最多顯示 2 筆</strong>，其餘按「其餘 N 筆」展開。</p>
+  <p>「兩個月後」和「已過期」兩個按鈕並排在清單下方。<strong>過期超過兩個月的事件會自動永久刪除</strong>，不進回收桶。</p>
 
   <h4>🔗 Google 日曆嵌入</h4>
   <p>設定在 <strong>Settings → GOOGLE 日曆</strong>，日曆本身顯示在 Calendar 分頁最下面。</p>
