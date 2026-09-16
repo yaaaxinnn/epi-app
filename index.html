@@ -724,7 +724,6 @@ const TERMS=[
 const DEFAULT_TAGS=['HBV','HCV','HCC'];
 const QK={mine:'Mine',study:'Study'};
 const QKCOL={mine:['#7A5AA8','#EDE6F7'],study:['#2E5FB0','#DEE9F7']};
-const RIS={explore:'Exploring',main:'Main',killed:'Killed'};
 const KDT={deadline:'Deadline',exam:'Exam',todo:'To do',school:'School',other:'Other'};
 const PF=[['sum','📌'],['q','研究問題/目標'],['design','研究設計與資料來源'],['pop','研究對象'],
  ['def','暴露與結果的定義'],['analysis','分析'],['result','主要結果'],['interp','解釋'],
@@ -812,14 +811,14 @@ function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=1
 
 let S=null,paperView='list',cardSort='due',mFilter='book',qFilter='open';
 let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
-const flipped=new Set(),clOpen=new Set(),openP=new Set(),openT=new Set(),openG=new Set(),openQ=new Set(),openR=new Set();
+const flipped=new Set(),openP=new Set(),openT=new Set(),openG=new Set(),openQ=new Set();
 let editCard=null,riFilter='all',trashAll=false;
 const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['pop','Participants'],
   ['def','Definitions'],['analysis','Analysis'],['result','Results'],['gap','Gap'],['note','Note']];
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],ri:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
+function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
   tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -859,7 +858,6 @@ function linkHost(kind,oid){
 function linkRender(kind){
   if(kind==='card')renderCards();
   else if(kind==='q')renderQ();
-  else if(kind==='cls')renderCl();
   else renderMethod();
 }
 document.addEventListener('input',e=>{
@@ -943,6 +941,13 @@ async function load(){
         delete m.dir;
       }
     });
+  })();
+  (function dropBlankLinks(){
+    (S.mt||[]).forEach(m=>{if(Array.isArray(m.linksL))m.linksL=m.linksL.filter(l=>l.url||l.name)});
+    (S.dirs||[]).forEach(d=>{if(Array.isArray(d.links))d.links=d.links.filter(l=>l.url||l.name)});
+    (S.notes||[]).forEach(n=>{if(Array.isArray(n.links))n.links=n.links.filter(l=>l.url||l.name)});
+    (S.qs||[]).forEach(q=>{if(Array.isArray(q.links))q.links=q.links.filter(l=>l.url||l.label)});
+    (S.cards||[]).forEach(x=>{if(Array.isArray(x.links))x.links=x.links.filter(l=>l.url||l.label)});
   })();
   gcImages();
   (function dedupeKD(){
@@ -1036,8 +1041,8 @@ document.addEventListener('click',e=>{
   window.open(u,'_blank','noopener');
 });
 const BIN={paper:['papers','精讀卡片','title'],card:['cards','複習卡','q'],
-  q:['qs','Question','q'],ri:['ri','Research idea','title'],
-  mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],note:['notes','Note','title'],kd:['kd','Key date','title'],cs:['courses','課表','name'],cls:['classes','課程','name']};
+  q:['qs','Question','q'],
+  mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],note:['notes','Note','title'],kd:['kd','Key date','title'],cs:['courses','課表','name']};
 function bin(type,obj){
   if(!Array.isArray(S.trash))S.trash=[];
   if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
@@ -1084,7 +1089,6 @@ async function doHold(spec){
   else if(t==='card'){save();renderCards();updateBadge();renderTrash();toast('已移到回收桶')}
   else if(t==='creset'){const c=S.cards.find(x=>x.id===id);if(c){c.level=0;c.due=Date.now();c.n=0;c.last=null;save();renderCards();updateBadge();toast('排程已重設')}}
   else if(t==='q'){save();renderQ();renderTrash();toast('已移到回收桶')}
-  else if(t==='ri'){save();renderRI();renderTrash();toast('已移到回收桶')}
   else if(t==='mt'){save();renderMT();renderTrash();toast('已移到回收桶')}
   else if(t==='dir'){save();renderDIR();renderTrash();toast('已移到回收桶')}
   else if(t==='note'){save();renderNt();renderTrash();toast('已移到回收桶')}
@@ -1093,7 +1097,6 @@ async function doHold(spec){
 
   else if(t==='kd'){save();renderKD();renderTrash();toast('已移到回收桶')}
   else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
-  else if(t==='cls'){save();renderCl();renderTrash();toast('已移到回收桶')}
   else if(t==='secnote'){const p=id.split('|'),ti=+p[0],kk=p[1],t2=th(ti);
     if(t2.sn[kk]){t2.sn[kk]={n:'',links:[],mtime:Date.now()};openSec=null;save();renderMethod();toast('已清除筆記')}}
   else if(t==='purge1'){S.trash=(S.trash||[]).filter(x=>x.tid!==id);save();renderTrash();toast('已永久刪除')}
@@ -1810,10 +1813,7 @@ function qItem(q){
         ?'color:#3E6B4E;background:#E2EEE6;border-color:#3E6B4E40'
         :'color:#B5761E;background:#F8EEDC;border-color:#B5761E40'}">${q.done?'Resolved':'Unresolved'}</span>
     </div>
-    <div class="row" style="margin-top:5px;gap:5px;flex-wrap:wrap">
-      <span class="pill" style="font-size:10px;color:${(QKCOL[q.kind]||QKCOL.mine)[0]};background:${(QKCOL[q.kind]||QKCOL.mine)[1]};border-color:${(QKCOL[q.kind]||QKCOL.mine)[0]}40">${QK[q.kind]||'Mine'}</span>
-      ${q.src?`<span class="pill" style="font-size:10px">${esc(q.src)}</span>`:''}
-    </div>
+
     ${q.a?`<div style="margin-top:8px;font-size:14px;white-space:pre-wrap;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
     ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
     <div class="row" style="margin-top:7px;gap:5px">
@@ -1823,9 +1823,11 @@ function qItem(q){
     </div>
     ${openQ.has(q.id)?`<div class="editbox">
       <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
-      <label class="f"><span>分類</span><select data-qk="${q.id}">
-        ${QKORD.map(k=>`<option value="${k}"${q.kind===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
-      <label class="f"><span>Source</span><input type="text" data-qf="${q.id}|src" value="${esc(q.src||'')}"></label>
+      <div class="grid2">
+        <label class="f"><span>分類</span><select data-qk="${q.id}">
+          ${QKORD.map(k=>`<option value="${k}"${q.kind===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
+        <label class="f"><span>Source</span><input type="text" data-qf="${q.id}|src" value="${esc(q.src||'')}"></label>
+      </div>
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">Answer</span>
         <button class="iconb" data-qimg="${q.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
@@ -1850,7 +1852,8 @@ function renderQ(){
   const LIM=2;
   let html=QKORD.filter(k=>groups[k].length).map(k=>{
     const g=groups[k],more=g.length>LIM,op=openQG.has(k);
-    return `<div class="sec-head" style="margin-top:14px"><span class="t">${QK[k]}</span>
+    const col=(QKCOL[k]||QKCOL.mine)[0];
+    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>
       <span class="pill" style="margin-left:6px">${g.length}</span></div>`
       +(op?g:g.slice(0,LIM)).map(qItem).join('')
       +(more?`<div class="row" style="margin:2px 0 6px">
@@ -1858,7 +1861,7 @@ function renderQ(){
   }).join('');
   if(doneQs.length){
     const op=openQG.has('__done');
-    html+=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:var(--muted)">Resolved</span>
+    html+=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:#3E6B4E">Resolved</span>
       <span class="pill" style="margin-left:6px">${doneQs.length}</span></div>
       <div class="row" style="margin:2px 0 6px"><button class="btn ghost mini" data-qgrp="__done" style="width:100%">${op?'收合':'展開已解決 '+doneQs.length+' 項'}</button></div>`
       +(op?doneQs.sort((x,y)=>y.created-x.created).map(qItem).join(''):'');
@@ -1890,6 +1893,9 @@ document.getElementById('qList').addEventListener('click',e=>{
   const ed=e.target.closest('[data-qedit]');
   if(ed){const id=ed.dataset.qedit;openQ.has(id)?openQ.delete(id):openQ.add(id);renderQ();
     setTimeout(()=>bindImagePaste(document.querySelector(`[data-qa="${id}"]`)),0);return}
+  const qsv=e.target.closest('[data-qsave]');
+  if(qsv){const q=S.qs.find(x=>x.id===qsv.dataset.qsave);
+    if(q&&Array.isArray(q.links))q.links=q.links.filter(l=>l.url||l.label);save()}
   const sv=e.target.closest('[data-qsave]');
   if(sv){openQ.delete(sv.dataset.qsave);saved();renderQ();return}
   const k=e.target.closest('[data-qd]');
@@ -2007,10 +2013,8 @@ function renderMT(){
   const a=[...S.mt].sort((x,y)=>(y.date||'').localeCompare(x.date||''));
   el.innerHTML=a.map(m=>{
     const open=openM.has(m.id);
-    const chip=(l,i,key,icon)=>l.url
-      ?`<span class="pill" data-open="${esc(l.url)}" data-mstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">${icon} ${esc(l.name)}</span>`
-      :`<span class="pill">${icon} ${esc(l.name)}</span>`;
-    const allBtns=(m.linksL||[]).map((l,i)=>chip(l,i,'linksL','🔗')).join(' ');
+    const allBtns=(m.linksL||[]).filter(l=>l.url).map(l=>
+      `<span class="pill" data-open="${esc(l.url)}" data-mstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">🔗 ${esc(l.name||l.url.slice(0,20))}</span>`).join(' ');
     return `<div class="item" data-mcard="${m.id}" style="cursor:pointer">
     <div class="row">
       <div style="flex:1;min-width:0">
@@ -2060,7 +2064,9 @@ document.getElementById('mtList').addEventListener('click',e=>{
   if(hEl)return;
   if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
   const sv=e.target.closest('[data-msave]');
-  if(sv){openM.delete(sv.dataset.msave);saved();renderMT();return}
+  if(sv){const m=S.mt.find(x=>x.id===sv.dataset.msave);
+    if(m&&Array.isArray(m.linksL))m.linksL=m.linksL.filter(l=>l.url||l.name);
+    openM.delete(sv.dataset.msave);save();saved();renderMT();return}
   const da=e.target.closest('[data-mdel-act]');
   if(da){const[id,ai]=da.dataset.mdelAct.split('|');const m=S.mt.find(x=>x.id===id);
     if(m){m.actions.splice(+ai,1);m.mtime=Date.now();save();renderMT()}return}
@@ -2107,20 +2113,7 @@ document.getElementById('mtList').addEventListener('keydown',e=>{
     return;
   }
   const la=e.target.closest('[data-mladd-url],[data-mladd-name]');
-  if(la&&e.key==='Enter'){e.preventDefault();addMtLink(la.dataset.mladdUrl||la.dataset.mladdName)}
 });
-function addMtLink(spec){
-  const[id,key]=spec.split('|');
-  const nameEl=document.querySelector(`[data-mladd-name="${id}|${key}"]`);
-  const urlEl=document.querySelector(`[data-mladd-url="${id}|${key}"]`);
-  const url=(urlEl?urlEl.value.trim():''),name=(nameEl?nameEl.value.trim():'');
-  if(!url){toast('請貼網址');if(urlEl)urlEl.focus();return}
-  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return}
-  const m=S.mt.find(x=>x.id===id);
-  if(m){m[key]=m[key]||[];m[key].push({name:name||url.slice(0,30),url});m.mtime=Date.now();save();renderMT();
-    const el=document.querySelector(`[data-mladd-name="${id}|${key}"]`);
-    if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}}
-}
 
 /* ===== RESEARCH DIRECTIONS ===== */
 const DIRSTAT={todo:['未開始','var(--muted)','var(--surface-2)'],doing:['進行中','#2E5FB0','#DEE9F7'],paused:['暫停','#9A6A2C','#F6EEE0'],done:['完成','#3E6B4E','#E2EEE6']};
@@ -2219,7 +2212,9 @@ document.getElementById('dirList').addEventListener('click',e=>{
   if(hEl)return;
   if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
   const sv=e.target.closest('[data-dsave]');
-  if(sv){openD.delete(sv.dataset.dsave);saved();renderDIR();return}
+  if(sv){const d=S.dirs.find(x=>x.id===sv.dataset.dsave);
+    if(d&&Array.isArray(d.links))d.links=d.links.filter(l=>l.url||l.name);
+    openD.delete(sv.dataset.dsave);save();saved();renderDIR();return}
   const lg=e.target.closest('[data-dlog-go]');
   if(lg){addDirLog(lg.dataset.dlogGo);return}
   const dn=e.target.closest('[data-dlnew]');
@@ -2259,7 +2254,6 @@ document.getElementById('dirList').addEventListener('keydown',e=>{
   const lg=e.target.closest('[data-dnew-log]');
   if(lg){e.preventDefault();addDirLog(lg.dataset.dnewLog);return}
   const la=e.target.closest('[data-dladd-url],[data-dladd-name]');
-  if(la){e.preventDefault();addDirLink(la.dataset.dladdUrl||la.dataset.dladdName)}
 });
 function keepOpen(sel){
   const el=document.querySelector(sel);
@@ -2273,16 +2267,6 @@ function addDirLog(id){
   if(d){if(typeof d.log==='string')d.log=[];d.log=d.log||[];
     d.log.push({ts:Date.now(),text:t});d.mtime=Date.now();save();renderDIR();
     keepOpen(`[data-dnew-log="${id}"]`)}
-}
-function addDirLink(id){
-  const nameEl=document.querySelector(`[data-dladd-name="${id}"]`);
-  const urlEl=document.querySelector(`[data-dladd-url="${id}"]`);
-  const url=(urlEl?urlEl.value.trim():''),name=(nameEl?nameEl.value.trim():'');
-  if(!url){toast('請貼網址');if(urlEl)urlEl.focus();return}
-  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return}
-  const d=S.dirs.find(x=>x.id===id);
-  if(d){d.links=d.links||[];d.links.push({name:name||url.slice(0,30),url});d.mtime=Date.now();save();renderDIR();
-    keepOpen(`[data-dladd-name="${id}"]`)}
 }
 
 /* ================= NOTES ================= */
@@ -2327,7 +2311,8 @@ function renderNt(){
   const LIM=2;
   el.innerHTML=QKORD.filter(k=>groups[k].length).map(k=>{
     const g=groups[k],more=g.length>LIM,op=openNG.has(k);
-    return `<div class="sec-head" style="margin-top:14px"><span class="t">${QK[k]}</span>
+    const col=(QKCOL[k]||QKCOL.mine)[0];
+    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>
       <span class="pill" style="margin-left:6px">${g.length}</span></div>`
       +(op?g:g.slice(0,LIM)).map(ntItem).join('')
       +(more?`<div class="row" style="margin:2px 0 6px">
@@ -2369,22 +2354,13 @@ function ntItem(n){
       <div class="saverow"><button class="btn" data-ntsave="${n.id}">收合</button></div>
     </div>`:''}</div>`;
 }
-function addNtLink(id){
-  const nameEl=document.querySelector(`[data-ntladd-name="${id}"]`);
-  const urlEl=document.querySelector(`[data-ntladd-url="${id}"]`);
-  const url=(urlEl?urlEl.value.trim():''),name=(nameEl?nameEl.value.trim():'');
-  if(!url){toast('請貼網址');if(urlEl)urlEl.focus();return}
-  if(!/^https?:\/\//.test(url)){toast('網址要以 http 開頭');return}
-  const n=S.notes.find(x=>x.id===id);
-  if(n){n.links=n.links||[];n.links.push({name:name||url.slice(0,30),url});n.mtime=Date.now();save();renderNt();
-    const el=document.querySelector(`[data-ntladd-name="${id}"]`);
-    if(el){const dt=el.closest('details');if(dt)dt.open=true;el.focus()}}
-}
 document.getElementById('ntList').addEventListener('click',e=>{
   if(hEl)return;
   if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
   const sv=e.target.closest('[data-ntsave]');
-  if(sv){openNt.delete(sv.dataset.ntsave);saved();renderNt();return}
+  if(sv){const n=S.notes.find(x=>x.id===sv.dataset.ntsave);
+    if(n&&Array.isArray(n.links))n.links=n.links.filter(l=>l.url||l.name);
+    openNt.delete(sv.dataset.ntsave);save();saved();renderNt();return}
   const ng=e.target.closest('[data-ngrp]');
   if(ng){const k=ng.dataset.ngrp;openNG.has(k)?openNG.delete(k):openNG.add(k);renderNt();return}
   const ni=e.target.closest('[data-ntimg]');
@@ -2422,9 +2398,7 @@ document.getElementById('ntList').addEventListener('input',e=>{
 document.getElementById('ntList').addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
   const la=e.target.closest('[data-ntladd-url],[data-ntladd-name]');
-  if(la){e.preventDefault();addNtLink(la.dataset.ntladdUrl||la.dataset.ntladdName)}
 });
-function renderCl(){/* legacy no-op */}
 
 
 /* ================= CALENDAR ================= */
@@ -2552,10 +2526,10 @@ function renderKD(){
   const far=withD.filter(x=>x.d>cut).sort((a,b)=>a.d-b.d);
   const past=withD.filter(x=>x.d<0).sort((a,b)=>b.d-a.d);
   el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">未來兩個月沒有安排。</div>`;
-  prow.innerHTML=`<div class="row" style="gap:6px">
-    ${far.length?`<button class="btn ghost mini" id="toggleFar" style="flex:1">${showFar?'收合兩個月後':'兩個月後（'+far.length+'）'}</button>`:''}
-    ${past.length?`<button class="btn ghost mini" id="togglePast" style="flex:1">${showPast?'隱藏已過期':'已過期（'+past.length+'）'}</button>`:''}
-  </div>`;
+  prow.style.flexWrap='nowrap';
+  prow.innerHTML=
+    (far.length?`<button class="btn ghost mini" id="toggleFar" style="flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${showFar?'收合兩個月後':'兩個月後 '+far.length}</button>`:'')
+   +(past.length?`<button class="btn ghost mini" id="togglePast" style="flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${showPast?'隱藏已過期':'已過期 '+past.length}</button>`:'');
   pel.innerHTML=(showFar&&far.length?kdRender(far,'f'):'')+(showPast&&past.length?kdRender(past,'p'):'');
 }
 
@@ -2735,13 +2709,11 @@ document.getElementById('trashList').addEventListener('click',e=>{
     if(x.type==='paper')renderPapers();
     else if(x.type==='card'){renderCards();updateBadge()}
     else if(x.type==='q')renderQ();
-    else if(x.type==='ri')renderRI();
     else if(x.type==='mt')renderMT();
     else if(x.type==='dir')renderDIR();
     else if(x.type==='note')renderNt();
     else if(x.type==='kd')renderKD();
     else if(x.type==='cs')renderTT();
-    else if(x.type==='cls')renderCl();
     toast('已還原');
   }catch(err){toast('還原失敗：'+err.message)}
 });
@@ -2825,7 +2797,6 @@ function mergeState(inc){
   S.papers=applyTombs(mergeArr(S.papers,inc.papers),tm);
   S.cards=applyTombs(mergeArr(S.cards,inc.cards),tm);
   S.qs=applyTombs(mergeArr(S.qs,inc.qs),tm);
-  S.ri=applyTombs(mergeArr(S.ri,inc.ri),tm);
   S.mt=applyTombs(mergeArr(S.mt,inc.mt),tm);
   S.dirs=applyTombs(mergeArr(S.dirs,inc.dirs),tm);
   S.notes=applyTombs(mergeArr(S.notes,inc.notes),tm);
@@ -2850,9 +2821,9 @@ document.getElementById('impFile').onchange=e=>{
     let inc;try{inc=JSON.parse(r.result)}catch(x){toast('檔案讀不出來');return}
     if(impMode==='replace'){S=Object.assign(defaults(),inc);toast('已覆蓋匯入')}
     else{
-      const before=S.papers.length+S.cards.length+S.qs.length+S.ri.length+(S.mt||[]).length+(S.dirs||[]).length;
+      const before=S.papers.length+S.cards.length+S.qs.length+(S.mt||[]).length+(S.dirs||[]).length;
       mergeState(inc);
-      const after=S.papers.length+S.cards.length+S.qs.length+S.ri.length+(S.mt||[]).length+(S.dirs||[]).length;
+      const after=S.papers.length+S.cards.length+S.qs.length+(S.mt||[]).length+(S.dirs||[]).length;
       toast('已合併，新增 '+(after-before)+' 筆');
     }
     save();renderAll();
@@ -3101,8 +3072,8 @@ document.getElementById('helpBox').innerHTML=`
 <line x1="517" y1="486" x2="517" y2="512" stroke="#9C978B" marker-end="url(#fa)"/>
 
 <rect x="400" y="514" width="235" height="68" rx="8" fill="#F6EEE0" stroke="#E7D5B6"/>
-<text x="517" y="536" text-anchor="middle" font-size="14" font-weight="600" fill="#8A5C22">7 疑問進 Meeting</text>
-<text x="517" y="554" text-anchor="middle" font-size="12" fill="#9A6A2C">複習卡或候選題目</text>
+<text x="517" y="536" text-anchor="middle" font-size="14" font-weight="600" fill="#8A5C22">7 疑問進 Notes</text>
+<text x="517" y="554" text-anchor="middle" font-size="12" fill="#9A6A2C">複習卡／筆記／方向</text>
 <text x="517" y="571" text-anchor="middle" font-size="11" fill="#9C978B" font-family="IBM Plex Mono,monospace">→ epi-data 自動</text>
 <path d="M400 548 L362 548 L362 656 L232 656" fill="none" stroke="#9C978B" marker-end="url(#fa)"/>
 
@@ -3134,128 +3105,85 @@ document.getElementById('helpBox').innerHTML=`
 <p>GoodNotes 不能同步到 Windows，所以只當<strong>拋棄式練習場</strong>——關鍵圖匯出 PDF 收進 figures/。</p>
 </div></details>
 
-<details class="card fold"><summary>🎛️ 介面約定</summary><div class="help">
-  <p><strong>✎</strong> 編輯　<strong>🔗</strong> 開精讀 HTML　<strong>🌐</strong> 開原文　<strong>🏷️</strong> tag　<strong>📝</strong> 筆記　<strong>🖼️</strong> 插入圖片　<strong>＋</strong> 新增。圖示鍵一律沒有外框。</p>
-  <p>每個編輯區塊右下角有 <strong>Save</strong>，但底下還有一層保險：<strong>你打的每個字都會自動存</strong>，忘記按也不會掉。</p>
-  <h4>💾 Merge vs Replace</h4>
-  <p><strong>Merge（合併匯入）</strong>：把檔案的資料併進現有資料，同一筆取較新版本，現有東西不會消失。換裝置、還原漏掉的資料用這個。</p>
-  <p><strong>Replace（覆蓋匯入）</strong>：整包換掉，現有資料<strong>全部清空</strong>。只在確定要還原到某個備份時用。</p>
-  <h4>🗑️ 刪除的兩層</h4>
-  <p><strong>凡是長按才會執行的按鈕，按住時都會被紅色由左往右填滿</strong>當進度條，手指移開或移動超過一點就取消。包括所有 ✕、清除筆記、重設排程、還原、清空回收桶。</p>
-  <table><thead><tr><th>動作</th><th>結果</th></tr></thead><tbody>
-    <tr><td>在卡片上長按 ✕</td><td><strong>軟刪除</strong>：畫面看不到了，但完整內容躺在「最近刪除」裡，30 天內隨時還原</td></tr>
-    <tr><td>在回收桶長按 ✕ 或「清空回收桶」</td><td><strong>真的刪掉</strong>：內容永久消失，救不回來</td></tr>
-  </tbody></table>
-  <p>清空之後系統仍會保留一筆<strong>「這個 id 在某時被刪過」的極輕量紀錄</strong>（只有 id 和時間，沒有內容），存 180 天。這是為了讓其他裝置知道該刪，不會把舊資料送回來。</p>
-  <h4>🎨 顏色</h4>
-  <p>每個分頁一個色：Reading 森綠、Textbooks 板岩藍、Review 梅紫、Meeting 赭黃、Calendar 陶紅、Settings 暖灰。按鈕、切換鍵、進度條都跟著換。</p>
+
+
+<details class="card fold"><summary>🧭 七個分頁在做什麼</summary><div class="help">
+  <p><strong>Reading</strong> 讀過的論文卡片　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Notes</strong> 疑問與零散資料　<strong>Review</strong> 間隔重複複習卡　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Calendar</strong> 重要日期與課表　<strong>Settings</strong> 同步、備份、說明。</p>
+  <h4>資料怎麼在分頁之間流動</h4>
+  <ul>
+    <li><strong>Notes 的 Question</strong> 是總樞紐，展開後有三個出口：<code>↑ Card</code> 進 Review 變複習卡、<code>↑ Note</code> 變同分頁的筆記、<code>↑ 方向</code> 進 Meeting 的 Research directions。</li>
+    <li><strong>Meeting 的 Action items</strong> 自動彙整到同分頁最下方的 To-do。</li>
+    <li><strong>Google 日曆</strong>的星號事件自動流進 Calendar 的 KEY DATES。</li>
+    <li>其餘分頁各自獨立，靠 <strong>🔗附件</strong> 互相指向（精讀 HTML、Drive 檔案、paper 連結）。</li>
+  </ul>
+</div></details>
+
+<details class="card fold"><summary>🎛️ 全站共通約定</summary><div class="help">
+  <h4>圖示</h4>
+  <p><strong>✎</strong> 編輯　<strong>✕</strong> 刪除（長按 1.5 秒）　<strong>🌐</strong> 原文　<strong>🔗</strong> 精讀 HTML／附件　<strong>🖼️</strong> 插入圖片　<strong>＋</strong> 新增　<strong>☆／★</strong> 置頂　<strong>📝</strong> 備註。圖示鍵一律沒有外框。</p>
+  <h4>刪除的兩層</h4>
+  <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings 最下方，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
+  <h4>分區與折疊</h4>
+  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆，其餘用「顯示其餘 N 篇」展開。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
+  <h4>🔗附件</h4>
+  <p>全站統一：展開後預設一列空白，左邊短格填名稱、右邊長格貼網址，按 <code>＋</code> 再加一列，長按 ✕ 刪除。沒填的空白列在收合時自動清掉。卡片上只顯示有網址的附件，點一下開啟。</p>
+  <h4>🖼️ 插入圖片</h4>
+  <p>三種方式：按 <strong>🖼️ 選檔</strong>、在輸入框<strong>直接 Ctrl+V 貼上</strong>、或<strong>貼圖片網址</strong>。前兩種會自動壓縮到寬 900px，文字裡只留 <code>![](img:xxxx)</code> 短代號，不會塞一長串編碼。單張上限 900 KB；刪掉引用的文字後圖片會自動回收。</p>
+  <h4>Markdown</h4>
+  <p>Meeting 重點、Question 的 Answer、Note 內容支援：<code>**粗體**</code>、<code>*斜體*</code>、<code>## 標題</code>、<code>- 清單</code>、<code>1. 編號</code>、<code>&gt; 引用</code>、<code>&#96;程式碼&#96;</code>、<code>---</code> 分隔線、<code>[文字](網址)</code>。</p>
 </div></details>
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
-  <p><strong>☆ 星號</strong>：點一下置頂（金框標示）。<strong>簡短備註</strong>會以 📝 顯示在卡片上，記「meeting 前要讀完」這類提醒。</p>
-  <p><strong>卡片依分類分組</strong>：老師指定／課程／探索／發表／未分類，組內星號優先、再按年份新到舊。分類在編輯區的下拉選。</p>
-  <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在展開的「書目與檔案」裡。Tags 超過三個會收成淺灰 <code>+N</code>，點一下展開。<strong>🌐 原文</strong>和<strong>🔗 精讀</strong>做成標籤，跟 tags 排在同一列。</p>
-  <p>每個分類<strong>最多顯示 3 篇</strong>，其餘按「顯示其餘 N 篇」展開，分類名稱已經在標題上，卡片內不再重複顯示。</p>
-  <h4>📥 從 Claude 匯入</h4>
-  <p>丟 PDF 給 Claude 說「精讀這篇」，會拿到<strong>一段 JSON</strong>和<strong>一個 HTML 檔</strong>。按工具列的 <code>📥</code>，一個面板兩件事都做完：</p>
-  <ol>
-    <li>JSON 貼進上半 → <strong>建立卡片</strong>，九個欄位自動填好，Note 留白</li>
-    <li>HTML 檔案拖進下半 → <strong>上傳</strong>，直接存進私密 repo 的 <span class="mono">papers/</span></li>
-  </ol>
-  <p>檔名和對應卡片會自動猜好，通常直接按上傳。同名直接覆蓋，改版重傳即可。臨時要記一篇不做精讀的，按 <code>＋</code> 手動新增。</p>
-  <p><strong>搜尋</strong>搜所有欄位，不用按 Enter。<code>🏷️</code> 展開實際用過的 tag，<strong>可複選，條件是「同時具備」</strong>。搜尋和 tag 會一起套用到 Cards 和 Compare。</p>
-  <p><code>🔗</code> 填相對路徑（<code>papers/2026-chen.html</code>）。設定好 GitHub 同步後，<strong>點下去會直接從私密 repo 抓檔案顯示</strong>——HTML 在閱讀視窗渲染、PDF 開新分頁。檔案全程沒有離開私密 repo。</p>
-  <h4>⬇️ 匯出</h4>
-  <p>切到 <code>Compare</code> 檢視時，上方會出現 CSV 與 Markdown 兩個匯出鍵，匯出的是<strong>目前搜尋和 tag 篩選後</strong>的卡片。<br>
-  <strong>Markdown</strong> 給寫作用——貼進 Word、Notion、GitHub 都保留結構，適合當 literature review 的初稿骨架。<br>
-  <strong>CSV</strong> 給 Excel 用——排序、篩選、做表格。</p>
+  <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇。組內星號優先、再按年份新到舊。分類在展開編輯區的下拉選。</p>
+  <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
+  <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
+  <p><strong>Compare</strong> 模式把選定欄位排成表格橫向比較，點格子可展開全文。</p>
 </div></details>
 
 <details class="card fold"><summary>📚 Textbooks</summary><div class="help">
-  <p>點小節循環：<code>Unread</code> → <code>Read</code> → <code>Explain</code>。<br>
-  <strong>Explain 的判準</strong>：闔上書，白紙上把核心論證重畫一次。做不到就還在 Read。</p>
-  <p>每個小節右邊的 <code>✎</code> 可以寫<strong>該節筆記</strong>和連結（<code>notes/me-07-3.html</code>）。有內容時 ✎ 會變色。</p>
-  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>；Causal Inference: What If 收在「＋ 補充」的折疊區，需要時才展開，<strong>不計入上方的 Progress 進度</strong>。</p>
-  <p><code>Book order</code> 按 ME4 的四個 Part；<code>Course order</code> 按上下學期。兩者不同——課程把偏差分析（ME 29）提前到上學期第 10 週。</p>
-  <p><strong>建議</strong>：第 6 週的干擾作用之前先把自修的 DAG 讀完。</p>
+  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>，Causal Inference: What If 收在「＋ 補充」折疊區，<strong>不計入上方 Progress</strong>。</p>
+  <p>每個小節點一下換狀態：未讀 → 讀過 → 懂了。右邊 <code>✎</code> 寫該節筆記和附件，有內容時會變色。</p>
 </div></details>
 
 <details class="card fold"><summary>📝 Notes</summary><div class="help">
-  <p><strong>Questions</strong>：讀 paper 或上課時的疑問，依 <strong>Mine</strong>（我不懂的）／<strong>Study</strong>（課堂與教科書）分區顯示，每區最多 2 項，其餘和已解決的都折疊起來。</p>
-  <p>展開編輯後可以 <code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉成筆記（會帶走答案、來源、連結並自動標記已解決）、<code>↑ 方向</code> 升級成研究方向。</p>
-  <h4>🖼️ 插入圖片</h4>
-  <p>三種方式，都會直接內嵌顯示在卡片上：</p>
-  <ol>
-    <li><strong>按 🖼️ 選檔</strong>（Answer 和筆記內容右上角）——自動壓縮到寬 900px、JPEG 品質 82%，直接存進你的資料裡，不依賴外部網址。</li>
-    <li><strong>直接貼上</strong>——截圖後在輸入框按 Ctrl+V，同樣自動壓縮內嵌。</li>
-    <li><strong>貼圖片網址</strong>——.png/.jpg/.gif/.webp 結尾的網址會自動顯示，也可用 <code>![](網址)</code> 語法。</li>
-  </ol>
-  <p>圖片不會把一長串編碼塞進輸入框——存進去之後文字裡只留 <code>![](img:xxxx)</code> 這種短代號，實際內容另外存放。刪掉引用它的文字後，圖片會在下次開啟時自動清除。</p>
-  <p>單張超過 900 KB 會擋下來。大量高解析圖片建議改放 repo 或 Drive 再貼連結。</p>
-  <p><strong>Notes</strong>：想查的東西、課程資料、待整理的想法。每筆可以掛連結——<strong>Google Drive 的分享連結直接貼進來</strong>，點一下開啟，手機平板都能用。</p>
-  <p><strong>🔗附件</strong>：全 app 統一（Reading 卡片、Textbook 小節、Questions、Notes、Meetings、Research directions）。折疊區展開後預設一列空白（名稱短格＋網址長格），按 <code>＋</code> 再加一列，長按 ✕ 刪除。</p>
-  <p><strong>Notes 也有 Mine／Study 分類</strong>，跟 Questions 一樣分區顯示、每區最多 2 項。</p>
-  <p><strong>Question → Note</strong> 的欄位對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
+  <h4>Questions</h4>
+  <p>讀 paper 或上課時的疑問，依 <strong>Mine</strong>（紫，我不懂的）／<strong>Study</strong>（藍，課堂與教科書）分區，Resolved 是綠色。每區最多 2 項，其餘和已解決的折疊起來。</p>
+  <p>卡片只顯示問題、答案、附件、狀態；分類和 Source 在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
+  <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
+  <h4>Notes</h4>
+  <p>想查的東西、課程資料、待整理的想法。同樣有 Mine／Study 分類與配色。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
-  <table><thead><tr><th>動作</th><th>結果</th></tr></thead><tbody>
-    <tr><td>答對</td><td>升一級：1 → 3 → 7 → 14 → 30 → 60 → 120 天</td></tr>
-    <tr><td>答錯</td><td><strong>退兩級</strong>，並當場排回佇列尾端再問一次</td></tr>
-  </tbody></table>
-  <p><code>Lv3 · 複習 8 次</code> ＝ 目前第 3 級（下次 14 天後），總共複習過 8 次。</p>
-  <p><strong>點卡片 = 翻面看答案</strong>，下方出現「不會 / 會」即可評分。要一次跑完今天全部就按 <code>Start review</code>。分頁上的紅色數字是今天的量。</p>
-  <p><code>Exam mode</code> 勾主題整批跑，<strong>不會改動到期日</strong>。</p>
+  <p>間隔重複：答「會」等級 +1、間隔拉長，答「不會」歸零。Lv0–6 對應 1、3、7、14、30、60、120 天。</p>
+  <p>點卡片翻面看答案。<strong>Exam mode</strong> 整批跑選定主題的所有卡片，<strong>不會改動任何卡的到期日</strong>。</p>
+  <p>卡片可從 Notes 的 Question 用 <code>↑ Card</code> 產生，也可以直接新增。✎ 和 ✕ 在卡片右下角。</p>
 </div></details>
 
 <details class="card fold"><summary>💬 Meeting</summary><div class="help">
-  <p>順序：<strong>Meetings → Research directions → To-do</strong>。Questions 已搬到 <strong>Notes</strong> 分頁。</p>
+  <p>順序：<strong>Meetings → Research directions → To-do</strong>。</p>
   <h4>📋 Meetings</h4>
-  <p><strong>重點</strong>欄寫 2–3 句結論，收合時就看得到；NotebookLM 轉出的<strong>完整逐字稿</strong>貼在下方的折疊區，不佔版面。</p>
-  <p><strong>點卡片展開／收合</strong>。收合時顯示日期、標題、重點、附件標籤。</p>
-  <p>展開後的 <strong>Action items</strong> 和 <strong>🔗附件</strong> 各自是收合的小區塊（標題後有數量），點標題才展開，刪除都在裡面做。</p>
-  <p>新增 meeting 時，<strong>✅Action items</strong>、<strong>🔗附件</strong>、<strong>✍️完整逐字稿</strong>都是折疊區，點標題展開。逐字稿固定在最下面。</p>
-  <p><strong>重點支援 Markdown</strong>：<code>**粗體**</code>、<code>*斜體*</code>、<code>## 標題</code>、<code>- 清單</code>、<code>1. 編號</code>、<code>&gt; 引用</code>、<code>&#96;程式碼&#96;</code>、<code>---</code> 分隔線、<code>[文字](網址)</code>。輸入框下方即時顯示排版後的樣子。</p>
-  <p>附件統一為一個 <strong>🔗附件</strong> 區（原本的「我提供的資料」和「老師給的參考文獻」已合併）。填名稱＋網址，按 <code>＋</code> 或在任一欄按 Enter 加入，卡片上以 🔗 標籤顯示，<strong>點一下開啟</strong>。</p>
-  <p>老師給的 PDF：上傳到 repo 的 <span class="mono">meetings/</span> 資料夾，把檔案網址貼進附件即可跨裝置開啟。</p>
-  <h4>✅ To-do</h4>
-  <p>所有 meeting 未完成的 action items 集中在分頁最下方，附來源日期，打勾就完成、從清單消失。全部完成會顯示 🎉。</p>
+  <p>點卡片展開／收合。收合時顯示日期、標題、重點首行、附件標籤。</p>
+  <p><strong>重點</strong>支援 Markdown，輸入框下方即時預覽排版後的樣子。<strong>✍️完整逐字稿</strong>固定在最下面的折疊區，NotebookLM 轉出的長稿貼這裡不會撐爆版面。</p>
+  <p><strong>✅Action items</strong> 一次打一項按 Enter，成為可勾選的清單。</p>
   <h4>🎯 Research directions</h4>
-  <p>老師給的方向獨立管理，不綁定單次 meeting。狀態篩選：<strong>進行中</strong>（預設，藏起已完成）／All／完成。</p>
-  <p>每個方向有：</p>
-  <ul>
-    <li><strong>👉 下一步</strong>：現在該做什麼，收合也看得到</li>
-    <li><strong>📈 進度紀錄</strong>：每做完一件事記一筆（自動蓋日期），累積成這個方向的軌跡；收合時顯示最新一筆，一眼看出上次做到哪</li>
-    <li><strong>📎 相關連結</strong>：掛 paper 或筆記，點一下開啟</li>
-    <li><strong>天數計數</strong>：距離老師給題已過幾天，提醒別讓方向躺太久</li>
-  </ul>
-  <p>狀態標籤顯示在卡片右側。進度紀錄和相關連結都是收合的小區塊，點開才編輯。</p>
+  <p>老師給的方向獨立管理，不綁定單次 meeting。狀態篩選：進行中（預設）／All／完成。</p>
+  <p>每個方向有 <strong>👉 下一步</strong>（收合也看得到）、<strong>進度紀錄</strong>（按 Enter 記一筆，自動蓋日期，收合時顯示最新一筆）、<strong>🔗附件</strong>、以及<strong>距離老師給題的天數</strong>。</p>
+  <h4>✅ To-do</h4>
+  <p>把每一筆 meeting 裡<strong>還沒打勾的 action items 全部撈出來</strong>集中成一張清單，附來源日期。不用一張張翻卡片找自己還欠什麼，打勾就完成、從清單消失，全做完顯示 🎉。</p>
 </div></details>
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
-  <p>課表<strong>依系統日期自動跳到對應學期</strong>。點色塊 = 編輯。必修綠、選修黃、Lab meeting 藍。</p>
-  <p>Key dates 按月分組，左邊方塊是倒數：一天內深紅、七天內淺紅、三十天內琥珀、更遠淺綠。過期的收在按鈕後。</p>
-  <h4>📅 KEY DATES 自動抓取與自動分類</h4>
-  <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，預設只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。</p>
-  <p><strong>類型會自動判斷，不用再手動選</strong>。兩種方式：</p>
-  <ol>
-    <li><strong>類型碼（最準）</strong>：在 Google 日曆寫 <code>*D 論文計畫書截止</code>，星號後第一個字母就是類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> meeting/to-do、<code>S</code> school。抓進來後字母會自動去掉。</li>
-    <li><strong>關鍵字（沒寫類型碼時的備援）</strong>：含「截止／繳交／deadline／投稿」→ Deadline；含「考／口試／資格」→ Exam；含「meeting／討論／報告／seminar」→ To do；含「註冊／選課／開學／畢業」→ School。</li>
-  </ol>
-  <p><strong>寫了類型碼就一律照著套</strong>（那是你的明確指示，會覆蓋舊的分類）；沒寫類型碼、只靠關鍵字猜的，則只在類型還是 Other 時才填入，不會動你手動分好的。</p>
-  <p>要把舊事件改成自動分類：去 Google 日曆在標題補上 <code>*D</code> 這類字母，下次抓取就會生效。</p>
-
-  <p>同一事件<strong>不會重複匯入</strong>：以 Google 事件 ID 比對，事件改期或改名會自動更新；在 Google 日曆刪掉的事件，這裡也會跟著移除。</p>
-  <h4>🗂️ KEY DATES 的顯示方式</h4>
-  <p>預設只列<strong>未來兩個月</strong>，更遠的收在「顯示兩個月後 N 筆」按鈕裡。清單<strong>依 Type 分組</strong>（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other）。</p>
-  <p>左側色條依<strong>倒數天數</strong>變色：3 天內紅、7 天內橘、21 天內藍、更遠綠。每個 Type <strong>最多顯示 2 筆</strong>，其餘按「其餘 N 筆」展開。</p>
-  <p>「兩個月後」和「已過期」兩個按鈕並排在清單下方。<strong>過期超過兩個月的事件會自動永久刪除</strong>，不進回收桶。</p>
-
-  <h4>🔗 Google 日曆嵌入</h4>
-  <p>設定在 <strong>Settings → GOOGLE 日曆</strong>，日曆本身顯示在 Calendar 分頁最下面。</p>
-  <p>取得網址：Google 日曆 → 設定 → 左側選那個日曆 → <strong>整合日曆</strong> → 找到「嵌入程式碼」，複製裡面 <code>src="…"</code> 引號內那一段。</p>
-  <p>日曆需設為公開，或你在同一個瀏覽器已登入 Google 帳號。</p>
+  <h4>KEY DATES</h4>
+  <p>預設只列<strong>未來兩個月</strong>，依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），每組最多 2 筆。左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。</p>
+  <p>清單下方「兩個月後」和「已過期」兩個按鈕並排。<strong>過期超過兩個月自動永久刪除</strong>。</p>
+  <h4>自動抓取與自動分類</h4>
+  <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
+  <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
+  <p><strong>關鍵字（備援）</strong>：含「截止／繳交／deadline／投稿」→ Deadline；含「考／口試／資格」→ Exam；含「meeting／討論／報告／seminar」→ To do；含「註冊／選課／開學／畢業」→ School。關鍵字猜的只在類型還是 Other 時才填，不會動你手動分好的。</p>
+  <h4>TIMETABLE</h4>
+  <p>管「星期幾幾點在哪間教室」。課程可填學分與領域，衝堂會提示。</p>
 </div></details>
 
 <details class="card fold"><summary>🗂️ Zotero</summary><div class="help">
@@ -3316,7 +3244,8 @@ document.getElementById('helpBox').innerHTML=`
   <h4>資料不見了</h4><p>先看 Settings 的<strong>最近刪除</strong>和<strong>自動存檔</strong>。換版本是不同儲存空間，要舊版 Export、新版 Import。</p>
   <h4>Google 日曆空白</h4><p>在 Claude 預覽視窗會被擋，存成檔案用瀏覽器開就正常。</p>
   <h4>iPad 看不到 PDF</h4><p>檢查 Zotero 附件是「儲存的副本」而非「連結的檔案」。</p>
-</div></details>`;
+</div></details>
+`;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
   renderCards();renderQ();renderMT();renderNt();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
