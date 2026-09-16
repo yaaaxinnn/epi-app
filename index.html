@@ -475,41 +475,33 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <label class="f"><span>日期</span><input type="date" id="mt-date"></label>
       <label class="f"><span>標題（選填）</span><input type="text" id="mt-title" placeholder="e.g. 每週 meeting"></label>
     </div>
-    <label class="f"><span>重點（2–3 句，收合時會顯示）</span><textarea id="mt-topics" style="min-height:60px" placeholder="這次最重要的結論是什麼"></textarea></label>
-    <label class="f"><span>完整逐字稿（選填）</span><textarea id="mt-full" style="min-height:90px" placeholder="NotebookLM 轉出的紀錄貼這裡"></textarea></label>
-    <div class="f">
-      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">Action items</span>
-        <button class="btn icon" id="mtActToggle" type="button">＋</button></div>
+    <label class="f"><span>重點</span><textarea id="mt-topics" style="min-height:60px"></textarea></label>
+    <details class="fold" style="margin-bottom:10px"><summary>完整逐字稿 ▾</summary>
+      <textarea id="mt-full" style="min-height:140px;margin-top:6px"></textarea>
+    </details>
+    <details class="fold" style="margin-bottom:10px"><summary><span id="mtActSum">Action items</span> ▾</summary>
       <div id="mtNewActs" style="margin:6px 0 4px"></div>
-      <div id="mtActInputs" class="linkrow" style="display:none">
-        <input type="text" id="mt-act-text" placeholder="回去要做的事，按 Enter 加入" style="flex:1">
-        <button class="btn icon" id="mtAddAct" type="button">✓</button>
+      <div class="linkrow">
+        <input type="text" id="mt-act-text" placeholder="回去要做的事" style="flex:1">
+        <button class="btn icon" id="mtAddAct" type="button">＋</button>
       </div>
-    </div>
-    <div class="f">
-      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">我提供的資料（PPT／PDF）</span>
-        <button class="btn icon" id="mtMatToggle" type="button">＋</button></div>
+    </details>
+    <details class="fold" style="margin-bottom:10px"><summary><span id="mtMatSum">我提供的資料（PPT／PDF）</span> ▾</summary>
       <div id="mtNewMats" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
-      <div id="mtMatInputs" class="grid2" style="gap:6px;display:none">
-        <input type="text" id="mt-mat-name" placeholder="名稱，e.g. 進度簡報">
-        <div style="display:flex;gap:6px">
-          <input type="text" id="mt-mat-url" placeholder="https://... 按 Enter 加入" style="flex:1">
-          <button class="btn icon" id="mtAddMat" type="button">✓</button>
-        </div>
+      <div class="linkrow">
+        <input type="text" id="mt-mat-name" placeholder="名稱" style="flex:0 0 30%">
+        <input type="text" id="mt-mat-url" placeholder="https://..." style="flex:1">
+        <button class="btn icon" id="mtAddMat" type="button">＋</button>
       </div>
-    </div>
-    <div class="f">
-      <div class="row"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">老師給的參考文獻／附件</span>
-        <button class="btn icon" id="mtRefToggle" type="button">＋</button></div>
+    </details>
+    <details class="fold" style="margin-bottom:10px"><summary><span id="mtRefSum">老師給的參考文獻／附件</span> ▾</summary>
       <div id="mtNewRefs" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
-      <div id="mtRefInputs" class="grid2" style="gap:6px;display:none">
-        <input type="text" id="mt-ref-name" placeholder="名稱，e.g. Wong 2023 IPDMA">
-        <div style="display:flex;gap:6px">
-          <input type="text" id="mt-ref-url" placeholder="https://... 按 Enter 加入" style="flex:1">
-          <button class="btn icon" id="mtAddRef" type="button">✓</button>
-        </div>
+      <div class="linkrow">
+        <input type="text" id="mt-ref-name" placeholder="名稱" style="flex:0 0 30%">
+        <input type="text" id="mt-ref-url" placeholder="https://..." style="flex:1">
+        <button class="btn icon" id="mtAddRef" type="button">＋</button>
       </div>
-    </div>
+    </details>
     <div class="saverow"><button class="btn ghost" id="cancelMT">Cancel</button><button class="btn" id="addMT">Save</button></div>
   </div>
   <div id="mtList"></div>
@@ -827,7 +819,7 @@ function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=1
 
 let S=null,paperView='list',cardSort='due',mFilter='book',qFilter='open';
 let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
-const flipped=new Set(),clOpen=new Set(),openP=new Set(),openT=new Set(),openQ=new Set(),openR=new Set();
+const flipped=new Set(),clOpen=new Set(),openP=new Set(),openT=new Set(),openG=new Set(),openQ=new Set(),openR=new Set();
 let editCard=null,riFilter='all',trashAll=false;
 const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['pop','Participants'],
   ['def','Definitions'],['analysis','Analysis'],['result','Results'],['gap','Gap'],['note','Note']];
@@ -1251,30 +1243,35 @@ function renderPapers(){
   const CATNAME={teacher:'老師指定',course:'課程',explore:'探索',publish:'發表','':'未分類'};
   const groups={};
   a.forEach(p=>{const k=CATS[p.cat]?p.cat:'';(groups[k]=groups[k]||[]).push(p)});
-  const authShort=s=>{if(!s)return'—';const t=s.split(/[;,&]/)[0].trim();
-    return s.length>52?t+' et al.':s};
+  const authLine=p=>{
+    let a=(p.authors||'').trim();
+    if(a.length>46){const f=a.split(/[;,&]/)[0].trim();a=f+' et al.'}
+    let s=a||'—';
+    if(p.year)s+=' ('+esc(p.year)+')';
+    s+='.';
+    if(p.journal)s+=' <em>'+esc(p.journal)+'</em>.';
+    return s;
+  };
   const card=p=>{
-    const tags=p.tags||[];const shown=tags.slice(0,2),rest=tags.slice(2);
+    const tags=p.tags||[];const shown=tags.slice(0,3),rest=tags.slice(3);
     return `<div class="item"${p.star?' style="border-color:#D9A62E;box-shadow:0 0 0 1px #E8C662 inset"':''}>
-    <div class="row" style="align-items:flex-start">
+    <div class="row" style="align-items:center">
       <button class="x" data-pstar="${p.id}" title="${p.star?'取消置頂':'標星置頂'}" style="font-size:16px;padding:0 2px;flex:0 0 auto;color:${p.star?'#D9A62E':'var(--faint)'}">${p.star?'★':'☆'}</button>
       <div style="flex:1;min-width:0">
         <h3 style="line-height:1.35">${esc(p.title)}</h3>
-        <div class="meta" style="font-size:11.5px;line-height:1.45;margin-top:2px">${esc(authShort(p.authors))}${p.year?' · '+esc(p.year):''}${p.journal?' · '+esc(p.journal):''}</div>
+        <div class="meta" style="font-size:11px;line-height:1.5;margin-top:2px">${authLine(p)}</div>
         ${p.sum?`<div class="oneline" style="margin-top:5px">📌 ${esc(p.sum)}</div>`:''}
         ${p.snote?`<div class="oneline" style="color:#8A6A1E;margin-top:2px">📝 ${esc(p.snote)}</div>`:''}
         <div class="row" style="margin-top:7px;gap:5px;flex-wrap:wrap">
-          ${p.cat&&CATS[p.cat]?`<span class="pill" style="color:${CATS[p.cat][1]};background:${CATS[p.cat][2]};border-color:${CATS[p.cat][1]}40">${CATS[p.cat][0]}</span>`:''}
+          ${p.url?`<button class="pill" data-open="${esc(p.url)}" title="原文連結" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid);background:none">🌐 原文</button>`:''}
+          ${p.file?`<button class="pill" data-open="${esc(p.file)}" title="精讀 HTML" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid);background:none">🔗 精讀</button>`:''}
           ${shown.map(t=>`<span class="pill">${esc(t)}</span>`).join('')}
-          ${rest.length?`<span class="pill" data-ptags="${p.id}" style="cursor:pointer;color:var(--ac)">+${rest.length}</span>`:''}
           ${openT.has(p.id)?rest.map(t=>`<span class="pill">${esc(t)}</span>`).join(''):''}
+          ${rest.length?`<span class="pill" data-ptags="${p.id}" style="cursor:pointer;color:var(--faint);background:var(--surface-2);border-color:var(--line)">${openT.has(p.id)?'−':'+'+rest.length}</span>`:''}
           ${!p.note?`<span class="pill clay">Note 未填</span>`:''}
         </div>
       </div>
-      <span class="acts" style="flex:0 0 auto">
-        ${p.url?`<button data-open="${esc(p.url)}" title="原文連結">🌐</button>`:''}
-        ${p.file?`<button data-open="${esc(p.file)}" title="精讀 HTML">🔗</button>`:''}
-        <button data-pedit="${p.id}" title="編輯">✎</button></span>
+      <span class="acts" style="flex:0 0 auto"><button data-pedit="${p.id}" title="編輯">✎</button></span>
       <button class="x" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${openP.has(p.id)?`<div class="editbox">
@@ -1305,11 +1302,16 @@ function renderPapers(){
       </details>
       <div class="saverow"><button class="btn" data-psave="${p.id}">Save</button></div>
     </div>`:''}</div>`};
+  const LIM=3;
   list.innerHTML=CATORD.filter(k=>groups[k]&&groups[k].length).map(k=>{
     const col=CATS[k]?CATS[k][1]:'var(--muted)';
-    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${CATNAME[k]}</span>
-      <span class="pill" style="margin-left:6px">${groups[k].length}</span></div>
-    ${groups[k].map(card).join('')}`;
+    const g=groups[k],more=g.length>LIM,open=openG.has(k);
+    const head=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${CATNAME[k]}</span>
+      <span class="pill" style="margin-left:6px">${g.length}</span></div>`;
+    const body=(open?g:g.slice(0,LIM)).map(card).join('');
+    const btn=more?`<div class="row" style="margin:2px 0 6px">
+      <button class="btn ghost mini" data-pgrp="${k}" style="width:100%">${open?'收合':'顯示其餘 '+(g.length-LIM)+' 篇'}</button></div>`:'';
+    return head+body+btn;
   }).join('');
   const cols=CMPCOLS.filter(c=>cmpOn.has(c[0]));
   tbl.innerHTML=`<div class="tagbar" style="margin-bottom:10px">${
@@ -1334,6 +1336,8 @@ document.getElementById('paperList').addEventListener('click',e=>{
   const st=e.target.closest('[data-pstar]');
   if(st){const p=S.papers.find(x=>x.id===st.dataset.pstar);
     if(p){p.star=!p.star;p.mtime=Date.now();save();renderPapers()}return}
+  const gp=e.target.closest('[data-pgrp]');
+  if(gp){const k=gp.dataset.pgrp;openG.has(k)?openG.delete(k):openG.add(k);renderPapers();return}
   const tg=e.target.closest('[data-ptags]');
   if(tg){const id=tg.dataset.ptags;openT.has(id)?openT.delete(id):openT.add(id);renderPapers();return}
   const ed=e.target.closest('[data-pedit]');
@@ -1715,6 +1719,8 @@ document.getElementById('addMTBtn').onclick=()=>{
 document.getElementById('cancelMT').onclick=()=>show('mtForm',false);
 let newMats=[],newRefs=[],newActs=[];
 function renderNewActs(){
+  const sa=document.getElementById('mtActSum');
+  if(sa)sa.textContent='Action items'+(newActs.length?`（${newActs.length}）`:'');
   document.getElementById('mtNewActs').innerHTML=newActs.map((t,i)=>
     `<div class="linkrow" style="margin-bottom:4px">
       <span class="ic">☐</span><span style="flex:1;font-size:13.5px">${esc(t)}</span>
@@ -1722,6 +1728,9 @@ function renderNewActs(){
     </div>`).join('')||'';
 }
 function renderNewLinks(){
+  const sm=document.getElementById('mtMatSum'),sr=document.getElementById('mtRefSum');
+  if(sm)sm.textContent='我提供的資料（PPT／PDF）'+(newMats.length?`（${newMats.length}）`:'');
+  if(sr)sr.textContent='老師給的參考文獻／附件'+(newRefs.length?`（${newRefs.length}）`:'');
   document.getElementById('mtNewMats').innerHTML=newMats.map((l,i)=>
     `<span class="pill" data-hold="nmlk|${i}" title="長按 1.5 秒刪除">📊 ${esc(l.name)}</span>`).join(' ');
   document.getElementById('mtNewRefs').innerHTML=newRefs.map((l,i)=>
@@ -1735,10 +1744,6 @@ function grabLink(nameId,urlId){
   document.getElementById(nameId).value='';document.getElementById(urlId).value='';
   return {name:name||url.slice(0,30),url};
 }
-document.getElementById('mtActToggle').onclick=()=>{const el=document.getElementById('mtActInputs');
-  const on=el.style.display==='none';el.style.display=on?'':'none';
-  document.getElementById('mtActToggle').textContent=on?'−':'＋';
-  if(on)document.getElementById('mt-act-text').focus()};
 document.getElementById('mtAddAct').onclick=()=>{
   const el=document.getElementById('mt-act-text');const t=el.value.trim();
   if(!t){toast('請輸入內容');el.focus();return}
@@ -1748,18 +1753,12 @@ document.getElementById('mt-act-text').addEventListener('keydown',e=>{
 document.getElementById('mtNewActs').addEventListener('click',e=>{
   const b=e.target.closest('[data-nact-del]');
   if(b){newActs.splice(+b.dataset.nactDel,1);renderNewActs()}});
-document.getElementById('mtMatToggle').onclick=()=>{const el=document.getElementById('mtMatInputs');
-  const on=el.style.display==='none';el.style.display=on?'':'none';
-  document.getElementById('mtMatToggle').textContent=on?'−':'＋';
-  if(on)document.getElementById('mt-mat-name').focus()};
-document.getElementById('mtRefToggle').onclick=()=>{const el=document.getElementById('mtRefInputs');
-  const on=el.style.display==='none';el.style.display=on?'':'none';
-  document.getElementById('mtRefToggle').textContent=on?'−':'＋';
-  if(on)document.getElementById('mt-ref-name').focus()};
 document.getElementById('mtAddMat').onclick=()=>{const l=grabLink('mt-mat-name','mt-mat-url');if(l){newMats.push(l);renderNewLinks();document.getElementById('mt-mat-name').focus()}};
 document.getElementById('mtAddRef').onclick=()=>{const l=grabLink('mt-ref-name','mt-ref-url');if(l){newRefs.push(l);renderNewLinks();document.getElementById('mt-ref-name').focus()}};
-document.getElementById('mt-mat-url').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('mtAddMat').click()}});
-document.getElementById('mt-ref-url').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('mtAddRef').click()}});
+['mt-mat-name','mt-mat-url'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('mtAddMat').click()}}));
+['mt-ref-name','mt-ref-url'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();document.getElementById('mtAddRef').click()}}));
 document.getElementById('addMT').onclick=()=>{
   const d=document.getElementById('mt-date').value;
   const topics=document.getElementById('mt-topics').value.trim();
@@ -2910,7 +2909,8 @@ document.getElementById('helpBox').innerHTML=`
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
   <p><strong>☆ 星號</strong>：點一下置頂（金框標示）。<strong>簡短備註</strong>會以 📝 顯示在卡片上，記「meeting 前要讀完」這類提醒。</p>
   <p><strong>卡片依分類分組</strong>：老師指定／課程／探索／發表／未分類，組內星號優先、再按年份新到舊。分類在編輯區的下拉選。</p>
-  <p>作者只顯示第一作者 et al.，完整名單在展開的「書目與檔案」裡。Tags 超過兩個會收成 <code>+N</code>，點一下展開。🌐 原文連結和 🔗 精讀 HTML 併在卡片右側。</p>
+  <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在展開的「書目與檔案」裡。Tags 超過三個會收成淺灰 <code>+N</code>，點一下展開。<strong>🌐 原文</strong>和<strong>🔗 精讀</strong>做成標籤，跟 tags 排在同一列。</p>
+  <p>每個分類<strong>最多顯示 3 篇</strong>，其餘按「顯示其餘 N 篇」展開，分類名稱已經在標題上，卡片內不再重複顯示。</p>
   <h4>📥 從 Claude 匯入</h4>
   <p>丟 PDF 給 Claude 說「精讀這篇」，會拿到<strong>一段 JSON</strong>和<strong>一個 HTML 檔</strong>。按工具列的 <code>📥</code>，一個面板兩件事都做完：</p>
   <ol>
@@ -2957,7 +2957,7 @@ document.getElementById('helpBox').innerHTML=`
   <p><strong>重點</strong>欄寫 2–3 句結論，收合時就看得到；NotebookLM 轉出的<strong>完整逐字稿</strong>貼在下方的折疊區，不佔版面。</p>
   <p><strong>點卡片展開／收合</strong>。收合時顯示日期、標題、重點、附件標籤。</p>
   <p>展開後的 <strong>Action items</strong>、<strong>我提供的資料</strong>、<strong>老師給的參考文獻</strong>各自是收合的小區塊（標題後有數量），點標題才展開，刪除都在裡面做。</p>
-  <p>新增 meeting 時，<strong>Action items</strong> 按 <code>＋</code> 展開輸入框，一次打一項按 Enter，列成一條一條的清單。</p>
+  <p>新增 meeting 時，<strong>Action items</strong>、<strong>我提供的資料</strong>、<strong>老師給的參考文獻</strong>、<strong>完整逐字稿</strong>都是折疊區，點標題的 ▾ 展開。前三者加入後標題會顯示數量。</p>
   <p>附件加入方式：填名稱＋網址，按 <code>＋</code> 或在任一欄按 Enter。加入後以 <strong>📊 我的資料／📄 老師文獻</strong>分列顯示在卡片上，<strong>點一下開啟</strong>（不會誤刪）。</p>
   <p>老師給的 PDF：上傳到 repo 的 <span class="mono">meetings/</span> 資料夾，把檔案網址貼進附件即可跨裝置開啟。</p>
   <h4>✅ To-do</h4>
