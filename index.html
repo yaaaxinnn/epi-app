@@ -73,6 +73,11 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:24px 0 8px}
 .sec-head:first-child{margin-top:0}
 .sec-head .t{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em}
+.blockhead{display:flex;align-items:center;gap:8px;margin:28px 0 9px;padding:0 0 6px 9px;
+  border-left:3px solid var(--ac);border-bottom:1px solid var(--line)}
+.blockhead:first-child{margin-top:4px}
+.blockhead .bt{font-size:13px;font-weight:600;color:var(--ac);letter-spacing:.05em}
+.blockhead .spacer{flex:1}
 .hint{font-size:13px;color:var(--muted);line-height:1.55}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .spacer{flex:1}
@@ -382,7 +387,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Notes ========== -->
 <section class="panel" id="p-courses">
-  <div class="sec-head"><span class="t">QUESTIONS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">❓ QUESTIONS</span><span class="spacer"></span>
     <div class="seg sm" id="qSeg">
       <button data-qf="open" aria-pressed="true">Unresolved</button>
       <button data-qf="all" aria-pressed="false">All</button>
@@ -401,7 +406,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
   <div id="qList"></div>
 
-  <div class="sec-head" style="margin-top:18px"><span class="t">NOTES</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">📒 NOTES</span><span class="spacer"></span>
     <button class="iconb" id="addNtBtn" title="新增筆記">＋</button></div>
   <div class="card" id="ntForm" style="display:none">
     <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
@@ -464,7 +469,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Ideas ========== -->
 <section class="panel" id="p-ideas">
-  <div class="sec-head"><span class="t">MEETINGS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">📋 MEETINGS</span><span class="spacer"></span>
     <button class="iconb" id="addMTBtn" title="新增 meeting 紀錄">＋</button></div>
   <div class="card" id="mtForm" style="display:none">
     <div class="grid2">
@@ -497,7 +502,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
   <div id="mtList"></div>
 
-  <div class="sec-head"><span class="t">RESEARCH DIRECTIONS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">🎯 RESEARCH DIRECTIONS</span><span class="spacer"></span>
     <div class="seg sm" id="dirSeg">
       <button data-dirf="active" aria-pressed="true">進行中</button>
       <button data-dirf="all" aria-pressed="false">All</button>
@@ -516,7 +521,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="saverow"><button class="btn ghost" id="cancelDIR">Cancel</button><button class="btn" id="addDIR">Save</button></div>
   </div>
   <div id="dirList"></div>
-  <div class="sec-head"><span class="t">TO-DO · 未完成的 Action Items</span></div>
+  <div class="blockhead"><span class="bt">✅ TO-DO</span></div>
   <div id="mtTodo"></div>
 
 </section>
@@ -1157,7 +1162,7 @@ function renderMethod(){
       let es=arr.map((a,j)=>({a,j}));
       if(qSec)es=es.filter(o=>norm((src==='me'?'ME ':'HR ')+o.a[0]+' '+o.a[1]).includes(norm(qSec)));
       if(!es.length)return '';
-      if(src==='hr')return `<details class="srcgrp fold" style="padding:0"><summary class="srclab" style="cursor:pointer">＋ CAUSAL INFERENCE: WHAT IF（補充 · ${es.length}）</summary><div class="secs">${
+      if(src==='hr')return `<details class="srcgrp fold" style="padding:0"><summary class="srclab" style="cursor:pointer">＋ CAUSAL INFERENCE: WHAT IF（補充）</summary><div class="secs">${
         es.map(o=>{
           const kk=src+'-'+o.j,v=t.sec[kk]||0,nt=t.sn[kk]||{},has=(nt.n||(nt.links||[]).some(l=>l.url))?' has':'';
           const sid=i+'|'+kk,op=openSec===sid;
@@ -1985,7 +1990,7 @@ function mtLinkEditor(m,key){
       <button class="iconb" data-mlnew="${m.id}|${key}" title="再新增一列">＋</button></div>
   </details>`;
 }
-const openM=new Set();
+const openM=new Set(),editM=new Set();
 function mtProgress(m){
   const total=(m.actions||[]).length;
   if(!total)return'';
@@ -2015,6 +2020,7 @@ function renderMT(){
     const open=openM.has(m.id);
     const allBtns=(m.linksL||[]).filter(l=>l.url).map(l=>
       `<span class="pill" data-open="${esc(l.url)}" data-mstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">🔗 ${esc(l.name||l.url.slice(0,20))}</span>`).join(' ');
+    const ed=editM.has(m.id);
     return `<div class="item" data-mcard="${m.id}" style="cursor:pointer">
     <div class="row">
       <div style="flex:1;min-width:0">
@@ -2023,9 +2029,24 @@ function renderMT(){
       </div>
       ${allBtns?`<span class="row" data-mstop="1" style="flex:0 0 auto;gap:4px;cursor:default">${allBtns}</span>`:''}
       ${mtProgress(m)}
+      ${open?`<button class="x" data-medit="${m.id}" data-mstop="1" title="${ed?'完成編輯':'編輯'}" style="font-size:11px;padding:0 3px">${ed?'✓':'✎'}</button>`:''}
       <button class="x" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
-    ${open?`<div class="editbox" data-mstop="1" style="cursor:default">
+    ${open&&!ed?`<div data-mstop="1" style="cursor:default">
+      ${m.topics?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(m.topics)}</div>`
+        :'<p class="hint" style="margin:8px 0 0">還沒有重點，點 ✎ 開始寫。</p>'}
+      ${(m.actions||[]).length?`<details class="fold" style="margin-top:10px"><summary>✅Action items</summary>
+        <div style="margin-top:6px">
+        ${m.actions.map((act,ai)=>`<label class="chk" style="margin-bottom:4px">
+          <input type="checkbox" data-mact="${m.id}|${ai}" ${act.done?'checked':''}>
+          <span style="flex:1;${act.done?'text-decoration:line-through;opacity:.55':''}">${esc(act.text)}</span>
+        </label>`).join('')}
+        </div></details>`:''}
+      ${m.full?`<details class="fold" style="margin-top:6px"><summary>✍️完整逐字稿</summary>
+        <div class="mdview" style="margin-top:6px;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--ink-soft)">${esc(m.full)}</div>
+      </details>`:''}
+    </div>`:''}
+    ${open&&ed?`<div class="editbox" data-mstop="1" style="cursor:default">
       <div class="grid2">
         <label class="f"><span>日期</span><input type="date" data-mf="${m.id}|date" value="${esc(m.date||'')}"></label>
         <label class="f"><span>標題</span><input type="text" data-mf="${m.id}|title" value="${esc(m.title||'')}"></label>
@@ -2033,8 +2054,7 @@ function renderMT(){
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">重點</span>
         <button class="iconb" data-mtimg="${m.id}" title="插入圖片">🖼️</button></div>
-        <textarea data-mf="${m.id}|topics" data-mtb="${m.id}" style="min-height:90px;margin-top:4px">${esc(m.topics||'')}</textarea></div>
-      ${m.topics?`<div class="mdview" style="margin:0 0 10px;font-size:13.5px;line-height:1.6;background:var(--surface-2);border-radius:6px;padding:9px 11px">${md(m.topics)}</div>`:''}
+        <textarea data-mf="${m.id}|topics" data-mtb="${m.id}" style="min-height:110px;margin-top:4px">${esc(m.topics||'')}</textarea></div>
       <details class="fold" style="margin-bottom:8px"><summary>✅Action items</summary>
         <div style="margin-top:6px">
         ${(m.actions||[]).map((act,ai)=>`<label class="chk" style="margin-bottom:4px">
@@ -2050,7 +2070,7 @@ function renderMT(){
       <details class="fold" style="margin-bottom:8px"><summary>✍️完整逐字稿</summary>
         <textarea data-mf="${m.id}|full" style="min-height:160px;margin-top:6px">${esc(m.full||'')}</textarea>
       </details>
-      <div class="saverow"><button class="btn" data-msave="${m.id}">收合</button></div>
+      <div class="saverow"><button class="btn" data-msave="${m.id}">完成</button></div>
     </div>`:''}</div>`}).join('');
   renderDIR();
 }
@@ -2063,10 +2083,18 @@ document.getElementById('mtTodo').addEventListener('change',e=>{
 document.getElementById('mtList').addEventListener('click',e=>{
   if(hEl)return;
   if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
+  const mte=e.target.closest('[data-medit]');
+  if(mte){const id=mte.dataset.medit;
+    if(editM.has(id)){editM.delete(id);
+      const m=S.mt.find(x=>x.id===id);
+      if(m&&Array.isArray(m.linksL))m.linksL=m.linksL.filter(l=>l.url||l.name);
+      save();saved()}
+    else{editM.add(id);setTimeout(()=>bindImagePaste(document.querySelector(`[data-mtb="${id}"]`)),0)}
+    renderMT();return}
   const sv=e.target.closest('[data-msave]');
-  if(sv){const m=S.mt.find(x=>x.id===sv.dataset.msave);
+  if(sv){const id=sv.dataset.msave;const m=S.mt.find(x=>x.id===id);
     if(m&&Array.isArray(m.linksL))m.linksL=m.linksL.filter(l=>l.url||l.name);
-    openM.delete(sv.dataset.msave);save();saved();renderMT();return}
+    editM.delete(id);save();saved();renderMT();return}
   const da=e.target.closest('[data-mdel-act]');
   if(da){const[id,ai]=da.dataset.mdelAct.split('|');const m=S.mt.find(x=>x.id===id);
     if(m){m.actions.splice(+ai,1);m.mtime=Date.now();save();renderMT()}return}
@@ -2083,8 +2111,9 @@ document.getElementById('mtList').addEventListener('click',e=>{
     if(m&&m[key]){m[key].splice(+i,1);m.mtime=Date.now();save();renderMT()}return}
   if(e.target.closest('[data-mstop]'))return;
   const card=e.target.closest('[data-mcard]');
-  if(card){const id=card.dataset.mcard;openM.has(id)?openM.delete(id):openM.add(id);renderMT();
-    setTimeout(()=>bindImagePaste(document.querySelector(`[data-mtb="${id}"]`)),0)}
+  if(card){const id=card.dataset.mcard;
+    if(openM.has(id)){openM.delete(id);editM.delete(id)}else openM.add(id);
+    renderMT()}
 });
 document.getElementById('mtList').addEventListener('change',e=>{
   const cb=e.target.closest('[data-mact]');
@@ -2271,7 +2300,7 @@ function addDirLog(id){
 
 /* ================= NOTES ================= */
 let newNtLinks=[];
-const openNt=new Set(),openNG=new Set();
+const openNt=new Set(),openNG=new Set(),editNt=new Set();
 function renderNtNewLinks(){
   document.getElementById('ntNewLinks').innerHTML=newNtLinks.map((l,i)=>
     `<span class="pill" data-hold="nntlk|${i}" title="長按 1.5 秒刪除">🔗 ${esc(l.name)}</span>`).join(' ');
@@ -2321,46 +2350,60 @@ function renderNt(){
 }
 function ntItem(n){
   if(!Array.isArray(n.links))n.links=[];
-  const open=openNt.has(n.id);
+  const open=openNt.has(n.id), ed=editNt.has(n.id);
   const chips=n.links.filter(l=>l.url).map(l=>
     `<span class="pill" data-open="${esc(l.url)}" data-ntstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">🔗 ${esc(l.name||l.url.slice(0,24))}</span>`).join(' ');
+  const attach=()=>{const arr=n.links.length?n.links:(n.links=[{name:'',url:''}]);
+    return `<details class="fold" style="margin-bottom:8px"><summary>🔗附件</summary>
+      ${arr.map((l,i)=>`<div class="lrow">
+        <input type="text" data-ntlname="${n.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 22%">
+        <input type="text" data-ntlurl="${n.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
+        <button class="x" data-ntldel="${n.id}|${i}" style="font-size:12px" title="刪除">✕</button>
+      </div>`).join('')}
+      <div class="row" style="margin-top:4px"><span class="spacer"></span>
+        <button class="iconb" data-ntlnew="${n.id}" title="再新增一列">＋</button></div>
+    </details>`};
   return `<div class="item" data-ntcard="${n.id}" style="cursor:pointer">
     <div class="row">
       <h3 style="flex:1;min-width:0">${esc(n.title)}</h3>
+      ${open?`<button class="x" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}" style="font-size:11px;padding:0 3px">${ed?'✓':'✎'}</button>`:''}
       <button class="x" data-hold="note|${n.id}" title="長按 1.5 秒刪除" style="font-size:11px;padding:0 3px">✕</button>
     </div>
     ${!open&&n.body?`<div class="oneline" style="margin-top:3px">${esc(n.body.split('\n')[0].replace(/!\[[^\]]*\]\([^)]*\)/g,'🖼️'))}</div>`:''}
     ${chips?`<div class="row" data-ntstop="1" style="margin-top:6px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
-    ${open?`<div class="editbox" data-ntstop="1" style="cursor:default">
-      <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
-      <label class="f"><span>分類</span><select data-ntk="${n.id}">
-        ${QKORD.map(k=>`<option value="${k}"${(n.kind||'mine')===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
+    ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
+      ${n.body?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(n.body)}</div>`
+        :'<p class="hint" style="margin:8px 0 0">還沒有內容，點 ✎ 開始寫。</p>'}
+    </div>`:''}
+    ${open&&ed?`<div class="editbox" data-ntstop="1" style="cursor:default">
+      <div class="grid2">
+        <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
+        <label class="f"><span>分類</span><select data-ntk="${n.id}">
+          ${QKORD.map(k=>`<option value="${k}"${(n.kind||'mine')===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
+      </div>
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
         <button class="iconb" data-ntimg="${n.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
-        <textarea data-ntf="${n.id}|body" data-ntb="${n.id}" style="min-height:110px;margin-top:4px">${esc(n.body||'')}</textarea></div>
-      ${n.body?`<div class="mdview" style="margin:6px 0 10px;font-size:13.5px;line-height:1.6;background:var(--surface-2);border-radius:6px;padding:9px 11px">${md(n.body)}</div>`:''}
-      ${(()=>{const arr=n.links.length?n.links:(n.links=[{name:'',url:''}]);
-        const cnt=arr.filter(l=>l.url).length;
-        return `<details class="fold" style="margin-bottom:8px"><summary>🔗附件</summary>
-        ${arr.map((l,i)=>`<div class="lrow">
-          <input type="text" data-ntlname="${n.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 22%">
-          <input type="text" data-ntlurl="${n.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
-          <button class="x" data-ntldel="${n.id}|${i}" style="font-size:12px" title="刪除">✕</button>
-        </div>`).join('')}
-        <div class="row" style="margin-top:4px"><span class="spacer"></span>
-          <button class="iconb" data-ntlnew="${n.id}" title="再新增一列">＋</button></div>
-      </details>`})()}
-      <div class="saverow"><button class="btn" data-ntsave="${n.id}">收合</button></div>
+        <textarea data-ntf="${n.id}|body" data-ntb="${n.id}" style="min-height:130px;margin-top:4px">${esc(n.body||'')}</textarea></div>
+      ${attach()}
+      <div class="saverow"><button class="btn" data-ntsave="${n.id}">完成</button></div>
     </div>`:''}</div>`;
 }
 document.getElementById('ntList').addEventListener('click',e=>{
   if(hEl)return;
   if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
+  const nte=e.target.closest('[data-ntedit]');
+  if(nte){const id=nte.dataset.ntedit;
+    if(editNt.has(id)){editNt.delete(id);
+      const n=S.notes.find(x=>x.id===id);
+      if(n&&Array.isArray(n.links))n.links=n.links.filter(l=>l.url||l.name);
+      save();saved()}
+    else{editNt.add(id);setTimeout(()=>bindImagePaste(document.querySelector(`[data-ntb="${id}"]`)),0)}
+    renderNt();return}
   const sv=e.target.closest('[data-ntsave]');
-  if(sv){const n=S.notes.find(x=>x.id===sv.dataset.ntsave);
+  if(sv){const id=sv.dataset.ntsave;const n=S.notes.find(x=>x.id===id);
     if(n&&Array.isArray(n.links))n.links=n.links.filter(l=>l.url||l.name);
-    openNt.delete(sv.dataset.ntsave);save();saved();renderNt();return}
+    editNt.delete(id);save();saved();renderNt();return}
   const ng=e.target.closest('[data-ngrp]');
   if(ng){const k=ng.dataset.ngrp;openNG.has(k)?openNG.delete(k):openNG.add(k);renderNt();return}
   const ni=e.target.closest('[data-ntimg]');
@@ -2376,8 +2419,9 @@ document.getElementById('ntList').addEventListener('click',e=>{
     if(n&&n.links){n.links.splice(+i,1);n.mtime=Date.now();save();renderNt()}return}
   if(e.target.closest('[data-ntstop]'))return;
   const card=e.target.closest('[data-ntcard]');
-  if(card){const id=card.dataset.ntcard;openNt.has(id)?openNt.delete(id):openNt.add(id);renderNt();
-    setTimeout(()=>bindImagePaste(document.querySelector(`[data-ntb="${id}"]`)),0)}
+  if(card){const id=card.dataset.ntcard;
+    if(openNt.has(id)){openNt.delete(id);editNt.delete(id)}else openNt.add(id);
+    renderNt()}
 });
 document.getElementById('ntList').addEventListener('change',e=>{
   const k=e.target.closest('[data-ntk]');
@@ -2478,7 +2522,7 @@ document.getElementById('ttTable').addEventListener('click',e=>{
   csOpen(S.courses.find(x=>x.id===b.dataset.cs));
 });
 
-let showPast=false,showFar=false;
+let showPast=false;
 function kdRow(k,d){
   const[u,col,bg]=kdUrg(d);
   const big=d<0?Math.abs(d):d, unit=d<0?'天前':(d===0?'':'天');
@@ -2501,41 +2545,43 @@ function kdUrg(d){
   return['u3','#3E6B4E','#E2EEE6'];
 }
 const openKG=new Set();
+function kdSection(g,key,label,icon){
+  const LIM=2;
+  const near=g.filter(x=>x.d<=62), far=g.filter(x=>x.d>62);
+  const op=openKG.has(key);
+  const hidden=(near.length>LIM?near.length-LIM:0)+far.length;
+  const shown=op?near.concat(far):near.slice(0,LIM);
+  return `<div class="kdgroup">${icon} ${label}<span class="pill" style="margin-left:6px;font-size:10px">${g.length}</span></div>`
+    +(shown.length?shown.map(x=>kdRow(x.k,x.d)).join(''):'<p class="hint" style="margin:0 0 6px">（無）</p>')
+    +(hidden?`<div class="row" style="margin:2px 0 8px">
+      <button class="btn ghost mini" data-kgrp="${key}" style="width:100%;font-size:12px">${op?'▴ 收合':'▾ 其餘 '+hidden+' 筆'+(far.length?'（含兩個月後 '+far.length+'）':'')}</button></div>`:'');
+}
 function kdRender(list,pfx){
   pfx=pfx||'u';
   const groups={};KDTORD.forEach(k=>groups[k]=[]);
   list.forEach(x=>{const t=KDTORD.includes(x.k.type)?x.k.type:'other';groups[t].push(x)});
-  const LIM=2;
-  return KDTORD.filter(t=>groups[t].length).map(t=>{
-    const g=groups[t],key=pfx+':'+t,op=openKG.has(key),more=g.length>LIM;
-    return `<div class="kdgroup">${KDTICON[t]} ${KDT[t]}<span class="pill" style="margin-left:6px;font-size:10px">${g.length}</span></div>`
-      +(op?g:g.slice(0,LIM)).map(x=>kdRow(x.k,x.d)).join('')
-      +(more?`<div class="row" style="margin:2px 0 6px"><button class="btn ghost mini" data-kgrp="${key}" style="width:100%">${op?'收合':'其餘 '+(g.length-LIM)+' 筆'}</button></div>`:'');
-  }).join('');
+  return KDTORD.filter(t=>groups[t].length)
+    .map(t=>kdSection(groups[t],pfx+':'+t,KDT[t],KDTICON[t])).join('');
 }
 function renderKD(){
   const el=document.getElementById('kdList'),pel=document.getElementById('kdPastList'),prow=document.getElementById('kdPastRow');
   const today=new Date();today.setHours(0,0,0,0);
-  // 過期超過兩個月自動永久刪除
   const cut=62;
   const before=S.kd.length;
   S.kd=S.kd.filter(k=>Math.round((new Date(k.date)-today)/DAY)>=-cut);
   if(S.kd.length!==before)save();
   const withD=S.kd.map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}));
-  const up=withD.filter(x=>x.d>=0&&x.d<=cut).sort((a,b)=>a.d-b.d);
-  const far=withD.filter(x=>x.d>cut).sort((a,b)=>a.d-b.d);
+  const up=withD.filter(x=>x.d>=0).sort((a,b)=>a.d-b.d);
   const past=withD.filter(x=>x.d<0).sort((a,b)=>b.d-a.d);
-  el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">未來兩個月沒有安排。</div>`;
+  el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">沒有即將到來的日期。</div>`;
   prow.style.flexWrap='nowrap';
-  prow.innerHTML=
-    (far.length?`<button class="btn ghost mini" id="toggleFar" style="flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${showFar?'收合兩個月後':'兩個月後 '+far.length}</button>`:'')
-   +(past.length?`<button class="btn ghost mini" id="togglePast" style="flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${showPast?'隱藏已過期':'已過期 '+past.length}</button>`:'');
-  pel.innerHTML=(showFar&&far.length?kdRender(far,'f'):'')+(showPast&&past.length?kdRender(past,'p'):'');
+  prow.innerHTML=past.length
+    ?`<button class="btn ghost mini" id="togglePast" style="flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${showPast?'▴ 隱藏已過期':'▾ 已過期 '+past.length}</button>`:'';
+  pel.innerHTML=showPast&&past.length?kdRender(past,'p'):'';
 }
 
 document.getElementById('kdPastRow').addEventListener('click',e=>{
-  if(e.target.closest('#togglePast')){showPast=!showPast;renderKD();return}
-  if(e.target.closest('#toggleFar')){showFar=!showFar;renderKD()}
+  if(e.target.closest('#togglePast')){showPast=!showPast;renderKD()}
 });
 [['kdList'],['kdPastList']].forEach(([id])=>document.getElementById(id).addEventListener('click',e=>{
   const g=e.target.closest('[data-kgrp]');
@@ -3125,6 +3171,8 @@ document.getElementById('helpBox').innerHTML=`
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings 最下方，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆，其餘用「顯示其餘 N 篇」展開。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
+  <h4>閱讀模式與編輯模式</h4>
+  <p>Notes 和 Meetings 的卡片<strong>點一下展開是閱讀模式</strong>——直接看排版好的內容、圖片和附件，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
   <h4>🔗附件</h4>
   <p>全站統一：展開後預設一列空白，左邊短格填名稱、右邊長格貼網址，按 <code>＋</code> 再加一列，長按 ✕ 刪除。沒填的空白列在收合時自動清掉。卡片上只顯示有網址的附件，點一下開啟。</p>
   <h4>🖼️ 插入圖片</h4>
@@ -3142,7 +3190,7 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>
 
 <details class="card fold"><summary>📚 Textbooks</summary><div class="help">
-  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>，Causal Inference: What If 收在「＋ 補充」折疊區，<strong>不計入上方 Progress</strong>。</p>
+  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>，Causal Inference: What If 收在「＋ CAUSAL INFERENCE: WHAT IF（補充）」折疊區，<strong>不計入上方 Progress</strong>。</p>
   <p>每個小節點一下換狀態：未讀 → 讀過 → 懂了。右邊 <code>✎</code> 寫該節筆記和附件，有內容時會變色。</p>
 </div></details>
 
@@ -3164,7 +3212,7 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>💬 Meeting</summary><div class="help">
   <p>順序：<strong>Meetings → Research directions → To-do</strong>。</p>
   <h4>📋 Meetings</h4>
-  <p>點卡片展開／收合。收合時顯示日期、標題、重點首行、附件標籤。</p>
+  <p>點卡片<strong>展開是閱讀模式</strong>：排版後的重點、可勾選的 action items、逐字稿折疊區。按右上 ✎ 切到編輯模式。收合時顯示日期、標題、重點首行、附件標籤。</p>
   <p><strong>重點</strong>支援 Markdown，輸入框下方即時預覽排版後的樣子。<strong>✍️完整逐字稿</strong>固定在最下面的折疊區，NotebookLM 轉出的長稿貼這裡不會撐爆版面。</p>
   <p><strong>✅Action items</strong> 一次打一項按 Enter，成為可勾選的清單。</p>
   <h4>🎯 Research directions</h4>
@@ -3176,8 +3224,8 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <h4>KEY DATES</h4>
-  <p>預設只列<strong>未來兩個月</strong>，依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），每組最多 2 筆。左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。</p>
-  <p>清單下方「兩個月後」和「已過期」兩個按鈕並排。<strong>過期超過兩個月自動永久刪除</strong>。</p>
+  <p>依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），<strong>每組預設顯示最近 2 筆</strong>。每組下方有自己的 <strong>▾ 箭頭</strong>，展開該類剩下的事項，包含兩個月後的遠期項目（箭頭上會標示有幾筆是兩個月後）。</p>
+  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方是「已過期」按鈕，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
   <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
   <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
