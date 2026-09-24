@@ -752,7 +752,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
   <div style="flex:1;margin-top:10px;min-height:0">
     <iframe id="fvFrame" sandbox="allow-popups allow-scripts allow-same-origin"
-      style="width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
+      style="display:block;width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
   </div>
 </div>
 <input type="file" id="imgPick" accept="image/*" style="display:none">
@@ -905,7 +905,8 @@ let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
 const flipped=new Set(),openP=new Set(),editP=new Set(),openT=new Set(),openG=new Set(),openQ=new Set();
 let editCard=null,riFilter='all',trashAll=false;
 const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['pop','Participants'],
-  ['def','Definitions'],['analysis','Analysis'],['result','Results'],['gap','Gap'],['note','Note']];
+  ['def','Definitions'],['analysis','Analysis'],['result','Results'],['interp','Interpretation'],
+  ['gap','Gap'],['note','Note']];
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
