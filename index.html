@@ -76,7 +76,7 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .kx svg{display:block;transition:transform .2s}
 .kx[aria-expanded="true"] svg{transform:rotate(180deg)}
 .blockhead{display:flex;align-items:center;gap:8px;margin:22px 0 6px;padding:1px 10px;
-  background:color-mix(in srgb,var(--ac-soft) 62%,var(--surface));border-radius:5px}
+  background:color-mix(in srgb,var(--ac) 14%,var(--surface));border-radius:5px}
 .blockhead.plain{background:none;padding-left:2px;padding-right:2px}
 .nsrch{display:flex;align-items:center;gap:3px;margin:4px 0 7px}
 .nsrch input{flex:1;font-size:13px;padding:6px 10px}
@@ -85,8 +85,18 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .tg{cursor:pointer;font-size:10px;padding:1px 7px;user-select:none}
 .tg[aria-pressed="true"]{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
 .srchinfo{font-family:var(--mono);font-size:11px;color:var(--faint);margin:0 0 6px;letter-spacing:.04em}
-.kdgroup.sub{margin:10px 0 5px;padding-left:14px;font-size:10px}
 .qst{margin-left:7px;vertical-align:1px;font-size:9.5px;padding:1px 6px}
+.qgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start;margin-bottom:10px}
+.qgrid>.item{margin-bottom:0}
+.qgrid>.item.wide{grid-column:1/-1}
+@media(max-width:760px){.qgrid{grid-template-columns:1fr}}
+.rsvmon{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);margin:14px 0 4px;padding-left:2px}
+.rsvmon:first-of-type{margin-top:6px}
+.rsvrow{display:flex;align-items:center;gap:8px;padding:7px 6px 7px 3px;border-bottom:1px solid var(--line);cursor:pointer}
+.rsvrow:hover{background:var(--surface-2)}
+.rsvrow .ck{flex:0 0 auto;color:#3E6B4E;font-size:11px;line-height:1}
+.rsvrow .rtx{flex:1;min-width:0;font-size:13.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rsvrow .rdt{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .blockhead:first-child{margin-top:4px}
 .blockhead .bt{font-size:11.5px;font-weight:600;color:var(--ac);letter-spacing:.05em}
 .blockhead .spacer{flex:1}
@@ -413,7 +423,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="tagbar" id="ntagbar"></div>
   <p class="srchinfo" id="nsrchInfo" style="display:none"></p>
 
-  <div class="blockhead"><span class="bt">❓ QUESTIONS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">QUESTIONS</span><span class="spacer"></span>
     <div class="seg sm" id="qSeg">
       <button data-qf="open" aria-pressed="true">Unresolved</button>
       <button data-qf="all" aria-pressed="false">All</button>
@@ -423,22 +433,18 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="card" id="qForm" style="display:none">
     <label class="f"><span>Question</span><textarea id="q-q"></textarea></label>
     <div class="grid2">
-      <label class="f"><span>Kind</span><select id="q-kind">
-        <option value="mine">Mine</option>
-        <option value="study">Study</option></select></label>
-      <label class="f"><span>Source</span><input type="text" id="q-src"></label>
+      <label class="f"><span>分類</span><select id="q-kind"></select></label>
     </div>
     <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="q-tags" placeholder="e.g. confounding, HBV"></label>
     <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
   </div>
   <div id="qList"></div>
 
-  <div class="blockhead"><span class="bt">📒 NOTES</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">NOTES</span><span class="spacer"></span>
     <button class="iconb" id="addNtBtn" title="新增筆記">＋</button></div>
   <div class="card" id="ntForm" style="display:none">
     <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
-    <label class="f"><span>分類</span><select id="nt-kind">
-      <option value="mine">Mine</option><option value="study">Study</option></select></label>
+    <label class="f"><span>分類</span><select id="nt-kind"></select></label>
     <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
     <div class="f"><div class="row" style="align-items:center">
       <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
@@ -497,7 +503,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Ideas ========== -->
 <section class="panel" id="p-ideas">
-  <div class="blockhead"><span class="bt">📋 MEETINGS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">MEETINGS</span><span class="spacer"></span>
     <button class="iconb" id="addMTBtn" title="新增 meeting 紀錄">＋</button></div>
   <div class="card" id="mtForm" style="display:none">
     <div class="grid2">
@@ -530,7 +536,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
   <div id="mtList"></div>
 
-  <div class="blockhead"><span class="bt">🎯 RESEARCH DIRECTIONS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">RESEARCH DIRECTIONS</span><span class="spacer"></span>
     <div class="seg sm" id="dirSeg">
       <button data-dirf="active" aria-pressed="true">進行中</button>
       <button data-dirf="all" aria-pressed="false">All</button>
@@ -549,7 +555,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="saverow"><button class="btn ghost" id="cancelDIR">Cancel</button><button class="btn" id="addDIR">Save</button></div>
   </div>
   <div id="dirList"></div>
-  <div class="blockhead"><span class="bt">✅ TO-DO</span></div>
+  <div class="blockhead"><span class="bt">TO-DO</span></div>
   <div id="mtTodo"></div>
 
 </section>
@@ -748,8 +754,37 @@ const TERMS=[
  {id:'p2a',label:'PhD2 上',from:'2027-07-01',to:'2028-01-01'},
  {id:'p2b',label:'PhD2 下',from:'2028-01-02',to:'2028-06-30'}];
 const DEFAULT_TAGS=['HBV','HCV','HCC'];
-const QK={mine:'Mine',study:'Study'};
-const QKCOL={mine:['#7A5AA8','#EDE6F7'],study:['#2E5FB0','#DEE9F7']};
+const DEFAULT_CATS=[
+  {id:'teacher',name:'老師指定',short:'老師',col:'#B0472E',soft:'#F7E5DE'},
+  {id:'course', name:'課程',    short:'課程',col:'#2E5FB0',soft:'#DEE9F7'},
+  {id:'explore',name:'探索',    short:'探索',col:'#7A5AA8',soft:'#EDE6F7'},
+  {id:'publish',name:'發表',    short:'發表',col:'#2E7D5B',soft:'#DDEFE6'}];
+const CATPAL=[['#B5761E','#F8EEDC'],['#1F6B6B','#E2EFEE'],['#8A5C22','#F6EEE0'],
+  ['#2F5670','#E5EBF0'],['#6A4A6E','#EFE8F0'],['#A0533F','#F6E9E4']];
+function catAdd(name){
+  name=String(name||'').trim();if(!name)return null;
+  const hit=S.cats.find(c=>c.name===name);if(hit)return hit.id;
+  const pal=CATPAL[S.cats.length%CATPAL.length];
+  const id='c'+uid();
+  S.cats.push({id,name,short:name.slice(0,4),col:pal[0],soft:pal[1]});
+  return id;
+}
+const DEFAULT_QCATS=[
+  {id:'mine', name:'Mine', col:'#7A5AA8',soft:'#EDE6F7'},
+  {id:'study',name:'Study',col:'#2E5FB0',soft:'#DEE9F7'}];
+function qcats(){if(!Array.isArray(S.qcats)||!S.qcats.length)S.qcats=DEFAULT_QCATS.map(x=>Object.assign({},x));return S.qcats}
+function qcatIds(){return qcats().map(x=>x.id)}
+function qcatName(id){const x=qcats().find(y=>y.id===id);return x?x.name:id}
+function qcatCol(id){const x=qcats().find(y=>y.id===id);return x?x.col:'var(--muted)'}
+function qcatFix(k){const ids=qcatIds();return ids.includes(k)?k:ids[0]}
+function qcatOpts(cur){return qcats().map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
+  +'<option value="__new">＋ 新增分類…</option>'}
+function qcatAdd(name){
+  name=String(name||'').trim();if(!name)return null;
+  const hit=qcats().find(x=>x.name===name);if(hit)return hit.id;
+  const pal=CATPAL[(qcats().length+2)%CATPAL.length];
+  const id='k'+uid();S.qcats.push({id,name,col:pal[0],soft:pal[1]});return id;
+}
 const KDT={deadline:'Deadline',exam:'Exam',todo:'To do',school:'School',other:'Other'};
 const PF=[['sum','📌'],['q','研究問題/目標'],['design','研究設計與資料來源'],['pop','研究對象'],
  ['def','暴露與結果的定義'],['analysis','分析'],['result','主要結果'],['interp','解釋'],
@@ -845,7 +880,7 @@ const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
 function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
-  tagLib:DEFAULT_TAGS.slice(),lastExport:null,lastBak:null,bakIdx:0}}
+  tagLib:DEFAULT_TAGS.slice(),cats:DEFAULT_CATS.map(c=>Object.assign({},c)),qcats:DEFAULT_QCATS.map(c=>Object.assign({},c)),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function norm(x){return String(x==null?'':x).toLowerCase()}
@@ -986,6 +1021,8 @@ async function load(){
     if(keep.length!==(S.kd||[]).length)S.kd=keep;
   })();
   if(!Array.isArray(S.tagLib))S.tagLib=DEFAULT_TAGS.slice();
+  if(!Array.isArray(S.cats)||!S.cats.length)S.cats=DEFAULT_CATS.map(c=>Object.assign({},c));
+  if(!Array.isArray(S.qcats)||!S.qcats.length)S.qcats=DEFAULT_QCATS.map(c=>Object.assign({},c));
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
   (S.cards||[]).forEach(c=>{if(!Array.isArray(c.links)){c.links=c.link?[{id:uid(),label:'',url:c.link}]:[]}});
@@ -1130,6 +1167,18 @@ async function doHold(spec){
   else if(t==='lk'){const[kind,oid,lid]=id.split(':');const h=linkHost(kind,oid);
     if(h){h.links=(h.links||[]).filter(l=>l.id!==lid);if(kind!=='sec')h.mtime=Date.now();save();linkRender(kind);toast('已刪除連結')}}
   else if(t==='tag'){S.tagLib=S.tagLib.filter(x=>x!==id);save();renderTags();toast('已從清單刪除')}
+  else if(t==='qcat'){
+    if(DEFAULT_QCATS.some(x=>x.id===id)){toast('內建分類不能刪除');return}
+    const nm=qcatName(id),fb=qcatIds().filter(x=>x!==id)[0]||'mine';
+    S.qs.forEach(q=>{if(q.kind===id)q.kind=fb});
+    S.notes.forEach(n=>{if(n.kind===id)n.kind=fb});
+    S.qcats=S.qcats.filter(x=>x.id!==id);
+    save();fillSelects();renderQ();renderNt();toast('已刪除分類「'+nm+'」，項目移到 '+qcatName(fb))}
+  else if(t==='cat'){
+    if(DEFAULT_CATS.some(x=>x.id===id)){toast('內建分類不能刪除');return}
+    const nm=(S.cats.find(x=>x.id===id)||{}).name||'';
+    S.papers.forEach(p=>{if(p.cat===id)p.cat=''});
+    S.cats=S.cats.filter(x=>x.id!==id);save();renderPapers();toast('已刪除分類「'+nm+'」，卡片移到未分類')}
   else if(t==='restore'){
     try{const r=await store.get(BAK[+id]);const o=JSON.parse(r.value);
       S=Object.assign(defaults(),o.data);save();renderAll();toast('已還原')}catch(x){toast('還原失敗')}}
@@ -1296,9 +1345,10 @@ function renderPapers(){
   info.innerHTML=(qPaper||tagFilter.size)&&!a.length
     ? `<span class="pill clay">沒有符合的卡片</span>` : '';
   if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
-  const CATS={teacher:['老師','#B0472E','#F7E5DE'],course:['課程','#2E5FB0','#DEE9F7'],explore:['探索','#7A5AA8','#EDE6F7'],publish:['發表','#2E7D5B','#DDEFE6']};
-  const CATORD=['teacher','course','explore','publish',''];
-  const CATNAME={teacher:'👨‍🏫 老師指定',course:'📘 課程',explore:'🔍 探索',publish:'✒️ 發表','':'📄 未分類'};
+  const CATS={},CATNAME={};
+  S.cats.forEach(x=>{CATS[x.id]=[x.short||x.name,x.col,x.soft];CATNAME[x.id]=x.name});
+  CATNAME['']='未分類';
+  const CATORD=S.cats.map(x=>x.id).concat('');
   const groups={};
   a.forEach(p=>{const k=CATS[p.cat]?p.cat:'';(groups[k]=groups[k]||[]).push(p)});
   const authLine=p=>{
@@ -1351,10 +1401,8 @@ function renderPapers(){
       <div class="grid2" style="margin-bottom:8px">
         <label class="f"><span>分類標籤</span><select data-pcat="${p.id}">
           <option value=""${!p.cat?' selected':''}>— 無 —</option>
-          <option value="teacher"${p.cat==='teacher'?' selected':''}>老師指定</option>
-          <option value="course"${p.cat==='course'?' selected':''}>課程</option>
-          <option value="explore"${p.cat==='explore'?' selected':''}>探索</option>
-          <option value="publish"${p.cat==='publish'?' selected':''}>發表</option>
+          ${S.cats.map(x=>`<option value="${esc(x.id)}"${p.cat===x.id?' selected':''}>${esc(x.name)}</option>`).join('')}
+          <option value="__new">＋ 新增分類…</option>
         </select></label>
         <label class="f"><span>簡短備註</span><input type="text" data-pf="${p.id}|snote" value="${esc(p.snote||'')}" placeholder="e.g. meeting 前要讀完"></label>
       </div>
@@ -1379,7 +1427,8 @@ function renderPapers(){
   list.innerHTML=CATORD.filter(k=>groups[k]&&groups[k].length).map(k=>{
     const col=CATS[k]?CATS[k][1]:'var(--muted)';
     const g=groups[k],more=g.length>LIM,open=openG.has(k);
-    const head=`<div class="kdgroup" style="color:${col}">${CATNAME[k]}${
+    const cus=k&&!DEFAULT_CATS.some(x=>x.id===k);
+    const head=`<div class="kdgroup" style="color:${col}"${cus?` data-hold="cat|${k}" title="長按 1.5 秒刪除這個分類"`:''}>${CATNAME[k]}${
       more?`<button class="kx" data-pgrp="${k}" aria-expanded="${open}" title="${open?'收合':'展開其餘 '+(g.length-LIM)+' 篇'}">${CHEV}</button>`:''}</div>`;
     return head+(open?g:g.slice(0,LIM)).map(card).join('');
   }).join('');
@@ -1392,8 +1441,13 @@ function renderPapers(){
 }
 document.getElementById('paperList').addEventListener('change',e=>{
   const cs=e.target.closest('[data-pcat]');
-  if(cs){const p=S.papers.find(x=>x.id===cs.dataset.pcat);
-    if(p){p.cat=cs.value;p.mtime=Date.now();save();renderPapers()}}
+  if(cs){const p=S.papers.find(x=>x.id===cs.dataset.pcat);if(!p)return;
+    if(cs.value==='__new'){
+      const id=catAdd(window.prompt('新分類名稱（例如：Lab meeting、Qualifying exam）',''));
+      if(!id){renderPapers();return}
+      p.cat=id;toast('已新增分類');
+    }else p.cat=cs.value;
+    p.mtime=Date.now();save();renderPapers()}
 });
 document.getElementById('paperList').addEventListener('input',e=>{
   const f=e.target.closest('[data-pf]');
@@ -1718,6 +1772,13 @@ document.getElementById('ovClose').onclick=()=>{ov.classList.remove('on');render
 /* ================= IDEAS ================= */
 document.getElementById('addQBtn').onclick=()=>{if(toggle('qForm'))document.getElementById('q-q').focus()};
 document.getElementById('cancelQ').onclick=()=>show('qForm',false);
+['q-kind','nt-kind'].forEach(id=>document.getElementById(id).addEventListener('change',e=>{
+  if(e.target.value!=='__new')return;
+  const nid=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
+  save();fillSelects();
+  e.target.value=nid||qcatIds()[0];
+  if(nid)toast('已新增分類');
+}));
 document.getElementById('nsearch').addEventListener('input',e=>{nq=e.target.value.trim();nSearchAll()});
 document.getElementById('nsearchX').onclick=()=>{nTags.clear();setSearch('')};
 document.getElementById('p-courses').addEventListener('click',e=>{
@@ -1732,20 +1793,18 @@ document.getElementById('qSeg').addEventListener('click',e=>{
 });
 document.getElementById('addQ').onclick=()=>{
   const q=document.getElementById('q-q').value.trim();if(!q){toast('請填問題');return}
-  S.qs.push({id:uid(),created:Date.now(),kind:document.getElementById('q-kind').value,q,
-    src:document.getElementById('q-src').value.trim(),a:'',done:false,links:[],
-    tags:parseTags(document.getElementById('q-tags').value)});
-  ['q-q','q-src','q-tags'].forEach(i=>document.getElementById(i).value='');
+  S.qs.push({id:uid(),created:Date.now(),kind:qcatFix(document.getElementById('q-kind').value),q,
+    a:'',done:false,links:[],tags:parseTags(document.getElementById('q-tags').value)});
+  ['q-q','q-tags'].forEach(i=>document.getElementById(i).value='');
   show('qForm',false);saved();renderQ();
 };
-const QKORD=['mine','study'];
-const openQG=new Set(),openQD=new Set();
-let nq='',qdSeeded=false;const nTags=new Set();
+const openQG=new Set();
+let nq='',rsvAll=false;const nTags=new Set(),openQA=new Set();
 function nterms(){return nq?nq.toLowerCase().split(/\s+/).filter(Boolean):[]}
 function nFilterOn(){return nterms().length>0||nTags.size>0}
 function nhit(s){const t=nterms();if(!t.length)return true;const x=(s||'').toLowerCase();return t.every(w=>x.includes(w))}
 function nTagOk(tags){if(!nTags.size)return true;const a=(tags||[]).map(t=>String(t).toLowerCase());return[...nTags].every(t=>a.includes(t))}
-function qHit(q){return nTagOk(q.tags)&&nhit([q.q,q.a,q.src,(q.tags||[]).join(' ')].join(' '))}
+function qHit(q){return nTagOk(q.tags)&&nhit([q.q,q.a,(q.tags||[]).join(' ')].join(' '))}
 function ntHit(n){return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' ')].join(' '))}
 function parseTags(s){
   const out=[];
@@ -1778,9 +1837,7 @@ function renderSrchInfo(nQ,nN){
 function nSearchAll(){renderTagBar();renderQ();renderNt()}
 function setSearch(v){nq=String(v||'').trim();
   const el=document.getElementById('nsearch');if(el)el.value=nq;nSearchAll()}
-function monHead(mk,op){
-  return `<div class="kdgroup sub" style="color:#3E6B4E">${mk}<button class="kx" data-qmon="${mk}" aria-expanded="${op}" title="${op?'收合':'展開'} ${mk}">${CHEV}</button></div>`;
-}
+
 function md(s){
   if(!s)return'';
   let t=mdImg(s);
@@ -1899,8 +1956,8 @@ function bindImagePaste(el){
   });
 }
 function qItem(q){
-  return `<div class="item" style="${q.done?'opacity:.6':''}">
-    <div style="font-weight:500;line-height:1.5">${esc(q.q)}<span class="pill qst" style="${q.done
+  return `<div class="item${openQ.has(q.id)?' wide':''}"${q.done?' style="background:var(--surface-2)"':''}>
+    <div style="font-weight:500;line-height:1.5${q.done?';cursor:pointer':''}"${q.done?` data-qopen="${q.id}"`:''}>${esc(q.q)}<span class="pill qst" style="${q.done
         ?'color:#3E6B4E;background:#E2EEE6;border-color:#3E6B4E40'
         :'color:#B5761E;background:#F8EEDC;border-color:#B5761E40'}">${q.done?'Resolved':'Unresolved'}</span></div>
     ${tagChips(q.tags)}
@@ -1916,11 +1973,9 @@ function qItem(q){
     ${openQ.has(q.id)?`<div class="editbox">
       <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
       <div class="grid2">
-        <label class="f"><span>分類</span><select data-qk="${q.id}">
-          ${QKORD.map(k=>`<option value="${k}"${q.kind===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
-        <label class="f"><span>Source</span><input type="text" data-qf="${q.id}|src" value="${esc(q.src||'')}"></label>
+        <label class="f"><span>分類</span><select data-qk="${q.id}">${qcatOpts(qcatFix(q.kind))}</select></label>
+        <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-qtags="${q.id}" value="${esc((q.tags||[]).join(', '))}"></label>
       </div>
-      <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-qtags="${q.id}" value="${esc((q.tags||[]).join(', '))}"></label>
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">Answer</span>
         <button class="iconb" data-qimg="${q.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
@@ -1933,6 +1988,12 @@ function qItem(q){
         <button class="btn ghost mini" data-qr="${q.id}">↑ 方向</button>
         <button class="btn" data-qsave="${q.id}">Save</button></div>
     </div>`:''}</div>`;
+}
+function qDoneRow(q){
+  const d=new Date(q.doneAt||q.mtime||q.created);
+  const dt=(d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0');
+  return `<div class="rsvrow" data-qopen="${q.id}" title="點一下展開">
+    <span class="ck">✓</span><span class="rtx">${esc(q.q)}</span><span class="rdt">${dt}</span></div>`;
 }
 function qMonths(list){
   const m={};
@@ -1947,31 +2008,38 @@ function renderQ(){
   const F=nFilterOn();
   const all=(S.qs||[]).filter(qHit);
   const openQs=all.filter(x=>!x.done),doneQs=all.filter(x=>x.done);
-  const groups={};QKORD.forEach(k=>groups[k]=[]);
-  openQs.forEach(q=>{const k=QKORD.includes(q.kind)?q.kind:'mine';groups[k].push(q)});
-  QKORD.forEach(k=>groups[k].sort((x,y)=>y.created-x.created));
+  const KORD=qcatIds();
+  const groups={};KORD.forEach(k=>groups[k]=[]);
+  openQs.forEach(q=>{groups[qcatFix(q.kind)].push(q)});
+  KORD.forEach(k=>groups[k].sort((x,y)=>y.created-x.created));
   const LIM=2;
-  let html=QKORD.map(k=>{
+  let html=KORD.map(k=>{
     const g=groups[k],op=F||openQG.has(k),more=!F&&g.length>LIM;
-    const col=(QKCOL[k]||QKCOL.mine)[0];
-    return grpHead(QK[k],col,more,`data-qgrp="${k}"`,op,'項',g.length-LIM)
-      +(g.length?(op?g:g.slice(0,LIM)).map(qItem).join(''):emptyRow());
+    const col=qcatCol(k),cus=!DEFAULT_QCATS.some(x=>x.id===k);
+    return grpHead(qcatName(k),col,more,`data-qgrp="${k}"`,op,'項',g.length-LIM,
+      cus?` data-hold="qcat|${k}" title="長按 1.5 秒刪除這個分類"`:'')
+      +(g.length?`<div class="qgrid">${(op?g:g.slice(0,LIM)).map(qItem).join('')}</div>`:emptyRow());
   }).join('');
   const dop=F||qFilter==='all'||openQG.has('__done');
   html+=grpHead('Resolved','#3E6B4E',!F&&doneQs.length>0,'data-qgrp="__done"',dop,'項',doneQs.length);
   if(!doneQs.length)html+=emptyRow();
   else if(dop){
-    const mg=qMonths(doneQs);
-    if(!qdSeeded&&mg.length){openQD.add(mg[0][0]);qdSeeded=true}
-    html+=mg.map(([mk,arr])=>{
-      const mop=F||openQD.has(mk);
-      return monHead(mk,mop)+(mop?arr.map(qItem).join(''):'');
-    }).join('');
+    const mg=qMonths(doneQs),MLIM=2;
+    const show=(F||rsvAll)?mg:mg.slice(0,MLIM);
+    html+=show.map(([mk,arr])=>`<div class="rsvmon">${mk}</div>`
+      +arr.map(q=>openQA.has(q.id)?qItem(q):qDoneRow(q)).join('')).join('');
+    if(!F&&mg.length>MLIM)
+      html+=`<div class="pastrow"><button class="pastbtn" id="rsvMore" aria-expanded="${rsvAll}" title="${rsvAll?'收合':'展開更早的月份'}">更早${CHEV}</button></div>`;
   }
   el.innerHTML=html;
   renderSrchInfo(all.length,(S.notes||[]).filter(ntHit).length);
 }
 document.getElementById('qList').addEventListener('change',e=>{
+  const kc=e.target.closest('[data-qk]');
+  if(kc&&kc.value==='__new'){const q=S.qs.find(x=>x.id===kc.dataset.qk);
+    const id=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
+    if(q&&id){q.kind=id;q.mtime=Date.now();toast('已新增分類')}
+    save();fillSelects();renderQ();renderNt();return}
   const tg=e.target.closest('[data-qtags]');
   if(tg){const q=S.qs.find(x=>x.id===tg.dataset.qtags);
     if(q){q.tags=parseTags(tg.value);q.mtime=Date.now();save();renderTagBar();renderQ()}return}
@@ -1986,15 +2054,18 @@ document.getElementById('qList').addEventListener('click',e=>{
   if(hEl)return;
   const qi=e.target.closest('[data-qimg]');
   if(qi){pickImage(`[data-qa="${qi.dataset.qimg}"]`);return}
-  const mn=e.target.closest('[data-qmon]');
-  if(mn){const k=mn.dataset.qmon;openQD.has(k)?openQD.delete(k):openQD.add(k);qdSeeded=true;renderQ();return}
+  if(e.target.closest('#rsvMore')){rsvAll=!rsvAll;renderQ();return}
+  const qo=e.target.closest('[data-qopen]');
+  if(qo){const id=qo.dataset.qopen;
+    if(openQA.has(id)){openQA.delete(id);openQ.delete(id)}else openQA.add(id);
+    renderQ();return}
   const gp=e.target.closest('[data-qgrp]');
   if(gp){const k=gp.dataset.qgrp;openQG.has(k)?openQG.delete(k):openQG.add(k);renderQ();return}
   const nb=e.target.closest('[data-qn]');
   if(nb){const q=S.qs.find(x=>x.id===nb.dataset.qn);
     if(!q){return}
     S.notes.push({id:uid(),created:Date.now(),mtime:Date.now(),
-      title:q.q,body:q.a||'',kind:QKORD.includes(q.kind)?q.kind:'mine',
+      title:q.q,body:q.a||'',kind:qcatFix(q.kind),
       links:(q.links||[]).filter(l=>l.url).map(l=>({name:l.label||l.url.slice(0,30),url:l.url}))});
     if(!q.done){q.done=true;q.mtime=Date.now()}
     save();renderQ();renderNt();toast('已轉成 Note');return}
@@ -2433,15 +2504,17 @@ document.getElementById('addNt').onclick=()=>{
 function renderNt(){
   const el=document.getElementById('ntList');if(!el)return;
   const F=nFilterOn();
-  const groups={mine:[],study:[]};
-  (S.notes||[]).filter(ntHit).forEach(n=>{groups[QKORD.includes(n.kind)?n.kind:'mine'].push(n)});
-  QKORD.forEach(k=>groups[k].sort((x,y)=>(y.mtime||y.created)-(x.mtime||x.created)));
+  const KORD=qcatIds();
+  const groups={};KORD.forEach(k=>groups[k]=[]);
+  (S.notes||[]).filter(ntHit).forEach(n=>{groups[qcatFix(n.kind)].push(n)});
+  KORD.forEach(k=>groups[k].sort((x,y)=>(y.mtime||y.created)-(x.mtime||x.created)));
   const LIM=2;
-  el.innerHTML=QKORD.map(k=>{
+  el.innerHTML=KORD.map(k=>{
     const g=groups[k],op=F||openNG.has(k),more=!F&&g.length>LIM;
-    const col=(QKCOL[k]||QKCOL.mine)[0];
-    return grpHead(QK[k],col,more,`data-ngrp="${k}"`,op,'項',g.length-LIM)
-      +(g.length?(op?g:g.slice(0,LIM)).map(ntItem).join(''):emptyRow());
+    const col=qcatCol(k),cus=!DEFAULT_QCATS.some(x=>x.id===k);
+    return grpHead(qcatName(k),col,more,`data-ngrp="${k}"`,op,'項',g.length-LIM,
+      cus?` data-hold="qcat|${k}" title="長按 1.5 秒刪除這個分類"`:'')
+      +(g.length?`<div class="qgrid">${(op?g:g.slice(0,LIM)).map(ntItem).join('')}</div>`:emptyRow());
   }).join('');
 }
 function ntItem(n){
@@ -2459,7 +2532,7 @@ function ntItem(n){
       <div class="row" style="margin-top:4px"><span class="spacer"></span>
         <button class="iconb" data-ntlnew="${n.id}" title="再新增一列">＋</button></div>
     </details>`};
-  return `<div class="item" data-ntcard="${n.id}" style="cursor:pointer">
+  return `<div class="item${open?' wide':''}" data-ntcard="${n.id}" style="cursor:pointer">
     <div class="row">
       <h3 style="flex:1;min-width:0">${esc(n.title)}</h3>
       <span class="cxg">
@@ -2475,8 +2548,7 @@ function ntItem(n){
     ${open&&ed?`<div class="editbox" data-ntstop="1" style="cursor:default">
       <div class="grid2">
         <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
-        <label class="f"><span>分類</span><select data-ntk="${n.id}">
-          ${QKORD.map(k=>`<option value="${k}"${(n.kind||'mine')===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
+        <label class="f"><span>分類</span><select data-ntk="${n.id}">${qcatOpts(qcatFix(n.kind))}</select></label>
       </div>
       <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       <div class="f"><div class="row" style="align-items:center">
@@ -2484,7 +2556,10 @@ function ntItem(n){
         <button class="iconb" data-ntimg="${n.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
         <textarea data-ntf="${n.id}|body" data-ntb="${n.id}" style="min-height:130px;margin-top:4px">${esc(n.body||'')}</textarea></div>
       ${attach()}
-      <div class="saverow"><button class="btn" data-ntsave="${n.id}">完成</button></div>
+      <div class="saverow">
+        <button class="btn ghost mini" data-ntc="${n.id}" style="margin-right:auto">↑ Card</button>
+        <button class="btn ghost mini" data-ntr="${n.id}">↑ 方向</button>
+        <button class="btn" data-ntsave="${n.id}">完成</button></div>
     </div>`:''}</div>`;
 }
 document.getElementById('ntList').addEventListener('click',e=>{
@@ -2502,6 +2577,18 @@ document.getElementById('ntList').addEventListener('click',e=>{
   if(sv){const id=sv.dataset.ntsave;const n=S.notes.find(x=>x.id===id);
     if(n&&Array.isArray(n.links))n.links=n.links.filter(l=>l.url||l.name);
     editNt.delete(id);save();saved();renderNt();return}
+  const nc=e.target.closest('[data-ntc]');
+  if(nc){const n=S.notes.find(x=>x.id===nc.dataset.ntc);if(!n)return;
+    if(!n.body&&!n.title){toast('先寫點內容再變複習卡');return}
+    S.cards.push({id:uid(),created:Date.now(),q:n.title||'(未命名)',a:n.body||'',
+      theme:-1,links:[],level:0,due:Date.now(),last:null,n:0});
+    save();renderCards();updateBadge();toast('已變成複習卡');return}
+  const nr=e.target.closest('[data-ntr]');
+  if(nr){const n=S.notes.find(x=>x.id===nr.dataset.ntr);if(!n)return;
+    if(S.dirs.some(d=>d.title===n.title)){toast('這個方向已存在');return}
+    S.dirs.push({id:uid(),created:Date.now(),mtime:Date.now(),title:n.title||'(未命名)',
+      date:new Date().toISOString().slice(0,10),status:'todo',log:n.body||''});
+    save();renderDIR();toast('已加入 Research directions');return}
   const ng=e.target.closest('[data-ngrp]');
   if(ng){const k=ng.dataset.ngrp;openNG.has(k)?openNG.delete(k):openNG.add(k);renderNt();return}
   const ni=e.target.closest('[data-ntimg]');
@@ -2522,6 +2609,11 @@ document.getElementById('ntList').addEventListener('click',e=>{
     renderNt()}
 });
 document.getElementById('ntList').addEventListener('change',e=>{
+  const kc=e.target.closest('[data-ntk]');
+  if(kc&&kc.value==='__new'){const n=S.notes.find(x=>x.id===kc.dataset.ntk);
+    const id=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
+    if(n&&id){n.kind=id;n.mtime=Date.now();toast('已新增分類')}
+    save();fillSelects();renderQ();renderNt();return}
   const tg=e.target.closest('[data-nttags]');
   if(tg){const n=S.notes.find(x=>x.id===tg.dataset.nttags);
     if(n){n.tags=parseTags(tg.value);n.mtime=Date.now();save();renderTagBar();renderNt()}return}
@@ -2552,6 +2644,8 @@ function fillSelects(){
   document.getElementById('cs-from').innerHTML=o;
   document.getElementById('cs-to').innerHTML=o;
   document.getElementById('cs-term').innerHTML=TERMS.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
+  ['q-kind','nt-kind'].forEach(id=>{const s=document.getElementById(id);
+    if(s){const v=s.value;s.innerHTML=qcatOpts(qcatFix(v));s.value=qcatFix(v)}});
   document.getElementById('termSeg').innerHTML=TERMS.map(t=>
     `<button data-term="${t.id}" aria-pressed="${t.id===activeTerm}">${t.label}</button>`).join('');
 }
@@ -2636,8 +2730,8 @@ function kdRow(k,d){
     <div class="rt"><span class="cxg"><button class="cx e" data-ed-kd="${k.id}" title="編輯">✎</button>
       <button class="cx" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></span></div></div>`;
 }
-function grpHead(label,col,more,attr,op,unit,n,cls){
-  return `<div class="kdgroup${cls?' '+cls:''}" style="color:${col}">${label}${
+function grpHead(label,col,more,attr,op,unit,n,extra){
+  return `<div class="kdgroup" style="color:${col}"${extra||''}>${label}${
     more?`<button class="kx" ${attr} aria-expanded="${op}" title="${op?'收合':'展開其餘 '+n+' '+unit}">${CHEV}</button>`:''}</div>`;
 }
 function emptyRow(){return `<p class="hint" style="margin:0 0 10px;padding-left:2px;font-size:12px">—</p>`}
@@ -2956,6 +3050,8 @@ function mergeState(inc){
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
   S.themes=mergeThemes(S.themes,inc.themes);
   (inc.tagLib||[]).forEach(t=>{if(!S.tagLib.includes(t))S.tagLib.push(t)});
+  (inc.cats||[]).forEach(x=>{if(x&&x.id&&!S.cats.some(y=>y.id===x.id))S.cats.push(x)});
+  (inc.qcats||[]).forEach(x=>{if(x&&x.id&&!S.qcats.some(y=>y.id===x.id))S.qcats.push(x)});
   if((inc.gcAt||0)>(S.gcAt||0)){S.gc=inc.gc||'';S.gcAt=inc.gcAt||0;
     S.gcId=inc.gcId||'';S.gcPrefix=inc.gcPrefix==null?'*':inc.gcPrefix;
     S.gcMonths=inc.gcMonths||12;S.gcAuto=!!inc.gcAuto}
@@ -3287,7 +3383,8 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
-  <p>卡片依<strong>👨‍🏫 老師指定／📘 課程／🔍 探索／✒️ 發表／📄 未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內星號優先、再按年份新到舊。分類在編輯模式的下拉選。</p>
+  <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內星號優先、再按年份新到舊。分類在編輯模式的下拉選。</p>
+  <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的卡片會回到未分類，不會被刪掉。內建那四個不能刪。</p>
   <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，支援 Markdown（<code>**粗體**</code>、<code>- 清單</code>、<code>## 標題</code>），空欄位不顯示。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
   <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
   <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
@@ -3301,15 +3398,18 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>📝 Notes</summary><div class="help">
   <h4>搜尋與標籤（久了以後怎麼找回東西）</h4>
-  <p>分頁最上方的<strong>搜尋框同時過濾 Questions 和 Notes</strong>，比對範圍是問題、答案、Source、筆記標題、內容、附件名稱與標籤。<strong>空白分隔＝而且</strong>（打 <code>collider 偏誤</code> 只留兩個詞都出現的）。搜尋時<strong>所有分組自動展開</strong>，不必再一個個點箭號；按 <strong>✕</strong> 清掉搜尋與標籤篩選。</p>
+  <p>分頁最上方的<strong>搜尋框同時過濾 Questions 和 Notes</strong>，比對範圍是問題、答案、筆記標題、內容、附件名稱與標籤。<strong>空白分隔＝而且</strong>（打 <code>collider 偏誤</code> 只留兩個詞都出現的）。搜尋時<strong>所有分組自動展開</strong>，不必再一個個點箭號；按 <strong>✕</strong> 清掉搜尋與標籤篩選。</p>
   <p><strong>標籤</strong>在編輯卡片時填，用逗號或空白分隔。搜尋框下方的<strong>標籤列</strong>列出所有用過的標籤（常用的排前面），點一下篩選、再點取消，可以疊加多個標籤（＝同時有這些標籤的才留下）。卡片上的標籤也能直接點。標籤和 Reading 分頁共用同一個標籤庫，所以 paper 和問題可以用同一套詞彙串起來。</p>
+  <h4>自己加分類</h4>
+  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的問題和筆記會移到第一個分類，不會被刪掉。Mine 和 Study 擋掉不給刪。</p>
   <h4>Questions</h4>
   <p>讀 paper 或上課時的疑問，依 <strong>Mine</strong>（紫，我不懂的）／<strong>Study</strong>（藍，課堂與教科書）分區，Resolved 是綠色。每區最多 2 項，其餘和已解決的折疊起來。狀態標籤（Unresolved／Resolved）<strong>接在問題文字後面</strong>。右上角的 <code>Unresolved｜All</code>：All 會直接把 Resolved 區展開。</p>
-  <p><strong>Resolved 依「解決的月份」分組</strong>（2026-09、2026-08…，新的在上），<strong>最新那個月預設展開、更舊的收合</strong>。這樣三年後回來找「那題我好像去年冬天弄懂的」，順著月份找就好，不會是一條看不到底的清單。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
-  <p>卡片只顯示問題、答案、附件、狀態；分類和 Source 在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
+  <p><strong>Resolved 是一行一題的清單</strong>：✓、問題、解決日期，<strong>不顯示答案</strong>；點問題才展開，再點一次收回去。上面用 <code>2026-09</code> 這種月份標記分段（新的在上），<strong>預設顯示最近兩個月</strong>，更舊的用底下置中的「更早」展開。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
+  <p>Mine 和 Study 兩區的卡片是<strong>雙欄</strong>排列，展開中的卡片會自動橫跨整列。螢幕窄（手機、iPad 直立）時自動變單欄。</p>
+  <p>卡片只顯示問題、答案、標籤、附件、狀態；分類和標籤在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
   <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
   <h4>Notes</h4>
-  <p>想查的東西、課程資料、待整理的想法。同樣有 Mine／Study 分類與配色，標籤在收合狀態下也看得到。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
+  <p>想查的東西、課程資料、待整理的想法。同樣有 Mine／Study 分類與配色，標籤在收合狀態下也看得到。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
