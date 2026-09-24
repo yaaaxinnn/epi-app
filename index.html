@@ -70,16 +70,13 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
 .sec-title{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em;margin:24px 0 8px}
 .sec-title:first-child{margin-top:0}
-.sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:24px 0 8px}
-.sec-head:first-child{margin-top:0}
-.sec-head .t{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em}
-.sx,.kx{flex:0 0 auto;border:0;background:none;padding:1px 3px;color:var(--faint);
+
+.kx{margin-left:auto;flex:0 0 auto;border:0;background:none;padding:1px 3px;color:var(--faint);
   cursor:pointer;line-height:0;display:inline-flex;align-items:center;transition:color .15s}
-.sx{margin-left:auto}
-.sx:hover,.kx:hover{color:var(--ac)}
-.sx[aria-expanded="true"],.kx[aria-expanded="true"]{color:var(--ac)}
-.sx svg,.kx svg{display:block;transition:transform .2s}
-.sx[aria-expanded="true"] svg,.kx[aria-expanded="true"] svg{transform:rotate(180deg)}
+.kx:hover{color:var(--ac)}
+.kx[aria-expanded="true"]{color:var(--ac)}
+.kx svg{display:block;transition:transform .2s}
+.kx[aria-expanded="true"] svg{transform:rotate(180deg)}
 .blockhead{display:flex;align-items:center;gap:8px;margin:22px 0 6px;padding:1px 10px;
   background:color-mix(in srgb,var(--ac-mid) 45%,var(--ac-soft));border-radius:5px}
 .blockhead:first-child{margin-top:4px}
@@ -117,13 +114,13 @@ button.pill:hover{background:var(--ac-soft);border-color:var(--ac-mid);color:var
   min-width:0;flex:0 0 auto;cursor:pointer}
 .cx:hover{color:var(--clay)}
 .cx.e:hover{color:var(--ac)}
+.cxg{display:inline-flex;align-items:center;gap:0;flex:0 0 auto}
 details.fold > summary{cursor:pointer;list-style:none;font-size:13px;color:var(--ac);padding:4px 0;font-weight:500}
 details.fold > summary::-webkit-details-marker{display:none}
 details.fold.right > summary{text-align:right;font-size:21px;padding:7px 2px;line-height:1.15}
 .item{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px;margin-bottom:10px}
 .item h3{font-size:15px;margin-bottom:3px}
 .meta{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
-.cite{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:4px;padding-left:16px;text-indent:-16px}
 .bar{height:3px;background:var(--line);border-radius:2px;overflow:hidden;flex:1}
 .bar > i{display:block;height:100%;background:var(--ac);border-radius:2px}
 .barrow{display:flex;align-items:center;gap:9px;margin-top:8px}
@@ -176,7 +173,7 @@ td[data-cell] > div.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-o
 .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{background:transparent;border:0;padding:3px 9px;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
-.seg.sm button{padding:0 8px;font-size:11px;height:19px;display:flex;align-items:center}
+.seg.sm button{padding:0 7px;font-size:10.5px;height:18px;display:flex;align-items:center;letter-spacing:0}
 .ttwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 table.tt{min-width:504px;width:100%;border-collapse:collapse;font-size:12.5px}
 table.tt th{background:var(--surface-2);text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
@@ -199,6 +196,13 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .legend i.lab{background:#E5EBF0;border-color:#2F5670}
 .kdgroup{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint);margin:16px 0 7px;display:flex;align-items:center;gap:9px}
 .kdgroup .kx{order:2}
+.pastrow{display:flex;justify-content:center;margin:18px 0 6px}
+.pastbtn{display:inline-flex;align-items:center;gap:5px;background:none;border:0;cursor:pointer;
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint);padding:3px 8px;transition:color .15s}
+.pastbtn:hover{color:var(--ac)}
+.pastbtn[aria-expanded="true"]{color:var(--ac)}
+.pastbtn svg{transition:transform .2s}
+.pastbtn[aria-expanded="true"] svg{transform:rotate(180deg)}
 .kdgroup::after{order:1}
 .kdgroup:first-child{margin-top:4px}
 .kdgroup::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -239,11 +243,6 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .help th,.help td{padding:6px 8px}
 .help strong{color:var(--ink);font-weight:600}
 .help code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
-.twobox{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}
-@media(max-width:560px){.twobox{grid-template-columns:1fr}}
-.twobox > div{border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;background:var(--surface-2)}
-.twobox h5{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--ac)}
-.twobox ol{margin:0;padding-left:17px;font-size:13px;color:var(--muted);line-height:1.6}
 .ov{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;flex-direction:column;padding:16px}
 .ov.on{display:flex}
 .ov-top{display:flex;align-items:center;gap:10px;max-width:640px;margin:0 auto;width:100%}
@@ -270,21 +269,18 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .linkrow .ic{flex:0 0 auto;font-size:15px;line-height:1}
 .linkrow input{flex:1;min-width:0}
 .oneline{font-size:13.5px;color:var(--ac);margin-top:5px;line-height:1.45}
-.acts{display:flex;gap:5px;align-items:center}
-.acts button{background:none;border:0;padding:6px 8px;font-size:19px;line-height:1.2;color:var(--muted);min-width:38px}
 .lchip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;padding:4px 10px;border-radius:20px;
   background:var(--ac-soft);border:1px solid var(--ac-mid);color:var(--ac);max-width:100%}
 .lchip:hover{background:var(--ac);color:#fff}
 .lrow{display:flex;gap:6px;align-items:center;margin-bottom:6px}
 .editbox{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .lrow input{min-width:0}
-.acts button:hover{color:var(--ac)}
 .iconb{background:none;border:0;padding:7px 10px;font-size:20px;line-height:1.2;color:var(--muted);min-width:42px;min-height:40px}
 .iconb:hover{color:var(--ac)}
-.blockhead{min-height:23px}
-.blockhead .iconb{padding:0 6px;font-size:14px;min-width:0;min-height:0;height:19px;
+.blockhead{min-height:22px}
+.blockhead .iconb{padding:0 6px;font-size:14px;min-width:0;min-height:0;height:18px;
   line-height:1;display:flex;align-items:center}
-.blockhead .seg{height:19px;border-radius:6px}
+.blockhead .seg{height:18px;border-radius:5px}
 .rv{cursor:pointer}
 .rv .ans{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);white-space:pre-wrap;font-size:14.5px;line-height:1.6}
 .grade{display:flex;gap:8px;margin-top:12px}
@@ -545,8 +541,8 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Calendar ========== -->
 <section class="panel" id="p-calendar">
-  <div class="sec-head"><span class="t">KEY DATES</span><span class="spacer"></span>
-    <button class="btn icon" id="toggleKD">＋</button></div>
+  <div class="blockhead"><span class="bt">📅 KEY DATES</span><span class="spacer"></span>
+    <button class="iconb" id="toggleKD" title="新增日期">＋</button></div>
   
   <div class="card" id="kdForm" style="display:none">
     <div class="grid2">
@@ -563,7 +559,8 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="row" id="kdPastRow" style="margin-top:4px"></div>
   <div id="kdPastList"></div>
 
-  <div class="sec-head"><span class="t">TIMETABLE</span><span class="spacer"></span><div class="seg sm" id="termSeg"></div></div>
+  <div class="blockhead"><span class="bt">🗓️ TIMETABLE</span><span class="spacer"></span>
+    <div class="seg sm" id="termSeg"></div></div>
   <div class="ttwrap"><table class="tt" id="ttTable"></table></div>
   <div class="legend">
     <span class="lg"><i class="required"></i>必修</span>
@@ -605,36 +602,12 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Settings ========== -->
 <section class="panel" id="p-settings">
-  <div class="sec-title">DATA</div>
-  <div id="expWarn"></div>
-  <div class="card">
-    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipData" aria-expanded="false">ⓘ</button></div>
-    <div class="tip" id="tipData">匯出會下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。<br>
-    <strong>它跟 GitHub 同步防的不是同一件事</strong>：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，存到硬碟或雲端硬碟，十年後用記事本都打得開。</div>
-    <div class="row">
-      <button class="btn ghost mini" id="impBtn" title="把檔案裡的資料併進現有資料，不會刪東西">⇊ Merge</button>
-      <button class="btn ghost mini" id="impRepBtn" title="整包換掉，現有資料會全部消失">⟳ Replace</button>
-      <input type="file" id="impFile" accept=".json" style="display:none">
-      <span class="spacer"></span>
-      <button class="btn mini" id="expBtn">⇈ Export</button>
-    </div>
-    <p class="hint" style="margin:10px 0 0"><strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。</p>
-    <p class="hint" style="margin:6px 0 0" id="expInfo"></p>
-  </div>
 
-  <div class="sec-title">自動存檔</div>
-  <div class="card">
-    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipBak" aria-expanded="false">ⓘ</button></div>
-    <div class="tip" id="tipBak">每天第一次開啟時，系統會把當下的所有資料<strong>複製一份存起來</strong>，保留最近三份。手殘刪錯東西時可以整包還原。<br>
-    注意：這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</div>
-    <div id="bakList"></div>
-    <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
-  </div>
-
-  <details class="card fold" id="ghFold"><summary style="font-size:15px;font-weight:600;color:var(--ink)">☁️ GitHub 同步 ▾</summary>
-    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipGh" aria-expanded="false">ⓘ</button></div>
-    <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
-    <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
+  <div class="blockhead"><span class="bt">☁️ 同步</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipGh" aria-expanded="false">ⓘ</button></div>
+  <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
+  <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
+  <details class="card fold" id="ghFold"><summary>GitHub 設定</summary>
     <div class="grid2">
       <label class="f"><span>Owner／使用者名稱</span><input type="text" id="gh-owner"></label>
       <label class="f"><span>私密 repo 名稱</span><input type="text" id="gh-repo"></label>
@@ -654,12 +627,33 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <p class="hint" style="margin:10px 0 0" id="ghState"></p>
   </details>
 
-  <details class="card fold"><summary style="font-size:15px;font-weight:600;color:var(--ink)">📆 GOOGLE 日曆 ▾</summary>
-    <p class="hint" style="margin-top:0">貼上嵌入網址後，會顯示在 Calendar 分頁最下面。取得方式見 HELP。</p>
-    <div class="linkrow" style="margin-top:10px"><span class="ic">🔗</span><input type="text" id="gcUrl"></div>
+  <div class="blockhead"><span class="bt">💾 備份</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipData" aria-expanded="false">ⓘ</button></div>
+  <div class="tip" id="tipData"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br>
+  <strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。</div>
+  <div id="expWarn"></div>
+  <div class="card">
+    <div class="row">
+      <button class="btn ghost mini" id="impBtn" title="把檔案裡的資料併進現有資料，不會刪東西">⇊ Merge</button>
+      <button class="btn ghost mini" id="impRepBtn" title="整包換掉，現有資料會全部消失">⟳ Replace</button>
+      <input type="file" id="impFile" accept=".json" style="display:none">
+      <span class="spacer"></span>
+      <button class="btn mini" id="expBtn">⇈ Export</button>
+    </div>
+    <p class="hint" style="margin:10px 0 0" id="expInfo"></p>
+  </div>
+  <details class="card fold"><summary>每日自動存檔</summary>
+    <p class="hint" style="margin:6px 0 10px" id="tipBak">每天第一次開啟時自動複製一份，保留最近三份。手殘刪錯可以整包還原。<br>
+    注意：這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</p>
+    <div id="bakList"></div>
+    <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
+  </details>
 
-    <div class="srclab" style="margin-top:16px">自動抓 KEY DATES</div>
-    <div class="grid2">
+  <div class="blockhead"><span class="bt">📆 Google 日曆</span></div>
+  <details class="card fold"><summary>日曆設定</summary>
+    <p class="hint" style="margin:6px 0 10px">嵌入網址顯示在 Calendar 分頁最下面；下方的 ID 與金鑰用來自動抓 KEY DATES。取得方式見 HELP。</p>
+    <div class="linkrow"><span class="ic">🔗</span><input type="text" id="gcUrl" placeholder="嵌入網址"></div>
+    <div class="grid2" style="margin-top:12px">
       <label class="f"><span>日曆 ID</span><input type="text" id="gc-id" placeholder="…@group.calendar.google.com"></label>
       <label class="f"><span>API 金鑰</span><input type="password" id="gc-key" autocomplete="off"></label>
     </div>
@@ -676,19 +670,14 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <p class="hint" style="margin:10px 0 0" id="gcState"></p>
   </details>
 
-  <div class="sec-title">🗑️ 最近刪除</div>
-  <div class="card">
-    <div class="cardhead"><span class="spacer"></span><button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
-    <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
-    <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></div>
-    <div id="trashList" style="margin-top:10px"></div>
-  </div>
+  <div class="blockhead"><span class="bt">🗑️ 最近刪除</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
+  <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
+  <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></div>
+  <div class="card"><div id="trashList"></div></div>
 
-  <details class="card fold"><summary style="font-size:15px;font-weight:600;color:var(--ink)">📘 HELP ▾</summary>
-    <div id="helpBox" style="margin-top:8px"></div>
-  </details>
-
-
+  <div class="blockhead"><span class="bt">📘 使用說明</span></div>
+  <div id="helpBox"></div>
 
 </section>
 
@@ -1313,7 +1302,7 @@ function renderPapers(){
     <div class="row" style="align-items:center">
       <button class="cx" data-pstar="${p.id}" title="${p.star?'取消置頂':'標星置頂'}" style="font-size:14px;color:${p.star?'#D9A62E':'var(--faint)'}">${p.star?'★':'☆'}</button>
       <div style="flex:1;min-width:0">
-        <h3 style="line-height:1.35">${esc(p.title)}</h3>
+        <h3 data-ptitle="${p.id}" style="line-height:1.35;cursor:pointer">${esc(p.title)}</h3>
         <div class="meta" style="font-size:11px;line-height:1.5;margin-top:2px">${authLine(p)}</div>
         ${p.sum?`<div style="margin-top:6px;display:flex;gap:9px;align-items:stretch">
           <span style="flex:0 0 3px;background:var(--ac);border-radius:2px"></span>
@@ -1327,9 +1316,9 @@ function renderPapers(){
           ${rest.length?`<span class="pill" data-ptags="${p.id}" style="cursor:pointer;color:var(--faint);background:var(--surface-2);border-color:var(--line)">${openT.has(p.id)?'−':'+'+rest.length}</span>`:''}
           ${!p.note?`<span class="pill clay">Note 未填</span>`:''}
           <span style="flex:1"></span>
-          ${openP.has(p.id)?`<button class="cx e" data-pedit="${p.id}" title="${editP.has(p.id)?'完成編輯':'編輯'}">${editP.has(p.id)?'✓':'✎'}</button>`
-            :`<button class="cx e" data-pedit="${p.id}" title="展開">✎</button>`}
-          <button class="cx" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button>
+          <span class="cxg">
+            <button class="cx e" data-pedit="${p.id}" title="${openP.has(p.id)?(editP.has(p.id)?'完成編輯':'編輯'):'展開'}">${editP.has(p.id)?'✓':'✎'}</button>
+            <button class="cx" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button></span>
         </div>
       </div>
     </div>
@@ -1406,6 +1395,10 @@ document.getElementById('paperList').addEventListener('click',e=>{
   if(gp){const k=gp.dataset.pgrp;openG.has(k)?openG.delete(k):openG.add(k);renderPapers();return}
   const tg=e.target.closest('[data-ptags]');
   if(tg){const id=tg.dataset.ptags;openT.has(id)?openT.delete(id):openT.add(id);renderPapers();return}
+  const ti=e.target.closest('[data-ptitle]');
+  if(ti){const id=ti.dataset.ptitle;
+    if(openP.has(id)){openP.delete(id);editP.delete(id)}else openP.add(id);
+    renderPapers();return}
   const ed=e.target.closest('[data-pedit]');
   if(ed){const id=ed.dataset.pedit;
     if(!openP.has(id)){openP.add(id)}
@@ -1608,8 +1601,9 @@ function renderCards(){
         <span class="pill ${overdue?'clay':''}">${overdue?'今天要複習':d+' 天後'}</span>
         <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span>
         <span style="flex:1"></span>
-        <button class="cx e" data-cedit="${c.id}" title="編輯">✎</button>
-        <button class="cx" data-hold="card|${c.id}" title="長按 1.5 秒刪除">✕</button></div>
+        <span class="cxg">
+          <button class="cx e" data-cedit="${c.id}" title="編輯">✎</button>
+          <button class="cx" data-hold="card|${c.id}" title="長按 1.5 秒刪除">✕</button></span></div>
       ${flip?`<div class="ans">${esc(c.a)||'（沒寫答案）'}</div>
         ${(c.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:10px">${linkChips(c.links)}</div>`:''}
         <div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`
@@ -1852,8 +1846,9 @@ function qItem(q){
     ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
     <div class="row" style="margin-top:7px;gap:5px">
       <span style="flex:1"></span>
-      <button class="cx e" data-qedit="${q.id}" title="編輯">✎</button>
-      <button class="cx" data-hold="q|${q.id}" title="長按 1.5 秒刪除">✕</button>
+      <span class="cxg">
+        <button class="cx e" data-qedit="${q.id}" title="編輯">✎</button>
+        <button class="cx" data-hold="q|${q.id}" title="長按 1.5 秒刪除">✕</button></span>
     </div>
     ${openQ.has(q.id)?`<div class="editbox">
       <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
@@ -1878,26 +1873,21 @@ function qItem(q){
 function renderQ(){
   const el=document.getElementById('qList');
   const all=S.qs||[];
-  if(!all.length){el.innerHTML=`<div class="empty">還沒有問題。</div>`;return}
   const openQs=all.filter(x=>!x.done),doneQs=all.filter(x=>x.done);
   const groups={};QKORD.forEach(k=>groups[k]=[]);
   openQs.forEach(q=>{const k=QKORD.includes(q.kind)?q.kind:'mine';groups[k].push(q)});
   QKORD.forEach(k=>groups[k].sort((x,y)=>y.created-x.created));
   const LIM=2;
-  let html=QKORD.filter(k=>groups[k].length).map(k=>{
+  let html=QKORD.map(k=>{
     const g=groups[k],more=g.length>LIM,op=openQG.has(k);
     const col=(QKCOL[k]||QKCOL.mine)[0];
-    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>${
-      more?`<button class="sx" data-qgrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${CHEV}</button>`:''}</div>`
-      +(op?g:g.slice(0,LIM)).map(qItem).join('');
+    return grpHead(QK[k],col,more,`data-qgrp="${k}"`,op,'項',g.length-LIM)
+      +(g.length?(op?g:g.slice(0,LIM)).map(qItem).join(''):emptyRow());
   }).join('');
-  if(doneQs.length){
-    const op=openQG.has('__done');
-    html+=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:#3E6B4E">Resolved</span>
-      <button class="sx" data-qgrp="__done" aria-expanded="${op}" title="${op?'收合':'展開已解決 '+doneQs.length+' 項'}">${CHEV}</button></div>`
-      +(op?doneQs.sort((x,y)=>y.created-x.created).map(qItem).join(''):'');
-  }
-  el.innerHTML=html||`<div class="empty">還沒有問題。</div>`;
+  const op=openQG.has('__done');
+  html+=grpHead('Resolved','#3E6B4E',doneQs.length>0,'data-qgrp="__done"',op,'項',doneQs.length)
+    +(doneQs.length?(op?doneQs.sort((x,y)=>y.created-x.created).map(qItem).join(''):''):emptyRow());
+  el.innerHTML=html;
 }
 document.getElementById('qList').addEventListener('change',e=>{
   const k=e.target.closest('[data-qk]');if(!k)return;
@@ -2017,12 +2007,6 @@ function mtLinkEditor(m,key){
   </details>`;
 }
 const openM=new Set(),editM=new Set();
-function mtProgress(m){
-  const total=(m.actions||[]).length;
-  if(!total)return'';
-  const done=(m.actions||[]).filter(a=>a.done).length;
-  return `<span class="pill ${done===total?'pine':''}">${done}/${total}</span>`;
-}
 function renderMTTodo(){
   const el=document.getElementById('mtTodo');
   const rows=[];
@@ -2052,8 +2036,9 @@ function renderMT(){
       <div style="flex:1;min-width:0">
         <h3><span class="mono" style="font-size:13px;color:var(--muted)">${esc(m.date)}</span>${m.title?`　${esc(m.title)}`:''}</h3>
       </div>
-      ${open?`<button class="cx e" data-medit="${m.id}" data-mstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
-      <button class="cx" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
+      <span class="cxg">
+        ${open?`<button class="cx e" data-medit="${m.id}" data-mstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
+        <button class="cx" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button></span>
     </div>
     ${open&&!ed?`<div data-mstop="1" style="cursor:default">
       ${allBtns?`<div class="row" style="margin-top:8px;flex-wrap:wrap;gap:5px">${allBtns}</div>`:''}
@@ -2223,7 +2208,7 @@ function renderDIR(){
       <h3 style="flex:1;min-width:0">${esc(d.title)}</h3>
       ${dirDays(d)}
       <span class="pill" style="color:${st[1]};background:${st[2]};flex:0 0 auto">${st[0]}</span>
-      <button class="cx" data-hold="dir|${d.id}" title="長按 1.5 秒刪除">✕</button>
+      <span class="cxg"><button class="cx" data-hold="dir|${d.id}" title="長按 1.5 秒刪除">✕</button></span>
     </div>
     ${!open&&d.next?`<div class="oneline" style="margin-top:4px">👉 ${esc(d.next)}</div>`:''}
     ${!open&&lastLog?`<div class="oneline" style="margin-top:2px;color:var(--muted)">📈 ${esc(lastLog.text)}</div>`:''}
@@ -2357,17 +2342,15 @@ document.getElementById('addNt').onclick=()=>{
 };
 function renderNt(){
   const el=document.getElementById('ntList');if(!el)return;
-  if(!S.notes||!S.notes.length){el.innerHTML=`<div class="empty">還沒有筆記。放你想查的東西、課程資料連結。</div>`;return}
   const groups={mine:[],study:[]};
-  S.notes.forEach(n=>{groups[QKORD.includes(n.kind)?n.kind:'mine'].push(n)});
+  (S.notes||[]).forEach(n=>{groups[QKORD.includes(n.kind)?n.kind:'mine'].push(n)});
   QKORD.forEach(k=>groups[k].sort((x,y)=>(y.mtime||y.created)-(x.mtime||x.created)));
   const LIM=2;
-  el.innerHTML=QKORD.filter(k=>groups[k].length).map(k=>{
+  el.innerHTML=QKORD.map(k=>{
     const g=groups[k],more=g.length>LIM,op=openNG.has(k);
     const col=(QKCOL[k]||QKCOL.mine)[0];
-    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>${
-      more?`<button class="sx" data-ngrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${CHEV}</button>`:''}</div>`
-      +(op?g:g.slice(0,LIM)).map(ntItem).join('');
+    return grpHead(QK[k],col,more,`data-ngrp="${k}"`,op,'項',g.length-LIM)
+      +(g.length?(op?g:g.slice(0,LIM)).map(ntItem).join(''):emptyRow());
   }).join('');
 }
 function ntItem(n){
@@ -2388,8 +2371,9 @@ function ntItem(n){
   return `<div class="item" data-ntcard="${n.id}" style="cursor:pointer">
     <div class="row">
       <h3 style="flex:1;min-width:0">${esc(n.title)}</h3>
-      ${open?`<button class="cx e" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
-      <button class="cx" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button>
+      <span class="cxg">
+        ${open?`<button class="cx e" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
+        <button class="cx" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button></span>
     </div>
     ${open&&chips?`<div class="row" data-ntstop="1" style="margin-top:8px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
@@ -2553,9 +2537,14 @@ function kdRow(k,d){
       <span class="n">${d===0?'今天':big}</span><span class="u">${unit}</span></div>
     <div class="bd"><span class="ti">${esc(k.title)}</span>
       <span class="dt">${esc(k.date)}（${wd}）</span></div>
-    <div class="rt"><button class="cx e" data-ed-kd="${k.id}" title="編輯">✎</button>
-      <button class="cx" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></div></div>`;
+    <div class="rt"><span class="cxg"><button class="cx e" data-ed-kd="${k.id}" title="編輯">✎</button>
+      <button class="cx" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></span></div></div>`;
 }
+function grpHead(label,col,more,attr,op,unit,n){
+  return `<div class="kdgroup" style="color:${col}">${label}${
+    more?`<button class="kx" ${attr} aria-expanded="${op}" title="${op?'收合':'展開其餘 '+n+' '+unit}">${CHEV}</button>`:''}</div>`;
+}
+function emptyRow(){return `<p class="hint" style="margin:0 0 10px;padding-left:2px;font-size:12px">—</p>`}
 const CHEV='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5L12 11L18 5"/><path d="M6 12L12 18L18 12"/></svg>';
 const KDTORD=['deadline','exam','todo','school','other'];
 const KDTICON={deadline:'⏰',exam:'📝',todo:'📌',school:'🏫',other:'•'};
@@ -2596,7 +2585,7 @@ function renderKD(){
   el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">沒有即將到來的日期。</div>`;
   prow.style.flexWrap='nowrap';
   prow.innerHTML=past.length
-    ?`<div class="kdgroup" style="margin-top:20px">已過期<button class="kx" id="togglePast" aria-expanded="${showPast}" title="${showPast?'收合':'展開已過期 '+past.length+' 筆'}">${CHEV}</button></div>`:'';
+    ?`<div class="pastrow"><button class="pastbtn" id="togglePast" aria-expanded="${showPast}" title="${showPast?'收合':'展開已過期 '+past.length+' 筆'}">已過期${CHEV}</button></div>`:'';
   pel.innerHTML=showPast&&past.length?past.map(x=>kdRow(x.k,x.d)).join(''):'';
 }
 
@@ -3204,7 +3193,7 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
   <p>卡片依<strong>👨‍🏫 老師指定／📘 課程／🔍 探索／✒️ 發表／📄 未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內星號優先、再按年份新到舊。分類在編輯模式的下拉選。</p>
-  <p><strong>點 ✎ 展開是閱讀模式</strong>：九個欄位排版後直接讀，支援 Markdown（<code>**粗體**</code>、<code>- 清單</code>、<code>## 標題</code>），空欄位不顯示。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。</p>
+  <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，支援 Markdown（<code>**粗體**</code>、<code>- 清單</code>、<code>## 標題</code>），空欄位不顯示。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
   <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
   <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
   <p><strong>Compare</strong> 模式把選定欄位排成表格橫向比較，點格子可展開全文。</p>
@@ -3246,7 +3235,7 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <h4>KEY DATES</h4>
   <p>依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
-  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
+  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方置中的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
   <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
   <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
