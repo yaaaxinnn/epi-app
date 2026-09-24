@@ -73,19 +73,18 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:24px 0 8px}
 .sec-head:first-child{margin-top:0}
 .sec-head .t{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em}
-.blockhead{display:flex;align-items:center;gap:8px;margin:26px 0 8px;padding:5px 11px;
-  background:var(--ac-soft);border-radius:7px;position:relative}
-.blockhead::before{content:"";position:absolute;left:4px;top:50%;transform:translateY(-50%);
-  width:3px;height:13px;background:var(--ac);border-radius:2px}
+.sx,.kx{flex:0 0 auto;border:0;background:none;padding:1px 3px;color:var(--faint);
+  cursor:pointer;line-height:0;display:inline-flex;align-items:center;transition:color .15s}
+.sx{margin-left:auto}
+.sx:hover,.kx:hover{color:var(--ac)}
+.sx[aria-expanded="true"],.kx[aria-expanded="true"]{color:var(--ac)}
+.sx svg,.kx svg{display:block;transition:transform .2s}
+.sx[aria-expanded="true"] svg,.kx[aria-expanded="true"] svg{transform:rotate(180deg)}
+.blockhead{display:flex;align-items:center;gap:8px;margin:22px 0 6px;padding:1px 10px;
+  background:color-mix(in srgb,var(--ac-mid) 45%,var(--ac-soft));border-radius:5px}
 .blockhead:first-child{margin-top:4px}
-.blockhead .bt{font-size:12.5px;font-weight:600;color:var(--ac);letter-spacing:.05em;padding-left:4px}
+.blockhead .bt{font-size:11.5px;font-weight:600;color:var(--ac);letter-spacing:.05em}
 .blockhead .spacer{flex:1}
-.exp{display:flex;justify-content:center;margin:3px 0 8px}
-.exp button{width:30px;height:22px;padding:0;border:1px solid var(--line);background:var(--surface);
-  border-radius:11px;color:var(--faint);font-size:10px;line-height:1;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .15s}
-.exp button:hover{border-color:var(--ac-mid);color:var(--ac);background:var(--ac-soft)}
-.exp button[aria-expanded="true"]{color:var(--ac);border-color:var(--ac-mid)}
 .hint{font-size:13px;color:var(--muted);line-height:1.55}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .spacer{flex:1}
@@ -171,9 +170,9 @@ td[data-cell] > div{white-space:pre-wrap}
 td[data-cell] > div.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .toolbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
 .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface)}
-.seg button{background:transparent;border:0;padding:7px 12px;font-size:13px;color:var(--muted);white-space:nowrap}
+.seg button{background:transparent;border:0;padding:4px 10px;font-size:12px;color:var(--muted);white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
-.seg.sm button{padding:8px 11px;font-size:12.5px}
+.seg.sm button{padding:3px 9px;font-size:11.5px}
 .ttwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 table.tt{min-width:504px;width:100%;border-collapse:collapse;font-size:12.5px}
 table.tt th{background:var(--surface-2);text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
@@ -195,6 +194,8 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .legend i.elective{background:#F6EEE0;border-color:#8A5C22}
 .legend i.lab{background:#E5EBF0;border-color:#2F5670}
 .kdgroup{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint);margin:16px 0 7px;display:flex;align-items:center;gap:9px}
+.kdgroup .kx{order:2}
+.kdgroup::after{order:1}
 .kdgroup:first-child{margin-top:4px}
 .kdgroup::after{content:"";flex:1;height:1px;background:var(--line)}
 .kd{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-bottom:7px;overflow:hidden}
@@ -276,6 +277,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .acts button:hover{color:var(--ac)}
 .iconb{background:none;border:0;padding:7px 10px;font-size:20px;line-height:1.2;color:var(--muted);min-width:42px;min-height:40px}
 .iconb:hover{color:var(--ac)}
+.blockhead .iconb{padding:2px 5px;font-size:15px;min-width:0;min-height:0;line-height:1}
 .rv{cursor:pointer}
 .rv .ans{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);white-space:pre-wrap;font-size:14.5px;line-height:1.6}
 .grade{display:flex;gap:8px;margin-top:12px}
@@ -294,11 +296,11 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="brand" style="display:flex;align-items:center;gap:9px"><h1>🎓 Epi_Yaxin</h1><button class="syncdot" id="syncDot" title="同步狀態">●</button></div>
     <nav class="tabs" role="tablist" id="tabs">
       <button class="tab" role="tab" data-p="reading" aria-selected="true">Reading</button>
-      <button class="tab" role="tab" data-p="textbooks" aria-selected="false">Textbooks</button>
-      <button class="tab" role="tab" data-p="courses" aria-selected="false">Notes</button>
-      <button class="tab" role="tab" data-p="review" aria-selected="false">Review</button>
       <button class="tab" role="tab" data-p="ideas" aria-selected="false">Meeting</button>
+      <button class="tab" role="tab" data-p="courses" aria-selected="false">Notes</button>
       <button class="tab" role="tab" data-p="calendar" aria-selected="false">Calendar</button>
+      <button class="tab" role="tab" data-p="textbooks" aria-selected="false">Textbooks</button>
+      <button class="tab" role="tab" data-p="review" aria-selected="false">Review</button>
       <button class="tab" role="tab" data-p="settings" aria-selected="false">Settings</button>
     </nav>
   </div>
@@ -1354,11 +1356,9 @@ function renderPapers(){
   list.innerHTML=CATORD.filter(k=>groups[k]&&groups[k].length).map(k=>{
     const col=CATS[k]?CATS[k][1]:'var(--muted)';
     const g=groups[k],more=g.length>LIM,open=openG.has(k);
-    const head=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${CATNAME[k]}</span>
-</div>`;
-    const body=(open?g:g.slice(0,LIM)).map(card).join('');
-    const btn=more?`<div class="exp"><button data-pgrp="${k}" aria-expanded="${open}" title="${open?'收合':'展開其餘 '+(g.length-LIM)+' 篇'}">${open?'▲':'▼'}</button></div>`:'';
-    return head+body+btn;
+    const head=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${CATNAME[k]}</span>${
+      more?`<button class="sx" data-pgrp="${k}" aria-expanded="${open}" title="${open?'收合':'展開其餘 '+(g.length-LIM)+' 篇'}">${CHEV}</button>`:''}</div>`;
+    return head+(open?g:g.slice(0,LIM)).map(card).join('');
   }).join('');
   const cols=CMPCOLS.filter(c=>cmpOn.has(c[0]));
   tbl.innerHTML=`<div class="tagbar" style="margin-bottom:10px">${
@@ -1864,16 +1864,14 @@ function renderQ(){
   let html=QKORD.filter(k=>groups[k].length).map(k=>{
     const g=groups[k],more=g.length>LIM,op=openQG.has(k);
     const col=(QKCOL[k]||QKCOL.mine)[0];
-    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>
-</div>`
-      +(op?g:g.slice(0,LIM)).map(qItem).join('')
-      +(more?`<div class="exp"><button data-qgrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${op?'▲':'▼'}</button></div>`:'');
+    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>${
+      more?`<button class="sx" data-qgrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${CHEV}</button>`:''}</div>`
+      +(op?g:g.slice(0,LIM)).map(qItem).join('');
   }).join('');
   if(doneQs.length){
     const op=openQG.has('__done');
     html+=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:#3E6B4E">Resolved</span>
-</div>
-      <div class="exp"><button data-qgrp="__done" aria-expanded="${op}" title="${op?'收合':'展開已解決 '+doneQs.length+' 項'}">${op?'▲':'▼'}</button></div>`
+      <button class="sx" data-qgrp="__done" aria-expanded="${op}" title="${op?'收合':'展開已解決 '+doneQs.length+' 項'}">${CHEV}</button></div>`
       +(op?doneQs.sort((x,y)=>y.created-x.created).map(qItem).join(''):'');
   }
   el.innerHTML=html||`<div class="empty">還沒有問題。</div>`;
@@ -2344,10 +2342,9 @@ function renderNt(){
   el.innerHTML=QKORD.filter(k=>groups[k].length).map(k=>{
     const g=groups[k],more=g.length>LIM,op=openNG.has(k);
     const col=(QKCOL[k]||QKCOL.mine)[0];
-    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>
-</div>`
-      +(op?g:g.slice(0,LIM)).map(ntItem).join('')
-      +(more?`<div class="exp"><button data-ngrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${op?'▲':'▼'}</button></div>`:'');
+    return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>${
+      more?`<button class="sx" data-ngrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${CHEV}</button>`:''}</div>`
+      +(op?g:g.slice(0,LIM)).map(ntItem).join('');
   }).join('');
 }
 function ntItem(n){
@@ -2536,6 +2533,7 @@ function kdRow(k,d){
     <div class="rt"><button class="x" data-ed-kd="${k.id}" title="編輯" style="font-size:13px">✎</button>
       <button class="x" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></div></div>`;
 }
+const CHEV='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5L12 11L18 5"/><path d="M6 12L12 18L18 12"/></svg>';
 const KDTORD=['deadline','exam','todo','school','other'];
 const KDTICON={deadline:'⏰',exam:'📝',todo:'📌',school:'🏫',other:'•'};
 function kdUrg(d){
@@ -2552,9 +2550,8 @@ function kdSection(g,key,label,icon){
   const op=openKG.has(key);
   const hidden=(near.length>LIM?near.length-LIM:0)+far.length;
   const shown=op?near.concat(far):near.slice(0,LIM);
-  return `<div class="kdgroup">${icon} ${label}</div>`
-    +(shown.length?shown.map(x=>kdRow(x.k,x.d)).join(''):'<p class="hint" style="margin:0 0 6px">（無）</p>')
-    +(hidden?`<div class="exp"><button data-kgrp="${key}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+hidden+' 筆'+(far.length?'（含兩個月後 '+far.length+'）':'')}">${op?'▲':'▼'}</button></div>`:'');
+  return `<div class="kdgroup">${icon} ${label}${hidden?`<button class="kx" data-kgrp="${key}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+hidden+' 筆'+(far.length?'（含兩個月後 '+far.length+'）':'')}">${CHEV}</button>`:''}</div>`
+    +(shown.length?shown.map(x=>kdRow(x.k,x.d)).join(''):'<p class="hint" style="margin:0 0 6px">（無）</p>');
 }
 function kdRender(list,pfx){
   pfx=pfx||'u';
@@ -2576,8 +2573,8 @@ function renderKD(){
   el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">沒有即將到來的日期。</div>`;
   prow.style.flexWrap='nowrap';
   prow.innerHTML=past.length
-    ?`<div class="exp" style="width:100%"><button id="togglePast" aria-expanded="${showPast}" title="${showPast?'隱藏已過期':'展開已過期 '+past.length+' 筆'}">${showPast?'▲':'▼'}</button></div>`:'';
-  pel.innerHTML=showPast&&past.length?kdRender(past,'p'):'';
+    ?`<div class="kdgroup" style="margin-top:20px">已過期<button class="kx" id="togglePast" aria-expanded="${showPast}" title="${showPast?'收合':'展開已過期 '+past.length+' 筆'}">${CHEV}</button></div>`:'';
+  pel.innerHTML=showPast&&past.length?past.map(x=>kdRow(x.k,x.d)).join(''):'';
 }
 
 document.getElementById('kdPastRow').addEventListener('click',e=>{
@@ -3154,7 +3151,7 @@ document.getElementById('helpBox').innerHTML=`
 
 
 <details class="card fold"><summary>🧭 七個分頁在做什麼</summary><div class="help">
-  <p><strong>Reading</strong> 讀過的論文卡片　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Notes</strong> 疑問與零散資料　<strong>Review</strong> 間隔重複複習卡　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Calendar</strong> 重要日期與課表　<strong>Settings</strong> 同步、備份、說明。</p>
+  <p>由左到右：<strong>Reading</strong> 讀過的論文卡片　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Notes</strong> 疑問與零散資料　<strong>Calendar</strong> 重要日期與課表　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Review</strong> 間隔重複複習卡　<strong>Settings</strong> 同步、備份、說明。</p>
   <h4>資料怎麼在分頁之間流動</h4>
   <ul>
     <li><strong>Notes 的 Question</strong> 是總樞紐，展開後有三個出口：<code>↑ Card</code> 進 Review 變複習卡、<code>↑ Note</code> 變同分頁的筆記、<code>↑ 方向</code> 進 Meeting 的 Research directions。</li>
@@ -3170,7 +3167,7 @@ document.getElementById('helpBox').innerHTML=`
   <h4>刪除的兩層</h4>
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings 最下方，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
-  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。區塊下方置中的 <strong>▼ 小圓鈕</strong>展開其餘項目，展開後變 ▲；滑過去會顯示還有幾筆。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
+  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
   <h4>閱讀模式與編輯模式</h4>
   <p>Notes 和 Meetings 的卡片<strong>收合時只顯示標題</strong>，點一下展開是閱讀模式——排版好的內容、圖片和附件都在這裡，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
   <h4>🔗附件</h4>
@@ -3224,8 +3221,8 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <h4>KEY DATES</h4>
-  <p>依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），<strong>每組預設顯示最近 2 筆</strong>。每組下方有自己的 <strong>▼ 小圓鈕</strong>，展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
-  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方是「已過期」按鈕，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
+  <p>依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
+  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
   <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
   <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
