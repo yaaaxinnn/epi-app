@@ -17,7 +17,7 @@
 :root{
   color-scheme:light only;
   --bg:#F7F3EA;--surface:#FFFFFF;--surface-2:#FBF8F2;
-  --cream:#E8E2D3;
+  --cream:#E8E2D3;--cream-soft:#F0EADC;
   --ink:#232019;--muted:#6E6A60;--faint:#9C978B;
   --line:#E3DED2;--line-strong:#CFC9BA;
   --pine:#1E6B58;--pine-soft:#E4EFEA;--pine-mid:#C6DED4;
@@ -85,13 +85,9 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .tg{cursor:pointer;font-size:10px;padding:1px 7px;user-select:none}
 .tg[aria-pressed="true"]{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
 .srchinfo{font-family:var(--mono);font-size:11px;color:var(--faint);margin:0 0 6px;letter-spacing:.04em}
-.qst{margin-left:7px;vertical-align:1px;font-size:9.5px;padding:1px 6px}
-.qgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start;margin-bottom:10px}
-.qgrid>.item{margin-bottom:0}
-.qgrid>.item.wide{grid-column:1/-1}
-@media(max-width:760px){.qgrid{grid-template-columns:1fr}}
 .dirwrap{display:flex;gap:11px;align-items:flex-start;margin-top:6px}
-.dirnav{flex:0 0 104px;min-width:0;border-right:1px solid var(--line);padding-right:7px;position:sticky;top:60px}
+.dirnav{flex:0 0 104px;min-width:0;background:var(--cream-soft);border:1px solid var(--line);
+  border-radius:8px;padding:5px 4px;position:sticky;top:60px}
 .dirbody{flex:1;min-width:0}
 @media(max-width:560px){.dirwrap{gap:8px}.dirnav{flex:0 0 82px;padding-right:5px}}
 .dnav{display:flex;width:100%;text-align:left;align-items:baseline;gap:4px;background:none;border:0;
@@ -109,6 +105,8 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .rsvrow .ck{flex:0 0 auto;color:#3E6B4E;font-size:11px;line-height:1}
 .rsvrow .rtx{flex:1;min-width:0;font-size:13.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rsvrow .rdt{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.rsvrow .rtag{flex:0 0 auto;display:inline-flex;gap:3px}
+.rsvrow .rtag .tg{cursor:pointer}
 .blockhead:first-child{margin-top:4px}
 .blockhead .bt{font-size:11.5px;font-weight:600;color:var(--ac);letter-spacing:.05em}
 .blockhead .spacer{flex:1}
@@ -436,18 +434,14 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <p class="srchinfo" id="nsrchInfo" style="display:none"></p>
 
   <div class="blockhead"><span class="bt">❓ QUESTIONS</span><span class="spacer"></span>
-    <div class="seg sm" id="qSeg">
-      <button data-qf="open" aria-pressed="true">Unresolved</button>
-      <button data-qf="all" aria-pressed="false">All</button>
-    </div>
     <button class="iconb" id="addQBtn" title="新增">＋</button>
   </div>
   <div class="card" id="qForm" style="display:none">
     <label class="f"><span>Question</span><textarea id="q-q"></textarea></label>
     <div class="grid2">
       <label class="f"><span>分類</span><select id="q-kind"></select></label>
+      <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="q-tags" placeholder="e.g. confounding, HBV"></label>
     </div>
-    <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="q-tags" placeholder="e.g. confounding, HBV"></label>
     <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
   </div>
   <div id="qList"></div>
@@ -456,8 +450,10 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <button class="iconb" id="addNtBtn" title="新增筆記">＋</button></div>
   <div class="card" id="ntForm" style="display:none">
     <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
-    <label class="f"><span>分類</span><select id="nt-kind"></select></label>
-    <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
+    <div class="grid2">
+      <label class="f"><span>分類</span><select id="nt-kind"></select></label>
+      <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
+    </div>
     <div class="f"><div class="row" style="align-items:center">
       <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
       <button class="iconb" id="ntImgBtn" type="button" title="插入圖片">🖼️</button></div>
@@ -630,7 +626,8 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
 
 
-  <div id="gcBox"></div>
+  <div class="pastrow" id="gcRow"></div>
+  <div id="gcBox" style="display:none"></div>
 </section>
 
 <!-- ========== Settings ========== -->
@@ -883,7 +880,7 @@ const PART=['Causal Inference: What If · 自修','Part I · Foundations','Part 
 function minCh(c){return c.me.length?Math.min.apply(null,c.me.map(x=>parseInt(x[0],10))):9999}
 function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=15)return 2;if(m<=31)return 3;return 4}
 
-let S=null,paperView='list',cardSort='due',mFilter='book',qFilter='open';
+let S=null,paperView='list',cardSort='due',mFilter='book';
 let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
 const flipped=new Set(),openP=new Set(),editP=new Set(),openT=new Set(),openG=new Set(),openQ=new Set();
 let editCard=null,riFilter='all',trashAll=false;
@@ -1801,10 +1798,6 @@ document.getElementById('p-courses').addEventListener('click',e=>{
   nTags.has(t)?nTags.delete(t):nTags.add(t);
   nSearchAll();
 });
-document.getElementById('qSeg').addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;qFilter=b.dataset.qf;
-  document.querySelectorAll('#qSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderQ();
-});
 document.getElementById('addQ').onclick=()=>{
   const q=document.getElementById('q-q').value.trim();if(!q){toast('請填問題');return}
   S.qs.push({id:uid(),created:Date.now(),kind:qcatFix(document.getElementById('q-kind').value),q,
@@ -1971,9 +1964,7 @@ function bindImagePaste(el){
 }
 function qItem(q){
   return `<div class="item${openQ.has(q.id)?' wide':''}"${q.done?' style="background:var(--surface-2)"':''}>
-    <div style="font-weight:500;line-height:1.5${q.done?';cursor:pointer':''}"${q.done?` data-qopen="${q.id}"`:''}>${esc(q.q)}<span class="pill qst" style="${q.done
-        ?'color:#3E6B4E;background:#E2EEE6;border-color:#3E6B4E40'
-        :'color:#B5761E;background:#F8EEDC;border-color:#B5761E40'}">${q.done?'Resolved':'Unresolved'}</span></div>
+    <div style="font-weight:500;line-height:1.5${q.done?';cursor:pointer':''}"${q.done?` data-qopen="${q.id}"`:''}>${esc(q.q)}</div>
     ${tagChips(q.tags)}
 
     ${q.a?`<div style="margin-top:8px;font-size:14px;white-space:pre-wrap;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
@@ -2040,10 +2031,10 @@ function renderQ(){
   const openQs=all.filter(x=>!x.done).sort((a,b)=>b.created-a.created);
   const doneQs=all.filter(x=>x.done).sort((a,b)=>(b.doneAt||b.created)-(a.doneAt||a.created));
 
-  let html=openQs.length?`<div class="qgrid">${openQs.map(qItem).join('')}</div>`:emptyRow();
+  let html=openQs.length?openQs.map(qItem).join(''):emptyRow();
 
-  const dop=F||qFilter==='all'||openQG.has('__done');
-  html+=grpHead('Resolved','#3E6B4E',doneQs.length>0,'data-qgrp="__done"',dop,'項',doneQs.length);
+  const dop=F||openQG.has('__done');
+  html+=grpHead('<b>Resolved</b>','#3E6B4E',doneQs.length>0,'data-qgrp="__done"',dop,'項',doneQs.length);
   if(!doneQs.length)html+=emptyRow();
   else if(dop){
     const catOf=q=>qcatFix(q.kind),tsOf=q=>q.doneAt||q.created;
@@ -2552,11 +2543,22 @@ function ntItem(n){
       <div class="row" style="margin-top:4px"><span class="spacer"></span>
         <button class="iconb" data-ntlnew="${n.id}" title="再新增一列">＋</button></div>
     </details>`};
-  return `<div class="item${open?' wide':''}" data-ntcard="${n.id}" style="cursor:pointer">
+  if(!open){
+    const d=new Date(n.mtime||n.created);
+    const dt=(d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0');
+    const tg=(n.tags||[]).filter(Boolean).slice(0,3).map(t=>
+      `<span class="pill tg" data-ntag="${esc(t)}" aria-pressed="${nTags.has(String(t).toLowerCase())}">${esc(t)}</span>`).join('');
+    return `<div class="rsvrow" data-ntcard="${n.id}" title="點一下展開">
+      <span class="ck" style="color:var(--faint);font-size:9px">●</span>
+      <span class="rtx">${esc(n.title)}</span>
+      ${tg?`<span class="rtag" data-ntstop="1">${tg}</span>`:''}
+      <span class="rdt">${dt}</span></div>`;
+  }
+  return `<div class="item" data-ntcard="${n.id}" style="cursor:pointer">
     <div class="row">
       <h3 style="flex:1;min-width:0">${esc(n.title)}</h3>
       <span class="cxg">
-        ${open?`<button class="cx e" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
+        <button class="cx e" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>
         <button class="cx" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button></span>
     </div>
     ${tagChips(n.tags,1)}
@@ -2566,11 +2568,11 @@ function ntItem(n){
         :'<p class="hint" style="margin:8px 0 0">還沒有內容，點 ✎ 開始寫。</p>'}
     </div>`:''}
     ${open&&ed?`<div class="editbox" data-ntstop="1" style="cursor:default">
+      <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
       <div class="grid2">
-        <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
         <label class="f"><span>分類</span><select data-ntk="${n.id}">${qcatOpts(qcatFix(n.kind))}</select></label>
+        <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       </div>
-      <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
         <button class="iconb" data-ntimg="${n.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
@@ -2830,7 +2832,7 @@ document.getElementById('addKD').onclick=()=>{
   else S.kd.push({id:uid(),date:d,title:t,type:ty});
   kdReset();show('kdForm',false);saved();renderKD();
 };
-let gcCur=null;
+let gcCur=null,gcOpen=false;
 
 
 /* 自動判斷 KEY DATE 類型：先看類型碼（*D / *E / *M / *T / *S），再用關鍵字 */
@@ -2905,6 +2907,10 @@ function gcSaveCfg(){
   S.gcAt=Date.now();save();
 }
 function renderGC(){
+  const row=document.getElementById('gcRow');
+  if(row)row.innerHTML=`<button class="pastbtn" id="toggleGC" aria-expanded="${gcOpen}" title="${gcOpen?'收合':'展開 Google 日曆'}">Google 日曆${CHEV}</button>`;
+  const box=document.getElementById('gcBox');
+  if(box)box.style.display=gcOpen?'':'none';
   const inp=document.getElementById('gcUrl');
   if(inp&&document.activeElement!==inp)inp.value=S.gc||'';
   const set=(id,v)=>{const el=document.getElementById(id);if(el&&document.activeElement!==el)el.value=v};
@@ -2917,6 +2923,10 @@ function renderGC(){
     `<iframe src="${esc(S.gc)}" style="width:100%;height:520px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)" loading="lazy"></iframe>`
     :'<div class="empty" style="margin-top:18px">還沒設定 Google 日曆。到 Settings 貼上嵌入網址。</div>';
 }
+document.getElementById('gcRow').addEventListener('click',e=>{
+  if(!e.target.closest('#toggleGC'))return;
+  gcOpen=!gcOpen;renderGC();
+});
 document.getElementById('saveGC').onclick=()=>{S.gc=document.getElementById('gcUrl').value.trim();gcSaveCfg();saved();renderGC()};
 document.getElementById('clearGC').onclick=()=>{S.gc='';S.gcAt=Date.now();save();renderGC()};
 
@@ -3423,12 +3433,13 @@ document.getElementById('helpBox').innerHTML=`
   <h4>自己加分類</h4>
   <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的問題和筆記會移到第一個分類，不會被刪掉。Mine 和 Study 擋掉不給刪。</p>
   <h4>Questions</h4>
-  <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊排成雙欄，因為手上還沒解決的東西就是該一眼看完。狀態標籤（Unresolved／Resolved）接在問題文字後面。右上角的 <code>Unresolved｜All</code>：All 會直接把 Resolved 區展開。</p>
-  <p><strong>Resolved 分成左目錄、右清單</strong>。左邊窄欄依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
+  <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊、一列一張，因為手上還沒解決的東西就是該一眼看完。卡片<strong>不標狀態</strong>——沒解決的都在上面，已解決的都在 Resolved 裡，不需要再貼標籤講一次。</p>
+  <p><strong>Resolved</strong>（粗體那行）<strong>分成左目錄、右清單</strong>。左邊窄欄底色較深，依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
   <p>卡片只顯示問題、答案、標籤、附件、狀態；分類和標籤在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
   <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
   <h4>Notes</h4>
-  <p>想查的東西、課程資料、待整理的想法。版面和 Resolved 一樣是<strong>左目錄、右清單</strong>：左邊依分類顯示筆數、選中才展開月份；右邊不分類，依最後修改時間新到舊排成單欄長條，標籤在收合狀態下也看得到。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
+  <p>想查的東西、課程資料、待整理的想法。版面和 Resolved 一樣是<strong>左目錄、右清單</strong>：左邊依分類顯示筆數、選中才展開月份；右邊不分類，依最後修改時間新到舊排成單欄。<strong>收合時和 Resolved 長得一樣</strong>：圓點、標題、標籤、最後修改日期一行帶過，點一下才展開成完整卡片（含內容、✎ 編輯、✕ 刪除），再點一次收回去。</p>
+  <p>分類和標籤在編輯時<strong>並排在同一列</strong>。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
@@ -3455,6 +3466,7 @@ document.getElementById('helpBox').innerHTML=`
   <p>依 Type 分組（Deadline、Exam、To do、School、Other），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
   <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方置中的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
+  <p>Calendar 分頁最下面置中的「<strong>Google 日曆 ⌄⌄</strong>」展開嵌入的月曆，預設收著，不展開就不會載入。</p>
   <p>設定在 <strong>Settings → GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
   <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
   <p><strong>關鍵字（備援）</strong>：含「截止／繳交／deadline／投稿」→ Deadline；含「考／口試／資格」→ Exam；含「meeting／討論／報告／seminar」→ To do；含「註冊／選課／開學／畢業」→ School。關鍵字猜的只在類型還是 Other 時才填，不會動你手動分好的。</p>
