@@ -73,11 +73,19 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:24px 0 8px}
 .sec-head:first-child{margin-top:0}
 .sec-head .t{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em}
-.blockhead{display:flex;align-items:center;gap:8px;margin:28px 0 9px;padding:0 0 6px 9px;
-  border-left:3px solid var(--ac);border-bottom:1px solid var(--line)}
+.blockhead{display:flex;align-items:center;gap:8px;margin:26px 0 8px;padding:5px 11px;
+  background:var(--ac-soft);border-radius:7px;position:relative}
+.blockhead::before{content:"";position:absolute;left:4px;top:50%;transform:translateY(-50%);
+  width:3px;height:13px;background:var(--ac);border-radius:2px}
 .blockhead:first-child{margin-top:4px}
-.blockhead .bt{font-size:13px;font-weight:600;color:var(--ac);letter-spacing:.05em}
+.blockhead .bt{font-size:12.5px;font-weight:600;color:var(--ac);letter-spacing:.05em;padding-left:4px}
 .blockhead .spacer{flex:1}
+.exp{display:flex;justify-content:center;margin:3px 0 8px}
+.exp button{width:30px;height:22px;padding:0;border:1px solid var(--line);background:var(--surface);
+  border-radius:11px;color:var(--faint);font-size:10px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .15s}
+.exp button:hover{border-color:var(--ac-mid);color:var(--ac);background:var(--ac-soft)}
+.exp button[aria-expanded="true"]{color:var(--ac);border-color:var(--ac-mid)}
 .hint{font-size:13px;color:var(--muted);line-height:1.55}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .spacer{flex:1}
@@ -1272,9 +1280,8 @@ function renderPapers(){
   const info=document.getElementById('paperCount');
   if(!S.papers.length){list.innerHTML=`<div class="empty">還沒有精讀卡片。</div>`;tbl.innerHTML='';info.innerHTML='';return}
   const a=S.papers.filter(paperMatch).sort((x,y)=>((y.star?1:0)-(x.star?1:0))||((y.year||0)-(x.year||0))||(y.created-x.created));
-  info.innerHTML=(qPaper||tagFilter.size)
-    ? `<span class="pill ${a.length?'pine':'clay'}">${a.length} / ${S.papers.length} 篇</span>`
-    : `<span class="pill">${S.papers.length} 篇</span>`;
+  info.innerHTML=(qPaper||tagFilter.size)&&!a.length
+    ? `<span class="pill clay">沒有符合的卡片</span>` : '';
   if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
   const CATS={teacher:['老師','#B0472E','#F7E5DE'],course:['課程','#2E5FB0','#DEE9F7'],explore:['探索','#7A5AA8','#EDE6F7'],publish:['發表','#2E7D5B','#DDEFE6']};
   const CATORD=['teacher','course','explore','publish',''];
@@ -1348,10 +1355,9 @@ function renderPapers(){
     const col=CATS[k]?CATS[k][1]:'var(--muted)';
     const g=groups[k],more=g.length>LIM,open=openG.has(k);
     const head=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${CATNAME[k]}</span>
-      <span class="pill" style="margin-left:6px">${g.length}</span></div>`;
+</div>`;
     const body=(open?g:g.slice(0,LIM)).map(card).join('');
-    const btn=more?`<div class="row" style="margin:2px 0 6px">
-      <button class="btn ghost mini" data-pgrp="${k}" style="width:100%">${open?'收合':'顯示其餘 '+(g.length-LIM)+' 篇'}</button></div>`:'';
+    const btn=more?`<div class="exp"><button data-pgrp="${k}" aria-expanded="${open}" title="${open?'收合':'展開其餘 '+(g.length-LIM)+' 篇'}">${open?'▲':'▼'}</button></div>`:'';
     return head+body+btn;
   }).join('');
   const cols=CMPCOLS.filter(c=>cmpOn.has(c[0]));
@@ -1554,12 +1560,12 @@ function renderCards(){
   const due=dueCards();
   document.getElementById('dueCount').textContent=due.length;
   document.getElementById('startReview').disabled=!due.length;
-  document.getElementById('cardTotals').textContent=`共 ${S.cards.length} 張 · 已成熟 ${S.cards.filter(c=>(c.level||0)>=4).length} 張`;
+  document.getElementById('cardTotals').textContent='';
   const sel=document.getElementById('cf-theme');
   if(!sel.options.length)sel.innerHTML='<option value="-1">— none —</option>'+C.map((c,i)=>`<option value="${i}">${c.e} ${esc(c.en)}</option>`).join('');
   document.getElementById('examThemes').innerHTML=C.map((c,i)=>{
     const n=S.cards.filter(x=>x.theme===i).length;if(!n)return'';
-    return `<label class="chk"><input type="checkbox" value="${i}"><span style="flex:1">${c.e} ${esc(c.en)}</span><span class="pill">${n}</span></label>`}).join('')||`<p class="hint">還沒有綁定主題的卡片。</p>`;
+    return `<label class="chk"><input type="checkbox" value="${i}"><span style="flex:1">${c.e} ${esc(c.en)}</span></label>`}).join('')||`<p class="hint">還沒有綁定主題的卡片。</p>`;
   const el=document.getElementById('cardList');
   if(!S.cards.length){el.innerHTML=`<div class="empty">還沒有卡片。</div>`;return}
   let a=S.cards.filter(c=>!qCard||norm([c.q,c.a,(c.links||[]).map(l=>l.label+' '+l.url).join(' '),(c.theme>=0&&C[c.theme])?C[c.theme].en+' '+C[c.theme].zh:''].join(' ')).includes(norm(qCard)));
@@ -1859,16 +1865,15 @@ function renderQ(){
     const g=groups[k],more=g.length>LIM,op=openQG.has(k);
     const col=(QKCOL[k]||QKCOL.mine)[0];
     return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>
-      <span class="pill" style="margin-left:6px">${g.length}</span></div>`
+</div>`
       +(op?g:g.slice(0,LIM)).map(qItem).join('')
-      +(more?`<div class="row" style="margin:2px 0 6px">
-        <button class="btn ghost mini" data-qgrp="${k}" style="width:100%">${op?'收合':'顯示其餘 '+(g.length-LIM)+' 項'}</button></div>`:'');
+      +(more?`<div class="exp"><button data-qgrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${op?'▲':'▼'}</button></div>`:'');
   }).join('');
   if(doneQs.length){
     const op=openQG.has('__done');
     html+=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:#3E6B4E">Resolved</span>
-      <span class="pill" style="margin-left:6px">${doneQs.length}</span></div>
-      <div class="row" style="margin:2px 0 6px"><button class="btn ghost mini" data-qgrp="__done" style="width:100%">${op?'收合':'展開已解決 '+doneQs.length+' 項'}</button></div>`
+</div>
+      <div class="exp"><button data-qgrp="__done" aria-expanded="${op}" title="${op?'收合':'展開已解決 '+doneQs.length+' 項'}">${op?'▲':'▼'}</button></div>`
       +(op?doneQs.sort((x,y)=>y.created-x.created).map(qItem).join(''):'');
   }
   el.innerHTML=html||`<div class="empty">還沒有問題。</div>`;
@@ -2025,14 +2030,12 @@ function renderMT(){
     <div class="row">
       <div style="flex:1;min-width:0">
         <h3><span class="mono" style="font-size:13px;color:var(--muted)">${esc(m.date)}</span>${m.title?`　${esc(m.title)}`:''}</h3>
-        ${!open&&m.topics?`<div class="oneline" style="margin-top:3px">💬 ${esc(m.topics.replace(/[#*`>\-]/g,'').split('\n').filter(Boolean)[0]||'')}</div>`:''}
       </div>
-      ${allBtns?`<span class="row" data-mstop="1" style="flex:0 0 auto;gap:4px;cursor:default">${allBtns}</span>`:''}
-      ${mtProgress(m)}
       ${open?`<button class="x" data-medit="${m.id}" data-mstop="1" title="${ed?'完成編輯':'編輯'}" style="font-size:11px;padding:0 3px">${ed?'✓':'✎'}</button>`:''}
       <button class="x" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${open&&!ed?`<div data-mstop="1" style="cursor:default">
+      ${allBtns?`<div class="row" style="margin-top:8px;flex-wrap:wrap;gap:5px">${allBtns}</div>`:''}
       ${m.topics?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(m.topics)}</div>`
         :'<p class="hint" style="margin:8px 0 0">還沒有重點，點 ✎ 開始寫。</p>'}
       ${(m.actions||[]).length?`<details class="fold" style="margin-top:10px"><summary>✅Action items</summary>
@@ -2342,10 +2345,9 @@ function renderNt(){
     const g=groups[k],more=g.length>LIM,op=openNG.has(k);
     const col=(QKCOL[k]||QKCOL.mine)[0];
     return `<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${QK[k]}</span>
-      <span class="pill" style="margin-left:6px">${g.length}</span></div>`
+</div>`
       +(op?g:g.slice(0,LIM)).map(ntItem).join('')
-      +(more?`<div class="row" style="margin:2px 0 6px">
-        <button class="btn ghost mini" data-ngrp="${k}" style="width:100%">${op?'收合':'顯示其餘 '+(g.length-LIM)+' 項'}</button></div>`:'');
+      +(more?`<div class="exp"><button data-ngrp="${k}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+(g.length-LIM)+' 項'}">${op?'▲':'▼'}</button></div>`:'');
   }).join('');
 }
 function ntItem(n){
@@ -2369,8 +2371,7 @@ function ntItem(n){
       ${open?`<button class="x" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}" style="font-size:11px;padding:0 3px">${ed?'✓':'✎'}</button>`:''}
       <button class="x" data-hold="note|${n.id}" title="長按 1.5 秒刪除" style="font-size:11px;padding:0 3px">✕</button>
     </div>
-    ${!open&&n.body?`<div class="oneline" style="margin-top:3px">${esc(n.body.split('\n')[0].replace(/!\[[^\]]*\]\([^)]*\)/g,'🖼️'))}</div>`:''}
-    ${chips?`<div class="row" data-ntstop="1" style="margin-top:6px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
+    ${open&&chips?`<div class="row" data-ntstop="1" style="margin-top:8px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
       ${n.body?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(n.body)}</div>`
         :'<p class="hint" style="margin:8px 0 0">還沒有內容，點 ✎ 開始寫。</p>'}
@@ -2551,10 +2552,9 @@ function kdSection(g,key,label,icon){
   const op=openKG.has(key);
   const hidden=(near.length>LIM?near.length-LIM:0)+far.length;
   const shown=op?near.concat(far):near.slice(0,LIM);
-  return `<div class="kdgroup">${icon} ${label}<span class="pill" style="margin-left:6px;font-size:10px">${g.length}</span></div>`
+  return `<div class="kdgroup">${icon} ${label}</div>`
     +(shown.length?shown.map(x=>kdRow(x.k,x.d)).join(''):'<p class="hint" style="margin:0 0 6px">（無）</p>')
-    +(hidden?`<div class="row" style="margin:2px 0 8px">
-      <button class="btn ghost mini" data-kgrp="${key}" style="width:100%;font-size:12px">${op?'▴ 收合':'▾ 其餘 '+hidden+' 筆'+(far.length?'（含兩個月後 '+far.length+'）':'')}</button></div>`:'');
+    +(hidden?`<div class="exp"><button data-kgrp="${key}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+hidden+' 筆'+(far.length?'（含兩個月後 '+far.length+'）':'')}">${op?'▲':'▼'}</button></div>`:'');
 }
 function kdRender(list,pfx){
   pfx=pfx||'u';
@@ -2576,7 +2576,7 @@ function renderKD(){
   el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">沒有即將到來的日期。</div>`;
   prow.style.flexWrap='nowrap';
   prow.innerHTML=past.length
-    ?`<button class="btn ghost mini" id="togglePast" style="flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${showPast?'▴ 隱藏已過期':'▾ 已過期 '+past.length}</button>`:'';
+    ?`<div class="exp" style="width:100%"><button id="togglePast" aria-expanded="${showPast}" title="${showPast?'隱藏已過期':'展開已過期 '+past.length+' 筆'}">${showPast?'▲':'▼'}</button></div>`:'';
   pel.innerHTML=showPast&&past.length?kdRender(past,'p'):'';
 }
 
@@ -3170,9 +3170,9 @@ document.getElementById('helpBox').innerHTML=`
   <h4>刪除的兩層</h4>
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings 最下方，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
-  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆，其餘用「顯示其餘 N 篇」展開。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
+  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。區塊下方置中的 <strong>▼ 小圓鈕</strong>展開其餘項目，展開後變 ▲；滑過去會顯示還有幾筆。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
   <h4>閱讀模式與編輯模式</h4>
-  <p>Notes 和 Meetings 的卡片<strong>點一下展開是閱讀模式</strong>——直接看排版好的內容、圖片和附件，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
+  <p>Notes 和 Meetings 的卡片<strong>收合時只顯示標題</strong>，點一下展開是閱讀模式——排版好的內容、圖片和附件都在這裡，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
   <h4>🔗附件</h4>
   <p>全站統一：展開後預設一列空白，左邊短格填名稱、右邊長格貼網址，按 <code>＋</code> 再加一列，長按 ✕ 刪除。沒填的空白列在收合時自動清掉。卡片上只顯示有網址的附件，點一下開啟。</p>
   <h4>🖼️ 插入圖片</h4>
@@ -3212,7 +3212,7 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>💬 Meeting</summary><div class="help">
   <p>順序：<strong>Meetings → Research directions → To-do</strong>。</p>
   <h4>📋 Meetings</h4>
-  <p>點卡片<strong>展開是閱讀模式</strong>：排版後的重點、可勾選的 action items、逐字稿折疊區。按右上 ✎ 切到編輯模式。收合時顯示日期、標題、重點首行、附件標籤。</p>
+  <p>點卡片<strong>展開是閱讀模式</strong>：附件標籤、排版後的重點、可勾選的 action items、逐字稿折疊區。按右上 ✎ 切到編輯模式。收合時只顯示日期和標題。</p>
   <p><strong>重點</strong>支援 Markdown，輸入框下方即時預覽排版後的樣子。<strong>✍️完整逐字稿</strong>固定在最下面的折疊區，NotebookLM 轉出的長稿貼這裡不會撐爆版面。</p>
   <p><strong>✅Action items</strong> 一次打一項按 Enter，成為可勾選的清單。</p>
   <h4>🎯 Research directions</h4>
@@ -3224,7 +3224,7 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <h4>KEY DATES</h4>
-  <p>依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），<strong>每組預設顯示最近 2 筆</strong>。每組下方有自己的 <strong>▾ 箭頭</strong>，展開該類剩下的事項，包含兩個月後的遠期項目（箭頭上會標示有幾筆是兩個月後）。</p>
+  <p>依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），<strong>每組預設顯示最近 2 筆</strong>。每組下方有自己的 <strong>▼ 小圓鈕</strong>，展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
   <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方是「已過期」按鈕，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
   <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
