@@ -90,8 +90,20 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .qgrid>.item{margin-bottom:0}
 .qgrid>.item.wide{grid-column:1/-1}
 @media(max-width:760px){.qgrid{grid-template-columns:1fr}}
-.rsvmon{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint);margin:14px 0 4px;padding-left:2px}
-.rsvmon:first-of-type{margin-top:6px}
+.dirwrap{display:flex;gap:11px;align-items:flex-start;margin-top:6px}
+.dirnav{flex:0 0 104px;min-width:0;border-right:1px solid var(--line);padding-right:7px;position:sticky;top:60px}
+.dirbody{flex:1;min-width:0}
+@media(max-width:560px){.dirwrap{gap:8px}.dirnav{flex:0 0 82px;padding-right:5px}}
+.dnav{display:flex;width:100%;text-align:left;align-items:baseline;gap:4px;background:none;border:0;
+  cursor:pointer;padding:4px 5px;border-radius:5px;font-size:11.5px;color:var(--muted);line-height:1.35}
+.dnav:hover{background:var(--surface-2)}
+.dnav[aria-pressed="true"]{background:var(--ac-soft);color:var(--ac);font-weight:600}
+.dnav .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dnav .ct{flex:0 0 auto;font-family:var(--mono);font-size:9.5px;color:var(--faint)}
+.dnav[aria-pressed="true"] .ct{color:var(--ac)}
+.dnav.mon{padding-left:13px;font-family:var(--mono);font-size:10px;letter-spacing:.02em}
+.dnav.mon[aria-pressed="true"]{font-weight:500}
+.dirbody>.item{margin-bottom:9px}
 .rsvrow{display:flex;align-items:center;gap:8px;padding:7px 6px 7px 3px;border-bottom:1px solid var(--line);cursor:pointer}
 .rsvrow:hover{background:var(--surface-2)}
 .rsvrow .ck{flex:0 0 auto;color:#3E6B4E;font-size:11px;line-height:1}
@@ -423,7 +435,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="tagbar" id="ntagbar"></div>
   <p class="srchinfo" id="nsrchInfo" style="display:none"></p>
 
-  <div class="blockhead"><span class="bt">QUESTIONS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">❓ QUESTIONS</span><span class="spacer"></span>
     <div class="seg sm" id="qSeg">
       <button data-qf="open" aria-pressed="true">Unresolved</button>
       <button data-qf="all" aria-pressed="false">All</button>
@@ -440,7 +452,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
   <div id="qList"></div>
 
-  <div class="blockhead"><span class="bt">NOTES</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">📒 NOTES</span><span class="spacer"></span>
     <button class="iconb" id="addNtBtn" title="新增筆記">＋</button></div>
   <div class="card" id="ntForm" style="display:none">
     <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
@@ -503,7 +515,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Ideas ========== -->
 <section class="panel" id="p-ideas">
-  <div class="blockhead"><span class="bt">MEETINGS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">📋 MEETINGS</span><span class="spacer"></span>
     <button class="iconb" id="addMTBtn" title="新增 meeting 紀錄">＋</button></div>
   <div class="card" id="mtForm" style="display:none">
     <div class="grid2">
@@ -536,7 +548,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   </div>
   <div id="mtList"></div>
 
-  <div class="blockhead"><span class="bt">RESEARCH DIRECTIONS</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">🎯 RESEARCH DIRECTIONS</span><span class="spacer"></span>
     <div class="seg sm" id="dirSeg">
       <button data-dirf="active" aria-pressed="true">進行中</button>
       <button data-dirf="all" aria-pressed="false">All</button>
@@ -555,14 +567,14 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="saverow"><button class="btn ghost" id="cancelDIR">Cancel</button><button class="btn" id="addDIR">Save</button></div>
   </div>
   <div id="dirList"></div>
-  <div class="blockhead"><span class="bt">TO-DO</span></div>
+  <div class="blockhead"><span class="bt">✅ TO-DO</span></div>
   <div id="mtTodo"></div>
 
 </section>
 
 <!-- ========== Calendar ========== -->
 <section class="panel" id="p-calendar">
-  <div class="blockhead"><span class="bt">KEY DATES</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">📅 KEY DATES</span><span class="spacer"></span>
     <button class="iconb" id="toggleKD" title="新增日期">＋</button></div>
   
   <div class="card" id="kdForm" style="display:none">
@@ -580,7 +592,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="row" id="kdPastRow" style="margin-top:4px"></div>
   <div id="kdPastList"></div>
 
-  <div class="blockhead"><span class="bt">TIMETABLE</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">🗓️ TIMETABLE</span><span class="spacer"></span>
     <div class="seg sm" id="termSeg"></div></div>
   <div class="ttwrap"><table class="tt" id="ttTable"></table></div>
   <div class="legend">
@@ -759,6 +771,7 @@ const DEFAULT_CATS=[
   {id:'course', name:'課程',    short:'課程',col:'#2E5FB0',soft:'#DEE9F7'},
   {id:'explore',name:'探索',    short:'探索',col:'#7A5AA8',soft:'#EDE6F7'},
   {id:'publish',name:'發表',    short:'發表',col:'#2E7D5B',soft:'#DDEFE6'}];
+const CATEMO={teacher:'👨‍🏫',course:'📘',explore:'🔍',publish:'✒️','':'📄'};
 const CATPAL=[['#B5761E','#F8EEDC'],['#1F6B6B','#E2EFEE'],['#8A5C22','#F6EEE0'],
   ['#2F5670','#E5EBF0'],['#6A4A6E','#EFE8F0'],['#A0533F','#F6E9E4']];
 function catAdd(name){
@@ -1346,8 +1359,9 @@ function renderPapers(){
     ? `<span class="pill clay">沒有符合的卡片</span>` : '';
   if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
   const CATS={},CATNAME={};
-  S.cats.forEach(x=>{CATS[x.id]=[x.short||x.name,x.col,x.soft];CATNAME[x.id]=x.name});
-  CATNAME['']='未分類';
+  S.cats.forEach(x=>{CATS[x.id]=[x.short||x.name,x.col,x.soft];
+    CATNAME[x.id]=(CATEMO[x.id]?CATEMO[x.id]+' ':'')+x.name});
+  CATNAME['']='📄 未分類';
   const CATORD=S.cats.map(x=>x.id).concat('');
   const groups={};
   a.forEach(p=>{const k=CATS[p.cat]?p.cat:'';(groups[k]=groups[k]||[]).push(p)});
@@ -1799,7 +1813,7 @@ document.getElementById('addQ').onclick=()=>{
   show('qForm',false);saved();renderQ();
 };
 const openQG=new Set();
-let nq='',rsvAll=false;const nTags=new Set(),openQA=new Set();
+let nq='',qSelCat='',qSelMon='',ntSelCat='',ntSelMon='';const nTags=new Set(),openQA=new Set();
 function nterms(){return nq?nq.toLowerCase().split(/\s+/).filter(Boolean):[]}
 function nFilterOn(){return nterms().length>0||nTags.size>0}
 function nhit(s){const t=nterms();if(!t.length)return true;const x=(s||'').toLowerCase();return t.every(w=>x.includes(w))}
@@ -1989,47 +2003,56 @@ function qItem(q){
         <button class="btn" data-qsave="${q.id}">Save</button></div>
     </div>`:''}</div>`;
 }
+function ym(ts){const d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+function dirNav(list,catOf,tsOf,selCat,selMon,pfx){
+  const cnt={},mon={};
+  list.forEach(x=>{const k=catOf(x);cnt[k]=(cnt[k]||0)+1;
+    const m=ym(tsOf(x));(mon[k]=mon[k]||{})[m]=(mon[k][m]||0)+1});
+  const ids=qcatIds().filter(k=>cnt[k]);
+  let h=`<button class="dnav" data-${pfx}="" aria-pressed="${!selCat}"><span class="nm">全部</span><span class="ct">${list.length}</span></button>`;
+  ids.forEach(k=>{
+    h+=`<button class="dnav" data-${pfx}="${k}" aria-pressed="${selCat===k&&!selMon}"`
+      +`${!DEFAULT_QCATS.some(x=>x.id===k)?` data-hold="qcat|${k}" title="長按 1.5 秒刪除這個分類"`:''}>`
+      +`<span class="nm" style="color:${selCat===k?'':qcatCol(k)}">${esc(qcatName(k))}</span><span class="ct">${cnt[k]}</span></button>`;
+    if(selCat===k)Object.keys(mon[k]).sort().reverse().forEach(m=>{
+      h+=`<button class="dnav mon" data-${pfx}="${k}|${m}" aria-pressed="${selMon===m}">`
+        +`<span class="nm">${m}</span><span class="ct">${mon[k][m]}</span></button>`});
+  });
+  return h;
+}
+function dirPick(v,cat,mon){
+  if(!v)return['',''];
+  const i=v.indexOf('|');
+  if(i<0)return[cat===v?'':v,''];
+  const a=v.slice(0,i),b=v.slice(i+1);
+  return[a,mon===b?'':b];
+}
 function qDoneRow(q){
   const d=new Date(q.doneAt||q.mtime||q.created);
   const dt=(d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0');
   return `<div class="rsvrow" data-qopen="${q.id}" title="點一下展開">
     <span class="ck">✓</span><span class="rtx">${esc(q.q)}</span><span class="rdt">${dt}</span></div>`;
 }
-function qMonths(list){
-  const m={};
-  list.forEach(q=>{const d=new Date(q.doneAt||q.mtime||q.created);
-    const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-    (m[k]=m[k]||[]).push(q)});
-  return Object.keys(m).sort().reverse()
-    .map(k=>[k,m[k].sort((a,b)=>(b.doneAt||b.created)-(a.doneAt||a.created))]);
-}
 function renderQ(){
   const el=document.getElementById('qList');
   const F=nFilterOn();
   const all=(S.qs||[]).filter(qHit);
-  const openQs=all.filter(x=>!x.done),doneQs=all.filter(x=>x.done);
-  const KORD=qcatIds();
-  const groups={};KORD.forEach(k=>groups[k]=[]);
-  openQs.forEach(q=>{groups[qcatFix(q.kind)].push(q)});
-  KORD.forEach(k=>groups[k].sort((x,y)=>y.created-x.created));
-  const LIM=2;
-  let html=KORD.map(k=>{
-    const g=groups[k],op=F||openQG.has(k),more=!F&&g.length>LIM;
-    const col=qcatCol(k),cus=!DEFAULT_QCATS.some(x=>x.id===k);
-    return grpHead(qcatName(k),col,more,`data-qgrp="${k}"`,op,'項',g.length-LIM,
-      cus?` data-hold="qcat|${k}" title="長按 1.5 秒刪除這個分類"`:'')
-      +(g.length?`<div class="qgrid">${(op?g:g.slice(0,LIM)).map(qItem).join('')}</div>`:emptyRow());
-  }).join('');
+  const openQs=all.filter(x=>!x.done).sort((a,b)=>b.created-a.created);
+  const doneQs=all.filter(x=>x.done).sort((a,b)=>(b.doneAt||b.created)-(a.doneAt||a.created));
+
+  let html=openQs.length?`<div class="qgrid">${openQs.map(qItem).join('')}</div>`:emptyRow();
+
   const dop=F||qFilter==='all'||openQG.has('__done');
-  html+=grpHead('Resolved','#3E6B4E',!F&&doneQs.length>0,'data-qgrp="__done"',dop,'項',doneQs.length);
+  html+=grpHead('Resolved','#3E6B4E',doneQs.length>0,'data-qgrp="__done"',dop,'項',doneQs.length);
   if(!doneQs.length)html+=emptyRow();
   else if(dop){
-    const mg=qMonths(doneQs),MLIM=2;
-    const show=(F||rsvAll)?mg:mg.slice(0,MLIM);
-    html+=show.map(([mk,arr])=>`<div class="rsvmon">${mk}</div>`
-      +arr.map(q=>openQA.has(q.id)?qItem(q):qDoneRow(q)).join('')).join('');
-    if(!F&&mg.length>MLIM)
-      html+=`<div class="pastrow"><button class="pastbtn" id="rsvMore" aria-expanded="${rsvAll}" title="${rsvAll?'收合':'展開更早的月份'}">更早${CHEV}</button></div>`;
+    const catOf=q=>qcatFix(q.kind),tsOf=q=>q.doneAt||q.created;
+    if(qSelCat&&!doneQs.some(q=>catOf(q)===qSelCat)){qSelCat='';qSelMon=''}
+    let show=doneQs;
+    if(qSelCat)show=show.filter(q=>catOf(q)===qSelCat);
+    if(qSelMon)show=show.filter(q=>ym(tsOf(q))===qSelMon);
+    html+=`<div class="dirwrap"><div class="dirnav">${dirNav(doneQs,catOf,tsOf,qSelCat,qSelMon,'qsel')}</div>`
+      +`<div class="dirbody">${show.length?show.map(q=>openQA.has(q.id)?qItem(q):qDoneRow(q)).join(''):emptyRow()}</div></div>`;
   }
   el.innerHTML=html;
   renderSrchInfo(all.length,(S.notes||[]).filter(ntHit).length);
@@ -2054,7 +2077,8 @@ document.getElementById('qList').addEventListener('click',e=>{
   if(hEl)return;
   const qi=e.target.closest('[data-qimg]');
   if(qi){pickImage(`[data-qa="${qi.dataset.qimg}"]`);return}
-  if(e.target.closest('#rsvMore')){rsvAll=!rsvAll;renderQ();return}
+  const ds=e.target.closest('[data-qsel]');
+  if(ds){const r=dirPick(ds.dataset.qsel,qSelCat,qSelMon);qSelCat=r[0];qSelMon=r[1];renderQ();return}
   const qo=e.target.closest('[data-qopen]');
   if(qo){const id=qo.dataset.qopen;
     if(openQA.has(id)){openQA.delete(id);openQ.delete(id)}else openQA.add(id);
@@ -2469,7 +2493,7 @@ function addDirLog(id){
 
 /* ================= NOTES ================= */
 let newNtLinks=[];
-const openNt=new Set(),openNG=new Set(),editNt=new Set();
+const openNt=new Set(),editNt=new Set();
 function renderNtNewLinks(){
   document.getElementById('ntNewLinks').innerHTML=newNtLinks.map((l,i)=>
     `<span class="pill" data-hold="nntlk|${i}" title="長按 1.5 秒刪除">🔗 ${esc(l.name)}</span>`).join(' ');
@@ -2503,19 +2527,15 @@ document.getElementById('addNt').onclick=()=>{
 };
 function renderNt(){
   const el=document.getElementById('ntList');if(!el)return;
-  const F=nFilterOn();
-  const KORD=qcatIds();
-  const groups={};KORD.forEach(k=>groups[k]=[]);
-  (S.notes||[]).filter(ntHit).forEach(n=>{groups[qcatFix(n.kind)].push(n)});
-  KORD.forEach(k=>groups[k].sort((x,y)=>(y.mtime||y.created)-(x.mtime||x.created)));
-  const LIM=2;
-  el.innerHTML=KORD.map(k=>{
-    const g=groups[k],op=F||openNG.has(k),more=!F&&g.length>LIM;
-    const col=qcatCol(k),cus=!DEFAULT_QCATS.some(x=>x.id===k);
-    return grpHead(qcatName(k),col,more,`data-ngrp="${k}"`,op,'項',g.length-LIM,
-      cus?` data-hold="qcat|${k}" title="長按 1.5 秒刪除這個分類"`:'')
-      +(g.length?`<div class="qgrid">${(op?g:g.slice(0,LIM)).map(ntItem).join('')}</div>`:emptyRow());
-  }).join('');
+  const list=(S.notes||[]).filter(ntHit).sort((a,b)=>(b.mtime||b.created)-(a.mtime||a.created));
+  if(!list.length){el.innerHTML=emptyRow();return}
+  const catOf=n=>qcatFix(n.kind),tsOf=n=>n.mtime||n.created;
+  if(ntSelCat&&!list.some(n=>catOf(n)===ntSelCat)){ntSelCat='';ntSelMon=''}
+  let show=list;
+  if(ntSelCat)show=show.filter(n=>catOf(n)===ntSelCat);
+  if(ntSelMon)show=show.filter(n=>ym(tsOf(n))===ntSelMon);
+  el.innerHTML=`<div class="dirwrap"><div class="dirnav">${dirNav(list,catOf,tsOf,ntSelCat,ntSelMon,'ntsel')}</div>`
+    +`<div class="dirbody">${show.length?show.map(ntItem).join(''):emptyRow()}</div></div>`;
 }
 function ntItem(n){
   if(!Array.isArray(n.links))n.links=[];
@@ -2589,8 +2609,8 @@ document.getElementById('ntList').addEventListener('click',e=>{
     S.dirs.push({id:uid(),created:Date.now(),mtime:Date.now(),title:n.title||'(未命名)',
       date:new Date().toISOString().slice(0,10),status:'todo',log:n.body||''});
     save();renderDIR();toast('已加入 Research directions');return}
-  const ng=e.target.closest('[data-ngrp]');
-  if(ng){const k=ng.dataset.ngrp;openNG.has(k)?openNG.delete(k):openNG.add(k);renderNt();return}
+  const ns=e.target.closest('[data-ntsel]');
+  if(ns){const r=dirPick(ns.dataset.ntsel,ntSelCat,ntSelMon);ntSelCat=r[0];ntSelMon=r[1];renderNt();return}
   const ni=e.target.closest('[data-ntimg]');
   if(ni){pickImage(`[data-ntb="${ni.dataset.ntimg}"]`);return}
   const nn=e.target.closest('[data-ntlnew]');
@@ -3403,13 +3423,12 @@ document.getElementById('helpBox').innerHTML=`
   <h4>自己加分類</h4>
   <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的問題和筆記會移到第一個分類，不會被刪掉。Mine 和 Study 擋掉不給刪。</p>
   <h4>Questions</h4>
-  <p>讀 paper 或上課時的疑問，依 <strong>Mine</strong>（紫，我不懂的）／<strong>Study</strong>（藍，課堂與教科書）分區，Resolved 是綠色。每區最多 2 項，其餘和已解決的折疊起來。狀態標籤（Unresolved／Resolved）<strong>接在問題文字後面</strong>。右上角的 <code>Unresolved｜All</code>：All 會直接把 Resolved 區展開。</p>
-  <p><strong>Resolved 是一行一題的清單</strong>：✓、問題、解決日期，<strong>不顯示答案</strong>；點問題才展開，再點一次收回去。上面用 <code>2026-09</code> 這種月份標記分段（新的在上），<strong>預設顯示最近兩個月</strong>，更舊的用底下置中的「更早」展開。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
-  <p>Mine 和 Study 兩區的卡片是<strong>雙欄</strong>排列，展開中的卡片會自動橫跨整列。螢幕窄（手機、iPad 直立）時自動變單欄。</p>
+  <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊排成雙欄，因為手上還沒解決的東西就是該一眼看完。狀態標籤（Unresolved／Resolved）接在問題文字後面。右上角的 <code>Unresolved｜All</code>：All 會直接把 Resolved 區展開。</p>
+  <p><strong>Resolved 分成左目錄、右清單</strong>。左邊窄欄依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
   <p>卡片只顯示問題、答案、標籤、附件、狀態；分類和標籤在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
   <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
   <h4>Notes</h4>
-  <p>想查的東西、課程資料、待整理的想法。同樣有 Mine／Study 分類與配色，標籤在收合狀態下也看得到。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
+  <p>想查的東西、課程資料、待整理的想法。版面和 Resolved 一樣是<strong>左目錄、右清單</strong>：左邊依分類顯示筆數、選中才展開月份；右邊不分類，依最後修改時間新到舊排成單欄長條，標籤在收合狀態下也看得到。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
