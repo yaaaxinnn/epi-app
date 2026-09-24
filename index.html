@@ -68,8 +68,6 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .panel{display:none;padding-top:18px}
 .panel.on{display:block}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
-.sec-title{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.06em;margin:24px 0 8px}
-.sec-title:first-child{margin-top:0}
 
 .kx{margin-left:auto;flex:0 0 auto;border:0;background:none;padding:1px 3px;color:var(--faint);
   cursor:pointer;line-height:0;display:inline-flex;align-items:center;transition:color .15s}
@@ -78,7 +76,17 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .kx svg{display:block;transition:transform .2s}
 .kx[aria-expanded="true"] svg{transform:rotate(180deg)}
 .blockhead{display:flex;align-items:center;gap:8px;margin:22px 0 6px;padding:1px 10px;
-  background:color-mix(in srgb,var(--ac-mid) 45%,var(--ac-soft));border-radius:5px}
+  background:color-mix(in srgb,var(--ac-soft) 62%,var(--surface));border-radius:5px}
+.blockhead.plain{background:none;padding-left:2px;padding-right:2px}
+.nsrch{display:flex;align-items:center;gap:3px;margin:4px 0 7px}
+.nsrch input{flex:1;font-size:13px;padding:6px 10px}
+.tagbar{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 4px}
+.tagbar:empty{display:none}
+.tg{cursor:pointer;font-size:10px;padding:1px 7px;user-select:none}
+.tg[aria-pressed="true"]{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
+.srchinfo{font-family:var(--mono);font-size:11px;color:var(--faint);margin:0 0 6px;letter-spacing:.04em}
+.kdgroup.sub{margin:10px 0 5px;padding-left:14px;font-size:10px}
+.qst{margin-left:7px;vertical-align:1px;font-size:9.5px;padding:1px 6px}
 .blockhead:first-child{margin-top:4px}
 .blockhead .bt{font-size:11.5px;font-weight:600;color:var(--ac);letter-spacing:.05em}
 .blockhead .spacer{flex:1}
@@ -173,7 +181,7 @@ td[data-cell] > div.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-o
 .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{background:transparent;border:0;padding:3px 9px;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
-.seg.sm button{padding:0 7px;font-size:10.5px;height:18px;display:flex;align-items:center;letter-spacing:0}
+.seg.sm button{padding:0 6px;font-size:9.5px;height:17px;display:flex;align-items:center;letter-spacing:0}
 .ttwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 table.tt{min-width:504px;width:100%;border-collapse:collapse;font-size:12.5px}
 table.tt th{background:var(--surface-2);text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
@@ -223,8 +231,6 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .warn{border:1px solid var(--clay-mid);background:var(--clay-soft);color:var(--clay);border-radius:var(--r);padding:11px 13px;font-size:13.5px;margin-bottom:12px}
 .bakrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px}
 .bakrow .d{font-family:var(--mono);color:var(--muted);flex:1}
-.cardhead{display:flex;align-items:flex-start;gap:8px}
-.cardhead .spacer{flex:1}
 .qm{flex:0 0 auto;background:none;border:0;color:var(--faint);font-size:15px;line-height:1;padding:2px 4px;cursor:pointer}
 .qm:hover{color:var(--ac)}
 .qm[aria-expanded="true"]{color:var(--ac)}
@@ -280,7 +286,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .blockhead{min-height:22px}
 .blockhead .iconb{padding:0 6px;font-size:14px;min-width:0;min-height:0;height:18px;
   line-height:1;display:flex;align-items:center}
-.blockhead .seg{height:18px;border-radius:5px}
+.blockhead .seg{height:17px;border-radius:5px}
 .rv{cursor:pointer}
 .rv .ans{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);white-space:pre-wrap;font-size:14.5px;line-height:1.6}
 .grade{display:flex;gap:8px;margin-top:12px}
@@ -400,6 +406,13 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Notes ========== -->
 <section class="panel" id="p-courses">
+  <div class="nsrch">
+    <input type="search" id="nsearch" placeholder="搜尋問題與筆記（標題／內容／答案／來源／標籤）">
+    <button class="cx" id="nsearchX" title="清除搜尋">✕</button>
+  </div>
+  <div class="tagbar" id="ntagbar"></div>
+  <p class="srchinfo" id="nsrchInfo" style="display:none"></p>
+
   <div class="blockhead"><span class="bt">❓ QUESTIONS</span><span class="spacer"></span>
     <div class="seg sm" id="qSeg">
       <button data-qf="open" aria-pressed="true">Unresolved</button>
@@ -415,6 +428,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
         <option value="study">Study</option></select></label>
       <label class="f"><span>Source</span><input type="text" id="q-src"></label>
     </div>
+    <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="q-tags" placeholder="e.g. confounding, HBV"></label>
     <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
   </div>
   <div id="qList"></div>
@@ -425,6 +439,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
     <label class="f"><span>分類</span><select id="nt-kind">
       <option value="mine">Mine</option><option value="study">Study</option></select></label>
+    <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
     <div class="f"><div class="row" style="align-items:center">
       <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
       <button class="iconb" id="ntImgBtn" type="button" title="插入圖片">🖼️</button></div>
@@ -541,7 +556,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Calendar ========== -->
 <section class="panel" id="p-calendar">
-  <div class="blockhead"><span class="bt">📅 KEY DATES</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">KEY DATES</span><span class="spacer"></span>
     <button class="iconb" id="toggleKD" title="新增日期">＋</button></div>
   
   <div class="card" id="kdForm" style="display:none">
@@ -559,7 +574,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="row" id="kdPastRow" style="margin-top:4px"></div>
   <div id="kdPastList"></div>
 
-  <div class="blockhead"><span class="bt">🗓️ TIMETABLE</span><span class="spacer"></span>
+  <div class="blockhead"><span class="bt">TIMETABLE</span><span class="spacer"></span>
     <div class="seg sm" id="termSeg"></div></div>
   <div class="ttwrap"><table class="tt" id="ttTable"></table></div>
   <div class="legend">
@@ -603,7 +618,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 <!-- ========== Settings ========== -->
 <section class="panel" id="p-settings">
 
-  <div class="blockhead"><span class="bt">☁️ 同步</span><span class="spacer"></span>
+  <div class="blockhead plain"><span class="bt">同步</span><span class="spacer"></span>
     <button class="qm" data-tip="tipGh" aria-expanded="false">ⓘ</button></div>
   <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
   <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
@@ -627,7 +642,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <p class="hint" style="margin:10px 0 0" id="ghState"></p>
   </details>
 
-  <div class="blockhead"><span class="bt">💾 備份</span><span class="spacer"></span>
+  <div class="blockhead plain"><span class="bt">備份</span><span class="spacer"></span>
     <button class="qm" data-tip="tipData" aria-expanded="false">ⓘ</button></div>
   <div class="tip" id="tipData"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br>
   <strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。</div>
@@ -649,7 +664,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
   </details>
 
-  <div class="blockhead"><span class="bt">📆 Google 日曆</span></div>
+  <div class="blockhead plain"><span class="bt">Google 日曆</span></div>
   <details class="card fold"><summary>日曆設定</summary>
     <p class="hint" style="margin:6px 0 10px">嵌入網址顯示在 Calendar 分頁最下面；下方的 ID 與金鑰用來自動抓 KEY DATES。取得方式見 HELP。</p>
     <div class="linkrow"><span class="ic">🔗</span><input type="text" id="gcUrl" placeholder="嵌入網址"></div>
@@ -670,13 +685,13 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <p class="hint" style="margin:10px 0 0" id="gcState"></p>
   </details>
 
-  <div class="blockhead"><span class="bt">🗑️ 最近刪除</span><span class="spacer"></span>
+  <div class="blockhead plain"><span class="bt">最近刪除</span><span class="spacer"></span>
     <button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
   <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
   <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></div>
   <div class="card"><div id="trashList"></div></div>
 
-  <div class="blockhead"><span class="bt">📘 使用說明</span></div>
+  <div class="blockhead plain"><span class="bt">使用說明</span></div>
   <div id="helpBox"></div>
 
 </section>
@@ -1703,6 +1718,14 @@ document.getElementById('ovClose').onclick=()=>{ov.classList.remove('on');render
 /* ================= IDEAS ================= */
 document.getElementById('addQBtn').onclick=()=>{if(toggle('qForm'))document.getElementById('q-q').focus()};
 document.getElementById('cancelQ').onclick=()=>show('qForm',false);
+document.getElementById('nsearch').addEventListener('input',e=>{nq=e.target.value.trim();nSearchAll()});
+document.getElementById('nsearchX').onclick=()=>{nTags.clear();setSearch('')};
+document.getElementById('p-courses').addEventListener('click',e=>{
+  const b=e.target.closest('[data-ntag]');if(!b||hEl)return;
+  const t=b.dataset.ntag.toLowerCase();
+  nTags.has(t)?nTags.delete(t):nTags.add(t);
+  nSearchAll();
+});
 document.getElementById('qSeg').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;qFilter=b.dataset.qf;
   document.querySelectorAll('#qSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderQ();
@@ -1710,12 +1733,54 @@ document.getElementById('qSeg').addEventListener('click',e=>{
 document.getElementById('addQ').onclick=()=>{
   const q=document.getElementById('q-q').value.trim();if(!q){toast('請填問題');return}
   S.qs.push({id:uid(),created:Date.now(),kind:document.getElementById('q-kind').value,q,
-    src:document.getElementById('q-src').value.trim(),a:'',done:false,links:[]});
-  ['q-q','q-src'].forEach(i=>document.getElementById(i).value='');
+    src:document.getElementById('q-src').value.trim(),a:'',done:false,links:[],
+    tags:parseTags(document.getElementById('q-tags').value)});
+  ['q-q','q-src','q-tags'].forEach(i=>document.getElementById(i).value='');
   show('qForm',false);saved();renderQ();
 };
 const QKORD=['mine','study'];
 const openQG=new Set(),openQD=new Set();
+let nq='',qdSeeded=false;const nTags=new Set();
+function nterms(){return nq?nq.toLowerCase().split(/\s+/).filter(Boolean):[]}
+function nFilterOn(){return nterms().length>0||nTags.size>0}
+function nhit(s){const t=nterms();if(!t.length)return true;const x=(s||'').toLowerCase();return t.every(w=>x.includes(w))}
+function nTagOk(tags){if(!nTags.size)return true;const a=(tags||[]).map(t=>String(t).toLowerCase());return[...nTags].every(t=>a.includes(t))}
+function qHit(q){return nTagOk(q.tags)&&nhit([q.q,q.a,q.src,(q.tags||[]).join(' ')].join(' '))}
+function ntHit(n){return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' ')].join(' '))}
+function parseTags(s){
+  const out=[];
+  String(s||'').split(/[,，、;；]+|\s{1,}/).forEach(t=>{t=t.trim();
+    if(t&&!out.some(x=>x.toLowerCase()===t.toLowerCase()))out.push(t)});
+  if(!Array.isArray(S.tagLib))S.tagLib=DEFAULT_TAGS.slice();
+  out.forEach(t=>{if(!S.tagLib.some(x=>x.toLowerCase()===t.toLowerCase()))S.tagLib.push(t)});
+  return out;
+}
+function tagChips(tags,stop){
+  const a=(tags||[]).filter(Boolean);if(!a.length)return'';
+  return `<div class="row" style="margin-top:6px;gap:4px"${stop?' data-ntstop="1"':''}>`
+    +a.map(t=>`<span class="pill tg" data-ntag="${esc(t)}" aria-pressed="${nTags.has(String(t).toLowerCase())}" title="點一下用這個標籤篩選">${esc(t)}</span>`).join('')+'</div>';
+}
+function renderTagBar(){
+  const el=document.getElementById('ntagbar');if(!el)return;
+  const cnt={};
+  (S.qs||[]).forEach(q=>(q.tags||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1}));
+  (S.notes||[]).forEach(n=>(n.tags||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1}));
+  const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b));
+  el.innerHTML=ks.map(t=>`<button type="button" class="pill tg" data-ntag="${esc(t)}" aria-pressed="${nTags.has(t.toLowerCase())}">${esc(t)}</button>`).join('');
+}
+function renderSrchInfo(nQ,nN){
+  const el=document.getElementById('nsrchInfo');if(!el)return;
+  if(!nFilterOn()){el.style.display='none';return}
+  el.style.display='';
+  const tg=[...nTags];
+  el.textContent=`找到 ${nQ} 個問題、${nN} 則筆記`+(tg.length?`　標籤：${tg.join(' + ')}`:'');
+}
+function nSearchAll(){renderTagBar();renderQ();renderNt()}
+function setSearch(v){nq=String(v||'').trim();
+  const el=document.getElementById('nsearch');if(el)el.value=nq;nSearchAll()}
+function monHead(mk,op){
+  return `<div class="kdgroup sub" style="color:#3E6B4E">${mk}<button class="kx" data-qmon="${mk}" aria-expanded="${op}" title="${op?'收合':'展開'} ${mk}">${CHEV}</button></div>`;
+}
 function md(s){
   if(!s)return'';
   let t=mdImg(s);
@@ -1835,12 +1900,10 @@ function bindImagePaste(el){
 }
 function qItem(q){
   return `<div class="item" style="${q.done?'opacity:.6':''}">
-    <div class="row" style="align-items:flex-start">
-      <div style="flex:1;font-weight:500;line-height:1.45">${esc(q.q)}</div>
-      <span class="pill" style="font-size:9.5px;padding:1px 6px;flex:0 0 auto;${q.done
+    <div style="font-weight:500;line-height:1.5">${esc(q.q)}<span class="pill qst" style="${q.done
         ?'color:#3E6B4E;background:#E2EEE6;border-color:#3E6B4E40'
-        :'color:#B5761E;background:#F8EEDC;border-color:#B5761E40'}">${q.done?'Resolved':'Unresolved'}</span>
-    </div>
+        :'color:#B5761E;background:#F8EEDC;border-color:#B5761E40'}">${q.done?'Resolved':'Unresolved'}</span></div>
+    ${tagChips(q.tags)}
 
     ${q.a?`<div style="margin-top:8px;font-size:14px;white-space:pre-wrap;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
     ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
@@ -1857,6 +1920,7 @@ function qItem(q){
           ${QKORD.map(k=>`<option value="${k}"${q.kind===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
         <label class="f"><span>Source</span><input type="text" data-qf="${q.id}|src" value="${esc(q.src||'')}"></label>
       </div>
+      <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-qtags="${q.id}" value="${esc((q.tags||[]).join(', '))}"></label>
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">Answer</span>
         <button class="iconb" data-qimg="${q.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
@@ -1870,26 +1934,47 @@ function qItem(q){
         <button class="btn" data-qsave="${q.id}">Save</button></div>
     </div>`:''}</div>`;
 }
+function qMonths(list){
+  const m={};
+  list.forEach(q=>{const d=new Date(q.doneAt||q.mtime||q.created);
+    const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    (m[k]=m[k]||[]).push(q)});
+  return Object.keys(m).sort().reverse()
+    .map(k=>[k,m[k].sort((a,b)=>(b.doneAt||b.created)-(a.doneAt||a.created))]);
+}
 function renderQ(){
   const el=document.getElementById('qList');
-  const all=S.qs||[];
+  const F=nFilterOn();
+  const all=(S.qs||[]).filter(qHit);
   const openQs=all.filter(x=>!x.done),doneQs=all.filter(x=>x.done);
   const groups={};QKORD.forEach(k=>groups[k]=[]);
   openQs.forEach(q=>{const k=QKORD.includes(q.kind)?q.kind:'mine';groups[k].push(q)});
   QKORD.forEach(k=>groups[k].sort((x,y)=>y.created-x.created));
   const LIM=2;
   let html=QKORD.map(k=>{
-    const g=groups[k],more=g.length>LIM,op=openQG.has(k);
+    const g=groups[k],op=F||openQG.has(k),more=!F&&g.length>LIM;
     const col=(QKCOL[k]||QKCOL.mine)[0];
     return grpHead(QK[k],col,more,`data-qgrp="${k}"`,op,'項',g.length-LIM)
       +(g.length?(op?g:g.slice(0,LIM)).map(qItem).join(''):emptyRow());
   }).join('');
-  const op=openQG.has('__done');
-  html+=grpHead('Resolved','#3E6B4E',doneQs.length>0,'data-qgrp="__done"',op,'項',doneQs.length)
-    +(doneQs.length?(op?doneQs.sort((x,y)=>y.created-x.created).map(qItem).join(''):''):emptyRow());
+  const dop=F||qFilter==='all'||openQG.has('__done');
+  html+=grpHead('Resolved','#3E6B4E',!F&&doneQs.length>0,'data-qgrp="__done"',dop,'項',doneQs.length);
+  if(!doneQs.length)html+=emptyRow();
+  else if(dop){
+    const mg=qMonths(doneQs);
+    if(!qdSeeded&&mg.length){openQD.add(mg[0][0]);qdSeeded=true}
+    html+=mg.map(([mk,arr])=>{
+      const mop=F||openQD.has(mk);
+      return monHead(mk,mop)+(mop?arr.map(qItem).join(''):'');
+    }).join('');
+  }
   el.innerHTML=html;
+  renderSrchInfo(all.length,(S.notes||[]).filter(ntHit).length);
 }
 document.getElementById('qList').addEventListener('change',e=>{
+  const tg=e.target.closest('[data-qtags]');
+  if(tg){const q=S.qs.find(x=>x.id===tg.dataset.qtags);
+    if(q){q.tags=parseTags(tg.value);q.mtime=Date.now();save();renderTagBar();renderQ()}return}
   const k=e.target.closest('[data-qk]');if(!k)return;
   const q=S.qs.find(x=>x.id===k.dataset.qk);if(q){q.kind=k.value;save();renderQ()}
 });
@@ -1901,6 +1986,8 @@ document.getElementById('qList').addEventListener('click',e=>{
   if(hEl)return;
   const qi=e.target.closest('[data-qimg]');
   if(qi){pickImage(`[data-qa="${qi.dataset.qimg}"]`);return}
+  const mn=e.target.closest('[data-qmon]');
+  if(mn){const k=mn.dataset.qmon;openQD.has(k)?openQD.delete(k):openQD.add(k);qdSeeded=true;renderQ();return}
   const gp=e.target.closest('[data-qgrp]');
   if(gp){const k=gp.dataset.qgrp;openQG.has(k)?openQG.delete(k):openQG.add(k);renderQ();return}
   const nb=e.target.closest('[data-qn]');
@@ -1920,7 +2007,9 @@ document.getElementById('qList').addEventListener('click',e=>{
   const sv=e.target.closest('[data-qsave]');
   if(sv){openQ.delete(sv.dataset.qsave);saved();renderQ();return}
   const k=e.target.closest('[data-qd]');
-  if(k){const q=S.qs.find(x=>x.id===k.dataset.qd);q.done=!q.done;save();renderQ();return}
+  if(k){const q=S.qs.find(x=>x.id===k.dataset.qd);q.done=!q.done;
+    if(q.done)q.doneAt=Date.now();else delete q.doneAt;
+    q.mtime=Date.now();save();renderQ();return}
   const c=e.target.closest('[data-qc]');
   if(c){const q=S.qs.find(x=>x.id===c.dataset.qc);
     S.cards.push({id:uid(),created:Date.now(),q:q.q,a:q.a||'',theme:-1,links:[],level:0,due:Date.now(),last:null,n:0});
@@ -2336,18 +2425,20 @@ document.getElementById('addNt').onclick=()=>{
   const b=document.getElementById('nt-body').value.trim();
   if(!t&&!b&&!newNtLinks.length){toast('請至少填標題或內容');return}
   S.notes.push({id:uid(),created:Date.now(),mtime:Date.now(),
-    title:t||'(未命名)',body:b,kind:document.getElementById('nt-kind').value,links:newNtLinks.slice()});
-  document.getElementById('nt-title').value='';document.getElementById('nt-body').value='';
+    title:t||'(未命名)',body:b,kind:document.getElementById('nt-kind').value,links:newNtLinks.slice(),
+    tags:parseTags(document.getElementById('nt-tags').value)});
+  ['nt-title','nt-body','nt-tags'].forEach(i=>document.getElementById(i).value='');
   newNtLinks=[];renderNtNewLinks();show('ntForm',false);saved();renderNt();
 };
 function renderNt(){
   const el=document.getElementById('ntList');if(!el)return;
+  const F=nFilterOn();
   const groups={mine:[],study:[]};
-  (S.notes||[]).forEach(n=>{groups[QKORD.includes(n.kind)?n.kind:'mine'].push(n)});
+  (S.notes||[]).filter(ntHit).forEach(n=>{groups[QKORD.includes(n.kind)?n.kind:'mine'].push(n)});
   QKORD.forEach(k=>groups[k].sort((x,y)=>(y.mtime||y.created)-(x.mtime||x.created)));
   const LIM=2;
   el.innerHTML=QKORD.map(k=>{
-    const g=groups[k],more=g.length>LIM,op=openNG.has(k);
+    const g=groups[k],op=F||openNG.has(k),more=!F&&g.length>LIM;
     const col=(QKCOL[k]||QKCOL.mine)[0];
     return grpHead(QK[k],col,more,`data-ngrp="${k}"`,op,'項',g.length-LIM)
       +(g.length?(op?g:g.slice(0,LIM)).map(ntItem).join(''):emptyRow());
@@ -2375,6 +2466,7 @@ function ntItem(n){
         ${open?`<button class="cx e" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
         <button class="cx" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button></span>
     </div>
+    ${tagChips(n.tags,1)}
     ${open&&chips?`<div class="row" data-ntstop="1" style="margin-top:8px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
       ${n.body?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(n.body)}</div>`
@@ -2386,6 +2478,7 @@ function ntItem(n){
         <label class="f"><span>分類</span><select data-ntk="${n.id}">
           ${QKORD.map(k=>`<option value="${k}"${(n.kind||'mine')===k?' selected':''}>${QK[k]}</option>`).join('')}</select></label>
       </div>
+      <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
         <button class="iconb" data-ntimg="${n.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
@@ -2429,6 +2522,9 @@ document.getElementById('ntList').addEventListener('click',e=>{
     renderNt()}
 });
 document.getElementById('ntList').addEventListener('change',e=>{
+  const tg=e.target.closest('[data-nttags]');
+  if(tg){const n=S.notes.find(x=>x.id===tg.dataset.nttags);
+    if(n){n.tags=parseTags(tg.value);n.mtime=Date.now();save();renderTagBar();renderNt()}return}
   const k=e.target.closest('[data-ntk]');
   if(k){const n=S.notes.find(x=>x.id===k.dataset.ntk);
     if(n){n.kind=k.value;n.mtime=Date.now();save();renderNt()}}
@@ -2540,14 +2636,13 @@ function kdRow(k,d){
     <div class="rt"><span class="cxg"><button class="cx e" data-ed-kd="${k.id}" title="編輯">✎</button>
       <button class="cx" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></span></div></div>`;
 }
-function grpHead(label,col,more,attr,op,unit,n){
-  return `<div class="kdgroup" style="color:${col}">${label}${
+function grpHead(label,col,more,attr,op,unit,n,cls){
+  return `<div class="kdgroup${cls?' '+cls:''}" style="color:${col}">${label}${
     more?`<button class="kx" ${attr} aria-expanded="${op}" title="${op?'收合':'展開其餘 '+n+' '+unit}">${CHEV}</button>`:''}</div>`;
 }
 function emptyRow(){return `<p class="hint" style="margin:0 0 10px;padding-left:2px;font-size:12px">—</p>`}
 const CHEV='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5L12 11L18 5"/><path d="M6 12L12 18L18 12"/></svg>';
 const KDTORD=['deadline','exam','todo','school','other'];
-const KDTICON={deadline:'⏰',exam:'📝',todo:'📌',school:'🏫',other:'•'};
 function kdUrg(d){
   if(d<0)return['past','var(--faint)','transparent'];
   if(d<=3)return['u0','#B0472E','#F7E5DE'];
@@ -2556,13 +2651,13 @@ function kdUrg(d){
   return['u3','#3E6B4E','#E2EEE6'];
 }
 const openKG=new Set();
-function kdSection(g,key,label,icon){
+function kdSection(g,key,label){
   const LIM=2;
   const near=g.filter(x=>x.d<=62), far=g.filter(x=>x.d>62);
   const op=openKG.has(key);
   const hidden=(near.length>LIM?near.length-LIM:0)+far.length;
   const shown=op?near.concat(far):near.slice(0,LIM);
-  return `<div class="kdgroup">${icon} ${label}${hidden?`<button class="kx" data-kgrp="${key}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+hidden+' 筆'+(far.length?'（含兩個月後 '+far.length+'）':'')}">${CHEV}</button>`:''}</div>`
+  return `<div class="kdgroup">${label}${hidden?`<button class="kx" data-kgrp="${key}" aria-expanded="${op}" title="${op?'收合':'展開其餘 '+hidden+' 筆'+(far.length?'（含兩個月後 '+far.length+'）':'')}">${CHEV}</button>`:''}</div>`
     +(shown.length?shown.map(x=>kdRow(x.k,x.d)).join(''):'<p class="hint" style="margin:0 0 6px">（無）</p>');
 }
 function kdRender(list,pfx){
@@ -2570,7 +2665,7 @@ function kdRender(list,pfx){
   const groups={};KDTORD.forEach(k=>groups[k]=[]);
   list.forEach(x=>{const t=KDTORD.includes(x.k.type)?x.k.type:'other';groups[t].push(x)});
   return KDTORD.filter(t=>groups[t].length)
-    .map(t=>kdSection(groups[t],pfx+':'+t,KDT[t],KDTICON[t])).join('');
+    .map(t=>kdSection(groups[t],pfx+':'+t,KDT[t])).join('');
 }
 function renderKD(){
   const el=document.getElementById('kdList'),pel=document.getElementById('kdPastList'),prow=document.getElementById('kdPastRow');
@@ -3205,12 +3300,16 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>
 
 <details class="card fold"><summary>📝 Notes</summary><div class="help">
+  <h4>搜尋與標籤（久了以後怎麼找回東西）</h4>
+  <p>分頁最上方的<strong>搜尋框同時過濾 Questions 和 Notes</strong>，比對範圍是問題、答案、Source、筆記標題、內容、附件名稱與標籤。<strong>空白分隔＝而且</strong>（打 <code>collider 偏誤</code> 只留兩個詞都出現的）。搜尋時<strong>所有分組自動展開</strong>，不必再一個個點箭號；按 <strong>✕</strong> 清掉搜尋與標籤篩選。</p>
+  <p><strong>標籤</strong>在編輯卡片時填，用逗號或空白分隔。搜尋框下方的<strong>標籤列</strong>列出所有用過的標籤（常用的排前面），點一下篩選、再點取消，可以疊加多個標籤（＝同時有這些標籤的才留下）。卡片上的標籤也能直接點。標籤和 Reading 分頁共用同一個標籤庫，所以 paper 和問題可以用同一套詞彙串起來。</p>
   <h4>Questions</h4>
-  <p>讀 paper 或上課時的疑問，依 <strong>Mine</strong>（紫，我不懂的）／<strong>Study</strong>（藍，課堂與教科書）分區，Resolved 是綠色。每區最多 2 項，其餘和已解決的折疊起來。</p>
+  <p>讀 paper 或上課時的疑問，依 <strong>Mine</strong>（紫，我不懂的）／<strong>Study</strong>（藍，課堂與教科書）分區，Resolved 是綠色。每區最多 2 項，其餘和已解決的折疊起來。狀態標籤（Unresolved／Resolved）<strong>接在問題文字後面</strong>。右上角的 <code>Unresolved｜All</code>：All 會直接把 Resolved 區展開。</p>
+  <p><strong>Resolved 依「解決的月份」分組</strong>（2026-09、2026-08…，新的在上），<strong>最新那個月預設展開、更舊的收合</strong>。這樣三年後回來找「那題我好像去年冬天弄懂的」，順著月份找就好，不會是一條看不到底的清單。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
   <p>卡片只顯示問題、答案、附件、狀態；分類和 Source 在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
   <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
   <h4>Notes</h4>
-  <p>想查的東西、課程資料、待整理的想法。同樣有 Mine／Study 分類與配色。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
+  <p>想查的東西、課程資料、待整理的想法。同樣有 Mine／Study 分類與配色，標籤在收合狀態下也看得到。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
@@ -3234,10 +3333,10 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <h4>KEY DATES</h4>
-  <p>依 Type 分組（⏰ Deadline、📝 Exam、📌 To do、🏫 School、• Other），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
+  <p>依 Type 分組（Deadline、Exam、To do、School、Other），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
   <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方置中的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
-  <p>設定在 <strong>Settings → 📆 GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
+  <p>設定在 <strong>Settings → GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
   <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
   <p><strong>關鍵字（備援）</strong>：含「截止／繳交／deadline／投稿」→ Deadline；含「考／口試／資格」→ Exam；含「meeting／討論／報告／seminar」→ To do；含「註冊／選課／開學／畢業」→ School。關鍵字猜的只在類型還是 Other 時才填，不會動你手動分好的。</p>
   <h4>TIMETABLE</h4>
@@ -3306,7 +3405,7 @@ document.getElementById('helpBox').innerHTML=`
 `;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
-  renderCards();renderQ();renderMT();renderNt();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
+  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
