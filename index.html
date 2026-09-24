@@ -107,6 +107,26 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .rsvrow .rdt{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .rsvrow .rtag{flex:0 0 auto;display:inline-flex;gap:3px}
 .rsvrow .rtag .tg{cursor:pointer}
+.mdview>:first-child{margin-top:0}
+.mdview>:last-child{margin-bottom:0}
+.mdview p{margin:0 0 7px}
+.mdview h3{margin:12px 0 5px;font-size:14.5px;font-weight:600}
+.mdview h4{margin:10px 0 4px;font-size:13px;font-weight:600}
+.mdview h5{margin:9px 0 3px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.mdview ul,.mdview ol{margin:5px 0;padding-left:20px}
+.mdview li{margin:2px 0}
+.mdview li>ul,.mdview li>ol{margin:2px 0}
+.mdview blockquote{margin:7px 0;padding:2px 0 2px 10px;border-left:3px solid var(--ac-mid);color:var(--muted)}
+.mdview hr{border:none;border-top:1px solid var(--line);margin:10px 0}
+.mdview code{background:var(--surface-2);padding:1px 4px;border-radius:4px;font-family:var(--mono);font-size:.92em}
+.mdview pre{background:var(--surface-2);padding:8px 10px;border-radius:6px;overflow-x:auto;margin:8px 0}
+.mdview pre code{background:none;padding:0;font-size:12.5px;line-height:1.5}
+.mdview .mdtable{overflow-x:auto;margin:8px 0;-webkit-overflow-scrolling:touch}
+.mdview table{border-collapse:collapse;width:100%;font-size:12.5px}
+.mdview th,.mdview td{border:1px solid var(--line);padding:5px 8px;vertical-align:top;line-height:1.5}
+.mdview th{background:var(--surface-2);font-weight:600;white-space:nowrap}
+.mdview a{color:var(--ac)}
+.mdview img{max-width:100%}
 .blockhead:first-child{margin-top:4px}
 .blockhead .bt{font-size:11.5px;font-weight:600;color:var(--ac);letter-spacing:.05em}
 .blockhead .spacer{flex:1}
@@ -1419,7 +1439,7 @@ function renderPapers(){
       </div>
       ${PF.map(f=>f[0]==='sum'
         ? `<div class="linkrow"><span class="ic">📌</span><input type="text" data-pf="${p.id}|sum" value="${esc(p.sum||'')}"></div>`
-        : `<label class="f"><span>${f[1]}</span><textarea data-pf="${p.id}|${f[0]}">${esc(p[f[0]]||'')}</textarea></label>`).join('')}
+        : `<label class="f"><span>${f[1]}</span><textarea data-pf="${p.id}|${f[0]}" style="min-height:110px;font-family:var(--mono);font-size:13px;line-height:1.6">${esc(p[f[0]]||'')}</textarea></label>`).join('')}
       <details class="fold"><summary>書目與檔案</summary>
         <label class="f"><span>Title</span><input type="text" data-pf="${p.id}|title" value="${esc(p.title)}"></label>
         <div class="grid4">
@@ -1847,38 +1867,83 @@ function setSearch(v){nq=String(v||'').trim();
 
 function md(s){
   if(!s)return'';
-  let t=mdImg(s);
-  // 先保護 <img>
-  const imgs=[];
-  t=t.replace(/<img [^>]*>/g,m=>{imgs.push(m);return '\u0000IMG'+(imgs.length-1)+'\u0000'});
-  t=t.replace(/^######\s?(.*)$/gm,'<h6>$1</h6>')
-     .replace(/^#####\s?(.*)$/gm,'<h5>$1</h5>')
-     .replace(/^####\s?(.*)$/gm,'<h4 style="margin:8px 0 4px;font-size:13px">$1</h4>')
-     .replace(/^###\s?(.*)$/gm,'<h4 style="margin:9px 0 4px;font-size:13.5px">$1</h4>')
-     .replace(/^##\s?(.*)$/gm,'<h3 style="margin:10px 0 5px;font-size:14.5px">$1</h3>')
-     .replace(/^#\s?(.*)$/gm,'<h3 style="margin:10px 0 5px;font-size:15px">$1</h3>')
-     .replace(/^\s*&gt;\s?(.*)$/gm,'<blockquote style="margin:6px 0;padding:2px 0 2px 10px;border-left:3px solid var(--ac-mid);color:var(--muted)">$1</blockquote>')
-     .replace(/^\s*(?:---|\*\*\*|___)\s*$/gm,'<hr style="border:none;border-top:1px solid var(--line);margin:10px 0">')
-     .replace(/```([\s\S]*?)```/g,'<pre style="background:var(--surface-2);padding:8px 10px;border-radius:6px;overflow-x:auto;font-size:12.5px">$1</pre>')
-     .replace(/`([^`\n]+)`/g,'<code>$1</code>')
-     .replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>')
-     .replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>')
-     .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
-  // 清單
-  const lines=t.split('\n');let out=[],mode=null;
-  const close=()=>{if(mode){out.push(mode==='ul'?'</ul>':'</ol>');mode=null}};
-  lines.forEach(L=>{
-    let m=L.match(/^\s*[-*+]\s+(.*)$/);
-    if(m){if(mode!=='ul'){close();out.push('<ul style="margin:5px 0;padding-left:20px">');mode='ul'}
-      out.push('<li>'+m[1]+'</li>');return}
-    m=L.match(/^\s*\d+[.)]\s+(.*)$/);
-    if(m){if(mode!=='ol'){close();out.push('<ol style="margin:5px 0;padding-left:22px">');mode='ol'}
-      out.push('<li>'+m[1]+'</li>');return}
-    close();out.push(L);
-  });
-  close();
-  t=out.join('\n').replace(/\u0000IMG(\d+)\u0000/g,(_,i)=>imgs[+i]);
-  return t;
+  let t=mdImg(s);                       // mdImg 已做 HTML escape
+  const keep=[];
+  const stash=h=>{keep.push(h);return '\u0000K'+(keep.length-1)+'\u0000'};
+  t=t.replace(/<img [^>]*>/g,m=>stash(m));
+  t=t.replace(/```[^\n]*\n?([\s\S]*?)```/g,(m,code)=>stash('<pre><code>'+code.replace(/\n$/,'')+'</code></pre>'));
+  const inline=x=>x
+    .replace(/`([^`\n]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>')
+    .replace(/~~([^~\n]+)~~/g,'<s>$1</s>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+  const L=t.split('\n'),out=[],stack=[];let para=[],i=0;
+  const popList=()=>{const s=stack.pop();out.push('</'+s.tag+'>');
+    if(stack.length&&stack[stack.length-1].openLi){out.push('</li>');stack[stack.length-1].openLi=false}};
+  const closeLists=()=>{while(stack.length)popList()};
+  const flushPara=()=>{if(para.length){out.push('<p>'+para.join('<br>')+'</p>');para=[]}};
+  const flushAll=()=>{flushPara();closeLists()};
+  const cut=r=>r.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(x=>x.trim());
+  const isRow=x=>/^\s*\|.*\|\s*$/.test(x);
+
+  while(i<L.length){
+    const line=L[i];
+    if(!line.trim()){flushAll();i++;continue}
+    if(/^\s*\u0000K\d+\u0000\s*$/.test(line)){flushAll();out.push(line.trim());i++;continue}
+
+    // 表格
+    if(isRow(line)&&i+1<L.length&&/^\s*\|[\s:|-]+\|\s*$/.test(L[i+1])){
+      flushAll();
+      const hd=cut(L[i]),al=cut(L[i+1]).map(a=>/^:-+:$/.test(a)?'center':/-+:$/.test(a)?'right':'left');
+      i+=2;const rows=[];
+      while(i<L.length&&isRow(L[i])){rows.push(cut(L[i]));i++}
+      out.push('<div class="mdtable"><table><thead><tr>'
+        +hd.map((h,j)=>`<th style="text-align:${al[j]||'left'}">${inline(h)}</th>`).join('')
+        +'</tr></thead><tbody>'
+        +rows.map(r=>'<tr>'+hd.map((_,j)=>`<td style="text-align:${al[j]||'left'}">${inline(r[j]||'')}</td>`).join('')+'</tr>').join('')
+        +'</tbody></table></div>');
+      continue;
+    }
+
+    // 標題
+    let m=line.match(/^(#{1,6})\s*(.*)$/);
+    if(m){flushAll();const n=m[1].length<=2?3:(m[1].length<=4?4:5);
+      out.push(`<h${n}>${inline(m[2])}</h${n}>`);i++;continue}
+
+    // 分隔線
+    if(/^\s*(?:---|\*\*\*|___)\s*$/.test(line)){flushAll();out.push('<hr>');i++;continue}
+
+    // 引用（連續行合併）
+    m=line.match(/^\s*&gt;\s?(.*)$/);
+    if(m){flushAll();const bq=[inline(m[1])];i++;
+      while(i<L.length&&/^\s*&gt;\s?/.test(L[i])){bq.push(inline(L[i].replace(/^\s*&gt;\s?/,'')));i++}
+      out.push('<blockquote>'+bq.join('<br>')+'</blockquote>');continue}
+
+    // 清單（支援縮排巢狀）
+    m=line.match(/^(\s*)([-*+]|\d+[.)])\s+(.*)$/);
+    if(m){
+      flushPara();
+      const ind=m[1].replace(/\t/g,'  ').length,tag=/^\d/.test(m[2])?'ol':'ul';
+      while(stack.length&&stack[stack.length-1].indent>ind)popList();
+      if(!stack.length||stack[stack.length-1].indent<ind){
+        if(stack.length&&out.length&&/<\/li>$/.test(out[out.length-1])){
+          out[out.length-1]=out[out.length-1].slice(0,-5);
+          stack[stack.length-1].openLi=true;
+        }
+        stack.push({tag,indent:ind,openLi:false});out.push('<'+tag+'>');
+      }else if(stack[stack.length-1].tag!==tag){
+        popList();stack.push({tag,indent:ind,openLi:false});out.push('<'+tag+'>');
+      }
+      out.push('<li>'+inline(m[3])+'</li>');i++;continue;
+    }
+
+    // 一般文字
+    closeLists();para.push(inline(line.trim()));i++;
+  }
+  flushAll();
+  return out.join('\n').replace(/\u0000K(\d+)\u0000/g,(_,n)=>keep[+n]);
 }
 function mdImg(s){
   // ![](url) / ![](data:image/...) / 裸圖片網址 → 內嵌圖片
@@ -3408,14 +3473,20 @@ document.getElementById('helpBox').innerHTML=`
   <h4>🖼️ 插入圖片</h4>
   <p>三種方式：按 <strong>🖼️ 選檔</strong>、在輸入框<strong>直接 Ctrl+V 貼上</strong>、或<strong>貼圖片網址</strong>。前兩種會自動壓縮到寬 900px，文字裡只留 <code>![](img:xxxx)</code> 短代號，不會塞一長串編碼。單張上限 900 KB；刪掉引用的文字後圖片會自動回收。</p>
   <h4>Markdown</h4>
-  <p>Meeting 重點、Question 的 Answer、Note 內容支援：<code>**粗體**</code>、<code>*斜體*</code>、<code>## 標題</code>、<code>- 清單</code>、<code>1. 編號</code>、<code>&gt; 引用</code>、<code>&#96;程式碼&#96;</code>、<code>---</code> 分隔線、<code>[文字](網址)</code>。</p>
+  <p><strong>Reading 的九個欄位</strong>（研究問題／目標、研究設計與資料來源、研究對象、暴露與結果的定義、分析、主要結果、解釋、Gap、Note）、Meeting 重點、Question 的 Answer、Note 內容都吃 Markdown。</p>
+  <p>支援：<code>## 標題</code>（# 與 ## 同一級，### 與 #### 小一級）、<code>**粗體**</code>、<code>*斜體*</code>、<code>~~刪節~~</code>、<code>&#96;程式碼&#96;</code>、<code>- 清單</code>（<strong>縮排兩格可以巢狀</strong>）、<code>1. 編號</code>、<code>&gt; 引用</code>（連續行會併成一塊）、<code>---</code> 分隔線、<code>[文字](網址)</code>、<code>&#96;&#96;&#96;</code> 程式碼區塊。</p>
+  <p><strong>表格</strong>用管線寫，對齊靠第二行的冒號控制，表格太寬會自己橫向捲動：</p>
+  <pre style="background:var(--surface-2);padding:8px 10px;border-radius:6px;overflow-x:auto;font-size:12px;line-height:1.5">| 變項 | 定義 | n |
+|---|:-:|---:|
+| 暴露 | HBsAg+ | 12,345 |</pre>
+  <p><strong>空一行分段</strong>，同一段裡換行就是換行。貼進去的 HTML 一律當純文字顯示，不會被執行。</p>
 </div></details>
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
   <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內星號優先、再按年份新到舊。分類在編輯模式的下拉選。</p>
   <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的卡片會回到未分類，不會被刪掉。內建那四個不能刪。</p>
-  <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，支援 Markdown（<code>**粗體**</code>、<code>- 清單</code>、<code>## 標題</code>），空欄位不顯示。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
+  <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，<strong>完整支援 Markdown</strong>（標題、巢狀清單、表格、引用、程式碼——細節見「共通操作 → Markdown」），空欄位不顯示。編輯模式的輸入框用等寬字、加高到 110px，方便直接寫 Markdown。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
   <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
   <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
   <p><strong>Compare</strong> 模式把選定欄位排成表格橫向比較，點格子可展開全文。</p>
