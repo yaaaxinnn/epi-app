@@ -113,6 +113,10 @@ button.pill{cursor:pointer;user-select:none;-webkit-user-select:none;touch-actio
 button.pill:hover{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
 .x{background:none;border:0;color:var(--faint);font-size:19px;line-height:1;padding:8px 9px;min-width:38px}
 .x:hover{color:var(--clay)}
+.cx{background:none;border:0;color:var(--faint);font-size:12px;line-height:1;padding:0 4px;
+  min-width:0;flex:0 0 auto;cursor:pointer}
+.cx:hover{color:var(--clay)}
+.cx.e:hover{color:var(--ac)}
 details.fold > summary{cursor:pointer;list-style:none;font-size:13px;color:var(--ac);padding:4px 0;font-weight:500}
 details.fold > summary::-webkit-details-marker{display:none}
 details.fold.right > summary{text-align:right;font-size:21px;padding:7px 2px;line-height:1.15}
@@ -170,9 +174,9 @@ td[data-cell] > div{white-space:pre-wrap}
 td[data-cell] > div.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .toolbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
 .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface)}
-.seg button{background:transparent;border:0;padding:4px 10px;font-size:12px;color:var(--muted);white-space:nowrap}
+.seg button{background:transparent;border:0;padding:3px 9px;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .seg button[aria-pressed="true"]{background:var(--ac);color:#fff}
-.seg.sm button{padding:3px 9px;font-size:11.5px}
+.seg.sm button{padding:0 8px;font-size:11px;height:19px;display:flex;align-items:center}
 .ttwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 table.tt{min-width:504px;width:100%;border-collapse:collapse;font-size:12.5px}
 table.tt th{background:var(--surface-2);text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;padding:8px 4px;border-bottom:1px solid var(--line)}
@@ -277,7 +281,10 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .acts button:hover{color:var(--ac)}
 .iconb{background:none;border:0;padding:7px 10px;font-size:20px;line-height:1.2;color:var(--muted);min-width:42px;min-height:40px}
 .iconb:hover{color:var(--ac)}
-.blockhead .iconb{padding:2px 5px;font-size:15px;min-width:0;min-height:0;line-height:1}
+.blockhead{min-height:23px}
+.blockhead .iconb{padding:0 6px;font-size:14px;min-width:0;min-height:0;height:19px;
+  line-height:1;display:flex;align-items:center}
+.blockhead .seg{height:19px;border-radius:6px}
 .rv{cursor:pointer}
 .rv .ans{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);white-space:pre-wrap;font-size:14.5px;line-height:1.6}
 .grade{display:flex;gap:8px;margin-top:12px}
@@ -826,7 +833,7 @@ function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=1
 
 let S=null,paperView='list',cardSort='due',mFilter='book',qFilter='open';
 let queue=[],qi=0,examMode=false,activeTerm='p1a',classTerm='p1a',editCl=null;
-const flipped=new Set(),openP=new Set(),openT=new Set(),openG=new Set(),openQ=new Set();
+const flipped=new Set(),openP=new Set(),editP=new Set(),openT=new Set(),openG=new Set(),openQ=new Set();
 let editCard=null,riFilter='all',trashAll=false;
 const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['pop','Participants'],
   ['def','Definitions'],['analysis','Analysis'],['result','Results'],['gap','Gap'],['note','Note']];
@@ -1287,7 +1294,7 @@ function renderPapers(){
   if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
   const CATS={teacher:['老師','#B0472E','#F7E5DE'],course:['課程','#2E5FB0','#DEE9F7'],explore:['探索','#7A5AA8','#EDE6F7'],publish:['發表','#2E7D5B','#DDEFE6']};
   const CATORD=['teacher','course','explore','publish',''];
-  const CATNAME={teacher:'老師指定',course:'課程',explore:'探索',publish:'發表','':'未分類'};
+  const CATNAME={teacher:'👨‍🏫 老師指定',course:'📘 課程',explore:'🔍 探索',publish:'✒️ 發表','':'📄 未分類'};
   const groups={};
   a.forEach(p=>{const k=CATS[p.cat]?p.cat:'';(groups[k]=groups[k]||[]).push(p)});
   const authLine=p=>{
@@ -1300,10 +1307,11 @@ function renderPapers(){
     return s;
   };
   const card=p=>{
+    const col=CATS[p.cat]?CATS[p.cat][1]:'var(--muted)';
     const tags=p.tags||[];const shown=tags.slice(0,3),rest=tags.slice(3);
     return `<div class="item"${p.star?' style="border-color:#D9A62E;box-shadow:0 0 0 1px #E8C662 inset"':''}>
     <div class="row" style="align-items:center">
-      <button class="x" data-pstar="${p.id}" title="${p.star?'取消置頂':'標星置頂'}" style="font-size:16px;padding:0 2px;flex:0 0 auto;color:${p.star?'#D9A62E':'var(--faint)'}">${p.star?'★':'☆'}</button>
+      <button class="cx" data-pstar="${p.id}" title="${p.star?'取消置頂':'標星置頂'}" style="font-size:14px;color:${p.star?'#D9A62E':'var(--faint)'}">${p.star?'★':'☆'}</button>
       <div style="flex:1;min-width:0">
         <h3 style="line-height:1.35">${esc(p.title)}</h3>
         <div class="meta" style="font-size:11px;line-height:1.5;margin-top:2px">${authLine(p)}</div>
@@ -1319,12 +1327,23 @@ function renderPapers(){
           ${rest.length?`<span class="pill" data-ptags="${p.id}" style="cursor:pointer;color:var(--faint);background:var(--surface-2);border-color:var(--line)">${openT.has(p.id)?'−':'+'+rest.length}</span>`:''}
           ${!p.note?`<span class="pill clay">Note 未填</span>`:''}
           <span style="flex:1"></span>
-          <button class="x" data-pedit="${p.id}" title="編輯" style="font-size:12px;padding:0 4px;flex:0 0 auto">✎</button>
-          <button class="x" data-hold="paper|${p.id}" title="長按 1.5 秒刪除" style="font-size:12px;padding:0 4px;flex:0 0 auto">✕</button>
+          ${openP.has(p.id)?`<button class="cx e" data-pedit="${p.id}" title="${editP.has(p.id)?'完成編輯':'編輯'}">${editP.has(p.id)?'✓':'✎'}</button>`
+            :`<button class="cx e" data-pedit="${p.id}" title="展開">✎</button>`}
+          <button class="cx" data-hold="paper|${p.id}" title="長按 1.5 秒刪除">✕</button>
         </div>
       </div>
     </div>
-    ${openP.has(p.id)?`<div class="editbox">
+    ${openP.has(p.id)&&!editP.has(p.id)?`<div class="editbox" style="padding-top:10px">
+      ${PF.filter(f=>f[0]!=='sum'&&String(p[f[0]]||'').trim()).map(f=>`
+        <div style="margin-bottom:11px">
+          <div style="font-size:11px;font-weight:600;color:${col};letter-spacing:.04em;margin-bottom:3px">${f[1]}</div>
+          <div class="mdview" style="font-size:13.5px;line-height:1.65">${md(p[f[0]])}</div>
+        </div>`).join('')||'<p class="hint" style="margin:0">還沒有內容，點 ✎ 開始寫。</p>'}
+      ${p.cite?`<details class="fold"><summary>書目</summary>
+        <div style="font-size:12.5px;line-height:1.6;color:var(--muted);margin-top:4px">${esc(p.cite)}</div>
+      </details>`:''}
+    </div>`:''}
+    ${editP.has(p.id)?`<div class="editbox">
       <div class="grid2" style="margin-bottom:8px">
         <label class="f"><span>分類標籤</span><select data-pcat="${p.id}">
           <option value=""${!p.cat?' selected':''}>— 無 —</option>
@@ -1350,14 +1369,14 @@ function renderPapers(){
         <div class="linkrow"><span class="ic">🏷️</span><input type="text" data-pft="${p.id}" value="${esc((p.tags||[]).join(', '))}"></div>
         <div class="linkrow"><span class="ic">🔗</span><input type="text" data-pf="${p.id}|file" value="${esc(p.file||'')}"></div>
       </details>
-      <div class="saverow"><button class="btn" data-psave="${p.id}">Save</button></div>
+      <div class="saverow"><button class="btn" data-psave="${p.id}">完成</button></div>
     </div>`:''}</div>`};
   const LIM=3;
   list.innerHTML=CATORD.filter(k=>groups[k]&&groups[k].length).map(k=>{
     const col=CATS[k]?CATS[k][1]:'var(--muted)';
     const g=groups[k],more=g.length>LIM,open=openG.has(k);
-    const head=`<div class="sec-head" style="margin-top:14px"><span class="t" style="color:${col}">${CATNAME[k]}</span>${
-      more?`<button class="sx" data-pgrp="${k}" aria-expanded="${open}" title="${open?'收合':'展開其餘 '+(g.length-LIM)+' 篇'}">${CHEV}</button>`:''}</div>`;
+    const head=`<div class="kdgroup" style="color:${col}">${CATNAME[k]}${
+      more?`<button class="kx" data-pgrp="${k}" aria-expanded="${open}" title="${open?'收合':'展開其餘 '+(g.length-LIM)+' 篇'}">${CHEV}</button>`:''}</div>`;
     return head+(open?g:g.slice(0,LIM)).map(card).join('');
   }).join('');
   const cols=CMPCOLS.filter(c=>cmpOn.has(c[0]));
@@ -1388,9 +1407,13 @@ document.getElementById('paperList').addEventListener('click',e=>{
   const tg=e.target.closest('[data-ptags]');
   if(tg){const id=tg.dataset.ptags;openT.has(id)?openT.delete(id):openT.add(id);renderPapers();return}
   const ed=e.target.closest('[data-pedit]');
-  if(ed){const id=ed.dataset.pedit;openP.has(id)?openP.delete(id):openP.add(id);renderPapers();return}
+  if(ed){const id=ed.dataset.pedit;
+    if(!openP.has(id)){openP.add(id)}
+    else if(editP.has(id)){editP.delete(id);saved()}
+    else editP.add(id);
+    renderPapers();return}
   const sv=e.target.closest('[data-psave]');
-  if(sv){openP.delete(sv.dataset.psave);saved();renderPapers()}
+  if(sv){const id=sv.dataset.psave;editP.delete(id);saved();renderPapers()}
 });
 document.getElementById('paperTable').addEventListener('click',e=>{
   const b=e.target.closest('[data-cmp]');
@@ -1585,8 +1608,8 @@ function renderCards(){
         <span class="pill ${overdue?'clay':''}">${overdue?'今天要複習':d+' 天後'}</span>
         <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span>
         <span style="flex:1"></span>
-        <button class="x" data-cedit="${c.id}" title="編輯" style="font-size:11px;padding:0 3px;flex:0 0 auto">✎</button>
-        <button class="x" data-hold="card|${c.id}" title="長按 1.5 秒刪除" style="font-size:11px;padding:0 3px;flex:0 0 auto">✕</button></div>
+        <button class="cx e" data-cedit="${c.id}" title="編輯">✎</button>
+        <button class="cx" data-hold="card|${c.id}" title="長按 1.5 秒刪除">✕</button></div>
       ${flip?`<div class="ans">${esc(c.a)||'（沒寫答案）'}</div>
         ${(c.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:10px">${linkChips(c.links)}</div>`:''}
         <div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`
@@ -1829,8 +1852,8 @@ function qItem(q){
     ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
     <div class="row" style="margin-top:7px;gap:5px">
       <span style="flex:1"></span>
-      <button class="x" data-qedit="${q.id}" title="編輯" style="font-size:11px;padding:0 3px;flex:0 0 auto">✎</button>
-      <button class="x" data-hold="q|${q.id}" title="長按 1.5 秒刪除" style="font-size:11px;padding:0 3px;flex:0 0 auto">✕</button>
+      <button class="cx e" data-qedit="${q.id}" title="編輯">✎</button>
+      <button class="cx" data-hold="q|${q.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${openQ.has(q.id)?`<div class="editbox">
       <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
@@ -2029,8 +2052,8 @@ function renderMT(){
       <div style="flex:1;min-width:0">
         <h3><span class="mono" style="font-size:13px;color:var(--muted)">${esc(m.date)}</span>${m.title?`　${esc(m.title)}`:''}</h3>
       </div>
-      ${open?`<button class="x" data-medit="${m.id}" data-mstop="1" title="${ed?'完成編輯':'編輯'}" style="font-size:11px;padding:0 3px">${ed?'✓':'✎'}</button>`:''}
-      <button class="x" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
+      ${open?`<button class="cx e" data-medit="${m.id}" data-mstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
+      <button class="cx" data-hold="mt|${m.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${open&&!ed?`<div data-mstop="1" style="cursor:default">
       ${allBtns?`<div class="row" style="margin-top:8px;flex-wrap:wrap;gap:5px">${allBtns}</div>`:''}
@@ -2200,7 +2223,7 @@ function renderDIR(){
       <h3 style="flex:1;min-width:0">${esc(d.title)}</h3>
       ${dirDays(d)}
       <span class="pill" style="color:${st[1]};background:${st[2]};flex:0 0 auto">${st[0]}</span>
-      <button class="x" data-hold="dir|${d.id}" title="長按 1.5 秒刪除">✕</button>
+      <button class="cx" data-hold="dir|${d.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${!open&&d.next?`<div class="oneline" style="margin-top:4px">👉 ${esc(d.next)}</div>`:''}
     ${!open&&lastLog?`<div class="oneline" style="margin-top:2px;color:var(--muted)">📈 ${esc(lastLog.text)}</div>`:''}
@@ -2365,8 +2388,8 @@ function ntItem(n){
   return `<div class="item" data-ntcard="${n.id}" style="cursor:pointer">
     <div class="row">
       <h3 style="flex:1;min-width:0">${esc(n.title)}</h3>
-      ${open?`<button class="x" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}" style="font-size:11px;padding:0 3px">${ed?'✓':'✎'}</button>`:''}
-      <button class="x" data-hold="note|${n.id}" title="長按 1.5 秒刪除" style="font-size:11px;padding:0 3px">✕</button>
+      ${open?`<button class="cx e" data-ntedit="${n.id}" data-ntstop="1" title="${ed?'完成編輯':'編輯'}">${ed?'✓':'✎'}</button>`:''}
+      <button class="cx" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button>
     </div>
     ${open&&chips?`<div class="row" data-ntstop="1" style="margin-top:8px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
@@ -2530,8 +2553,8 @@ function kdRow(k,d){
       <span class="n">${d===0?'今天':big}</span><span class="u">${unit}</span></div>
     <div class="bd"><span class="ti">${esc(k.title)}</span>
       <span class="dt">${esc(k.date)}（${wd}）</span></div>
-    <div class="rt"><button class="x" data-ed-kd="${k.id}" title="編輯" style="font-size:13px">✎</button>
-      <button class="x" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></div></div>`;
+    <div class="rt"><button class="cx e" data-ed-kd="${k.id}" title="編輯">✎</button>
+      <button class="cx" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></div></div>`;
 }
 const CHEV='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5L12 11L18 5"/><path d="M6 12L12 18L18 12"/></svg>';
 const KDTORD=['deadline','exam','todo','school','other'];
@@ -3169,7 +3192,7 @@ document.getElementById('helpBox').innerHTML=`
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
   <h4>閱讀模式與編輯模式</h4>
-  <p>Notes 和 Meetings 的卡片<strong>收合時只顯示標題</strong>，點一下展開是閱讀模式——排版好的內容、圖片和附件都在這裡，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
+  <p>Reading、Notes、Meetings 的卡片<strong>收合時只顯示標題</strong>，點一下展開是閱讀模式——排版好的內容、圖片和附件都在這裡，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
   <h4>🔗附件</h4>
   <p>全站統一：展開後預設一列空白，左邊短格填名稱、右邊長格貼網址，按 <code>＋</code> 再加一列，長按 ✕ 刪除。沒填的空白列在收合時自動清掉。卡片上只顯示有網址的附件，點一下開啟。</p>
   <h4>🖼️ 插入圖片</h4>
@@ -3180,7 +3203,8 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
-  <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇。組內星號優先、再按年份新到舊。分類在展開編輯區的下拉選。</p>
+  <p>卡片依<strong>👨‍🏫 老師指定／📘 課程／🔍 探索／✒️ 發表／📄 未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內星號優先、再按年份新到舊。分類在編輯模式的下拉選。</p>
+  <p><strong>點 ✎ 展開是閱讀模式</strong>：九個欄位排版後直接讀，支援 Markdown（<code>**粗體**</code>、<code>- 清單</code>、<code>## 標題</code>），空欄位不顯示。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。</p>
   <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
   <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
   <p><strong>Compare</strong> 模式把選定欄位排成表格橫向比較，點格子可展開全文。</p>
