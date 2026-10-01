@@ -107,6 +107,9 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .rsvrow .rdt{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .rsvrow .rtag{flex:0 0 auto;display:inline-flex;gap:3px}
 .rsvrow .rtag .tg{cursor:pointer}
+.chk .actin{flex:1;min-width:0;background:none;border:0;border-bottom:1px dashed var(--line);
+  border-radius:0;padding:3px 2px;font-size:14px}
+.chk .actin:focus{outline:none;border-bottom-color:var(--ac);background:var(--surface-2)}
 .pfsec{margin:0 0 15px}
 .pfsec:last-child{margin-bottom:0}
 .pfhead{display:flex;align-items:center;gap:7px;margin-bottom:8px;padding:5px 10px 5px 9px;
@@ -131,9 +134,12 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .mdview pre{background:var(--surface-2);padding:8px 10px;border-radius:6px;overflow-x:auto;margin:8px 0}
 .mdview pre code{background:none;padding:0;font-size:12.5px;line-height:1.5}
 .mdview .mdtable{overflow-x:auto;margin:8px 0;-webkit-overflow-scrolling:touch}
-.mdview table{border-collapse:collapse;width:100%;font-size:12.5px}
-.mdview th,.mdview td{border:1px solid var(--line);padding:5px 8px;vertical-align:top;line-height:1.5}
+.mdview table{border-collapse:collapse;width:100%;min-width:0;max-width:100%;
+  table-layout:auto;font-size:12.5px}
+.mdview th,.mdview td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;
+  line-height:1.5;min-width:0;max-width:none;width:auto}
 .mdview th{background:var(--surface-2);font-weight:600;white-space:nowrap}
+.mdview td{overflow-wrap:anywhere}
 .mdview a{color:var(--ac)}
 .mdview img{max-width:100%}
 .blockhead:first-child{margin-top:4px}
@@ -219,13 +225,17 @@ details.fold.right > summary{text-align:right;font-size:21px;padding:7px 2px;lin
 .stagehdr .sn{font-size:15px;font-weight:700;color:var(--ink)}
 .stagehdr .sv{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
-table{border-collapse:collapse;min-width:900px;font-size:13px}
-th,td{border-bottom:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
-th{background:var(--surface-2);font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
-td{min-width:130px;max-width:240px}
-td[data-cell]{cursor:pointer}
-td[data-cell] > div{white-space:pre-wrap}
-td[data-cell] > div.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+table{border-collapse:collapse}
+.tablewrap table{min-width:900px;font-size:13px}
+.tablewrap th,.tablewrap td{border-bottom:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+.tablewrap th{background:var(--surface-2);font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.tablewrap td{min-width:130px;max-width:240px}
+.tablewrap td[data-cell]{cursor:pointer}
+.tablewrap td[data-cell] > div{white-space:pre-wrap}
+.tablewrap td[data-cell] > div.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.help table{width:100%;min-width:0;font-size:12.5px;margin:6px 0}
+.help th,.help td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;min-width:0;max-width:none}
+.help th{background:var(--surface-2);font-weight:600}
 .toolbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
 .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:var(--surface)}
 .seg button{background:transparent;border:0;padding:3px 9px;font-size:11.5px;color:var(--muted);white-space:nowrap}
@@ -565,9 +575,6 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
         <input type="text" id="mt-lk-url" placeholder="https://..." style="flex:1">
         <button class="btn icon" id="mtAddLk" type="button">＋</button>
       </div>
-    </details>
-    <details class="fold" style="margin-bottom:10px"><summary>✍️完整逐字稿</summary>
-      <textarea id="mt-full" style="min-height:140px;margin-top:6px"></textarea>
     </details>
     <div class="saverow"><button class="btn ghost" id="cancelMT">Cancel</button><button class="btn" id="addMT">Save</button></div>
   </div>
@@ -2230,14 +2237,13 @@ document.getElementById('addMT').onclick=()=>{
   const d=document.getElementById('mt-date').value;
   const topics=document.getElementById('mt-topics').value.trim();
   if(!d){toast('請填日期');return}
-  if(!topics&&!newActs.length&&!newLks.length&&!document.getElementById('mt-full').value.trim()){
-    toast('至少填一項內容');return}
+  if(!topics&&!newActs.length&&!newLks.length){toast('至少填一項內容');return}
   S.mt.push({id:uid(),created:Date.now(),mtime:Date.now(),
     date:d,title:document.getElementById('mt-title').value.trim(),
-    topics:topics,full:document.getElementById('mt-full').value.trim(),
+    topics:topics,
     actions:newActs.map(t=>({text:t,done:false})),
     linksL:newLks.slice()});
-  ['mt-title','mt-topics','mt-full'].forEach(i=>document.getElementById(i).value='');
+  ['mt-title','mt-topics'].forEach(i=>document.getElementById(i).value='');
   newLks=[];newActs=[];renderNewLinks();renderNewActs();
   show('mtForm',false);saved();renderMT();
 };
@@ -2258,19 +2264,25 @@ function mtLinkEditor(m,key){
   </details>`;
 }
 const openM=new Set(),editM=new Set();
+let tdDone=false;
 function renderMTTodo(){
   const el=document.getElementById('mtTodo');
-  const rows=[];
+  const open=[],done=[];
   [...(S.mt||[])].sort((x,y)=>(y.date||'').localeCompare(x.date||'')).forEach(m=>{
-    (m.actions||[]).forEach((a,ai)=>{if(!a.done)rows.push({m,a,ai})});
+    (m.actions||[]).forEach((a,ai)=>{(a.done?done:open).push({m,a,ai})});
   });
-  if(!rows.length){el.innerHTML=`<div class="empty" style="padding:14px">🎉 沒有未完成的待辦。</div>`;return}
-  el.innerHTML=`<div class="card" style="padding:10px 14px">`+rows.map(r=>
-    `<label class="chk" style="margin-bottom:4px">
-      <input type="checkbox" data-tdact="${r.m.id}|${r.ai}">
-      <span style="flex:1">${esc(r.a.text)}</span>
+  const row=r=>`<label class="chk" style="margin-bottom:4px">
+      <input type="checkbox" data-tdact="${r.m.id}|${r.ai}"${r.a.done?' checked':''}>
+      <span style="flex:1${r.a.done?';text-decoration:line-through;opacity:.55':''}">${esc(r.a.text)}</span>
       <span class="pill" style="font-size:10.5px">${esc(r.m.date)}</span>
-    </label>`).join('')+`</div>`;
+    </label>`;
+  el.innerHTML=(open.length
+      ? `<div class="card" style="padding:10px 14px">${open.map(row).join('')}</div>`
+      : `<div class="empty" style="padding:14px">🎉 沒有未完成的待辦。</div>`)
+    +(done.length
+      ? `<div class="pastrow"><button class="pastbtn" id="tdMore" aria-expanded="${tdDone}" title="${tdDone?'收合':'展開已完成 '+done.length+' 項'}">已完成${CHEV}</button></div>`
+        +(tdDone?`<div class="card" style="padding:10px 14px">${done.map(row).join('')}</div>`:'')
+      : '');
 }
 function renderMT(){
   renderMTTodo();
@@ -2302,9 +2314,6 @@ function renderMT(){
           <span style="flex:1;${act.done?'text-decoration:line-through;opacity:.55':''}">${esc(act.text)}</span>
         </label>`).join('')}
         </div></details>`:''}
-      ${m.full?`<details class="fold" style="margin-top:6px"><summary>✍️完整逐字稿</summary>
-        <div class="mdview" style="margin-top:6px;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--ink-soft)">${esc(m.full)}</div>
-      </details>`:''}
     </div>`:''}
     ${open&&ed?`<div class="editbox" data-mstop="1" style="cursor:default">
       <div class="grid2">
@@ -2317,19 +2326,17 @@ function renderMT(){
         <textarea data-mf="${m.id}|topics" data-mtb="${m.id}" style="min-height:110px;margin-top:4px">${esc(m.topics||'')}</textarea></div>
       <details class="fold" style="margin-bottom:8px"><summary>✅Action items</summary>
         <div style="margin-top:6px">
-        ${(m.actions||[]).map((act,ai)=>`<label class="chk" style="margin-bottom:4px">
+        ${(m.actions||[]).map((act,ai)=>`<div class="chk" style="margin-bottom:4px">
           <input type="checkbox" data-mact="${m.id}|${ai}" ${act.done?'checked':''}>
-          <span style="flex:1;${act.done?'text-decoration:line-through;opacity:.55':''}">${esc(act.text)}</span>
+          <input type="text" class="actin" data-mactf="${m.id}|${ai}" value="${esc(act.text)}"
+            style="${act.done?'text-decoration:line-through;opacity:.6':''}">
           <button class="x" data-mdel-act="${m.id}|${ai}" style="font-size:12px" title="刪除">✕</button>
-        </label>`).join('')}
+        </div>`).join('')}
         </div>
         <div class="linkrow" style="margin-top:6px"><span class="ic">＋</span>
           <input type="text" data-mnew-act="${m.id}" placeholder="新增一項，按 Enter"></div>
       </details>
       ${mtLinkEditor(m,'linksL')}
-      <details class="fold" style="margin-bottom:8px"><summary>✍️完整逐字稿</summary>
-        <textarea data-mf="${m.id}|full" style="min-height:160px;margin-top:6px">${esc(m.full||'')}</textarea>
-      </details>
       <div class="saverow"><button class="btn" data-msave="${m.id}">完成</button></div>
     </div>`:''}</div>`}).join('');
   renderDIR();
@@ -2337,8 +2344,12 @@ function renderMT(){
 document.getElementById('mtTodo').addEventListener('change',e=>{
   const cb=e.target.closest('[data-tdact]');if(!cb)return;
   const[id,ai]=cb.dataset.tdact.split('|');const m=S.mt.find(x=>x.id===id);
-  if(m&&m.actions[+ai]){m.actions[+ai].done=true;m.mtime=Date.now();save();
+  if(m&&m.actions[+ai]){m.actions[+ai].done=cb.checked;m.mtime=Date.now();save();
     setTimeout(renderMT,220)}
+});
+document.getElementById('mtTodo').addEventListener('click',e=>{
+  if(!e.target.closest('#tdMore'))return;
+  tdDone=!tdDone;renderMTTodo();
 });
 document.getElementById('mtList').addEventListener('click',e=>{
   if(hEl)return;
@@ -2384,6 +2395,9 @@ document.getElementById('mtList').addEventListener('input',e=>{
   const f=e.target.closest('[data-mf]');
   if(f){const[id,k]=f.dataset.mf.split('|');const m=S.mt.find(x=>x.id===id);
     if(m){m[k]=f.value;m.mtime=Date.now();save()}return}
+  const af=e.target.closest('[data-mactf]');
+  if(af){const[id,ai]=af.dataset.mactf.split('|');const m=S.mt.find(x=>x.id===id);
+    if(m&&m.actions&&m.actions[+ai]){m.actions[+ai].text=af.value;m.mtime=Date.now();save();renderMTTodo()}return}
   const ln=e.target.closest('[data-mlname]');
   if(ln){const[id,key,i]=ln.dataset.mlname.split('|');const m=S.mt.find(x=>x.id===id);
     if(m&&m[key]&&m[key][+i]){m[key][+i].name=ln.value;m.mtime=Date.now();save()}return}
@@ -3476,7 +3490,7 @@ document.getElementById('helpBox').innerHTML=`
   <h4>刪除的兩層</h4>
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings 最下方，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
-  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（逐字稿、附件、進度紀錄）一律收在折疊區，點標題展開。</p>
+  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
   <h4>閱讀模式與編輯模式</h4>
   <p>Reading、Notes、Meetings 的卡片<strong>收合時只顯示標題</strong>，點一下展開是閱讀模式——排版好的內容、圖片和附件都在這裡，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
   <h4>🔗附件</h4>
@@ -3533,14 +3547,15 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>💬 Meeting</summary><div class="help">
   <p>順序：<strong>Meetings → Research directions → To-do</strong>。</p>
   <h4>📋 Meetings</h4>
-  <p>點卡片<strong>展開是閱讀模式</strong>：附件標籤、排版後的重點、可勾選的 action items、逐字稿折疊區。按右上 ✎ 切到編輯模式。收合時只顯示日期和標題。</p>
-  <p><strong>重點</strong>支援 Markdown，輸入框下方即時預覽排版後的樣子。<strong>✍️完整逐字稿</strong>固定在最下面的折疊區，NotebookLM 轉出的長稿貼這裡不會撐爆版面。</p>
+  <p>點卡片<strong>展開是閱讀模式</strong>：附件標籤、排版後的重點、可勾選的 action items。按右上 ✎ 切到編輯模式。收合時只顯示日期和標題。</p>
+  <p><strong>重點</strong>支援 Markdown，輸入框下方即時預覽排版後的樣子。長的討論內容直接寫進重點就好，Markdown 的標題和清單足以撐起結構。</p>
   <p><strong>✅Action items</strong> 一次打一項按 Enter，成為可勾選的清單。</p>
   <h4>🎯 Research directions</h4>
   <p>老師給的方向獨立管理，不綁定單次 meeting。狀態篩選：進行中（預設）／All／完成。</p>
   <p>每個方向有 <strong>👉 下一步</strong>（收合也看得到）、<strong>進度紀錄</strong>（按 Enter 記一筆，自動蓋日期，收合時顯示最新一筆）、<strong>🔗附件</strong>、以及<strong>距離老師給題的天數</strong>。</p>
   <h4>✅ To-do</h4>
-  <p>把每一筆 meeting 裡<strong>還沒打勾的 action items 全部撈出來</strong>集中成一張清單，附來源日期。不用一張張翻卡片找自己還欠什麼，打勾就完成、從清單消失，全做完顯示 🎉。</p>
+  <p>把每一筆 meeting 裡<strong>還沒打勾的 action items 全部撈出來</strong>集中成一張清單，附來源日期。不用一張張翻卡片找自己還欠什麼，打勾就完成、從上方清單消失，全做完顯示 🎉。</p>
+  <p><strong>已完成的收在下方「已完成」折疊區</strong>，點開可以看、也可以把勾取消讓它回到待辦。Action items 的文字在 meeting 卡片的編輯模式直接改，改完 TO-DO 清單同步更新。</p>
 </div></details>
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
