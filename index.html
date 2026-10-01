@@ -107,6 +107,15 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .rsvrow .rdt{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .rsvrow .rtag{flex:0 0 auto;display:inline-flex;gap:3px}
 .rsvrow .rtag .tg{cursor:pointer}
+.pfsec{margin:0 0 15px}
+.pfsec:last-child{margin-bottom:0}
+.pfhead{display:flex;align-items:center;gap:7px;margin-bottom:8px;padding:5px 10px 5px 9px;
+  border-left:3px solid var(--pf,var(--ac));border-radius:0 6px 6px 0;
+  background:color-mix(in srgb,var(--pf,var(--ac)) 10%,var(--surface));
+  font-size:11.5px;font-weight:600;letter-spacing:.05em;color:var(--pf,var(--ac))}
+.pfhead .n{font-family:var(--mono);font-size:9.5px;font-weight:500;opacity:.55;letter-spacing:.06em}
+.pfbody{padding-left:12px}
+@media(max-width:560px){.pfbody{padding-left:4px}}
 .mdview>:first-child{margin-top:0}
 .mdview>:last-child{margin-bottom:0}
 .mdview p{margin:0 0 7px}
@@ -816,6 +825,7 @@ function qcatAdd(name){
   const id='k'+uid();S.qcats.push({id,name,col:pal[0],soft:pal[1]});return id;
 }
 const KDT={deadline:'Deadline',exam:'Exam',todo:'To do',school:'School',other:'Other'};
+const PFNO={q:'01',design:'02',pop:'03',def:'04',analysis:'05',result:'06',interp:'07',gap:'08',note:'09'};
 const PF=[['sum','📌'],['q','研究問題/目標'],['design','研究設計與資料來源'],['pop','研究對象'],
  ['def','暴露與結果的定義'],['analysis','分析'],['result','主要結果'],['interp','解釋'],
  ['gap','Gap'],['note','Note']];
@@ -1372,7 +1382,7 @@ function renderPapers(){
   renderTagbar();
   const info=document.getElementById('paperCount');
   if(!S.papers.length){list.innerHTML=`<div class="empty">還沒有精讀卡片。</div>`;tbl.innerHTML='';info.innerHTML='';return}
-  const a=S.papers.filter(paperMatch).sort((x,y)=>((y.star?1:0)-(x.star?1:0))||((y.year||0)-(x.year||0))||(y.created-x.created));
+  const a=S.papers.filter(paperMatch).sort((x,y)=>((y.star?1:0)-(x.star?1:0))||(y.created-x.created));
   info.innerHTML=(qPaper||tagFilter.size)&&!a.length
     ? `<span class="pill clay">沒有符合的卡片</span>` : '';
   if(!a.length){list.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;tbl.innerHTML='';return}
@@ -1419,12 +1429,12 @@ function renderPapers(){
         </div>
       </div>
     </div>
-    ${openP.has(p.id)&&!editP.has(p.id)?`<div class="editbox" style="padding-top:10px">
+    ${openP.has(p.id)&&!editP.has(p.id)?`<div class="editbox" style="--pf:${col};padding-top:10px">
       ${PF.filter(f=>f[0]!=='sum'&&String(p[f[0]]||'').trim()).map(f=>`
-        <div style="margin-bottom:11px">
-          <div style="font-size:11px;font-weight:600;color:${col};letter-spacing:.04em;margin-bottom:3px">${f[1]}</div>
-          <div class="mdview" style="font-size:13.5px;line-height:1.65">${md(p[f[0]])}</div>
-        </div>`).join('')||'<p class="hint" style="margin:0">還沒有內容，點 ✎ 開始寫。</p>'}
+        <section class="pfsec">
+          <div class="pfhead"><span class="n">${PFNO[f[0]]}</span>${f[1]}</div>
+          <div class="mdview pfbody" style="font-size:13.5px;line-height:1.65">${md(p[f[0]])}</div>
+        </section>`).join('')||'<p class="hint" style="margin:0">還沒有內容，點 ✎ 開始寫。</p>'}
       ${p.cite?`<details class="fold"><summary>書目</summary>
         <div style="font-size:12.5px;line-height:1.6;color:var(--muted);margin-top:4px">${esc(p.cite)}</div>
       </details>`:''}
@@ -3485,9 +3495,9 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
-  <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內星號優先、再按年份新到舊。分類在編輯模式的下拉選。</p>
+  <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內<strong>星號優先，再按加入時間新到舊</strong>（不是出版年）。分類在編輯模式的下拉選。</p>
   <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的卡片會回到未分類，不會被刪掉。內建那四個不能刪。</p>
-  <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，<strong>完整支援 Markdown</strong>（標題、巢狀清單、表格、引用、程式碼——細節見「共通操作 → Markdown」），空欄位不顯示。編輯模式的輸入框用等寬字、加高到 110px，方便直接寫 Markdown。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
+  <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，<strong>完整支援 Markdown</strong>（標題、巢狀清單、表格、引用、程式碼——細節見「共通操作 → Markdown」），空欄位不顯示。每個欄位有自己的小標題列：<strong>左側分類色色條＋整條淡底色＋固定編號</strong>（01 研究問題 … 09 Note），編號不會因為某欄空著就跳號，所以看一眼就知道這張卡少了哪幾塊。編輯模式的輸入框用等寬字、加高到 110px，方便直接寫 Markdown。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
   <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
   <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
   <p><strong>Compare</strong> 模式把選定欄位排成表格橫向比較，點格子可展開全文。</p>
