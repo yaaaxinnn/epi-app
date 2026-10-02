@@ -736,6 +736,23 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <p class="hint" style="margin:10px 0 0" id="gcState"></p>
   </details>
 
+  <div class="blockhead plain"><span class="bt">檔案整理</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipOrph" aria-expanded="false">ⓘ</button></div>
+  <div class="tip" id="tipOrph">掃描 repo 裡<strong>沒有任何 Reading 卡片指向的 .html</strong>。卡片刪掉時，它對應的精讀 HTML 不會跟著刪，久了就會累積孤兒檔案。<br>
+  <span style="color:var(--clay)">清單是「沒有卡片指向」而不是「沒用的」——你自己放進 repo 的其他 HTML 也會出現在這裡。刪之前先用 👁 看一眼。刪除無法復原，但 GitHub 的 commit 歷史仍留著舊版本。</span></div>
+  <details class="card fold"><summary>孤兒 HTML</summary>
+    <p class="hint" style="margin:6px 0 10px">比對 repo 裡所有 .html 與卡片的 🔗 路徑。需要先設定好上面的 GitHub 同步。</p>
+    <p class="hint" style="margin:0 0 10px" id="repoSize">repo 用量：尚未查詢</p>
+    <div class="row" style="margin-bottom:8px">
+      <button class="btn ghost mini" id="orphScan">🔍 掃描</button>
+      <span class="spacer"></span>
+      <button class="btn ghost mini" id="orphAll" style="display:none">全選／全不選</button>
+    </div>
+    <div id="orphList"></div>
+    <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="orphState"></span>
+      <button class="btn warn mini" id="orphDel" data-hold="orphdel|1" style="display:none" title="長按 1.5 秒刪除">長按刪除勾選的</button></div>
+  </details>
+
   <div class="blockhead plain"><span class="bt">最近刪除</span><span class="spacer"></span>
     <button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
   <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
@@ -1210,6 +1227,7 @@ async function doHold(spec){
   else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
   else if(t==='secnote'){const p=id.split('|'),ti=+p[0],kk=p[1],t2=th(ti);
     if(t2.sn[kk]){t2.sn[kk]={n:'',links:[],mtime:Date.now()};openSec=null;save();renderMethod();toast('已清除筆記')}}
+  else if(t==='orphdel'){await orphDelete()}
   else if(t==='purge1'){S.trash=(S.trash||[]).filter(x=>x.tid!==id);save();renderTrash();toast('已永久刪除')}
   else if(t==='purgeall'){S.trash=[];save();renderTrash();toast('回收桶已清空')}
   else if(t==='lk'){const[kind,oid,lid]=id.split(':');const h=linkHost(kind,oid);
@@ -2050,7 +2068,7 @@ function qItem(q){
     <div style="font-weight:500;line-height:1.5${q.done?';cursor:pointer':''}"${q.done?` data-qopen="${q.id}"`:''}>${esc(q.q)}</div>
     ${tagChips(q.tags)}
 
-    ${q.a?`<div style="margin-top:8px;font-size:14px;white-space:pre-wrap;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
+    ${q.a?`<div class="mdview" style="margin-top:8px;font-size:13.5px;line-height:1.65;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
     ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
     <div class="row" style="margin-top:7px;gap:5px">
       <span style="flex:1"></span>
@@ -3202,6 +3220,103 @@ document.getElementById('impFile').onchange=e=>{
 let GH={owner:'',repo:'',branch:'main',path:'data/notes.json',token:'',auto:false};
 let ghSha=null,ghTimer=null,ghBusy=false,ghQuiet=false,ghPulled=false,ghLastPull=0,ghDirty=false;
 function ghOn(){return !!(GH.owner&&GH.repo&&GH.token)}
+
+/* ===== 孤兒 HTML：repo 裡沒有卡片指向的 .html ===== */
+let orphans=[],orphTrunc=false;
+function orphUsed(){
+  return new Set((S.papers||[]).map(p=>String(p.file||'').replace(/^\.?\//,'')).filter(Boolean));
+}
+function renderOrph(){
+  const el=document.getElementById('orphList'),st=document.getElementById('orphState');
+  const del=document.getElementById('orphDel'),all=document.getElementById('orphAll');
+  if(!el)return;
+  const linked=orphUsed().size;
+  const warn=orphTrunc?'<span style="color:var(--clay)">repo 檔案太多，清單可能不完整。</span><br>':'';
+  if(!orphans.length){
+    el.innerHTML=`<div class="empty" style="padding:12px">沒有孤兒檔案。</div>`;
+    del.style.display='none';all.style.display='none';
+    st.innerHTML=warn+`repo 裡的 HTML 都有卡片指向（已比對 ${linked} 張有附檔的卡片）。`;
+    return;
+  }
+  el.innerHTML=orphans.map((o,i)=>`<label class="chk" style="margin-bottom:4px">
+    <input type="checkbox" data-orph="${i}">
+    <span style="flex:1;min-width:0;word-break:break-all;font-family:var(--mono);font-size:12px">${esc(o.path)}</span>
+    <span class="pill" style="font-size:10.5px">${Math.max(1,Math.round((o.size||0)/1024))} KB</span>
+    <button class="cx" data-orphopen="${i}" title="先看看內容">👁</button>
+  </label>`).join('');
+  del.style.display='';all.style.display='';
+  st.innerHTML=warn+`找到 ${orphans.length} 個沒有卡片指向的 HTML（已比對 ${linked} 張有附檔的卡片）。`;
+}
+async function repoSize(){
+  const el=document.getElementById('repoSize');if(!el||!ghOn())return;
+  try{
+    const r=await ghFetch('https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo),
+      {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
+    if(!r.ok)throw new Error(ghErrMsg(r.status));
+    const j=await r.json();
+    const kb=j.size||0, mb=kb/1024;
+    const pct=Math.min(100,Math.round(mb/1024*100));
+    const col=mb>700?'var(--clay)':mb>300?'var(--amber)':'var(--ac)';
+    el.innerHTML=`repo 用量 <strong style="color:${col}">${mb<1?kb+' KB':mb.toFixed(1)+' MB'}</strong>`
+      +`　<span style="color:var(--faint)">GitHub 建議單一 repo 不超過 1 GB（目前約 ${pct}%）</span>`;
+  }catch(e){el.textContent='repo 用量查詢失敗：'+e.message}
+}
+async function orphScan(){
+  const st=document.getElementById('orphState');
+  if(!ghOn()){st.textContent='請先在上面設定 GitHub 同步';return}
+  repoSize();
+  st.textContent='掃描中…';
+  document.getElementById('orphList').innerHTML='';
+  document.getElementById('orphDel').style.display='none';
+  document.getElementById('orphAll').style.display='none';
+  try{
+    const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+      +'/git/trees/'+encodeURIComponent(GH.branch)+'?recursive=1';
+    const r=await ghFetch(url,{headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'}});
+    if(!r.ok)throw new Error(ghErrMsg(r.status));
+    const j=await r.json();
+    const used=orphUsed();
+    orphTrunc=!!j.truncated;
+    orphans=(j.tree||[])
+      .filter(x=>x.type==='blob'&&/\.html?$/i.test(x.path)&&!used.has(x.path))
+      .sort((a,b)=>a.path.localeCompare(b.path))
+      .map(x=>({path:x.path,sha:x.sha,size:x.size}));
+    renderOrph();
+  }catch(e){orphans=[];st.textContent='掃描失敗：'+e.message}
+}
+async function orphDelete(){
+  const sel=[...document.querySelectorAll('[data-orph]')].filter(x=>x.checked).map(x=>orphans[+x.dataset.orph]);
+  const st=document.getElementById('orphState');
+  if(!sel.length){toast('請先勾選要刪的檔案');return}
+  let ok=0,fail=0,last='';const gone=[];
+  for(const o of sel){
+    st.textContent='刪除中… '+(ok+fail+1)+'/'+sel.length;
+    try{
+      const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+        +'/contents/'+o.path.split('/').map(encodeURIComponent).join('/');
+      const r=await ghFetch(url,{method:'DELETE',
+        headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+        body:JSON.stringify({message:'remove orphan '+o.path,sha:o.sha,branch:GH.branch})},30000);
+      if(!r.ok)throw new Error(ghErrMsg(r.status));
+      ok++;gone.push(o);
+    }catch(e){fail++;last=e.message}
+  }
+  orphans=orphans.filter(o=>gone.indexOf(o)<0);
+  renderOrph();
+  st.textContent=`已刪除 ${ok} 個`+(fail?`，${fail} 個失敗：`+last:'');
+  toast(fail?`刪除 ${ok} 個，${fail} 個失敗`:`已刪除 ${ok} 個`);
+}
+document.getElementById('orphScan').onclick=orphScan;
+document.getElementById('orphAll').onclick=()=>{
+  const cbs=[...document.querySelectorAll('[data-orph]')];
+  const on=!cbs.every(x=>x.checked);
+  cbs.forEach(x=>{x.checked=on});
+};
+document.getElementById('orphList').addEventListener('click',e=>{
+  const b=e.target.closest('[data-orphopen]');if(!b)return;
+  e.preventDefault();
+  const o=orphans[+b.dataset.orphopen];if(o)openRepoFile(o.path);
+});
 function setDot(cls,msg){
   const d=document.getElementById('syncDot');
   if(d){d.className='syncdot'+(cls?' '+cls:'');d.title=msg||'同步狀態'}
@@ -3488,6 +3603,9 @@ document.getElementById('helpBox').innerHTML=`
   <h4>圖示</h4>
   <p><strong>✎</strong> 編輯　<strong>✕</strong> 刪除（長按 1.5 秒）　<strong>🌐</strong> 原文　<strong>🔗</strong> 精讀 HTML／附件　<strong>🖼️</strong> 插入圖片　<strong>＋</strong> 新增　<strong>☆／★</strong> 置頂　<strong>📝</strong> 備註。圖示鍵一律沒有外框。</p>
   <h4>刪除的兩層</h4>
+  <h4>刪除與 GitHub 的關係</h4>
+  <p><strong>卡片資料會同步刪除</strong>：刪掉時會留一個「墓碑」記號跟著上傳，所以其他裝置合併後也會跟著刪，不會把已刪的東西送回來。墓碑保留 180 天。GitHub 的 <strong>commit 歷史仍留著舊版本</strong>，真的刪錯可以到 repo 的 <code>data/notes.json</code> → History 翻回去。</p>
+  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，變成沒人指向的孤兒檔案。到 <strong>Settings → 檔案整理 → 孤兒 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。</p>
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings 最下方，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
