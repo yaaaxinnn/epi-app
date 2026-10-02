@@ -303,6 +303,10 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .warn{border:1px solid var(--clay-mid);background:var(--clay-soft);color:var(--clay);border-radius:var(--r);padding:11px 13px;font-size:13.5px;margin-bottom:12px}
 .bakrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px}
 .bakrow .d{font-family:var(--mono);color:var(--muted);flex:1}
+.qm{flex:0 0 auto;background:none;border:0;color:var(--faint);font-size:13px;line-height:1;padding:0 3px;cursor:pointer}
+.qm:hover{color:var(--ac)}
+.qm[aria-expanded="true"]{color:var(--ac)}
+.kdgroup .qm{order:2}
 .tip{display:none;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
   padding:10px 13px;font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 12px}
 .tip.on{display:block}
@@ -617,8 +621,13 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 <!-- ========== Calendar ========== -->
 <section class="panel" id="p-calendar">
   <div class="blockhead"><span class="bt">📌 PROGRESS</span><span class="spacer"></span>
-    <button class="iconb" id="toggleTD" title="新增進度項目">＋</button></div>
-  <div id="kdTodo"></div>
+    <button class="iconb" id="togglePG" title="新增進度項目">＋</button></div>
+  <div class="card" id="pgForm" style="display:none">
+    <label class="f"><span>Title</span><input type="text" id="pg-title"></label>
+    <label class="f"><span>Date</span><input type="date" id="pg-date"></label>
+    <div class="saverow"><button class="btn ghost" id="cancelPG">Cancel</button><button class="btn" id="addPG">Save</button></div>
+  </div>
+  <div id="progList"></div>
 
   <div class="blockhead"><span class="bt">📅 KEY DATES</span><span class="spacer"></span>
     <button class="iconb" id="toggleKD" title="新增日期">＋</button></div>
@@ -626,7 +635,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="card" id="kdForm" style="display:none">
     <div class="grid2">
       <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
-      <label class="f" id="kdTypeWrap"><span>Type</span><select id="kd-type"></select></label>
+      <label class="f"><span>Type</span><select id="kd-type"></select></label>
     </div>
     <label class="f"><span>Title</span><input type="text" id="kd-title"></label>
     <div class="saverow"><button class="btn ghost" id="cancelKD">Cancel</button><button class="btn" id="addKD">Save</button></div>
@@ -680,10 +689,10 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 <!-- ========== Settings ========== -->
 <section class="panel" id="p-settings">
 
-  <div class="kdgroup setg">同步<button class="kx" data-setg="sync" aria-expanded="false" title="展開"></button></div>
-  <div class="setbody" id="sg-sync" style="display:none">
-    <div class="tip on">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
+  <div class="kdgroup setg">同步<button class="qm" data-tip="tipGh" aria-expanded="false" title="說明">ⓘ</button><button class="kx" data-setg="sync" aria-expanded="false" title="展開"></button></div>
+  <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
     <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
+  <div class="setbody" id="sg-sync" style="display:none">
     <div class="card" id="ghFold">
       <div class="grid2">
         <label class="f"><span>Owner／使用者名稱</span><input type="text" id="gh-owner"></label>
@@ -705,10 +714,11 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     </div>
   </div>
 
-  <div class="kdgroup setg">備份<button class="kx" data-setg="backup" aria-expanded="false" title="展開"></button></div>
-  <div class="setbody" id="sg-backup" style="display:none">
-    <div class="tip on"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br>
-    <strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。</div>
+  <div class="kdgroup setg">備份<button class="qm" data-tip="tipData" aria-expanded="false" title="說明">ⓘ</button></div>
+  <div class="tip" id="tipData"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br>
+    <strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。<br>
+  <strong>每日自動存檔</strong>：每天第一次開啟時自動複製一份，保留最近三份，手殘刪錯可以整包還原。這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——真正的備份還是 Export。</div>
+  <div class="setbody" id="sg-backup">
     <div id="expWarn"></div>
     <div class="card">
       <div class="row">
@@ -721,17 +731,15 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <p class="hint" style="margin:10px 0 0" id="expInfo"></p>
     </div>
     <details class="card fold"><summary>每日自動存檔</summary>
-      <p class="hint" style="margin:6px 0 10px" id="tipBak">每天第一次開啟時自動複製一份，保留最近三份。手殘刪錯可以整包還原。<br>
-      注意：這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</p>
-      <div id="bakList"></div>
+      <div id="bakList" style="margin-top:6px"></div>
       <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
     </details>
   </div>
 
-  <div class="kdgroup setg">Google 日曆<button class="kx" data-setg="gcal" aria-expanded="false" title="展開"></button></div>
+  <div class="kdgroup setg">Google 日曆<button class="qm" data-tip="tipGc" aria-expanded="false" title="說明">ⓘ</button><button class="kx" data-setg="gcal" aria-expanded="false" title="展開"></button></div>
+  <div class="tip" id="tipGc">嵌入網址顯示在 Calendar 分頁最下面；ID 與金鑰用來自動抓 KEY DATES（只抓標題以 <code>*</code> 開頭的事件）。取得方式見使用說明。</div>
   <div class="setbody" id="sg-gcal" style="display:none">
     <div class="card">
-      <p class="hint" style="margin:0 0 10px">嵌入網址顯示在 Calendar 分頁最下面；下方的 ID 與金鑰用來自動抓 KEY DATES。取得方式見使用說明。</p>
       <div class="linkrow"><span class="ic">🔗</span><input type="text" id="gcUrl" placeholder="嵌入網址"></div>
       <div class="grid2" style="margin-top:12px">
         <label class="f"><span>日曆 ID</span><input type="text" id="gc-id" placeholder="…@group.calendar.google.com"></label>
@@ -751,20 +759,19 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     </div>
   </div>
 
-  <div class="kdgroup setg">分類與清理<button class="kx" data-setg="clean" aria-expanded="false" title="展開"></button></div>
-  <div class="setbody" id="sg-clean" style="display:none">
+  <div class="kdgroup setg">分類與清理<button class="qm" data-tip="tipClean" aria-expanded="false" title="說明">ⓘ</button></div>
+  <div class="tip" id="tipClean"><strong>分類清單</strong>：三組分類各自獨立（Reading／Questions 與 Notes／KEY DATES）。在下拉選單最下面選「＋ 新增…」就能加。名字可直接改，卡片存的是代號，改名不動資料。內建的只能改名不能刪；刪掉自訂分類時底下項目退回預設，不會被刪。<br>
+  <strong>回收桶</strong>：刪掉的卡片保留 30 天。✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記墓碑跟著同步，其他裝置不會送回來。<br>
+  <strong>沒有卡片指向的 HTML</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
+  <div class="setbody" id="sg-clean">
     <details class="card fold"><summary>分類清單</summary>
-      <p class="hint" style="margin:6px 0 10px">三組分類各自獨立。在任何一個下拉選單最下面選「＋ 新增…」就能加，加完同組的下拉都看得到。名字可以直接在這裡改，卡片存的是代號不是名字，改名不會動到資料。內建的可以改名但不能刪；刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設（Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other）。</p>
-      <div id="catMgr"></div>
+      <div id="catMgr" style="margin-top:6px"></div>
     </details>
     <details class="card fold"><summary>🗑️ 回收桶</summary>
-      <p class="hint" style="margin:6px 0 10px">刪掉的卡片先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記在墓碑名單裡跟著同步，其他裝置不會把它送回來。</p>
-      <div id="trashList"></div>
+      <div id="trashList" style="margin-top:6px"></div>
     </details>
     <details class="card fold"><summary>沒有卡片指向的 HTML</summary>
-      <p class="hint" style="margin:6px 0 10px">卡片刪掉時，它對應的精讀 HTML 不會跟著刪，久了就會在 repo 裡累積。這裡比對 repo 裡所有 .html 與卡片的 🔗 路徑，掃出沒人指向的。需要先設定好上面的 GitHub 同步。<br>
-      <span style="color:var(--clay)">清單是「沒有卡片指向」而不是「沒用的」——你自己放進 repo 的其他 HTML 也會出現在這裡。刪之前先用 👁 看一眼。刪除無法復原，但 GitHub 的 commit 歷史仍留著舊版本。</span></p>
-      <p class="hint" style="margin:0 0 10px" id="repoSize">repo 用量：尚未查詢</p>
+      <p class="hint" style="margin:6px 0 10px" id="repoSize">repo 用量：尚未查詢</p>
       <div class="row" style="margin-bottom:8px">
         <button class="btn ghost mini" id="orphScan">🔍 掃描</button>
         <span class="spacer"></span>
@@ -865,13 +872,12 @@ function qcatAdd(name){
   const pal=CATPAL[(qcats().length+2)%CATPAL.length];
   const id='k'+uid();S.qcats.push({id,name,col:pal[0],soft:pal[1]});return id;
 }
-const DEFAULT_KDCATS=[{id:'exam',name:'Exam'},{id:'school',name:'School'},
-  {id:'other',name:'Other'},{id:'todo',name:'To do',hidden:true}];
+const DEFAULT_KDCATS=[{id:'exam',name:'Exam'},{id:'school',name:'School'},{id:'other',name:'Other'}];
 function kdcats(){if(!Array.isArray(S.kdcats)||!S.kdcats.length)S.kdcats=DEFAULT_KDCATS.map(x=>Object.assign({},x));return S.kdcats}
 function kdcatIds(){return kdcats().map(x=>x.id)}
 function kdcatName(id){const x=kdcats().find(y=>y.id===id);return x?x.name:id}
 function kdcatFix(k){const ids=kdcatIds();return ids.includes(k)?k:'other'}
-function kdcatOpts(cur){return kdcats().filter(x=>!x.hidden).map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
+function kdcatOpts(cur){return kdcats().map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
   +'<option value="__new">＋ 新增類型…</option>'}
 function kdcatAdd(name){
   name=String(name||'').trim();if(!name)return null;
@@ -973,7 +979,21 @@ const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
+/* v44：PROGRESS 從 KEY DATES 拆成獨立資料。Google 日曆來的（有 gid）留在 KEY DATES 改 Other */
+function migrateProg(){
+  if(!Array.isArray(S.prog))S.prog=[];
+  if(!Array.isArray(S.kd))S.kd=[];
+  if(!Array.isArray(S.kdcats)||!S.kdcats.length)S.kdcats=DEFAULT_KDCATS.map(x=>Object.assign({},x));
+  S.kd.filter(k=>k.type==='todo').forEach(k=>{
+    if(k.gid){k.type='other';return}
+    if(!S.prog.some(p=>p.id===k.id))
+      S.prog.push({id:k.id,created:k.created||Date.now(),mtime:Date.now(),date:k.date||'',title:k.title||''});
+  });
+  S.kd=S.kd.filter(k=>k.type!=='todo');
+  S.kdcats=S.kdcats.filter(x=>x.id!=='todo');
+  S.kd.forEach(k=>{if(!S.kdcats.some(x=>x.id===k.type))k.type='other'});
+}
+function defaults(){return{v:1,prog:[],papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
   tombT:{},kdcats:DEFAULT_KDCATS.map(c=>Object.assign({},c)),tagLib:DEFAULT_TAGS.slice(),cats:DEFAULT_CATS.map(c=>Object.assign({},c)),qcats:DEFAULT_QCATS.map(c=>Object.assign({},c)),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -1122,9 +1142,7 @@ async function load(){
     S.kdcats=S.kdcats.filter(x=>x.id!=='deadline');
     (S.kd||[]).forEach(k=>{if(k.type==='deadline')k.type='other'});
   }
-  {const td=S.kdcats.find(x=>x.id==='todo');
-   if(td)td.hidden=true;else S.kdcats.push({id:'todo',name:'To do',hidden:true});}
-  (S.kd||[]).forEach(k=>{if(!S.kdcats.some(x=>x.id===k.type))k.type='other'});
+  migrateProg();
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
   (S.cards||[]).forEach(c=>{if(!Array.isArray(c.links)){c.links=c.link?[{id:uid(),label:'',url:c.link}]:[]}});
@@ -1207,7 +1225,7 @@ document.addEventListener('click',e=>{
 });
 const BIN={paper:['papers','精讀卡片','title'],card:['cards','複習卡','q'],
   q:['qs','Question','q'],
-  mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],note:['notes','Note','title'],kd:['kd','Key date','title'],cs:['courses','課表','name']};
+  mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],note:['notes','Note','title'],kd:['kd','Key date','title'],prog:['prog','Progress','title'],cs:['courses','課表','name']};
 function bin(type,obj){
   if(!Array.isArray(S.trash))S.trash=[];
   if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
@@ -1270,6 +1288,7 @@ async function doHold(spec){
   else if(t==='nlk'){newLks.splice(+id,1);renderNewLinks();toast('已刪除')}
 
   else if(t==='kd'){save();renderKD();renderTrash();toast('已移到回收桶')}
+  else if(t==='prog'){save();renderProg();renderTrash();toast('已移到回收桶')}
   else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
   else if(t==='secnote'){const p=id.split('|'),ti=+p[0],kk=p[1],t2=th(ti);
     if(t2.sn[kk]){t2.sn[kk]={n:'',links:[],mtime:Date.now()};openSec=null;save();renderMethod();toast('已清除筆記')}}
@@ -2949,9 +2968,9 @@ function kdSection(g,key,label){
 }
 function kdRender(list,pfx){
   pfx=pfx||'u';
-  const ord=kdcatIds().filter(k=>k!=='todo');
+  const ord=kdcatIds();
   const groups={};ord.forEach(k=>groups[k]=[]);
-  list.forEach(x=>{const t=kdcatFix(x.k.type);if(t!=='todo')groups[t].push(x)});
+  list.forEach(x=>{groups[kdcatFix(x.k.type)].push(x)});
   return ord.filter(t=>groups[t].length)
     .map(t=>kdSection(groups[t],pfx+':'+t,kdcatName(t))).join('');
 }
@@ -2965,13 +2984,13 @@ function progRow(k,d){
     <span class="ptxt">${esc(k.title)}</span>
     <span class="pdate">${md}</span>
     <span class="pday" style="background:${bg};color:${col}">${lab}</span>
-    <span class="cxg"><button class="cx e" data-ed-kd="${k.id}" title="編輯">✎</button>
-      <button class="cx" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></span></div>`;
+    <span class="cxg"><button class="cx e" data-ed-pg="${k.id}" title="編輯">✎</button>
+      <button class="cx" data-hold="prog|${k.id}" title="長按 1.5 秒刪除">✕</button></span></div>`;
 }
-function renderKDTodo(){
-  const el=document.getElementById('kdTodo');if(!el)return;
+function renderProg(){
+  const el=document.getElementById('progList');if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
-  const rows=(S.kd||[]).filter(k=>kdcatFix(k.type)==='todo')
+  const rows=(S.prog||[])
     .map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}))
     .sort((a,b)=>a.d-b.d);
   el.innerHTML=rows.length?`<div class="prog">${rows.map(x=>progRow(x.k,x.d)).join('')}</div>`
@@ -2982,10 +3001,9 @@ function renderKD(){
   const today=new Date();today.setHours(0,0,0,0);
   const cut=62;
   const before=S.kd.length;
-  S.kd=S.kd.filter(k=>kdcatFix(k.type)==='todo'||Math.round((new Date(k.date)-today)/DAY)>=-cut);
+  S.kd=S.kd.filter(k=>Math.round((new Date(k.date)-today)/DAY)>=-cut);
   if(S.kd.length!==before)save();
-  renderKDTodo();
-  const withD=S.kd.filter(k=>kdcatFix(k.type)!=='todo').map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}));
+  const withD=S.kd.map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}));
   const up=withD.filter(x=>x.d>=0).sort((a,b)=>a.d-b.d);
   const past=withD.filter(x=>x.d<0).sort((a,b)=>b.d-a.d);
   el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">沒有即將到來的日期。</div>`;
@@ -3002,19 +3020,13 @@ document.getElementById('kdPastRow').addEventListener('click',e=>{
   const g=e.target.closest('[data-kgrp]');
   if(g){const k=g.dataset.kgrp;openKG.has(k)?openKG.delete(k):openKG.add(k);renderKD()}
 }));
-let kdMode='kd';
-function kdSetMode(m){
-  kdMode=m;
-  const w=document.getElementById('kdTypeWrap');
-  if(w)w.style.display=m==='todo'?'none':'';
-}
-function kdReset(){editKD=null;kdSetMode('kd');
+function kdReset(){editKD=null;
   document.getElementById('kd-date').value='';document.getElementById('kd-title').value='';
   document.getElementById('addKD').textContent='Save';}
 function kdClick(e){
   const ed=e.target.closest('[data-ed-kd]');
   if(ed){const k=S.kd.find(x=>x.id===ed.dataset.edKd);editKD=k.id;
-    show('kdForm',true);kdSetMode(kdcatFix(k.type)==='todo'?'todo':'kd');
+    show('kdForm',true);
     document.getElementById('kd-date').value=k.date;
     document.getElementById('kd-title').value=k.title;
     document.getElementById('kd-type').value=kdcatFix(k.type);
@@ -3023,14 +3035,31 @@ function kdClick(e){
 }
 document.getElementById('kdList').addEventListener('click',kdClick);
 document.getElementById('kdPastList').addEventListener('click',kdClick);
-document.getElementById('kdTodo').addEventListener('click',kdClick);
-document.getElementById('toggleTD').onclick=()=>{
-  if(toggle('kdForm')){kdSetMode('todo');document.getElementById('kd-title').focus()}
-  else kdReset();
+let editPG=null;
+function pgReset(){editPG=null;
+  document.getElementById('pg-date').value='';document.getElementById('pg-title').value='';
+  document.getElementById('addPG').textContent='Save';}
+document.getElementById('progList').addEventListener('click',e=>{
+  const ed=e.target.closest('[data-ed-pg]');if(!ed)return;
+  const k=(S.prog||[]).find(x=>x.id===ed.dataset.edPg);if(!k)return;
+  editPG=k.id;show('pgForm',true);
+  document.getElementById('pg-date').value=k.date||'';
+  document.getElementById('pg-title').value=k.title||'';
+  document.getElementById('addPG').textContent='Update';
+  document.getElementById('pg-title').focus();
+});
+document.getElementById('togglePG').onclick=()=>{
+  if(toggle('pgForm'))document.getElementById('pg-title').focus();else pgReset()};
+document.getElementById('cancelPG').onclick=()=>{show('pgForm',false);pgReset()};
+document.getElementById('addPG').onclick=()=>{
+  const d=document.getElementById('pg-date').value,t=document.getElementById('pg-title').value.trim();
+  if(!d||!t){toast('請填事項和日期');return}
+  if(!Array.isArray(S.prog))S.prog=[];
+  if(editPG)Object.assign(S.prog.find(x=>x.id===editPG),{date:d,title:t,mtime:Date.now()});
+  else S.prog.push({id:uid(),created:Date.now(),mtime:Date.now(),date:d,title:t});
+  pgReset();show('pgForm',false);saved();renderProg();
 };
-document.getElementById('toggleKD').onclick=()=>{
-  if(toggle('kdForm')){kdSetMode('kd');document.getElementById('kd-title').focus()}
-  else kdReset()};
+document.getElementById('toggleKD').onclick=()=>{if(toggle('kdForm'))document.getElementById('kd-title').focus();else kdReset()};
 document.getElementById('cancelKD').onclick=()=>{show('kdForm',false);kdReset()};
 document.getElementById('kd-type').addEventListener('change',e=>{
   if(e.target.value!=='__new')return;
@@ -3041,7 +3070,7 @@ document.getElementById('kd-type').addEventListener('change',e=>{
 document.getElementById('addKD').onclick=()=>{
   const d=document.getElementById('kd-date').value,t=document.getElementById('kd-title').value.trim();
   if(!d||!t){toast('請填日期和標題');return}
-  const ty=kdMode==='todo'?'todo':kdcatFix(document.getElementById('kd-type').value);
+  const ty=kdcatFix(document.getElementById('kd-type').value);
   if(editKD)Object.assign(S.kd.find(x=>x.id===editKD),{date:d,title:t,type:ty});
   else S.kd.push({id:uid(),date:d,title:t,type:ty});
   kdReset();show('kdForm',false);saved();renderKD();
@@ -3050,7 +3079,7 @@ let gcCur=null,gcOpen=false;
 
 
 /* 自動判斷 KEY DATE 類型：先看類型碼（*D / *E / *M / *T / *S），再用關鍵字 */
-const KDCODE={d:'other',e:'exam',m:'todo',t:'todo',s:'school',p:'school'};
+const KDCODE={d:'other',e:'exam',m:'other',t:'other',s:'school',p:'school'};
 function kdAutoType(raw){
   const m=raw.match(/^([A-Za-z])[\s\-·:：]/);
   if(m){const t=KDCODE[m[1].toLowerCase()];if(t)return{type:t,title:raw.slice(m[0].length).trim(),explicit:true}}
@@ -3058,7 +3087,6 @@ function kdAutoType(raw){
   const has=(...ws)=>ws.some(w=>s.includes(w)||raw.includes(w));
   let type='other';
   if(has('考','exam','quiz','口試','資格'))type='exam';
-  else if(has('meeting','討論','報告','presentation','journal club','演講','seminar'))type='todo';
   else if(has('註冊','選課','開學','放假','校','學期','畢業'))type='school';
   return{type,title:raw};
 }
@@ -3194,6 +3222,7 @@ document.getElementById('trashList').addEventListener('click',e=>{
     else if(x.type==='mt')renderMT();
     else if(x.type==='dir')renderDIR();
     else if(x.type==='note')renderNt();
+    else if(x.type==='prog')renderProg();
     else if(x.type==='kd')renderKD();
     else if(x.type==='cs')renderTT();
     toast('已還原');
@@ -3289,6 +3318,7 @@ function mergeState(inc){
   S.notes=applyTombs(mergeArr(S.notes,inc.notes),tm);
   if(inc.imgs)S.imgs=Object.assign({},inc.imgs,S.imgs||{});
   S.kd=applyTombs(mergeArr(S.kd,inc.kd),tm);
+  S.prog=applyTombs(mergeArr(S.prog||[],inc.prog||[]),tm);
   S.courses=applyTombs(mergeArr(S.courses,inc.courses),tm);
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
   S.themes=mergeThemes(S.themes,inc.themes);
@@ -3301,6 +3331,7 @@ function mergeState(inc){
     S.gcMonths=inc.gcMonths||12;S.gcAuto=!!inc.gcAuto}
   else if(!S.gc&&inc.gc){S.gc=inc.gc;S.gcAt=inc.gcAt||0}
   if(inc.lastExport&&(!S.lastExport||inc.lastExport>S.lastExport))S.lastExport=inc.lastExport;
+  migrateProg();
 }
 let impMode='merge';
 document.getElementById('impBtn').onclick=()=>{impMode='merge';document.getElementById('impFile').click()};
@@ -3634,7 +3665,7 @@ function renderCatMgr(){
           ${built?`<span class="pill" style="font-size:10px;color:var(--faint)">內建</span>`
                  :`<button class="x" data-hold="${set.hold}|${x.id}" style="font-size:12px" title="長按 1.5 秒刪除">✕</button>`}
         </div>`}).join('')
-      +`<p class="hint" style="margin:2px 0 14px;font-size:11.5px">在下拉選單最下面選「＋ 新增…」加新的。</p>`;
+      +`<div style="height:10px"></div>`;
   }).join('');
 }
 document.getElementById('catMgr').addEventListener('input',e=>{
@@ -3648,6 +3679,11 @@ document.getElementById('catMgr').addEventListener('change',e=>{
   fillSelects();renderPapers();renderQ();renderNt();renderKD();renderCatMgr();
 });
 document.querySelectorAll('#p-settings [data-setg]').forEach(b=>{b.innerHTML=CHEV});
+document.body.addEventListener('click',e=>{
+  const q=e.target.closest('[data-tip]');if(!q)return;
+  const t=document.getElementById(q.dataset.tip);if(!t)return;
+  const on=t.classList.toggle('on');q.setAttribute('aria-expanded',on);
+});
 document.getElementById('p-settings').addEventListener('click',e=>{
   const b=e.target.closest('[data-setg]');if(!b)return;
   const body=document.getElementById('sg-'+b.dataset.setg);if(!body)return;
@@ -3782,7 +3818,7 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
   <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內<strong>星號優先，再按加入時間新到舊</strong>（不是出版年）。分類在編輯模式的下拉選。</p>
-  <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。改名和刪除到 <strong>Settings → 分類管理</strong>。</p>
+  <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。改名和刪除到 <strong>Settings → 分類與清理 → 分類清單</strong>。</p>
   <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，<strong>完整支援 Markdown</strong>（標題、巢狀清單、表格、引用、程式碼——細節見「共通操作 → Markdown」），空欄位不顯示。每個欄位有自己的小標題列：<strong>左側分類色色條＋整條淡底色＋固定編號</strong>（01 研究問題 … 09 Note），編號不會因為某欄空著就跳號，所以看一眼就知道這張卡少了哪幾塊。編輯模式的輸入框用等寬字、加高到 110px，方便直接寫 Markdown。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
   <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
   <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
@@ -3799,7 +3835,7 @@ document.getElementById('helpBox').innerHTML=`
   <p>分頁最上方的<strong>搜尋框同時過濾 Questions 和 Notes</strong>，比對範圍是問題、答案、筆記標題、內容、附件名稱與標籤。<strong>空白分隔＝而且</strong>（打 <code>collider 偏誤</code> 只留兩個詞都出現的）。搜尋時<strong>所有分組自動展開</strong>，不必再一個個點箭號；按 <strong>✕</strong> 清掉搜尋與標籤篩選。</p>
   <p><strong>標籤</strong>在編輯卡片時填，用逗號或空白分隔。搜尋框下方的<strong>標籤列</strong>列出所有用過的標籤（常用的排前面），點一下篩選、再點取消，可以疊加多個標籤（＝同時有這些標籤的才留下）。卡片上的標籤也能直接點。標籤和 Reading 分頁共用同一個標籤庫，所以 paper 和問題可以用同一套詞彙串起來。</p>
   <h4>自己加分類</h4>
-  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。改名和刪除到 <strong>Settings → 分類管理</strong>。</p>
+  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。改名和刪除到 <strong>Settings → 分類與清理 → 分類清單</strong>。</p>
   <h4>Questions</h4>
   <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊、一列一張，因為手上還沒解決的東西就是該一眼看完。卡片<strong>不標狀態</strong>——沒解決的都在上面，已解決的都在 Resolved 裡，不需要再貼標籤講一次。<strong>點問題本身可以把答案收起來</strong>，收起時標題後面會有一個 ⌄；再點一次展開。</p>
   <p><strong>Resolved</strong>（粗體那行）<strong>分成左目錄、右清單</strong>。左邊窄欄底色較深，依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。<strong>預設展開、先顯示最近解決的 3 筆</strong>，底下的「更多」看全部；Resolved 右邊的雙箭號可以把整區收起來。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
@@ -3831,18 +3867,20 @@ document.getElementById('helpBox').innerHTML=`
 </div></details>
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
-  <h4>KEY DATES</h4>
-  <p>依 Type 分組（Deadline、Exam、School、Other，以及你自己加的），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
-  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方置中的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
+  <p>由上到下三區：<strong>📌 PROGRESS → 📅 KEY DATES → 🗓️ TIMETABLE</strong>。</p>
+  <h4>📌 PROGRESS</h4>
+  <p>寫「論文下一步該做什麼」。和 Meeting 分頁的 ✅ TO-DO 不一樣——那邊是從每場 meeting 的 action items 自動撈出來的。</p>
+  <p>樣式刻意和 KEY DATES 不同：一張卡裡一行一項（圓點、事項、日期、倒數），<strong>全部列出、不分類、不折疊</strong>。依日期排，<strong>逾期的排最上面並整列變紅</strong>。</p>
+  <p><strong>PROGRESS 和 KEY DATES 是兩份獨立的資料</strong>，各有各的 ＋ 和表單，互不影響。這裡的項目<strong>不會因為過期兩個月被自動刪除</strong>，除非你自己長按 ✕ 刪掉（會進回收桶）。Google 日曆只會流進 KEY DATES，不會流進這裡。</p>
+  <h4>📅 KEY DATES</h4>
+  <p>依 Type 分組（Exam、School、Other，以及你自己加的），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目。</p>
+  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。最下方置中的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
   <p>Calendar 分頁最下面置中的「<strong>Google 日曆 ⌄⌄</strong>」展開嵌入的月曆，預設收著，不展開就不會載入。</p>
-  <p>設定在 <strong>Settings → GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
-  <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
-  <p><strong>關鍵字（備援）</strong>：含「截止／繳交／deadline／投稿」→ Deadline；含「考／口試／資格」→ Exam；含「meeting／討論／報告／seminar」→ To do；含「註冊／選課／開學／畢業」→ School。關鍵字猜的只在類型還是 Other 時才填，不會動你手動分好的。</p>
-  <h4>📌 進度清單</h4>
-  <p>Type 選 <strong>To do</strong> 的項目會從 KEY DATES 抽出來，自己一區，<strong>全部列出不折疊</strong>。這裡是寫「論文下一步該做什麼」的，和 Meeting 分頁的 ✅ TO-DO 不一樣——那邊是從每場 meeting 的 action items 自動撈出來的。</p>
-  <p>依日期排，<strong>逾期的排在最上面</strong>（倒數膠囊顯示「N 天前」）。進度清單的項目<strong>不會因為過期兩個月被自動刪除</strong>，也不會跑進「已過期」區，除非你自己長按 ✕ 刪掉。Google 日曆的 <code>*M</code>／<code>*T</code> 類型碼一樣會流進這裡。</p>
-  <h4>TIMETABLE</h4>
+  <p>設定在 <strong>Settings → Google 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
+  <p><strong>類型碼（最準）</strong>：寫 <code>*E 資格考</code>，星號後第一個字母即類型——<code>E</code> Exam、<code>S</code> School，其他字母進 Other，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
+  <p><strong>關鍵字（備援）</strong>：含「考／口試／資格」→ Exam；含「註冊／選課／開學／畢業」→ School；其餘 Other。關鍵字猜的只在類型還是 Other 時才填，不會動你手動分好的。</p>
+  <h4>🗓️ TIMETABLE</h4>
   <p>管「星期幾幾點在哪間教室」。課程可填學分與領域，衝堂會提示。</p>
 </div></details>
 
@@ -3908,7 +3946,7 @@ document.getElementById('helpBox').innerHTML=`
 `;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
-  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderCatMgr();renderHelp()}
+  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderTT();renderProg();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderCatMgr();renderHelp()}
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
