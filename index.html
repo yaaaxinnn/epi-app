@@ -85,6 +85,18 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .tg{cursor:pointer;font-size:10px;padding:1px 7px;user-select:none}
 .tg[aria-pressed="true"]{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac)}
 .srchinfo{font-family:var(--mono);font-size:11px;color:var(--faint);margin:0 0 6px;letter-spacing:.04em}
+.setg{color:var(--ac);font-size:11.5px;font-weight:600;margin:22px 0 9px}
+.setg:first-child{margin-top:6px}
+.setbody{margin-bottom:6px}
+.prog{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.prow{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.prow:last-child{border-bottom:0}
+.prow .pdot{flex:0 0 auto;width:8px;height:8px;border-radius:50%}
+.prow .ptxt{flex:1;min-width:0;font-size:14.5px;line-height:1.4}
+.prow .pdate{flex:0 0 auto;font-family:var(--mono);font-size:11px;color:var(--faint)}
+.prow .pday{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;padding:2px 8px;border-radius:20px}
+.prow.past{background:color-mix(in srgb,var(--clay-soft) 50%,var(--surface))}
+.prow.past .ptxt{color:var(--clay);font-weight:500}
 .dirwrap{display:flex;gap:11px;align-items:flex-start;margin-top:6px}
 .dirnav{flex:0 0 104px;min-width:0;background:var(--cream-soft);border:1px solid var(--line);
   border-radius:8px;padding:5px 4px;position:sticky;top:60px}
@@ -291,9 +303,6 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .warn{border:1px solid var(--clay-mid);background:var(--clay-soft);color:var(--clay);border-radius:var(--r);padding:11px 13px;font-size:13.5px;margin-bottom:12px}
 .bakrow{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:13px}
 .bakrow .d{font-family:var(--mono);color:var(--muted);flex:1}
-.qm{flex:0 0 auto;background:none;border:0;color:var(--faint);font-size:15px;line-height:1;padding:2px 4px;cursor:pointer}
-.qm:hover{color:var(--ac)}
-.qm[aria-expanded="true"]{color:var(--ac)}
 .tip{display:none;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
   padding:10px 13px;font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 12px}
 .tip.on{display:block}
@@ -607,13 +616,17 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 
 <!-- ========== Calendar ========== -->
 <section class="panel" id="p-calendar">
+  <div class="blockhead"><span class="bt">📌 PROGRESS</span><span class="spacer"></span>
+    <button class="iconb" id="toggleTD" title="新增進度項目">＋</button></div>
+  <div id="kdTodo"></div>
+
   <div class="blockhead"><span class="bt">📅 KEY DATES</span><span class="spacer"></span>
     <button class="iconb" id="toggleKD" title="新增日期">＋</button></div>
   
   <div class="card" id="kdForm" style="display:none">
     <div class="grid2">
       <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
-      <label class="f"><span>Type</span><select id="kd-type"></select></label>
+      <label class="f" id="kdTypeWrap"><span>Type</span><select id="kd-type"></select></label>
     </div>
     <label class="f"><span>Title</span><input type="text" id="kd-title"></label>
     <div class="saverow"><button class="btn ghost" id="cancelKD">Cancel</button><button class="btn" id="addKD">Save</button></div>
@@ -621,10 +634,6 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div id="kdList"></div>
   <div class="row" id="kdPastRow" style="margin-top:4px"></div>
   <div id="kdPastList"></div>
-
-  <div class="blockhead"><span class="bt">📌 進度清單</span><span class="spacer"></span>
-    <button class="iconb" id="toggleTD" title="新增進度項目">＋</button></div>
-  <div id="kdTodo"></div>
 
   <div class="blockhead"><span class="bt">🗓️ TIMETABLE</span><span class="spacer"></span>
     <div class="seg sm" id="termSeg"></div></div>
@@ -671,106 +680,104 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 <!-- ========== Settings ========== -->
 <section class="panel" id="p-settings">
 
-  <div class="blockhead plain"><span class="bt">同步</span><span class="spacer"></span>
-    <button class="qm" data-tip="tipGh" aria-expanded="false">ⓘ</button></div>
-  <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
-  <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
-  <details class="card fold" id="ghFold"><summary>GitHub 設定</summary>
-    <div class="grid2">
-      <label class="f"><span>Owner／使用者名稱</span><input type="text" id="gh-owner"></label>
-      <label class="f"><span>私密 repo 名稱</span><input type="text" id="gh-repo"></label>
+  <div class="kdgroup setg">同步<button class="kx" data-setg="sync" aria-expanded="false" title="展開"></button></div>
+  <div class="setbody" id="sg-sync" style="display:none">
+    <div class="tip on">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
+    <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
+    <div class="card" id="ghFold">
+      <div class="grid2">
+        <label class="f"><span>Owner／使用者名稱</span><input type="text" id="gh-owner"></label>
+        <label class="f"><span>私密 repo 名稱</span><input type="text" id="gh-repo"></label>
+      </div>
+      <div class="grid2">
+        <label class="f"><span>Branch</span><input type="text" id="gh-branch" placeholder="main"></label>
+        <label class="f"><span>檔案路徑</span><input type="text" id="gh-path" placeholder="data/notes.json"></label>
+      </div>
+      <label class="f"><span>Fine-grained token</span><input type="password" id="gh-token" autocomplete="off"></label>
+      <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="gh-auto"><span style="flex:1">開啟自動同步</span></label>
+      <div class="row">
+        <button class="btn ghost mini" id="ghPullBtn">⬇ 下載合併</button>
+        <button class="btn ghost mini" id="ghPushBtn">⬆ 上傳</button>
+        <span class="spacer"></span>
+        <button class="btn mini" id="ghSave">儲存設定</button>
+      </div>
+      <p class="hint" style="margin:10px 0 0" id="ghState"></p>
     </div>
-    <div class="grid2">
-      <label class="f"><span>Branch</span><input type="text" id="gh-branch" placeholder="main"></label>
-      <label class="f"><span>檔案路徑</span><input type="text" id="gh-path" placeholder="data/notes.json"></label>
-    </div>
-    <label class="f"><span>Fine-grained token</span><input type="password" id="gh-token" autocomplete="off"></label>
-    <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="gh-auto"><span style="flex:1">開啟自動同步</span></label>
-    <div class="row">
-      <button class="btn ghost mini" id="ghPullBtn">⬇ 下載合併</button>
-      <button class="btn ghost mini" id="ghPushBtn">⬆ 上傳</button>
-      <span class="spacer"></span>
-      <button class="btn mini" id="ghSave">儲存設定</button>
-    </div>
-    <p class="hint" style="margin:10px 0 0" id="ghState"></p>
-  </details>
-
-  <div class="blockhead plain"><span class="bt">備份</span><span class="spacer"></span>
-    <button class="qm" data-tip="tipData" aria-expanded="false">ⓘ</button></div>
-  <div class="tip" id="tipData"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br>
-  <strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。</div>
-  <div id="expWarn"></div>
-  <div class="card">
-    <div class="row">
-      <button class="btn ghost mini" id="impBtn" title="把檔案裡的資料併進現有資料，不會刪東西">⇊ Merge</button>
-      <button class="btn ghost mini" id="impRepBtn" title="整包換掉，現有資料會全部消失">⟳ Replace</button>
-      <input type="file" id="impFile" accept=".json" style="display:none">
-      <span class="spacer"></span>
-      <button class="btn mini" id="expBtn">⇈ Export</button>
-    </div>
-    <p class="hint" style="margin:10px 0 0" id="expInfo"></p>
   </div>
-  <details class="card fold"><summary>每日自動存檔</summary>
-    <p class="hint" style="margin:6px 0 10px" id="tipBak">每天第一次開啟時自動複製一份，保留最近三份。手殘刪錯可以整包還原。<br>
-    注意：這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</p>
-    <div id="bakList"></div>
-    <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
-  </details>
 
-  <div class="blockhead plain"><span class="bt">Google 日曆</span></div>
-  <details class="card fold"><summary>日曆設定</summary>
-    <p class="hint" style="margin:6px 0 10px">嵌入網址顯示在 Calendar 分頁最下面；下方的 ID 與金鑰用來自動抓 KEY DATES。取得方式見 HELP。</p>
-    <div class="linkrow"><span class="ic">🔗</span><input type="text" id="gcUrl" placeholder="嵌入網址"></div>
-    <div class="grid2" style="margin-top:12px">
-      <label class="f"><span>日曆 ID</span><input type="text" id="gc-id" placeholder="…@group.calendar.google.com"></label>
-      <label class="f"><span>API 金鑰</span><input type="password" id="gc-key" autocomplete="off"></label>
+  <div class="kdgroup setg">備份<button class="kx" data-setg="backup" aria-expanded="false" title="展開"></button></div>
+  <div class="setbody" id="sg-backup" style="display:none">
+    <div class="tip on"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br>
+    <strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。</div>
+    <div id="expWarn"></div>
+    <div class="card">
+      <div class="row">
+        <button class="btn ghost mini" id="impBtn" title="把檔案裡的資料併進現有資料，不會刪東西">⇊ Merge</button>
+        <button class="btn ghost mini" id="impRepBtn" title="整包換掉，現有資料會全部消失">⟳ Replace</button>
+        <input type="file" id="impFile" accept=".json" style="display:none">
+        <span class="spacer"></span>
+        <button class="btn mini" id="expBtn">⇈ Export</button>
+      </div>
+      <p class="hint" style="margin:10px 0 0" id="expInfo"></p>
     </div>
-    <div class="grid2">
-      <label class="f"><span>只抓開頭是</span><input type="text" id="gc-prefix" value="*"></label>
-      <label class="f"><span>往後幾個月</span><input type="number" id="gc-months" value="12" min="1" max="36"></label>
-    </div>
-    <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="gc-auto"><span style="flex:1">開啟自動抓取</span></label>
-    <div class="row">
-      <button class="btn ghost mini" id="gcFetch">立刻抓一次</button>
-      <span class="spacer"></span>
-      <button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button>
-    </div>
-    <p class="hint" style="margin:10px 0 0" id="gcState"></p>
-  </details>
+    <details class="card fold"><summary>每日自動存檔</summary>
+      <p class="hint" style="margin:6px 0 10px" id="tipBak">每天第一次開啟時自動複製一份，保留最近三份。手殘刪錯可以整包還原。<br>
+      注意：這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——<strong>真正的備份還是上面的 Export</strong>。</p>
+      <div id="bakList"></div>
+      <div class="saverow"><button class="btn ghost mini" id="bakNow">立刻存一份</button></div>
+    </details>
+  </div>
 
-  <div class="blockhead plain"><span class="bt">分類管理</span><span class="spacer"></span>
-    <button class="qm" data-tip="tipCat" aria-expanded="false">ⓘ</button></div>
-  <div class="tip" id="tipCat">三組分類各自獨立：<strong>Reading 的分類標籤</strong>、<strong>Questions 與 Notes 共用的分類</strong>、<strong>KEY DATES 的類型</strong>。在任何一個下拉選單最下面選「＋ 新增…」就能加，加完所有同組的下拉都看得到。<br>
-  名字可以直接在這裡改，改完所有卡片跟著更新（卡片存的是代號不是名字）。內建的那幾個可以改名但不能刪。<br>
-  <span style="color:var(--clay)">刪掉自訂分類時，底下的項目不會被刪，只會退回預設分類（Reading → 未分類；Questions／Notes → 第一個分類；KEY DATES → Other）。</span></div>
-  <details class="card fold"><summary>分類清單</summary>
-    <div id="catMgr" style="margin-top:6px"></div>
-  </details>
-
-  <div class="blockhead plain"><span class="bt">刪除與清理</span><span class="spacer"></span>
-    <button class="qm" data-tip="tipClean" aria-expanded="false">ⓘ</button></div>
-  <div class="tip" id="tipClean"><strong>回收桶</strong>：刪掉的卡片先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記在墓碑名單裡跟著同步，其他裝置不會把它送回來。<br>
-  <strong>沒有卡片指向的 HTML</strong>：卡片刪掉時，它對應的精讀 HTML 不會跟著刪，久了就會在 repo 裡累積。這裡掃出來讓你清掉。<br>
-  <span style="color:var(--clay)">清單是「沒有卡片指向」而不是「沒用的」——你自己放進 repo 的其他 HTML 也會出現在這裡。刪之前先用 👁 看一眼。刪除無法復原，但 GitHub 的 commit 歷史仍留著舊版本。</span></div>
-  <details class="card fold"><summary>🗑️ 回收桶</summary>
-    <div id="trashList" style="margin-top:6px"></div>
-  </details>
-  <details class="card fold"><summary>沒有卡片指向的 HTML</summary>
-    <p class="hint" style="margin:6px 0 10px">比對 repo 裡所有 .html 與卡片的 🔗 路徑。需要先設定好上面的 GitHub 同步。</p>
-    <p class="hint" style="margin:0 0 10px" id="repoSize">repo 用量：尚未查詢</p>
-    <div class="row" style="margin-bottom:8px">
-      <button class="btn ghost mini" id="orphScan">🔍 掃描</button>
-      <span class="spacer"></span>
-      <button class="btn ghost mini" id="orphAll" style="display:none">全選／全不選</button>
+  <div class="kdgroup setg">Google 日曆<button class="kx" data-setg="gcal" aria-expanded="false" title="展開"></button></div>
+  <div class="setbody" id="sg-gcal" style="display:none">
+    <div class="card">
+      <p class="hint" style="margin:0 0 10px">嵌入網址顯示在 Calendar 分頁最下面；下方的 ID 與金鑰用來自動抓 KEY DATES。取得方式見使用說明。</p>
+      <div class="linkrow"><span class="ic">🔗</span><input type="text" id="gcUrl" placeholder="嵌入網址"></div>
+      <div class="grid2" style="margin-top:12px">
+        <label class="f"><span>日曆 ID</span><input type="text" id="gc-id" placeholder="…@group.calendar.google.com"></label>
+        <label class="f"><span>API 金鑰</span><input type="password" id="gc-key" autocomplete="off"></label>
+      </div>
+      <div class="grid2">
+        <label class="f"><span>只抓開頭是</span><input type="text" id="gc-prefix" value="*"></label>
+        <label class="f"><span>往後幾個月</span><input type="number" id="gc-months" value="12" min="1" max="36"></label>
+      </div>
+      <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="gc-auto"><span style="flex:1">開啟自動抓取</span></label>
+      <div class="row">
+        <button class="btn ghost mini" id="gcFetch">立刻抓一次</button>
+        <span class="spacer"></span>
+        <button class="btn ghost mini" id="clearGC">Clear</button><button class="btn mini" id="saveGC">Save</button>
+      </div>
+      <p class="hint" style="margin:10px 0 0" id="gcState"></p>
     </div>
-    <div id="orphList"></div>
-    <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="orphState"></span>
-      <button class="btn warn mini" id="orphDel" data-hold="orphdel|1" style="display:none" title="長按 1.5 秒刪除">長按刪除勾選的</button></div>
-  </details>
+  </div>
 
-  <div class="blockhead plain"><span class="bt">使用說明</span><span class="spacer"></span>
-    <button class="kx" id="helpToggle" aria-expanded="false" title="展開使用說明"></button></div>
-  <div id="helpBox" style="display:none"></div>
+  <div class="kdgroup setg">分類與清理<button class="kx" data-setg="clean" aria-expanded="false" title="展開"></button></div>
+  <div class="setbody" id="sg-clean" style="display:none">
+    <details class="card fold"><summary>分類清單</summary>
+      <p class="hint" style="margin:6px 0 10px">三組分類各自獨立。在任何一個下拉選單最下面選「＋ 新增…」就能加，加完同組的下拉都看得到。名字可以直接在這裡改，卡片存的是代號不是名字，改名不會動到資料。內建的可以改名但不能刪；刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設（Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other）。</p>
+      <div id="catMgr"></div>
+    </details>
+    <details class="card fold"><summary>🗑️ 回收桶</summary>
+      <p class="hint" style="margin:6px 0 10px">刪掉的卡片先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記在墓碑名單裡跟著同步，其他裝置不會把它送回來。</p>
+      <div id="trashList"></div>
+    </details>
+    <details class="card fold"><summary>沒有卡片指向的 HTML</summary>
+      <p class="hint" style="margin:6px 0 10px">卡片刪掉時，它對應的精讀 HTML 不會跟著刪，久了就會在 repo 裡累積。這裡比對 repo 裡所有 .html 與卡片的 🔗 路徑，掃出沒人指向的。需要先設定好上面的 GitHub 同步。<br>
+      <span style="color:var(--clay)">清單是「沒有卡片指向」而不是「沒用的」——你自己放進 repo 的其他 HTML 也會出現在這裡。刪之前先用 👁 看一眼。刪除無法復原，但 GitHub 的 commit 歷史仍留著舊版本。</span></p>
+      <p class="hint" style="margin:0 0 10px" id="repoSize">repo 用量：尚未查詢</p>
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn ghost mini" id="orphScan">🔍 掃描</button>
+        <span class="spacer"></span>
+        <button class="btn ghost mini" id="orphAll" style="display:none">全選／全不選</button>
+      </div>
+      <div id="orphList"></div>
+      <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="orphState"></span>
+        <button class="btn warn mini" id="orphDel" data-hold="orphdel|1" style="display:none" title="長按 1.5 秒刪除">長按刪除勾選的</button></div>
+    </details>
+  </div>
+
+  <div class="kdgroup setg">使用說明<button class="kx" data-setg="help" aria-expanded="false" title="展開"></button></div>
+  <div class="setbody" id="sg-help" style="display:none"><div id="helpBox"></div></div>
 
 </section>
 
@@ -858,13 +865,13 @@ function qcatAdd(name){
   const pal=CATPAL[(qcats().length+2)%CATPAL.length];
   const id='k'+uid();S.qcats.push({id,name,col:pal[0],soft:pal[1]});return id;
 }
-const DEFAULT_KDCATS=[{id:'deadline',name:'Deadline'},{id:'exam',name:'Exam'},
-  {id:'todo',name:'To do'},{id:'school',name:'School'},{id:'other',name:'Other'}];
+const DEFAULT_KDCATS=[{id:'exam',name:'Exam'},{id:'school',name:'School'},
+  {id:'other',name:'Other'},{id:'todo',name:'To do',hidden:true}];
 function kdcats(){if(!Array.isArray(S.kdcats)||!S.kdcats.length)S.kdcats=DEFAULT_KDCATS.map(x=>Object.assign({},x));return S.kdcats}
 function kdcatIds(){return kdcats().map(x=>x.id)}
 function kdcatName(id){const x=kdcats().find(y=>y.id===id);return x?x.name:id}
 function kdcatFix(k){const ids=kdcatIds();return ids.includes(k)?k:'other'}
-function kdcatOpts(cur){return kdcats().map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
+function kdcatOpts(cur){return kdcats().filter(x=>!x.hidden).map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
   +'<option value="__new">＋ 新增類型…</option>'}
 function kdcatAdd(name){
   name=String(name||'').trim();if(!name)return null;
@@ -1111,6 +1118,13 @@ async function load(){
   if(!Array.isArray(S.cats)||!S.cats.length)S.cats=DEFAULT_CATS.map(c=>Object.assign({},c));
   if(!Array.isArray(S.qcats)||!S.qcats.length)S.qcats=DEFAULT_QCATS.map(c=>Object.assign({},c));
   if(!Array.isArray(S.kdcats)||!S.kdcats.length)S.kdcats=DEFAULT_KDCATS.map(c=>Object.assign({},c));
+  if(S.kdcats.some(x=>x.id==='deadline')){
+    S.kdcats=S.kdcats.filter(x=>x.id!=='deadline');
+    (S.kd||[]).forEach(k=>{if(k.type==='deadline')k.type='other'});
+  }
+  {const td=S.kdcats.find(x=>x.id==='todo');
+   if(td)td.hidden=true;else S.kdcats.push({id:'todo',name:'To do',hidden:true});}
+  (S.kd||[]).forEach(k=>{if(!S.kdcats.some(x=>x.id===k.type))k.type='other'});
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
   (S.cards||[]).forEach(c=>{if(!Array.isArray(c.links)){c.links=c.link?[{id:uid(),label:'',url:c.link}]:[]}});
@@ -2941,13 +2955,26 @@ function kdRender(list,pfx){
   return ord.filter(t=>groups[t].length)
     .map(t=>kdSection(groups[t],pfx+':'+t,kdcatName(t))).join('');
 }
+function progRow(k,d){
+  const past=d<0;
+  const[,col,bg]=past?['past','#A8483B','#F6E7E4']:kdUrg(d);
+  const lab=past?Math.abs(d)+'天前':(d===0?'今天':d+'天');
+  const dd=new Date(k.date),md=(dd.getMonth()+1)+'/'+String(dd.getDate()).padStart(2,'0');
+  return `<div class="prow${past?' past':''}">
+    <span class="pdot" style="background:${col}"></span>
+    <span class="ptxt">${esc(k.title)}</span>
+    <span class="pdate">${md}</span>
+    <span class="pday" style="background:${bg};color:${col}">${lab}</span>
+    <span class="cxg"><button class="cx e" data-ed-kd="${k.id}" title="編輯">✎</button>
+      <button class="cx" data-hold="kd|${k.id}" title="長按 1.5 秒刪除">✕</button></span></div>`;
+}
 function renderKDTodo(){
   const el=document.getElementById('kdTodo');if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
   const rows=(S.kd||[]).filter(k=>kdcatFix(k.type)==='todo')
     .map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}))
     .sort((a,b)=>a.d-b.d);
-  el.innerHTML=rows.length?rows.map(x=>kdRow(x.k,x.d)).join('')
+  el.innerHTML=rows.length?`<div class="prog">${rows.map(x=>progRow(x.k,x.d)).join('')}</div>`
     :`<div class="empty">還沒有進度項目。點 ＋ 列下一步該做什麼。</div>`;
 }
 function renderKD(){
@@ -2975,13 +3002,19 @@ document.getElementById('kdPastRow').addEventListener('click',e=>{
   const g=e.target.closest('[data-kgrp]');
   if(g){const k=g.dataset.kgrp;openKG.has(k)?openKG.delete(k):openKG.add(k);renderKD()}
 }));
-function kdReset(){editKD=null;
+let kdMode='kd';
+function kdSetMode(m){
+  kdMode=m;
+  const w=document.getElementById('kdTypeWrap');
+  if(w)w.style.display=m==='todo'?'none':'';
+}
+function kdReset(){editKD=null;kdSetMode('kd');
   document.getElementById('kd-date').value='';document.getElementById('kd-title').value='';
   document.getElementById('addKD').textContent='Save';}
 function kdClick(e){
   const ed=e.target.closest('[data-ed-kd]');
   if(ed){const k=S.kd.find(x=>x.id===ed.dataset.edKd);editKD=k.id;
-    show('kdForm',true);
+    show('kdForm',true);kdSetMode(kdcatFix(k.type)==='todo'?'todo':'kd');
     document.getElementById('kd-date').value=k.date;
     document.getElementById('kd-title').value=k.title;
     document.getElementById('kd-type').value=kdcatFix(k.type);
@@ -2992,12 +3025,12 @@ document.getElementById('kdList').addEventListener('click',kdClick);
 document.getElementById('kdPastList').addEventListener('click',kdClick);
 document.getElementById('kdTodo').addEventListener('click',kdClick);
 document.getElementById('toggleTD').onclick=()=>{
-  if(toggle('kdForm')){
-    document.getElementById('kd-type').value='todo';
-    document.getElementById('kd-title').focus();
-  }else kdReset();
+  if(toggle('kdForm')){kdSetMode('todo');document.getElementById('kd-title').focus()}
+  else kdReset();
 };
-document.getElementById('toggleKD').onclick=()=>{if(toggle('kdForm'))document.getElementById('kd-title').focus();else kdReset()};
+document.getElementById('toggleKD').onclick=()=>{
+  if(toggle('kdForm')){kdSetMode('kd');document.getElementById('kd-title').focus()}
+  else kdReset()};
 document.getElementById('cancelKD').onclick=()=>{show('kdForm',false);kdReset()};
 document.getElementById('kd-type').addEventListener('change',e=>{
   if(e.target.value!=='__new')return;
@@ -3008,7 +3041,7 @@ document.getElementById('kd-type').addEventListener('change',e=>{
 document.getElementById('addKD').onclick=()=>{
   const d=document.getElementById('kd-date').value,t=document.getElementById('kd-title').value.trim();
   if(!d||!t){toast('請填日期和標題');return}
-  const ty=kdcatFix(document.getElementById('kd-type').value);
+  const ty=kdMode==='todo'?'todo':kdcatFix(document.getElementById('kd-type').value);
   if(editKD)Object.assign(S.kd.find(x=>x.id===editKD),{date:d,title:t,type:ty});
   else S.kd.push({id:uid(),date:d,title:t,type:ty});
   kdReset();show('kdForm',false);saved();renderKD();
@@ -3017,15 +3050,14 @@ let gcCur=null,gcOpen=false;
 
 
 /* 自動判斷 KEY DATE 類型：先看類型碼（*D / *E / *M / *T / *S），再用關鍵字 */
-const KDCODE={d:'deadline',e:'exam',m:'todo',t:'todo',s:'school',p:'school'};
+const KDCODE={d:'other',e:'exam',m:'todo',t:'todo',s:'school',p:'school'};
 function kdAutoType(raw){
   const m=raw.match(/^([A-Za-z])[\s\-·:：]/);
   if(m){const t=KDCODE[m[1].toLowerCase()];if(t)return{type:t,title:raw.slice(m[0].length).trim(),explicit:true}}
   const s=raw.toLowerCase();
   const has=(...ws)=>ws.some(w=>s.includes(w)||raw.includes(w));
   let type='other';
-  if(has('截止','繳交','deadline','due','投稿','送件','期限'))type='deadline';
-  else if(has('考','exam','quiz','口試','資格'))type='exam';
+  if(has('考','exam','quiz','口試','資格'))type='exam';
   else if(has('meeting','討論','報告','presentation','journal club','演講','seminar'))type='todo';
   else if(has('註冊','選課','開學','放假','校','學期','畢業'))type='school';
   return{type,title:raw};
@@ -3139,11 +3171,6 @@ async function renderBackups(){
 }
 
 document.getElementById('bakNow').onclick=()=>snapshot(true);
-document.body.addEventListener('click',e=>{
-  const q=e.target.closest('[data-tip]');if(!q)return;
-  const t=document.getElementById(q.dataset.tip);if(!t)return;
-  const on=t.classList.toggle('on');q.setAttribute('aria-expanded',on);
-});
 document.getElementById('trashList').addEventListener('click',e=>{
   if(hEl)return;
   const tg=e.target.closest('[data-trall]');
@@ -3620,15 +3647,14 @@ document.getElementById('catMgr').addEventListener('change',e=>{
   if(!e.target.closest('[data-catren]'))return;
   fillSelects();renderPapers();renderQ();renderNt();renderKD();renderCatMgr();
 });
-let helpOpen=false;
-document.getElementById('helpToggle').innerHTML=CHEV;
-document.getElementById('helpToggle').onclick=()=>{
-  helpOpen=!helpOpen;
-  const b=document.getElementById('helpToggle');
-  b.setAttribute('aria-expanded',helpOpen);
-  b.title=helpOpen?'收合使用說明':'展開使用說明';
-  document.getElementById('helpBox').style.display=helpOpen?'':'none';
-};
+document.querySelectorAll('#p-settings [data-setg]').forEach(b=>{b.innerHTML=CHEV});
+document.getElementById('p-settings').addEventListener('click',e=>{
+  const b=e.target.closest('[data-setg]');if(!b)return;
+  const body=document.getElementById('sg-'+b.dataset.setg);if(!body)return;
+  const on=b.getAttribute('aria-expanded')!=='true';
+  b.setAttribute('aria-expanded',on);b.title=on?'收合':'展開';
+  body.style.display=on?'':'none';
+});
 function renderHelp(){
 document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🔄 一篇文獻的流程</summary><div class="help">
@@ -3728,13 +3754,13 @@ document.getElementById('helpBox').innerHTML=`
   <p><strong>✎</strong> 編輯　<strong>✕</strong> 刪除（長按 1.5 秒）　<strong>🌐</strong> 原文　<strong>🔗</strong> 精讀 HTML／附件　<strong>🖼️</strong> 插入圖片　<strong>＋</strong> 新增　<strong>☆／★</strong> 置頂　<strong>📝</strong> 備註。圖示鍵一律沒有外框。</p>
   <h4>刪除的兩層</h4>
   <h4>分類怎麼加、怎麼刪</h4>
-  <p>有三組彼此獨立的分類：<strong>Reading 的分類標籤</strong>、<strong>Questions 與 Notes 共用的分類</strong>、<strong>KEY DATES 的類型</strong>。每一組的下拉選單最下面都有 <code>＋ 新增…</code>，加完同組的所有下拉立刻都看得到。課表的必修／選修／Lab 和選修領域是學程規定的固定選項，不開放自訂。</p>
-  <p><strong>Settings → 分類管理</strong>列出三組的全部分類，顯示每個分類底下有幾筆。名字可以直接在那裡改——卡片存的是代號不是名字，改名不會動到任何資料。自訂的右邊有 ✕ 可長按刪除，<strong>連一筆都沒有的空分類也刪得掉</strong>。內建的可以改名但不能刪。</p>
+  <p>有三組彼此獨立的分類：<strong>Reading 的分類標籤</strong>、<strong>Questions 與 Notes 共用的分類</strong>、<strong>KEY DATES 的類型</strong>（Exam／School／Other；PROGRESS 不需要選類型）。每一組的下拉選單最下面都有 <code>＋ 新增…</code>，加完同組的所有下拉立刻都看得到。課表的必修／選修／Lab 和選修領域是學程規定的固定選項，不開放自訂。</p>
+  <p><strong>Settings → 分類與清理 → 分類清單</strong>列出三組的全部分類，顯示每個分類底下有幾筆。名字可以直接在那裡改——卡片存的是代號不是名字，改名不會動到任何資料。自訂的右邊有 ✕ 可長按刪除，<strong>連一筆都沒有的空分類也刪得掉</strong>。內建的可以改名但不能刪。</p>
   <p>刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設：Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other。</p>
   <h4>刪除與 GitHub 的關係</h4>
   <p><strong>卡片資料會同步刪除</strong>：刪掉時會留一個「墓碑」記號跟著上傳，所以其他裝置合併後也會跟著刪，不會把已刪的東西送回來。墓碑保留 180 天。GitHub 的 <strong>commit 歷史仍留著舊版本</strong>，真的刪錯可以到 repo 的 <code>data/notes.json</code> → History 翻回去。</p>
-  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 刪除與清理 → 沒有卡片指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
-  <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings → 刪除與清理 → 回收桶，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
+  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
+  <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings → 分類與清理 → 回收桶，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
   <h4>閱讀模式與編輯模式</h4>
