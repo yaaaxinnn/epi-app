@@ -107,6 +107,7 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .rsvrow .rdt{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .rsvrow .rtag{flex:0 0 auto;display:inline-flex;gap:3px}
 .rsvrow .rtag .tg{cursor:pointer}
+.qmore{margin-left:7px;color:var(--faint);font-size:12px;font-weight:400}
 .chk .actin{flex:1;min-width:0;background:none;border:0;border-bottom:1px dashed var(--line);
   border-radius:0;padding:3px 2px;font-size:14px}
 .chk .actin:focus{outline:none;border-bottom-color:var(--ac);background:var(--surface-2)}
@@ -612,10 +613,7 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div class="card" id="kdForm" style="display:none">
     <div class="grid2">
       <label class="f"><span>Date</span><input type="date" id="kd-date"></label>
-      <label class="f"><span>Type</span><select id="kd-type">
-        <option value="deadline">Deadline</option><option value="exam">Exam</option>
-        <option value="todo">To do</option><option value="school">School</option>
-        <option value="other">Other</option></select></label>
+      <label class="f"><span>Type</span><select id="kd-type"></select></label>
     </div>
     <label class="f"><span>Title</span><input type="text" id="kd-title"></label>
     <div class="saverow"><button class="btn ghost" id="cancelKD">Cancel</button><button class="btn" id="addKD">Save</button></div>
@@ -623,6 +621,10 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
   <div id="kdList"></div>
   <div class="row" id="kdPastRow" style="margin-top:4px"></div>
   <div id="kdPastList"></div>
+
+  <div class="blockhead"><span class="bt">📌 進度清單</span><span class="spacer"></span>
+    <button class="iconb" id="toggleTD" title="新增進度項目">＋</button></div>
+  <div id="kdTodo"></div>
 
   <div class="blockhead"><span class="bt">🗓️ TIMETABLE</span><span class="spacer"></span>
     <div class="seg sm" id="termSeg"></div></div>
@@ -736,11 +738,24 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
     <p class="hint" style="margin:10px 0 0" id="gcState"></p>
   </details>
 
-  <div class="blockhead plain"><span class="bt">檔案整理</span><span class="spacer"></span>
-    <button class="qm" data-tip="tipOrph" aria-expanded="false">ⓘ</button></div>
-  <div class="tip" id="tipOrph">掃描 repo 裡<strong>沒有任何 Reading 卡片指向的 .html</strong>。卡片刪掉時，它對應的精讀 HTML 不會跟著刪，久了就會累積孤兒檔案。<br>
+  <div class="blockhead plain"><span class="bt">分類管理</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipCat" aria-expanded="false">ⓘ</button></div>
+  <div class="tip" id="tipCat">三組分類各自獨立：<strong>Reading 的分類標籤</strong>、<strong>Questions 與 Notes 共用的分類</strong>、<strong>KEY DATES 的類型</strong>。在任何一個下拉選單最下面選「＋ 新增…」就能加，加完所有同組的下拉都看得到。<br>
+  名字可以直接在這裡改，改完所有卡片跟著更新（卡片存的是代號不是名字）。內建的那幾個可以改名但不能刪。<br>
+  <span style="color:var(--clay)">刪掉自訂分類時，底下的項目不會被刪，只會退回預設分類（Reading → 未分類；Questions／Notes → 第一個分類；KEY DATES → Other）。</span></div>
+  <details class="card fold"><summary>分類清單</summary>
+    <div id="catMgr" style="margin-top:6px"></div>
+  </details>
+
+  <div class="blockhead plain"><span class="bt">刪除與清理</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipClean" aria-expanded="false">ⓘ</button></div>
+  <div class="tip" id="tipClean"><strong>回收桶</strong>：刪掉的卡片先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記在墓碑名單裡跟著同步，其他裝置不會把它送回來。<br>
+  <strong>沒有卡片指向的 HTML</strong>：卡片刪掉時，它對應的精讀 HTML 不會跟著刪，久了就會在 repo 裡累積。這裡掃出來讓你清掉。<br>
   <span style="color:var(--clay)">清單是「沒有卡片指向」而不是「沒用的」——你自己放進 repo 的其他 HTML 也會出現在這裡。刪之前先用 👁 看一眼。刪除無法復原，但 GitHub 的 commit 歷史仍留著舊版本。</span></div>
-  <details class="card fold"><summary>孤兒 HTML</summary>
+  <details class="card fold"><summary>🗑️ 回收桶</summary>
+    <div id="trashList" style="margin-top:6px"></div>
+  </details>
+  <details class="card fold"><summary>沒有卡片指向的 HTML</summary>
     <p class="hint" style="margin:6px 0 10px">比對 repo 裡所有 .html 與卡片的 🔗 路徑。需要先設定好上面的 GitHub 同步。</p>
     <p class="hint" style="margin:0 0 10px" id="repoSize">repo 用量：尚未查詢</p>
     <div class="row" style="margin-bottom:8px">
@@ -753,14 +768,9 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
       <button class="btn warn mini" id="orphDel" data-hold="orphdel|1" style="display:none" title="長按 1.5 秒刪除">長按刪除勾選的</button></div>
   </details>
 
-  <div class="blockhead plain"><span class="bt">最近刪除</span><span class="spacer"></span>
-    <button class="qm" data-tip="tipTrash" aria-expanded="false">ⓘ</button></div>
-  <div class="tip" id="tipTrash">刪掉的東西會先放這裡，保留 30 天，過期自動清掉。每列的 ✕ 長按可永久刪除單筆，下方可清空整個回收桶。<br>
-  <span style="color:var(--clay)">清空前請先確認每台裝置都同步過——清掉之後，還沒同步的裝置可能會把舊資料送回來。</span></div>
-  <div class="card"><div id="trashList"></div></div>
-
-  <div class="blockhead plain"><span class="bt">使用說明</span></div>
-  <div id="helpBox"></div>
+  <div class="blockhead plain"><span class="bt">使用說明</span><span class="spacer"></span>
+    <button class="kx" id="helpToggle" aria-expanded="false" title="展開使用說明"></button></div>
+  <div id="helpBox" style="display:none"></div>
 
 </section>
 
@@ -848,7 +858,19 @@ function qcatAdd(name){
   const pal=CATPAL[(qcats().length+2)%CATPAL.length];
   const id='k'+uid();S.qcats.push({id,name,col:pal[0],soft:pal[1]});return id;
 }
-const KDT={deadline:'Deadline',exam:'Exam',todo:'To do',school:'School',other:'Other'};
+const DEFAULT_KDCATS=[{id:'deadline',name:'Deadline'},{id:'exam',name:'Exam'},
+  {id:'todo',name:'To do'},{id:'school',name:'School'},{id:'other',name:'Other'}];
+function kdcats(){if(!Array.isArray(S.kdcats)||!S.kdcats.length)S.kdcats=DEFAULT_KDCATS.map(x=>Object.assign({},x));return S.kdcats}
+function kdcatIds(){return kdcats().map(x=>x.id)}
+function kdcatName(id){const x=kdcats().find(y=>y.id===id);return x?x.name:id}
+function kdcatFix(k){const ids=kdcatIds();return ids.includes(k)?k:'other'}
+function kdcatOpts(cur){return kdcats().map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
+  +'<option value="__new">＋ 新增類型…</option>'}
+function kdcatAdd(name){
+  name=String(name||'').trim();if(!name)return null;
+  const hit=kdcats().find(x=>x.name===name);if(hit)return hit.id;
+  const id='k'+uid();S.kdcats.push({id,name});return id;
+}
 const PFNO={q:'01',design:'02',pop:'03',def:'04',analysis:'05',result:'06',interp:'07',gap:'08',note:'09'};
 const PF=[['sum','📌'],['q','研究問題/目標'],['design','研究設計與資料來源'],['pop','研究對象'],
  ['def','暴露與結果的定義'],['analysis','分析'],['result','主要結果'],['interp','解釋'],
@@ -945,7 +967,7 @@ const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
 function defaults(){return{v:1,papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
-  tagLib:DEFAULT_TAGS.slice(),cats:DEFAULT_CATS.map(c=>Object.assign({},c)),qcats:DEFAULT_QCATS.map(c=>Object.assign({},c)),lastExport:null,lastBak:null,bakIdx:0}}
+  tombT:{},kdcats:DEFAULT_KDCATS.map(c=>Object.assign({},c)),tagLib:DEFAULT_TAGS.slice(),cats:DEFAULT_CATS.map(c=>Object.assign({},c)),qcats:DEFAULT_QCATS.map(c=>Object.assign({},c)),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function norm(x){return String(x==null?'':x).toLowerCase()}
@@ -1088,6 +1110,7 @@ async function load(){
   if(!Array.isArray(S.tagLib))S.tagLib=DEFAULT_TAGS.slice();
   if(!Array.isArray(S.cats)||!S.cats.length)S.cats=DEFAULT_CATS.map(c=>Object.assign({},c));
   if(!Array.isArray(S.qcats)||!S.qcats.length)S.qcats=DEFAULT_QCATS.map(c=>Object.assign({},c));
+  if(!Array.isArray(S.kdcats)||!S.kdcats.length)S.kdcats=DEFAULT_KDCATS.map(c=>Object.assign({},c));
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
   (S.cards||[]).forEach(c=>{if(!Array.isArray(c.links)){c.links=c.link?[{id:uid(),label:'',url:c.link}]:[]}});
@@ -1179,13 +1202,22 @@ function bin(type,obj){
   if(obj&&obj.id)S.tomb[obj.id]=now;
   if(S.trash.length>200)S.trash.length=200;
 }
+function trashGone(tids){
+  if(!S.tombT||typeof S.tombT!=='object')S.tombT={};
+  const n=Date.now();(tids||[]).forEach(t=>{if(t)S.tombT[t]=n});
+}
 function purgeTrash(){
   if(!Array.isArray(S.trash))S.trash=[];
   if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
+  if(!S.tombT||typeof S.tombT!=='object')S.tombT={};
   const n=S.trash.length,cut=Date.now()-30*DAY,tcut=Date.now()-180*DAY;
   S.trash=S.trash.filter(x=>x.at>=cut);
   let changed=S.trash.length!==n;
   Object.keys(S.tomb).forEach(id=>{if(S.tomb[id]<tcut){delete S.tomb[id];changed=true}});
+  Object.keys(S.tombT).forEach(id=>{if(S.tombT[id]<tcut){delete S.tombT[id];changed=true}});
+  const before=S.trash.length;
+  S.trash=S.trash.filter(x=>!S.tombT[x.tid]);
+  if(S.trash.length!==before)changed=true;
   if(changed)save();
 }
 function renderTrash(){
@@ -1228,23 +1260,29 @@ async function doHold(spec){
   else if(t==='secnote'){const p=id.split('|'),ti=+p[0],kk=p[1],t2=th(ti);
     if(t2.sn[kk]){t2.sn[kk]={n:'',links:[],mtime:Date.now()};openSec=null;save();renderMethod();toast('已清除筆記')}}
   else if(t==='orphdel'){await orphDelete()}
-  else if(t==='purge1'){S.trash=(S.trash||[]).filter(x=>x.tid!==id);save();renderTrash();toast('已永久刪除')}
-  else if(t==='purgeall'){S.trash=[];save();renderTrash();toast('回收桶已清空')}
+  else if(t==='purge1'){trashGone([id]);S.trash=(S.trash||[]).filter(x=>x.tid!==id);save();renderTrash();toast('已永久刪除')}
+  else if(t==='purgeall'){trashGone((S.trash||[]).map(x=>x.tid));S.trash=[];save();renderTrash();toast('回收桶已清空')}
   else if(t==='lk'){const[kind,oid,lid]=id.split(':');const h=linkHost(kind,oid);
     if(h){h.links=(h.links||[]).filter(l=>l.id!==lid);if(kind!=='sec')h.mtime=Date.now();save();linkRender(kind);toast('已刪除連結')}}
   else if(t==='tag'){S.tagLib=S.tagLib.filter(x=>x!==id);save();renderTags();toast('已從清單刪除')}
+  else if(t==='kdcat'){
+    if(DEFAULT_KDCATS.some(x=>x.id===id)){toast('內建類型不能刪除');return}
+    const nm=kdcatName(id);
+    S.kd.forEach(k=>{if(k.type===id)k.type='other'});
+    S.kdcats=S.kdcats.filter(x=>x.id!==id);
+    save();fillSelects();renderKD();renderCatMgr();toast('已刪除類型「'+nm+'」，項目移到 Other')}
   else if(t==='qcat'){
     if(DEFAULT_QCATS.some(x=>x.id===id)){toast('內建分類不能刪除');return}
     const nm=qcatName(id),fb=qcatIds().filter(x=>x!==id)[0]||'mine';
     S.qs.forEach(q=>{if(q.kind===id)q.kind=fb});
     S.notes.forEach(n=>{if(n.kind===id)n.kind=fb});
     S.qcats=S.qcats.filter(x=>x.id!==id);
-    save();fillSelects();renderQ();renderNt();toast('已刪除分類「'+nm+'」，項目移到 '+qcatName(fb))}
+    save();fillSelects();renderQ();renderNt();renderCatMgr();toast('已刪除分類「'+nm+'」，項目移到 '+qcatName(fb))}
   else if(t==='cat'){
     if(DEFAULT_CATS.some(x=>x.id===id)){toast('內建分類不能刪除');return}
     const nm=(S.cats.find(x=>x.id===id)||{}).name||'';
     S.papers.forEach(p=>{if(p.cat===id)p.cat=''});
-    S.cats=S.cats.filter(x=>x.id!==id);save();renderPapers();toast('已刪除分類「'+nm+'」，卡片移到未分類')}
+    S.cats=S.cats.filter(x=>x.id!==id);save();renderPapers();renderCatMgr();toast('已刪除分類「'+nm+'」，卡片移到未分類')}
   else if(t==='restore'){
     try{const r=await store.get(BAK[+id]);const o=JSON.parse(r.value);
       S=Object.assign(defaults(),o.data);save();renderAll();toast('已還原')}catch(x){toast('還原失敗')}}
@@ -1512,7 +1550,7 @@ document.getElementById('paperList').addEventListener('change',e=>{
     if(cs.value==='__new'){
       const id=catAdd(window.prompt('新分類名稱（例如：Lab meeting、Qualifying exam）',''));
       if(!id){renderPapers();return}
-      p.cat=id;toast('已新增分類');
+      p.cat=id;renderCatMgr();toast('已新增分類');
     }else p.cat=cs.value;
     p.mtime=Date.now();save();renderPapers()}
 });
@@ -1842,7 +1880,7 @@ document.getElementById('cancelQ').onclick=()=>show('qForm',false);
 ['q-kind','nt-kind'].forEach(id=>document.getElementById(id).addEventListener('change',e=>{
   if(e.target.value!=='__new')return;
   const nid=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
-  save();fillSelects();
+  save();fillSelects();renderCatMgr();
   e.target.value=nid||qcatIds()[0];
   if(nid)toast('已新增分類');
 }));
@@ -1862,7 +1900,7 @@ document.getElementById('addQ').onclick=()=>{
   show('qForm',false);saved();renderQ();
 };
 const openQG=new Set();
-let nq='',qSelCat='',qSelMon='',ntSelCat='',ntSelMon='';const nTags=new Set(),openQA=new Set();
+let nq='',qSelCat='',qSelMon='',ntSelCat='',ntSelMon='',rsvAll=false;const nTags=new Set(),openQA=new Set(),qShut=new Set();
 function nterms(){return nq?nq.toLowerCase().split(/\s+/).filter(Boolean):[]}
 function nFilterOn(){return nterms().length>0||nTags.size>0}
 function nhit(s){const t=nterms();if(!t.length)return true;const x=(s||'').toLowerCase();return t.every(w=>x.includes(w))}
@@ -2064,12 +2102,14 @@ function bindImagePaste(el){
   });
 }
 function qItem(q){
+  const shut=!q.done&&qShut.has(q.id);
   return `<div class="item${openQ.has(q.id)?' wide':''}"${q.done?' style="background:var(--surface-2)"':''}>
-    <div style="font-weight:500;line-height:1.5${q.done?';cursor:pointer':''}"${q.done?` data-qopen="${q.id}"`:''}>${esc(q.q)}</div>
+    <div style="font-weight:500;line-height:1.5;cursor:pointer" data-qopen="${q.id}" title="${shut?'展開答案':'收合答案'}">${esc(q.q)}${
+      shut&&q.a?'<span class="qmore">⌄</span>':''}</div>
     ${tagChips(q.tags)}
 
-    ${q.a?`<div class="mdview" style="margin-top:8px;font-size:13.5px;line-height:1.65;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
-    ${(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
+    ${!shut&&q.a?`<div class="mdview" style="margin-top:8px;font-size:13.5px;line-height:1.65;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
+    ${!shut&&(q.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:8px">${linkChips(q.links)}</div>`:''}
     <div class="row" style="margin-top:7px;gap:5px">
       <span style="flex:1"></span>
       <span class="cxg">
@@ -2134,7 +2174,7 @@ function renderQ(){
 
   let html=openQs.length?openQs.map(qItem).join(''):emptyRow();
 
-  const dop=F||openQG.has('__done');
+  const dop=F||!openQG.has('__done');
   html+=grpHead('<b>Resolved</b>','#3E6B4E',doneQs.length>0,'data-qgrp="__done"',dop,'項',doneQs.length);
   if(!doneQs.length)html+=emptyRow();
   else if(dop){
@@ -2143,8 +2183,11 @@ function renderQ(){
     let show=doneQs;
     if(qSelCat)show=show.filter(q=>catOf(q)===qSelCat);
     if(qSelMon)show=show.filter(q=>ym(tsOf(q))===qSelMon);
+    const LIMR=3,more=!F&&show.length>LIMR,vis=(F||rsvAll)?show:show.slice(0,LIMR);
     html+=`<div class="dirwrap"><div class="dirnav">${dirNav(doneQs,catOf,tsOf,qSelCat,qSelMon,'qsel')}</div>`
-      +`<div class="dirbody">${show.length?show.map(q=>openQA.has(q.id)?qItem(q):qDoneRow(q)).join(''):emptyRow()}</div></div>`;
+      +`<div class="dirbody">${vis.length?vis.map(q=>openQA.has(q.id)?qItem(q):qDoneRow(q)).join(''):emptyRow()}`
+      +(more||rsvAll?`<div class="pastrow"><button class="pastbtn" id="rsvMore" aria-expanded="${rsvAll}" title="${rsvAll?'只顯示 3 筆':'展開其餘 '+(show.length-LIMR)+' 筆'}">${rsvAll?'收合':'更多'}${CHEV}</button></div>`:'')
+      +`</div></div>`;
   }
   el.innerHTML=html;
   renderSrchInfo(all.length,(S.notes||[]).filter(ntHit).length);
@@ -2169,11 +2212,16 @@ document.getElementById('qList').addEventListener('click',e=>{
   if(hEl)return;
   const qi=e.target.closest('[data-qimg]');
   if(qi){pickImage(`[data-qa="${qi.dataset.qimg}"]`);return}
+  if(e.target.closest('#rsvMore')){rsvAll=!rsvAll;renderQ();return}
   const ds=e.target.closest('[data-qsel]');
   if(ds){const r=dirPick(ds.dataset.qsel,qSelCat,qSelMon);qSelCat=r[0];qSelMon=r[1];renderQ();return}
   const qo=e.target.closest('[data-qopen]');
-  if(qo){const id=qo.dataset.qopen;
-    if(openQA.has(id)){openQA.delete(id);openQ.delete(id)}else openQA.add(id);
+  if(qo){const id=qo.dataset.qopen,q=(S.qs||[]).find(x=>x.id===id);
+    if(q&&q.done){
+      if(openQA.has(id)){openQA.delete(id);openQ.delete(id)}else openQA.add(id);
+    }else{
+      if(qShut.has(id)){qShut.delete(id)}else{qShut.add(id);openQ.delete(id)}
+    }
     renderQ();return}
   const gp=e.target.closest('[data-qgrp]');
   if(gp){const k=gp.dataset.qgrp;openQG.has(k)?openQG.delete(k):openQG.add(k);renderQ();return}
@@ -2474,8 +2522,7 @@ function renderDIR(){
   if(dirFilter==='active')a=a.filter(d=>d.status!=='done');
   else if(dirFilter==='done')a=a.filter(d=>d.status==='done');
   if(!a.length){el.innerHTML=`<div class="empty">這個分類沒有方向。</div>`;return}
-  const order={doing:0,todo:1,paused:2,done:3};
-  a.sort((x,y)=>(order[x.status]??9)-(order[y.status]??9)||(y.created-x.created));
+  a.sort((x,y)=>(y.created-x.created));
   el.innerHTML=a.map(d=>{
     // migrate old string log to array on the fly
     if(typeof d.log==='string'){d.log=d.log.trim()?[{ts:d.created||Date.now(),text:d.log.trim()}]:[]}
@@ -2776,6 +2823,8 @@ function fillSelects(){
   document.getElementById('cs-term').innerHTML=TERMS.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
   ['q-kind','nt-kind'].forEach(id=>{const s=document.getElementById(id);
     if(s){const v=s.value;s.innerHTML=qcatOpts(qcatFix(v));s.value=qcatFix(v)}});
+  {const s=document.getElementById('kd-type');
+   if(s){const v=s.value;s.innerHTML=kdcatOpts(kdcatFix(v));s.value=kdcatFix(v)}}
   document.getElementById('termSeg').innerHTML=TERMS.map(t=>
     `<button data-term="${t.id}" aria-pressed="${t.id===activeTerm}">${t.label}</button>`).join('');
 }
@@ -2866,7 +2915,7 @@ function grpHead(label,col,more,attr,op,unit,n,extra){
 }
 function emptyRow(){return `<p class="hint" style="margin:0 0 10px;padding-left:2px;font-size:12px">—</p>`}
 const CHEV='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5L12 11L18 5"/><path d="M6 12L12 18L18 12"/></svg>';
-const KDTORD=['deadline','exam','todo','school','other'];
+
 function kdUrg(d){
   if(d<0)return['past','var(--faint)','transparent'];
   if(d<=3)return['u0','#B0472E','#F7E5DE'];
@@ -2886,19 +2935,30 @@ function kdSection(g,key,label){
 }
 function kdRender(list,pfx){
   pfx=pfx||'u';
-  const groups={};KDTORD.forEach(k=>groups[k]=[]);
-  list.forEach(x=>{const t=KDTORD.includes(x.k.type)?x.k.type:'other';groups[t].push(x)});
-  return KDTORD.filter(t=>groups[t].length)
-    .map(t=>kdSection(groups[t],pfx+':'+t,KDT[t])).join('');
+  const ord=kdcatIds().filter(k=>k!=='todo');
+  const groups={};ord.forEach(k=>groups[k]=[]);
+  list.forEach(x=>{const t=kdcatFix(x.k.type);if(t!=='todo')groups[t].push(x)});
+  return ord.filter(t=>groups[t].length)
+    .map(t=>kdSection(groups[t],pfx+':'+t,kdcatName(t))).join('');
+}
+function renderKDTodo(){
+  const el=document.getElementById('kdTodo');if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const rows=(S.kd||[]).filter(k=>kdcatFix(k.type)==='todo')
+    .map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}))
+    .sort((a,b)=>a.d-b.d);
+  el.innerHTML=rows.length?rows.map(x=>kdRow(x.k,x.d)).join('')
+    :`<div class="empty">還沒有進度項目。點 ＋ 列下一步該做什麼。</div>`;
 }
 function renderKD(){
   const el=document.getElementById('kdList'),pel=document.getElementById('kdPastList'),prow=document.getElementById('kdPastRow');
   const today=new Date();today.setHours(0,0,0,0);
   const cut=62;
   const before=S.kd.length;
-  S.kd=S.kd.filter(k=>Math.round((new Date(k.date)-today)/DAY)>=-cut);
+  S.kd=S.kd.filter(k=>kdcatFix(k.type)==='todo'||Math.round((new Date(k.date)-today)/DAY)>=-cut);
   if(S.kd.length!==before)save();
-  const withD=S.kd.map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}));
+  renderKDTodo();
+  const withD=S.kd.filter(k=>kdcatFix(k.type)!=='todo').map(k=>({k,d:Math.round((new Date(k.date)-today)/DAY)}));
   const up=withD.filter(x=>x.d>=0).sort((a,b)=>a.d-b.d);
   const past=withD.filter(x=>x.d<0).sort((a,b)=>b.d-a.d);
   el.innerHTML=up.length?kdRender(up,'u'):`<div class="empty">沒有即將到來的日期。</div>`;
@@ -2924,18 +2984,31 @@ function kdClick(e){
     show('kdForm',true);
     document.getElementById('kd-date').value=k.date;
     document.getElementById('kd-title').value=k.title;
-    document.getElementById('kd-type').value=k.type;
+    document.getElementById('kd-type').value=kdcatFix(k.type);
     document.getElementById('addKD').textContent='Update';
     document.getElementById('kd-title').focus();return}
 }
 document.getElementById('kdList').addEventListener('click',kdClick);
 document.getElementById('kdPastList').addEventListener('click',kdClick);
+document.getElementById('kdTodo').addEventListener('click',kdClick);
+document.getElementById('toggleTD').onclick=()=>{
+  if(toggle('kdForm')){
+    document.getElementById('kd-type').value='todo';
+    document.getElementById('kd-title').focus();
+  }else kdReset();
+};
 document.getElementById('toggleKD').onclick=()=>{if(toggle('kdForm'))document.getElementById('kd-title').focus();else kdReset()};
 document.getElementById('cancelKD').onclick=()=>{show('kdForm',false);kdReset()};
+document.getElementById('kd-type').addEventListener('change',e=>{
+  if(e.target.value!=='__new')return;
+  const id=kdcatAdd(window.prompt('新類型名稱（例如：Grant、健檢）',''));
+  save();fillSelects();renderCatMgr();e.target.value=id||'other';
+  if(id){toast('已新增類型');renderKD()}
+});
 document.getElementById('addKD').onclick=()=>{
   const d=document.getElementById('kd-date').value,t=document.getElementById('kd-title').value.trim();
   if(!d||!t){toast('請填日期和標題');return}
-  const ty=document.getElementById('kd-type').value;
+  const ty=kdcatFix(document.getElementById('kd-type').value);
   if(editKD)Object.assign(S.kd.find(x=>x.id===editKD),{date:d,title:t,type:ty});
   else S.kd.push({id:uid(),date:d,title:t,type:ty});
   kdReset();show('kdForm',false);saved();renderKD();
@@ -3149,9 +3222,10 @@ function mergeThemes(cur,inc){
   return out;
 }
 function mergeTrash(cur,inc){
+  const gone=(S.tombT&&typeof S.tombT==='object')?S.tombT:{};
   const m=new Map((cur||[]).map(x=>[x.tid,x]));
-  (inc||[]).forEach(x=>{if(x&&x.tid&&!m.has(x.tid))m.set(x.tid,x)});
-  return [...m.values()].sort((a,b)=>b.at-a.at).slice(0,200);
+  (inc||[]).forEach(x=>{if(x&&x.tid&&!m.has(x.tid)&&!gone[x.tid])m.set(x.tid,x)});
+  return [...m.values()].filter(x=>!gone[x.tid]).sort((a,b)=>b.at-a.at).slice(0,200);
 }
 function tombMap(){
   const m=new Map();
@@ -3170,6 +3244,10 @@ function applyTombs(arr,tm){
   });
 }
 function mergeState(inc){
+  if(!S.tombT||typeof S.tombT!=='object')S.tombT={};
+  Object.keys(inc.tombT||{}).forEach(t=>{
+    if((inc.tombT[t]||0)>(S.tombT[t]||0))S.tombT[t]=inc.tombT[t];
+  });
   S.trash=mergeTrash(S.trash,inc.trash);
   if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
   Object.keys(inc.tomb||{}).forEach(id=>{
@@ -3190,6 +3268,7 @@ function mergeState(inc){
   (inc.tagLib||[]).forEach(t=>{if(!S.tagLib.includes(t))S.tagLib.push(t)});
   (inc.cats||[]).forEach(x=>{if(x&&x.id&&!S.cats.some(y=>y.id===x.id))S.cats.push(x)});
   (inc.qcats||[]).forEach(x=>{if(x&&x.id&&!S.qcats.some(y=>y.id===x.id))S.qcats.push(x)});
+  (inc.kdcats||[]).forEach(x=>{if(x&&x.id&&!S.kdcats.some(y=>y.id===x.id))S.kdcats.push(x)});
   if((inc.gcAt||0)>(S.gcAt||0)){S.gc=inc.gc||'';S.gcAt=inc.gcAt||0;
     S.gcId=inc.gcId||'';S.gcPrefix=inc.gcPrefix==null?'*':inc.gcPrefix;
     S.gcMonths=inc.gcMonths||12;S.gcAuto=!!inc.gcAuto}
@@ -3221,7 +3300,7 @@ let GH={owner:'',repo:'',branch:'main',path:'data/notes.json',token:'',auto:fals
 let ghSha=null,ghTimer=null,ghBusy=false,ghQuiet=false,ghPulled=false,ghLastPull=0,ghDirty=false;
 function ghOn(){return !!(GH.owner&&GH.repo&&GH.token)}
 
-/* ===== 孤兒 HTML：repo 裡沒有卡片指向的 .html ===== */
+/* ===== repo 裡沒有卡片指向的 .html ===== */
 let orphans=[],orphTrunc=false;
 function orphUsed(){
   return new Set((S.papers||[]).map(p=>String(p.file||'').replace(/^\.?\//,'')).filter(Boolean));
@@ -3233,7 +3312,7 @@ function renderOrph(){
   const linked=orphUsed().size;
   const warn=orphTrunc?'<span style="color:var(--clay)">repo 檔案太多，清單可能不完整。</span><br>':'';
   if(!orphans.length){
-    el.innerHTML=`<div class="empty" style="padding:12px">沒有孤兒檔案。</div>`;
+    el.innerHTML=`<div class="empty" style="padding:12px">每個 HTML 都有卡片指向，不用清。</div>`;
     del.style.display='none';all.style.display='none';
     st.innerHTML=warn+`repo 裡的 HTML 都有卡片指向（已比對 ${linked} 張有附檔的卡片）。`;
     return;
@@ -3505,6 +3584,51 @@ document.getElementById('tagbar').addEventListener('click',e=>{
 
 
 /* ================= HELP ================= */
+/* ===== 分類管理 ===== */
+const CATSETS=[
+  {key:'cats', label:'Reading 分類標籤', hold:'cat',
+   def:()=>DEFAULT_CATS, count:id=>(S.papers||[]).filter(p=>p.cat===id).length, unit:'篇'},
+  {key:'qcats',label:'Questions／Notes 分類', hold:'qcat',
+   def:()=>DEFAULT_QCATS,count:id=>(S.qs||[]).filter(q=>q.kind===id).length+(S.notes||[]).filter(n=>n.kind===id).length, unit:'項'},
+  {key:'kdcats',label:'KEY DATES 類型', hold:'kdcat',
+   def:()=>DEFAULT_KDCATS,count:id=>(S.kd||[]).filter(k=>k.type===id).length, unit:'筆'}];
+function renderCatMgr(){
+  const el=document.getElementById('catMgr');if(!el)return;
+  el.innerHTML=CATSETS.map(set=>{
+    const list=S[set.key]||[];
+    return `<div class="kdgroup" style="color:var(--muted)">${set.label}</div>`
+      +list.map(x=>{
+        const built=set.def().some(d=>d.id===x.id);
+        const n=set.count(x.id);
+        return `<div class="chk" style="margin-bottom:4px">
+          <span style="flex:0 0 10px;height:10px;border-radius:3px;background:${x.col||'var(--line-strong)'}"></span>
+          <input type="text" class="actin" data-catren="${set.key}|${x.id}" value="${esc(x.name)}">
+          <span class="pill" style="font-size:10px">${n} ${set.unit}</span>
+          ${built?`<span class="pill" style="font-size:10px;color:var(--faint)">內建</span>`
+                 :`<button class="x" data-hold="${set.hold}|${x.id}" style="font-size:12px" title="長按 1.5 秒刪除">✕</button>`}
+        </div>`}).join('')
+      +`<p class="hint" style="margin:2px 0 14px;font-size:11.5px">在下拉選單最下面選「＋ 新增…」加新的。</p>`;
+  }).join('');
+}
+document.getElementById('catMgr').addEventListener('input',e=>{
+  const f=e.target.closest('[data-catren]');if(!f)return;
+  const[key,id]=f.dataset.catren.split('|');
+  const x=(S[key]||[]).find(y=>y.id===id);
+  if(x){x.name=f.value;if(key==='cats')x.short=f.value.slice(0,4);save();}
+});
+document.getElementById('catMgr').addEventListener('change',e=>{
+  if(!e.target.closest('[data-catren]'))return;
+  fillSelects();renderPapers();renderQ();renderNt();renderKD();renderCatMgr();
+});
+let helpOpen=false;
+document.getElementById('helpToggle').innerHTML=CHEV;
+document.getElementById('helpToggle').onclick=()=>{
+  helpOpen=!helpOpen;
+  const b=document.getElementById('helpToggle');
+  b.setAttribute('aria-expanded',helpOpen);
+  b.title=helpOpen?'收合使用說明':'展開使用說明';
+  document.getElementById('helpBox').style.display=helpOpen?'':'none';
+};
 function renderHelp(){
 document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🔄 一篇文獻的流程</summary><div class="help">
@@ -3603,10 +3727,14 @@ document.getElementById('helpBox').innerHTML=`
   <h4>圖示</h4>
   <p><strong>✎</strong> 編輯　<strong>✕</strong> 刪除（長按 1.5 秒）　<strong>🌐</strong> 原文　<strong>🔗</strong> 精讀 HTML／附件　<strong>🖼️</strong> 插入圖片　<strong>＋</strong> 新增　<strong>☆／★</strong> 置頂　<strong>📝</strong> 備註。圖示鍵一律沒有外框。</p>
   <h4>刪除的兩層</h4>
+  <h4>分類怎麼加、怎麼刪</h4>
+  <p>有三組彼此獨立的分類：<strong>Reading 的分類標籤</strong>、<strong>Questions 與 Notes 共用的分類</strong>、<strong>KEY DATES 的類型</strong>。每一組的下拉選單最下面都有 <code>＋ 新增…</code>，加完同組的所有下拉立刻都看得到。課表的必修／選修／Lab 和選修領域是學程規定的固定選項，不開放自訂。</p>
+  <p><strong>Settings → 分類管理</strong>列出三組的全部分類，顯示每個分類底下有幾筆。名字可以直接在那裡改——卡片存的是代號不是名字，改名不會動到任何資料。自訂的右邊有 ✕ 可長按刪除，<strong>連一筆都沒有的空分類也刪得掉</strong>。內建的可以改名但不能刪。</p>
+  <p>刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設：Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other。</p>
   <h4>刪除與 GitHub 的關係</h4>
   <p><strong>卡片資料會同步刪除</strong>：刪掉時會留一個「墓碑」記號跟著上傳，所以其他裝置合併後也會跟著刪，不會把已刪的東西送回來。墓碑保留 180 天。GitHub 的 <strong>commit 歷史仍留著舊版本</strong>，真的刪錯可以到 repo 的 <code>data/notes.json</code> → History 翻回去。</p>
-  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，變成沒人指向的孤兒檔案。到 <strong>Settings → 檔案整理 → 孤兒 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。</p>
-  <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings 最下方，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
+  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 刪除與清理 → 沒有卡片指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
+  <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings → 刪除與清理 → 回收桶，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
   <h4>閱讀模式與編輯模式</h4>
@@ -3628,7 +3756,7 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
   <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
   <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內<strong>星號優先，再按加入時間新到舊</strong>（不是出版年）。分類在編輯模式的下拉選。</p>
-  <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的卡片會回到未分類，不會被刪掉。內建那四個不能刪。</p>
+  <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。改名和刪除到 <strong>Settings → 分類管理</strong>。</p>
   <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，<strong>完整支援 Markdown</strong>（標題、巢狀清單、表格、引用、程式碼——細節見「共通操作 → Markdown」），空欄位不顯示。每個欄位有自己的小標題列：<strong>左側分類色色條＋整條淡底色＋固定編號</strong>（01 研究問題 … 09 Note），編號不會因為某欄空著就跳號，所以看一眼就知道這張卡少了哪幾塊。編輯模式的輸入框用等寬字、加高到 110px，方便直接寫 Markdown。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
   <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
   <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
@@ -3645,10 +3773,10 @@ document.getElementById('helpBox').innerHTML=`
   <p>分頁最上方的<strong>搜尋框同時過濾 Questions 和 Notes</strong>，比對範圍是問題、答案、筆記標題、內容、附件名稱與標籤。<strong>空白分隔＝而且</strong>（打 <code>collider 偏誤</code> 只留兩個詞都出現的）。搜尋時<strong>所有分組自動展開</strong>，不必再一個個點箭號；按 <strong>✕</strong> 清掉搜尋與標籤篩選。</p>
   <p><strong>標籤</strong>在編輯卡片時填，用逗號或空白分隔。搜尋框下方的<strong>標籤列</strong>列出所有用過的標籤（常用的排前面），點一下篩選、再點取消，可以疊加多個標籤（＝同時有這些標籤的才留下）。卡片上的標籤也能直接點。標籤和 Reading 分頁共用同一個標籤庫，所以 paper 和問題可以用同一套詞彙串起來。</p>
   <h4>自己加分類</h4>
-  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。要刪就<strong>長按那個分類的標題 1.5 秒</strong>，底下的問題和筆記會移到第一個分類，不會被刪掉。Mine 和 Study 擋掉不給刪。</p>
+  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。改名和刪除到 <strong>Settings → 分類管理</strong>。</p>
   <h4>Questions</h4>
-  <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊、一列一張，因為手上還沒解決的東西就是該一眼看完。卡片<strong>不標狀態</strong>——沒解決的都在上面，已解決的都在 Resolved 裡，不需要再貼標籤講一次。</p>
-  <p><strong>Resolved</strong>（粗體那行）<strong>分成左目錄、右清單</strong>。左邊窄欄底色較深，依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
+  <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊、一列一張，因為手上還沒解決的東西就是該一眼看完。卡片<strong>不標狀態</strong>——沒解決的都在上面，已解決的都在 Resolved 裡，不需要再貼標籤講一次。<strong>點問題本身可以把答案收起來</strong>，收起時標題後面會有一個 ⌄；再點一次展開。</p>
+  <p><strong>Resolved</strong>（粗體那行）<strong>分成左目錄、右清單</strong>。左邊窄欄底色較深，依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。<strong>預設展開、先顯示最近解決的 3 筆</strong>，底下的「更多」看全部；Resolved 右邊的雙箭號可以把整區收起來。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
   <p>卡片只顯示問題、答案、標籤、附件、狀態；分類和標籤在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
   <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
   <h4>Notes</h4>
@@ -3678,13 +3806,16 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
   <h4>KEY DATES</h4>
-  <p>依 Type 分組（Deadline、Exam、To do、School、Other），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
+  <p>依 Type 分組（Deadline、Exam、School、Other，以及你自己加的），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目（滑過去會顯示有幾筆是兩個月後）。</p>
   <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。清單最下方置中的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
   <h4>自動抓取與自動分類</h4>
   <p>Calendar 分頁最下面置中的「<strong>Google 日曆 ⌄⌄</strong>」展開嵌入的月曆，預設收著，不展開就不會載入。</p>
   <p>設定在 <strong>Settings → GOOGLE 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
   <p><strong>類型碼（最準）</strong>：寫 <code>*D 論文計畫書截止</code>，星號後第一個字母即類型——<code>D</code> deadline、<code>E</code> exam、<code>M</code> to do、<code>S</code> school，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
   <p><strong>關鍵字（備援）</strong>：含「截止／繳交／deadline／投稿」→ Deadline；含「考／口試／資格」→ Exam；含「meeting／討論／報告／seminar」→ To do；含「註冊／選課／開學／畢業」→ School。關鍵字猜的只在類型還是 Other 時才填，不會動你手動分好的。</p>
+  <h4>📌 進度清單</h4>
+  <p>Type 選 <strong>To do</strong> 的項目會從 KEY DATES 抽出來，自己一區，<strong>全部列出不折疊</strong>。這裡是寫「論文下一步該做什麼」的，和 Meeting 分頁的 ✅ TO-DO 不一樣——那邊是從每場 meeting 的 action items 自動撈出來的。</p>
+  <p>依日期排，<strong>逾期的排在最上面</strong>（倒數膠囊顯示「N 天前」）。進度清單的項目<strong>不會因為過期兩個月被自動刪除</strong>，也不會跑進「已過期」區，除非你自己長按 ✕ 刪掉。Google 日曆的 <code>*M</code>／<code>*T</code> 類型碼一樣會流進這裡。</p>
   <h4>TIMETABLE</h4>
   <p>管「星期幾幾點在哪間教室」。課程可填學分與領域，衝堂會提示。</p>
 </div></details>
@@ -3751,7 +3882,7 @@ document.getElementById('helpBox').innerHTML=`
 `;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
-  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderHelp()}
+  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderTT();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderCatMgr();renderHelp()}
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
