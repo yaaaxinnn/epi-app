@@ -431,16 +431,11 @@ tr.sup .gsc .go{color:var(--muted)}
 .grep ul{margin:4px 0 0;padding-left:18px;color:var(--muted)}
 @media(max-width:560px){.gkv{grid-template-columns:1fr;gap:0}.gkv dd{margin-bottom:7px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
-/* ===== v46 考古題 ===== */
+/* ===== v47 資格考 ===== */
 .qpast{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:6px}
 .qpast .qps{font-size:12px;color:var(--muted)}
-.chk.pastchk{background:none;border:0;padding:2px 2px;margin:0 0 10px;font-size:13px;color:var(--muted)}
 .chk .ct{font-family:var(--mono);font-size:11px;color:var(--faint)}
-.qpg{scroll-margin-top:96px}
-.qpg:first-child>.gth{margin-top:6px}
-.th-head .pastn{flex:0 0 auto}
-.tg.pastf{border-color:var(--amber-mid);color:var(--amber);font-weight:600}
-.tg.pastf[aria-pressed="true"]{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
+.f .qm{font-size:12px;padding:0 0 0 4px;vertical-align:1px}
 </style>
 </head>
 <body>
@@ -597,13 +592,6 @@ tr.sup .gsc .go{color:var(--muted)}
       <label class="f"><span>分類</span><select id="q-kind"></select></label>
       <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="q-tags" placeholder="e.g. confounding, HBV"></label>
     </div>
-    <div class="row" style="align-items:center;gap:2px;margin-bottom:10px"><label class="chk pastchk" style="margin:0"><input type="checkbox" id="q-past"><span>🎓 資格考考古題</span></label>
-      <button class="qm" type="button" data-tip="tipPast" aria-expanded="false" title="說明">ⓘ</button></div>
-    <div class="tip" id="tipPast">老師上課說「這個之前考過」，就記成<strong>考古題</strong>：Question 寫題目或老師的原話，勾 <strong>🎓 資格考考古題</strong>，出處寫哪堂課、哪位老師、哪天（都可以留空）。選了 <strong>Textbooks 主題</strong>，Textbooks 那個主題會顯示「考古 N」，點它會跳回這裡。<br>標籤列最前面的 <strong>🎓 考古題</strong> 只列考古題、依主題分組；<code>↑ Card</code> 送進 Review 後，Exam mode 可以只跑考古題。</div>
-    <div class="grid2" id="qPastBox" style="display:none">
-      <label class="f"><span>出處（課程／老師／日期）</span><input type="text" id="q-psrc" placeholder="e.g. 高流方法 W5 陳老師 10/6"></label>
-      <label class="f"><span>Textbooks 主題</span><select id="q-tb"></select></label>
-    </div>
     <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
   </div>
   <div id="qList"></div>
@@ -611,13 +599,21 @@ tr.sup .gsc .go{color:var(--muted)}
   <div class="blockhead"><span class="bt">📒 NOTES</span><span class="spacer"></span>
     <button class="iconb" id="addNtBtn" title="新增筆記">＋</button></div>
   <div class="card" id="ntForm" style="display:none">
-    <label class="f"><span>標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
+    <label class="f"><span id="ntTitleLb">標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
     <div class="grid2">
       <label class="f"><span>分類</span><select id="nt-kind"></select></label>
       <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
     </div>
+    <div id="ntExamBox" style="display:none">
+      <div class="grid2">
+        <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">出處（課程／老師／日期）<button class="qm" type="button" data-tip="tipExam" aria-expanded="false" title="說明">ⓘ</button></span>
+          <input type="text" id="nt-psrc" placeholder="e.g. 高流方法 W5 陳老師 10/6" style="margin-top:4px"></div>
+        <label class="f"><span>Textbooks 主題</span><select id="nt-tb"></select></label>
+      </div>
+      <div class="tip" id="tipExam">「資格考」分類放老師說考過的題目：<strong>題目</strong>寫題目或老師的原話，<strong>答案</strong>寫你準備的答案，出處和主題都可以留空。答案寫好按 Save（或編輯後按「完成」），就會<strong>自動在 Review 產生一張 🎓 考古卡</strong>；之後改答案，按完成就會同步更新那張卡。考古卡<strong>不進每日排程</strong>，只在 Review → Exam mode 勾「只跑考古題」時出現。</div>
+    </div>
     <div class="f"><div class="row" style="align-items:center">
-      <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
+      <span id="ntBodyLb" style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
       <button class="iconb" id="ntImgBtn" type="button" title="插入圖片">🖼️</button></div>
       <textarea id="nt-body" style="margin-top:4px"></textarea></div>
     <details class="fold" style="margin-bottom:10px"><summary>🔗附件</summary>
@@ -647,7 +643,7 @@ tr.sup .gsc .go{color:var(--muted)}
   </div>
   <details class="card fold"><summary>🎓 Exam mode</summary>
     <div style="margin-top:10px">
-      <p class="hint" style="margin-top:0">整批跑選定主題的所有卡片，不會改動任何卡的到期日。勾「只跑考古題」時只跑考古題卡片；沒選主題就跑全部考古題。</p>
+      <p class="hint" style="margin-top:0">整批跑選定主題的所有卡片，不會改動任何卡的到期日。</p>
       <label class="chk" style="margin-top:10px"><input type="checkbox" id="examPast"><span style="flex:1">🎓 只跑考古題</span><span class="ct" id="examPastN">0</span></label>
       <div id="examThemes" style="max-height:260px;overflow-y:auto;margin-top:10px"></div>
       <div class="saverow"><button class="btn mini" id="startExam">Start</button></div>
@@ -666,7 +662,6 @@ tr.sup .gsc .go{color:var(--muted)}
     <label class="f"><span>Question</span><textarea id="cf-q"></textarea></label>
     <label class="f"><span>Answer</span><textarea id="cf-a" style="min-height:100px"></textarea></label>
     <div class="linkrow"><span class="ic" style="font-size:11px;color:var(--muted)">分類</span><select id="cf-theme"></select></div>
-    <label class="chk pastchk" style="margin-top:8px"><input type="checkbox" id="cf-past"><span>🎓 資格考考古題</span></label>
 
     <div class="saverow"><button class="btn ghost" id="cancelCard">Cancel</button><button class="btn" id="saveCard">Save</button></div>
   </div>
@@ -967,16 +962,30 @@ function catAdd(name){
   S.cats.push({id,name,short:name.slice(0,4),col:pal[0],soft:pal[1]});
   return id;
 }
+const EXAM='exam';
 const DEFAULT_QCATS=[
   {id:'mine', name:'Mine', col:'#7A5AA8',soft:'#EDE6F7'},
-  {id:'study',name:'Study',col:'#2E5FB0',soft:'#DEE9F7'}];
+  {id:'study',name:'Study',col:'#2E5FB0',soft:'#DEE9F7'},
+  {id:EXAM,   name:'資格考',col:'#B5761E',soft:'#F8EEDC'}];
 function qcats(){if(!Array.isArray(S.qcats)||!S.qcats.length)S.qcats=DEFAULT_QCATS.map(x=>Object.assign({},x));return S.qcats}
 function qcatIds(){return qcats().map(x=>x.id)}
 function qcatName(id){const x=qcats().find(y=>y.id===id);return x?x.name:id}
 function qcatCol(id){const x=qcats().find(y=>y.id===id);return x?x.col:'var(--muted)'}
 function qcatFix(k){const ids=qcatIds();return ids.includes(k)?k:ids[0]}
-function qcatOpts(cur){return qcats().map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
+function qcatOpts(cur,noExam){return qcats().filter(x=>!noExam||x.id!==EXAM).map(x=>`<option value="${esc(x.id)}"${cur===x.id?' selected':''}>${esc(x.name)}</option>`).join('')
   +'<option value="__new">＋ 新增分類…</option>'}
+/* v47：Notes 專用的內建分類「資格考」。舊版自己建的同名分類：筆記移過來，沒有問題在用就刪掉 */
+function ensureExamCat(){
+  if(!Array.isArray(S.qcats))S.qcats=[];
+  if(S.qcats.some(x=>x.id===EXAM))return;
+  const old=S.qcats.find(x=>/^(資格考|考古題?)$/.test(String(x.name||'').trim()));
+  if(old){
+    (S.notes||[]).forEach(n=>{if(n.kind===old.id){n.kind=EXAM;n.mtime=Date.now()}});
+    if((S.qs||[]).some(q=>q.kind===old.id))old.name=old.name+'（舊）';
+    else S.qcats=S.qcats.filter(x=>x!==old);
+  }
+  S.qcats.push(Object.assign({},DEFAULT_QCATS.find(x=>x.id===EXAM)));
+}
 function qcatAdd(name){
   name=String(name||'').trim();if(!name)return null;
   const hit=qcats().find(x=>x.name===name);if(hit)return hit.id;
@@ -1079,17 +1088,28 @@ const PART=['Causal Inference: What If · 自修','Part I · Foundations','Part 
 
 function minCh(c){return c.me.length?Math.min.apply(null,c.me.map(x=>parseInt(x[0],10))):9999}
 function partOf(c){const m=minCh(c);if(m>=9999)return 0;if(m<=6)return 1;if(m<=15)return 2;if(m<=31)return 3;return 4}
-/* v46：資格考考古題。q.past（是否考古題）、q.psrc（出處）、q.tb（Textbooks 主題，存 C[].en）；卡片 c.past */
+/* v47：資格考筆記的 Textbooks 主題（n.tb 存 C[].en）與自動考古卡 */
 function bookOrder(){return C.map((c,i)=>i).sort((a,b)=>{const pa=partOf(C[a]),pb=partOf(C[b]);
   if(pa!==pb)return (pa||9)-(pb||9);return minCh(C[a])-minCh(C[b])})}
 function tbIdx(k){if(k==null||k==='')return -1;return C.findIndex(c=>c.en===k)}
 function tbName(k){const i=tbIdx(k);return i>=0?C[i].en+' '+C[i].zh:''}
 function tbOpts(cur){return '<option value="">— 未指定 —</option>'+bookOrder().map(i=>
   `<option value="${esc(C[i].en)}"${cur===C[i].en?' selected':''}>${C[i].e} ${esc(C[i].en)}・${esc(C[i].zh)}</option>`).join('')}
-function pastCounts(){const o={};(S.qs||[]).forEach(q=>{if(q.past&&tbIdx(q.tb)>=0)o[q.tb]=(o[q.tb]||0)+1});return o}
-function migratePast(){
-  const ids=(S.qcats||[]).filter(x=>/資格考|考古/.test(x.name||'')).map(x=>x.id);
-  if(ids.length)(S.qs||[]).forEach(q=>{if(q.past===undefined&&ids.includes(q.kind))q.past=true});
+/* 資格考筆記有答案 → 建立或更新考古卡（c.past，不進排程）。卡被刪過（在墓碑裡）就不重建 */
+function examSync(n){
+  if(!n||n.kind!==EXAM||!String(n.body||'').trim())return '';
+  const th=tbIdx(n.tb),now=Date.now();
+  let c=n.cid?S.cards.find(x=>x.id===n.cid):null;
+  if(!c&&n.cid&&S.tomb&&S.tomb[n.cid])return '';
+  if(c){
+    if(c.q===n.title&&c.a===n.body&&c.theme===th&&c.past)return '';
+    c.q=n.title;c.a=n.body;c.theme=th;c.past=true;c.mtime=now;
+    save();renderCards();updateBadge();return '考古卡已同步更新';
+  }
+  c={id:uid(),created:now,mtime:now,q:n.title||'(未命名)',a:n.body,theme:th,past:true,nid:n.id,
+    links:[],level:0,due:null,last:null,n:0};
+  S.cards.push(c);n.cid=c.id;n.mtime=now;
+  save();renderCards();updateBadge();return '已送到 Review（🎓 考古卡）';
 }
 
 let S=null,paperView='list',cardSort='due',mFilter='book';
@@ -1283,7 +1303,7 @@ async function load(){
     (S.kd||[]).forEach(k=>{if(k.type==='deadline')k.type='other'});
   }
   migrateProg();
-  migratePast();
+  ensureExamCat();
   gEnsureSeeds();
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
@@ -2121,9 +2141,8 @@ function renderMethod(){
     tt[k]=(tt[k]||0)+st.n;rr[k]=(rr[k]||0)+st.r;xx[k]=(xx[k]||0)+st.x});
 
   let html='',cur=null;
-  const pc=pastCounts();
   idx.forEach(i=>{
-    const c=C[i],t=th(i),k=gk(i),pn=pc[c.en]||0;
+    const c=C[i],t=th(i),k=gk(i);
     if(mFilter!=='active'&&!qSec&&k!==cur){cur=k;
       html+=`<div class="stagehdr"><span class="sn">${gl(k)}</span>
         <span class="sv">Read ${rr[k]}/${tt[k]} · Explain ${xx[k]}/${tt[k]}</span></div>`}
@@ -2163,15 +2182,12 @@ function renderMethod(){
       <div class="th-head" data-toggle="${i}">
         <span class="th-emo">${c.e}</span>
         <div class="th-name"><div class="en">${esc(c.en)}</div><div class="zh">${esc(c.zh)}</div></div>
-        ${pn?`<button class="pill amber pastn" data-pastgo="${i}" title="到 Notes 看這個主題的考古題">考古 ${pn}</button>`:''}
       </div>
       <div class="th-body">${body}</div></div>`;
   });
   document.getElementById('themeList').innerHTML=html||`<div class="empty">沒有符合的主題。</div>`;
 }
 document.getElementById('themeList').addEventListener('click',e=>{
-  const pg=e.target.closest('[data-pastgo]');
-  if(pg){goPast(+pg.dataset.pastgo);return}
   const sv=e.target.closest('[data-nsave]');
   if(sv){openSec=null;saved();renderMethod();return}
   const np=e.target.closest('[data-note]');
@@ -2543,7 +2559,7 @@ document.getElementById('savePaper').onclick=()=>{
 };
 
 /* ================= REVIEW ================= */
-function dueCards(){const n=Date.now();return S.cards.filter(c=>!c.due||c.due<=n)}
+function dueCards(){const n=Date.now();return S.cards.filter(c=>!c.past&&(!c.due||c.due<=n))}
 function renderCards(){
   const due=dueCards();
   document.getElementById('dueCount').textContent=due.length;
@@ -2553,15 +2569,15 @@ function renderCards(){
   if(!sel.options.length)sel.innerHTML='<option value="-1">— none —</option>'+C.map((c,i)=>`<option value="${i}">${c.e} ${esc(c.en)}</option>`).join('');
   document.getElementById('examPastN').textContent=S.cards.filter(x=>x.past).length;
   document.getElementById('examThemes').innerHTML=C.map((c,i)=>{
-    const L=S.cards.filter(x=>x.theme===i),n=L.length;if(!n)return'';
+    const L=S.cards.filter(x=>x.theme===i);if(!L.length)return'';
     const pn=L.filter(x=>x.past).length;
-    return `<label class="chk"><input type="checkbox" value="${i}"><span style="flex:1">${c.e} ${esc(c.en)}</span><span class="ct">${n}${pn?' · 考古 '+pn:''}</span></label>`}).join('')||`<p class="hint">還沒有綁定主題的卡片。</p>`;
+    return `<label class="chk"><input type="checkbox" value="${i}"><span style="flex:1">${c.e} ${esc(c.en)}</span><span class="ct">${L.length-pn}${pn?' · 考古 '+pn:''}</span></label>`}).join('')||`<p class="hint">還沒有綁定主題的卡片。</p>`;
   const el=document.getElementById('cardList');
   if(!S.cards.length){el.innerHTML=`<div class="empty">還沒有卡片。</div>`;return}
   let a=S.cards.filter(c=>!qCard||norm([c.q,c.a,(c.links||[]).map(l=>l.label+' '+l.url).join(' '),(c.theme>=0&&C[c.theme])?C[c.theme].en+' '+C[c.theme].zh:'',c.past?'考古':''].join(' ')).includes(norm(qCard)));
   if(!a.length){el.innerHTML=`<div class="empty">沒有符合的卡片。</div>`;return}
   a=[...a];
-  if(cardSort==='due')a.sort((x,y)=>(x.due||0)-(y.due||0));
+  if(cardSort==='due')a.sort((x,y)=>(x.past?9e15:(x.due||0))-(y.past?9e15:(y.due||0)));
   else if(cardSort==='new')a.sort((x,y)=>y.created-x.created);
   else a.sort((x,y)=>(x.theme==null?99:x.theme)-(y.theme==null?99:y.theme));
   el.innerHTML=a.map(c=>{
@@ -2572,16 +2588,16 @@ function renderCards(){
       <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(c.q)}</div></div>
       <div class="row" style="margin-top:6px;gap:5px;flex-wrap:wrap">
         ${c.theme>=0&&C[c.theme]?`<span class="pill pine">${C[c.theme].e} ${esc(C[c.theme].en)}</span>`:''}
-        ${c.past?'<span class="pill amber">🎓 考古</span>':''}
-        <span class="pill ${overdue?'clay':''}">${overdue?'今天要複習':d+' 天後'}</span>
-        <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span>
+        ${c.past?'<span class="pill amber" title="考古卡不進每日排程，只在 Exam mode 勾「只跑考古題」時出現">🎓 考古</span>'
+          :`<span class="pill ${overdue?'clay':''}">${overdue?'今天要複習':d+' 天後'}</span>
+        <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span>`}
         <span style="flex:1"></span>
         <span class="cxg">
           <button class="cx e" data-cedit="${c.id}" title="編輯">✎</button>
           <button class="cx" data-hold="card|${c.id}" title="長按 1.5 秒刪除">✕</button></span></div>
       ${flip?`<div class="ans">${esc(c.a)||'（沒寫答案）'}</div>
         ${(c.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:10px">${linkChips(c.links)}</div>`:''}
-        <div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`
+        ${c.past?'':`<div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`}`
         :`<div class="flipcue">點卡片看答案</div>`}
       ${ed?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
         <label class="f"><span>Question</span><textarea data-cf="${c.id}|q">${esc(c.q)}</textarea></label>
@@ -2590,8 +2606,7 @@ function renderCards(){
           <option value="-1"${c.theme<0?' selected':''}>— none —</option>
           ${C.map((x,ix)=>`<option value="${ix}"${c.theme===ix?' selected':''}>${x.e} ${esc(x.en)}</option>`).join('')}
         </select></div>
-        <label class="chk pastchk" style="margin-top:8px"><input type="checkbox" data-cpast="${c.id}"${c.past?' checked':''}><span>🎓 資格考考古題</span></label>
-        <div class="saverow"><button class="btn ghost mini" data-hold="creset|${c.id}" title="長按 1.5 秒重設" style="margin-right:auto">重設排程</button>
+        <div class="saverow">${c.past?'<span style="margin-right:auto"></span>':`<button class="btn ghost mini" data-hold="creset|${c.id}" title="長按 1.5 秒重設" style="margin-right:auto">重設排程</button>`}
           <button class="btn" data-csave="${c.id}">Save</button></div></div>`:''}
       </div>`}).join('');
 }
@@ -2600,8 +2615,6 @@ document.getElementById('cardList').addEventListener('input',e=>{
   const[id,k]=f.dataset.cf.split('|');const c=S.cards.find(x=>x.id===id);if(c){c[k]=f.value;c.mtime=Date.now();save()}
 });
 document.getElementById('cardList').addEventListener('change',e=>{
-  const pp=e.target.closest('[data-cpast]');
-  if(pp){const c=S.cards.find(x=>x.id===pp.dataset.cpast);if(c){c.past=pp.checked;c.mtime=Date.now();save();renderCards()}return}
   const t=e.target.closest('[data-cft]');if(!t)return;
   const c=S.cards.find(x=>x.id===t.dataset.cft);if(c){c.theme=+t.value;c.mtime=Date.now();save();renderCards()}
 });
@@ -2633,10 +2646,9 @@ document.getElementById('cancelCard').onclick=()=>show('cardForm',false);
 document.getElementById('saveCard').onclick=()=>{
   const q=document.getElementById('cf-q').value.trim();if(!q){toast('請填問題');return}
   S.cards.push({id:uid(),created:Date.now(),q,a:document.getElementById('cf-a').value.trim(),
-    theme:+document.getElementById('cf-theme').value,links:[],past:document.getElementById('cf-past').checked,
+    theme:+document.getElementById('cf-theme').value,links:[],
     level:0,due:Date.now(),last:null,n:0});
   ['cf-q','cf-a'].forEach(i=>document.getElementById(i).value='');
-  document.getElementById('cf-past').checked=false;
   show('cardForm',false);saved();renderCards();updateBadge();
 };
 
@@ -2676,29 +2688,13 @@ document.getElementById('startExam').onclick=()=>{
   const sel=[...document.querySelectorAll('#examThemes input:checked')].map(x=>+x.value);
   const po=document.getElementById('examPast').checked;
   if(!sel.length&&!po){toast('先選主題或勾「只跑考古題」');return}
-  let L=S.cards;
-  if(sel.length)L=L.filter(c=>sel.includes(c.theme));
-  if(po)L=L.filter(c=>c.past);
-  startQueue(L,true);
+  // 勾「只跑考古題」＝考古卡（有選主題就限那些主題）；沒勾＝選定主題的一般卡片
+  startQueue(S.cards.filter(c=>po?(c.past&&(!sel.length||sel.includes(c.theme))):(!c.past&&sel.includes(c.theme))),true);
 };
 document.getElementById('ovClose').onclick=()=>{ov.classList.remove('on');renderCards();updateBadge()};
 
 /* ================= IDEAS ================= */
-document.getElementById('addQBtn').onclick=()=>{if(toggle('qForm')){
-  if(qView==='past'){document.getElementById('q-past').checked=true;show('qPastBox',true)}
-  document.getElementById('q-q').focus()}};
-document.getElementById('q-past').addEventListener('change',e=>show('qPastBox',e.target.checked));
-document.getElementById('ntagbar').addEventListener('click',e=>{
-  const b=e.target.closest('[data-npast]');if(!b||hEl)return;
-  qView=qView==='past'?'all':'past';nSearchAll()});
-function goPast(i){
-  qView='past';qPastShut.delete(String(i));
-  const tab=document.querySelector('.tab[data-p="courses"]');if(tab)tab.click();
-  renderQ();
-  let g=document.getElementById('qpg-'+i);
-  if(!g&&nFilterOn()){nTags.clear();setSearch('');g=document.getElementById('qpg-'+i)}
-  if(g&&g.scrollIntoView)g.scrollIntoView({block:'start'});
-}
+document.getElementById('addQBtn').onclick=()=>{if(toggle('qForm'))document.getElementById('q-q').focus()};
 document.getElementById('cancelQ').onclick=()=>show('qForm',false);
 ['q-kind','nt-kind'].forEach(id=>document.getElementById(id).addEventListener('change',e=>{
   if(e.target.value!=='__new')return;
@@ -2708,7 +2704,7 @@ document.getElementById('cancelQ').onclick=()=>show('qForm',false);
   if(nid)toast('已新增分類');
 }));
 document.getElementById('nsearch').addEventListener('input',e=>{nq=e.target.value.trim();nSearchAll()});
-document.getElementById('nsearchX').onclick=()=>{nTags.clear();qView='all';setSearch('')};
+document.getElementById('nsearchX').onclick=()=>{nTags.clear();setSearch('')};
 document.getElementById('p-courses').addEventListener('click',e=>{
   const b=e.target.closest('[data-ntag]');if(!b||hEl)return;
   const t=b.dataset.ntag.toLowerCase();
@@ -2717,22 +2713,19 @@ document.getElementById('p-courses').addEventListener('click',e=>{
 });
 document.getElementById('addQ').onclick=()=>{
   const q=document.getElementById('q-q').value.trim();if(!q){toast('請填問題');return}
-  const past=document.getElementById('q-past').checked;
   S.qs.push({id:uid(),created:Date.now(),kind:qcatFix(document.getElementById('q-kind').value),q,
-    a:'',done:false,links:[],tags:parseTags(document.getElementById('q-tags').value),
-    past,psrc:past?document.getElementById('q-psrc').value.trim():'',tb:past?document.getElementById('q-tb').value:''});
-  ['q-q','q-tags','q-psrc','q-tb'].forEach(i=>document.getElementById(i).value='');
-  document.getElementById('q-past').checked=false;show('qPastBox',false);
+    a:'',done:false,links:[],tags:parseTags(document.getElementById('q-tags').value)});
+  ['q-q','q-tags'].forEach(i=>document.getElementById(i).value='');
   show('qForm',false);saved();renderQ();
 };
-const openQG=new Set(),qPastShut=new Set();let qView='all';
+const openQG=new Set();
 let nq='',qSelCat='',qSelMon='',ntSelCat='',ntSelMon='',rsvAll=false;const nTags=new Set(),openQA=new Set(),qShut=new Set();
 function nterms(){return nq?nq.toLowerCase().split(/\s+/).filter(Boolean):[]}
 function nFilterOn(){return nterms().length>0||nTags.size>0}
 function nhit(s){const t=nterms();if(!t.length)return true;const x=(s||'').toLowerCase();return t.every(w=>x.includes(w))}
 function nTagOk(tags){if(!nTags.size)return true;const a=(tags||[]).map(t=>String(t).toLowerCase());return[...nTags].every(t=>a.includes(t))}
-function qHit(q){return nTagOk(q.tags)&&nhit([q.q,q.a,(q.tags||[]).join(' ')].join(' ')+(q.past?' 考古 '+(q.psrc||'')+' '+tbName(q.tb):''))}
-function ntHit(n){if(qView==='past')return false;return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' ')].join(' '))}
+function qHit(q){return nTagOk(q.tags)&&nhit([q.q,q.a,(q.tags||[]).join(' ')].join(' '))}
+function ntHit(n){return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' '),n.psrc||'',tbName(n.tb)].join(' '))}
 function parseTags(s){
   const out=[];
   String(s||'').split(/[,，、;；]+|\s{1,}/).forEach(t=>{t=t.trim();
@@ -2752,16 +2745,14 @@ function renderTagBar(){
   (S.qs||[]).forEach(q=>(q.tags||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1}));
   (S.notes||[]).forEach(n=>(n.tags||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1}));
   const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||a.localeCompare(b));
-  const np=(S.qs||[]).filter(q=>q.past).length;
-  el.innerHTML=(np||qView==='past'?`<button type="button" class="pill tg pastf" data-npast="1" aria-pressed="${qView==='past'}" title="只看考古題（依 Textbooks 主題分組）">🎓 考古題 ${np}</button>`:'')
-    +ks.map(t=>`<button type="button" class="pill tg" data-ntag="${esc(t)}" aria-pressed="${nTags.has(t.toLowerCase())}">${esc(t)}</button>`).join('');
+  el.innerHTML=ks.map(t=>`<button type="button" class="pill tg" data-ntag="${esc(t)}" aria-pressed="${nTags.has(t.toLowerCase())}">${esc(t)}</button>`).join('');
 }
 function renderSrchInfo(nQ,nN){
   const el=document.getElementById('nsrchInfo');if(!el)return;
-  if(!nFilterOn()&&qView!=='past'){el.style.display='none';return}
+  if(!nFilterOn()){el.style.display='none';return}
   el.style.display='';
   const tg=[...nTags];
-  el.textContent=(qView==='past'?`🎓 考古題 ${nQ} 題`:`找到 ${nQ} 個問題、${nN} 則筆記`)+(tg.length?`　標籤：${tg.join(' + ')}`:'');
+  el.textContent=`找到 ${nQ} 個問題、${nN} 則筆記`+(tg.length?`　標籤：${tg.join(' + ')}`:'');
 }
 function nSearchAll(){renderTagBar();renderQ();renderNt()}
 function setSearch(v){nq=String(v||'').trim();
@@ -2929,17 +2920,11 @@ function bindImagePaste(el){
     }
   });
 }
-function qPastMeta(q,noTb){
-  if(!q.past)return'';
-  const i=tbIdx(q.tb);
-  return `<div class="qpast"><span class="pill amber">🎓 考古</span>${!noTb&&i>=0?`<span class="pill pine">${C[i].e} ${esc(C[i].en)}</span>`:''}${q.psrc?`<span class="qps">${esc(q.psrc)}</span>`:''}</div>`;
-}
 function qItem(q){
-  const shut=(!q.done||qView==='past')&&qShut.has(q.id);
+  const shut=!q.done&&qShut.has(q.id);
   return `<div class="item${openQ.has(q.id)?' wide':''}"${q.done?' style="background:var(--surface-2)"':''}>
     <div style="font-weight:500;line-height:1.5;cursor:pointer" data-qopen="${q.id}" title="${shut?'展開答案':'收合答案'}">${esc(q.q)}${
       shut&&q.a?'<span class="qmore">⌄</span>':''}</div>
-    ${qPastMeta(q,qView==='past')}
     ${tagChips(q.tags)}
 
     ${!shut&&q.a?`<div class="mdview" style="margin-top:8px;font-size:13.5px;line-height:1.65;border-left:3px solid var(--ac-mid);padding-left:10px">${md(q.a)}</div>`:''}
@@ -2953,13 +2938,9 @@ function qItem(q){
     ${openQ.has(q.id)?`<div class="editbox">
       <label class="f"><span>Question</span><textarea data-qf="${q.id}|q">${esc(q.q)}</textarea></label>
       <div class="grid2">
-        <label class="f"><span>分類</span><select data-qk="${q.id}">${qcatOpts(qcatFix(q.kind))}</select></label>
+        <label class="f"><span>分類</span><select data-qk="${q.id}">${qcatOpts(qcatFix(q.kind),true)}</select></label>
         <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-qtags="${q.id}" value="${esc((q.tags||[]).join(', '))}"></label>
       </div>
-      <label class="chk pastchk"><input type="checkbox" data-qpast="${q.id}"${q.past?' checked':''}><span>🎓 資格考考古題</span></label>
-      ${q.past?`<div class="grid2">
-        <label class="f"><span>出處（課程／老師／日期）</span><input type="text" data-qf="${q.id}|psrc" value="${esc(q.psrc||'')}" placeholder="e.g. 高流方法 W5 陳老師 10/6"></label>
-        <label class="f"><span>Textbooks 主題</span><select data-qtb="${q.id}">${tbOpts(q.tb||'')}</select></label></div>`:''}
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">Answer</span>
         <button class="iconb" data-qimg="${q.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
@@ -3003,27 +2984,10 @@ function qDoneRow(q){
   return `<div class="rsvrow" data-qopen="${q.id}" title="點一下展開">
     <span class="ck">✓</span><span class="rtx">${esc(q.q)}</span><span class="rdt">${dt}</span></div>`;
 }
-function qPastHTML(all){
-  const past=all.filter(q=>q.past);
-  if(!past.length)return `<div class="empty">${nFilterOn()?'沒有符合的考古題。':'還沒有考古題。在問題的 ✎ 裡勾「🎓 資格考考古題」就會出現在這裡。'}</div>`;
-  const by={};past.forEach(q=>{const i=tbIdx(q.tb);(by[i]=by[i]||[]).push(q)});
-  const keys=bookOrder().filter(i=>by[i]);if(by[-1])keys.push(-1);
-  return keys.map(i=>{
-    const L=by[i].sort((a,b)=>b.created-a.created),op=nFilterOn()||!qPastShut.has(String(i));
-    const name=i>=0?`<span>${C[i].e} ${esc(C[i].en)}</span><span class="gn">${esc(C[i].zh)} · ${L.length} 題</span>`
-      :`<span>未指定主題</span><span class="gn">${L.length} 題</span>`;
-    return `<div class="qpg" id="qpg-${i}"><div class="kdgroup gth">${name}<button class="kx" data-qpg="${i}" aria-expanded="${op}" title="${op?'收合':'展開'}">${CHEV}</button></div>`
-      +(op?L.map(qItem).join(''):'')+`</div>`;
-  }).join('');
-}
 function renderQ(){
   const el=document.getElementById('qList');
   const F=nFilterOn();
   const all=(S.qs||[]).filter(qHit);
-  renderTagBar();
-  if(typeof renderMethod==='function'&&document.getElementById('themeList'))renderMethod();
-  if(qView==='past'){el.innerHTML=qPastHTML(all);
-    renderSrchInfo(all.filter(q=>q.past).length,(S.notes||[]).filter(ntHit).length);return}
   const openQs=all.filter(x=>!x.done).sort((a,b)=>b.created-a.created);
   const doneQs=all.filter(x=>x.done).sort((a,b)=>(b.doneAt||b.created)-(a.doneAt||a.created));
 
@@ -3048,10 +3012,6 @@ function renderQ(){
   renderSrchInfo(all.length,(S.notes||[]).filter(ntHit).length);
 }
 document.getElementById('qList').addEventListener('change',e=>{
-  const pc=e.target.closest('[data-qpast]');
-  if(pc){const q=S.qs.find(x=>x.id===pc.dataset.qpast);if(q){q.past=pc.checked;q.mtime=Date.now();save();renderQ()}return}
-  const tb=e.target.closest('[data-qtb]');
-  if(tb){const q=S.qs.find(x=>x.id===tb.dataset.qtb);if(q){q.tb=tb.value;q.mtime=Date.now();save();renderQ()}return}
   const kc=e.target.closest('[data-qk]');
   if(kc&&kc.value==='__new'){const q=S.qs.find(x=>x.id===kc.dataset.qk);
     const id=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
@@ -3072,13 +3032,11 @@ document.getElementById('qList').addEventListener('click',e=>{
   const qi=e.target.closest('[data-qimg]');
   if(qi){pickImage(`[data-qa="${qi.dataset.qimg}"]`);return}
   if(e.target.closest('#rsvMore')){rsvAll=!rsvAll;renderQ();return}
-  const pg=e.target.closest('[data-qpg]');
-  if(pg){const k=pg.dataset.qpg;qPastShut.has(k)?qPastShut.delete(k):qPastShut.add(k);renderQ();return}
   const ds=e.target.closest('[data-qsel]');
   if(ds){const r=dirPick(ds.dataset.qsel,qSelCat,qSelMon);qSelCat=r[0];qSelMon=r[1];renderQ();return}
   const qo=e.target.closest('[data-qopen]');
   if(qo){const id=qo.dataset.qopen,q=(S.qs||[]).find(x=>x.id===id);
-    if(q&&q.done&&qView!=='past'){
+    if(q&&q.done){
       if(openQA.has(id)){openQA.delete(id);openQ.delete(id)}else openQA.add(id);
     }else{
       if(qShut.has(id)){qShut.delete(id)}else{qShut.add(id);openQ.delete(id)}
@@ -3108,9 +3066,8 @@ document.getElementById('qList').addEventListener('click',e=>{
     q.mtime=Date.now();save();renderQ();return}
   const c=e.target.closest('[data-qc]');
   if(c){const q=S.qs.find(x=>x.id===c.dataset.qc);
-    S.cards.push({id:uid(),created:Date.now(),mtime:Date.now(),q:q.q,a:q.a||'',theme:q.past?tbIdx(q.tb):-1,
-      past:!!q.past,qid:q.id,links:[],level:0,due:Date.now(),last:null,n:0});
-    save();renderCards();updateBadge();toast(q.past?'已變成複習卡（考古題）':'已變成複習卡');return}
+    S.cards.push({id:uid(),created:Date.now(),q:q.q,a:q.a||'',theme:-1,links:[],level:0,due:Date.now(),last:null,n:0});
+    save();renderCards();updateBadge();toast('已變成複習卡');return}
   const r=e.target.closest('[data-qr]');if(!r)return;
   const q=S.qs.find(x=>x.id===r.dataset.qr);
   if(S.dirs.some(d=>d.title===q.q)){toast('這個方向已存在');return}
@@ -3518,8 +3475,15 @@ document.getElementById('ntAddLink').onclick=()=>{const l=grabNtLink();
   if(l){newNtLinks.push(l);renderNtNewLinks();document.getElementById('nt-link-name').focus()}};
 ['nt-link-name','nt-link-url'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();document.getElementById('ntAddLink').click()}}));
+function ntExamUI(){
+  const k=document.getElementById('nt-kind');if(!k)return;
+  const ex=k.value===EXAM;show('ntExamBox',ex);
+  document.getElementById('ntTitleLb').textContent=ex?'題目':'標題';
+  document.getElementById('ntBodyLb').textContent=ex?'答案':'內容／備忘';
+}
+document.getElementById('nt-kind').addEventListener('change',ntExamUI);
 document.getElementById('addNtBtn').onclick=()=>{
-  if(toggle('ntForm')){document.getElementById('nt-title').focus();
+  if(toggle('ntForm')){ntExamUI();document.getElementById('nt-title').focus();
     bindImagePaste(document.getElementById('nt-body'))}};
 document.getElementById('ntImgBtn').onclick=()=>pickImage('#nt-body');
 document.getElementById('cancelNt').onclick=()=>show('ntForm',false);
@@ -3527,11 +3491,15 @@ document.getElementById('addNt').onclick=()=>{
   const t=document.getElementById('nt-title').value.trim();
   const b=document.getElementById('nt-body').value.trim();
   if(!t&&!b&&!newNtLinks.length){toast('請至少填標題或內容');return}
-  S.notes.push({id:uid(),created:Date.now(),mtime:Date.now(),
-    title:t||'(未命名)',body:b,kind:document.getElementById('nt-kind').value,links:newNtLinks.slice(),
-    tags:parseTags(document.getElementById('nt-tags').value)});
-  ['nt-title','nt-body','nt-tags'].forEach(i=>document.getElementById(i).value='');
+  const kind=document.getElementById('nt-kind').value,ex=kind===EXAM;
+  const n={id:uid(),created:Date.now(),mtime:Date.now(),
+    title:t||'(未命名)',body:b,kind,links:newNtLinks.slice(),
+    tags:parseTags(document.getElementById('nt-tags').value)};
+  if(ex){n.psrc=document.getElementById('nt-psrc').value.trim();n.tb=document.getElementById('nt-tb').value}
+  S.notes.push(n);
+  ['nt-title','nt-body','nt-tags','nt-psrc','nt-tb'].forEach(i=>document.getElementById(i).value='');
   newNtLinks=[];renderNtNewLinks();show('ntForm',false);saved();renderNt();
+  const r=examSync(n);if(r)toast(r);
 };
 function renderNt(){
   const el=document.getElementById('ntList');if(!el)return;
@@ -3547,7 +3515,10 @@ function renderNt(){
 }
 function ntItem(n){
   if(!Array.isArray(n.links))n.links=[];
-  const open=openNt.has(n.id), ed=editNt.has(n.id);
+  const open=openNt.has(n.id), ed=editNt.has(n.id), ex=n.kind===EXAM, ti=tbIdx(n.tb);
+  const hasCard=ex&&!!n.cid&&S.cards.some(c=>c.id===n.cid);
+  const meta=ex&&(ti>=0||n.psrc||hasCard)?`<div class="qpast">${hasCard?'<span class="pill amber" title="已在 Review，Exam mode 勾「只跑考古題」時出現">🎓 考古卡</span>':''}${
+    ti>=0?`<span class="pill pine">${C[ti].e} ${esc(C[ti].en)}</span>`:''}${n.psrc?`<span class="qps">${esc(n.psrc)}</span>`:''}</div>`:'';
   const chips=n.links.filter(l=>l.url).map(l=>
     `<span class="pill" data-open="${esc(l.url)}" data-ntstop="1" title="點一下開啟" style="cursor:pointer;color:var(--ac);border-color:var(--ac-mid)">🔗 ${esc(l.name||l.url.slice(0,24))}</span>`).join(' ');
   const attach=()=>{const arr=n.links.length?n.links:(n.links=[{name:'',url:''}]);
@@ -3579,24 +3550,28 @@ function ntItem(n){
         <button class="cx" data-hold="note|${n.id}" title="長按 1.5 秒刪除">✕</button></span>
     </div>
     ${tagChips(n.tags,1)}
+    ${meta}
     ${open&&chips?`<div class="row" data-ntstop="1" style="margin-top:8px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
       ${n.body?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(n.body)}</div>`
-        :'<p class="hint" style="margin:8px 0 0">還沒有內容，點 ✎ 開始寫。</p>'}
+        :`<p class="hint" style="margin:8px 0 0">${ex?'還沒有答案，點 ✎ 開始寫；寫好按「完成」會自動送到 Review。':'還沒有內容，點 ✎ 開始寫。'}</p>`}
     </div>`:''}
     ${open&&ed?`<div class="editbox" data-ntstop="1" style="cursor:default">
-      <label class="f"><span>標題</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
+      <label class="f"><span>${ex?'題目':'標題'}</span><input type="text" data-ntf="${n.id}|title" value="${esc(n.title)}"></label>
       <div class="grid2">
         <label class="f"><span>分類</span><select data-ntk="${n.id}">${qcatOpts(qcatFix(n.kind))}</select></label>
         <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       </div>
+      ${ex?`<div class="grid2">
+        <label class="f"><span>出處（課程／老師／日期）</span><input type="text" data-ntf="${n.id}|psrc" value="${esc(n.psrc||'')}" placeholder="e.g. 高流方法 W5 陳老師 10/6"></label>
+        <label class="f"><span>Textbooks 主題</span><select data-nttb="${n.id}">${tbOpts(n.tb||'')}</select></label></div>`:''}
       <div class="f"><div class="row" style="align-items:center">
-        <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">內容／備忘</span>
+        <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">${ex?'答案':'內容／備忘'}</span>
         <button class="iconb" data-ntimg="${n.id}" title="插入圖片（也可直接貼上剪貼簿圖片）">🖼️</button></div>
         <textarea data-ntf="${n.id}|body" data-ntb="${n.id}" style="min-height:130px;margin-top:4px">${esc(n.body||'')}</textarea></div>
       ${attach()}
       <div class="saverow">
-        <button class="btn ghost mini" data-ntc="${n.id}" style="margin-right:auto">↑ Card</button>
+        ${ex?'<span style="margin-right:auto"></span>':`<button class="btn ghost mini" data-ntc="${n.id}" style="margin-right:auto">↑ Card</button>`}
         <button class="btn ghost mini" data-ntr="${n.id}">↑ 方向</button>
         <button class="btn" data-ntsave="${n.id}">完成</button></div>
     </div>`:''}</div>`;
@@ -3609,13 +3584,13 @@ document.getElementById('ntList').addEventListener('click',e=>{
     if(editNt.has(id)){editNt.delete(id);
       const n=S.notes.find(x=>x.id===id);
       if(n&&Array.isArray(n.links))n.links=n.links.filter(l=>l.url||l.name);
-      save();saved()}
+      save();saved();const r=examSync(n);if(r)toast(r)}
     else{editNt.add(id);setTimeout(()=>bindImagePaste(document.querySelector(`[data-ntb="${id}"]`)),0)}
     renderNt();return}
   const sv=e.target.closest('[data-ntsave]');
   if(sv){const id=sv.dataset.ntsave;const n=S.notes.find(x=>x.id===id);
     if(n&&Array.isArray(n.links))n.links=n.links.filter(l=>l.url||l.name);
-    editNt.delete(id);save();saved();renderNt();return}
+    editNt.delete(id);save();saved();const r=examSync(n);if(r)toast(r);renderNt();return}
   const nc=e.target.closest('[data-ntc]');
   if(nc){const n=S.notes.find(x=>x.id===nc.dataset.ntc);if(!n)return;
     if(!n.body&&!n.title){toast('先寫點內容再變複習卡');return}
@@ -3653,6 +3628,9 @@ document.getElementById('ntList').addEventListener('change',e=>{
     const id=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
     if(n&&id){n.kind=id;n.mtime=Date.now();toast('已新增分類')}
     save();fillSelects();renderQ();renderNt();return}
+  const tb=e.target.closest('[data-nttb]');
+  if(tb){const n=S.notes.find(x=>x.id===tb.dataset.nttb);
+    if(n){n.tb=tb.value;n.mtime=Date.now();save()}return}
   const tg=e.target.closest('[data-nttags]');
   if(tg){const n=S.notes.find(x=>x.id===tg.dataset.nttags);
     if(n){n.tags=parseTags(tg.value);n.mtime=Date.now();save();renderTagBar();renderNt()}return}
@@ -3684,8 +3662,10 @@ function fillSelects(){
   document.getElementById('cs-to').innerHTML=o;
   document.getElementById('cs-term').innerHTML=TERMS.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
   ['q-kind','nt-kind'].forEach(id=>{const s=document.getElementById(id);
-    if(s){const v=s.value;s.innerHTML=qcatOpts(qcatFix(v));s.value=qcatFix(v)}});
-  {const s=document.getElementById('q-tb');if(s&&!s.options.length)s.innerHTML=tbOpts('')}
+    if(s){const v=s.value;s.innerHTML=qcatOpts(qcatFix(v),id==='q-kind');s.value=qcatFix(v);
+      if(id==='q-kind'&&s.value===EXAM)s.value=qcatIds()[0]}});
+  {const s=document.getElementById('nt-tb');if(s&&!s.options.length)s.innerHTML=tbOpts('')}
+  if(typeof ntExamUI==='function')ntExamUI();
   {const s=document.getElementById('kd-type');
    if(s){const v=s.value;s.innerHTML=kdcatOpts(kdcatFix(v));s.value=kdcatFix(v)}}
   document.getElementById('termSeg').innerHTML=TERMS.map(t=>
@@ -4171,7 +4151,7 @@ function mergeState(inc){
   else if(!S.gc&&inc.gc){S.gc=inc.gc;S.gcAt=inc.gcAt||0}
   if(inc.lastExport&&(!S.lastExport||inc.lastExport>S.lastExport))S.lastExport=inc.lastExport;
   migrateProg();
-  migratePast();
+  ensureExamCat();
   gEnsureSeeds();
 }
 let impMode='merge';
@@ -4688,7 +4668,6 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>📚 Textbooks</summary><div class="help">
   <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>，Causal Inference: What If 收在「＋ CAUSAL INFERENCE: WHAT IF（補充）」折疊區，<strong>不計入上方 Progress</strong>。</p>
   <p>每個小節點一下換狀態：未讀 → 讀過 → 懂了。右邊 <code>✎</code> 寫該節筆記和附件，有內容時會變色。</p>
-  <p>主題列右邊的 <strong>考古 N</strong> 是 Notes 裡對應到這個主題的考古題數，點一下跳到 Notes 的考古題檢視、捲到這個主題。</p>
 </div></details>
 
 <details class="card fold"><summary>📝 Notes</summary><div class="help">
@@ -4696,15 +4675,15 @@ document.getElementById('helpBox').innerHTML=`
   <p>分頁最上方的<strong>搜尋框同時過濾 Questions 和 Notes</strong>，比對範圍是問題、答案、筆記標題、內容、附件名稱與標籤。<strong>空白分隔＝而且</strong>（打 <code>collider 偏誤</code> 只留兩個詞都出現的）。搜尋時<strong>所有分組自動展開</strong>，不必再一個個點箭號；按 <strong>✕</strong> 清掉搜尋與標籤篩選。</p>
   <p><strong>標籤</strong>在編輯卡片時填，用逗號或空白分隔。搜尋框下方的<strong>標籤列</strong>列出所有用過的標籤（常用的排前面），點一下篩選、再點取消，可以疊加多個標籤（＝同時有這些標籤的才留下）。卡片上的標籤也能直接點。標籤和 Reading 分頁共用同一個標籤庫，所以 paper 和問題可以用同一套詞彙串起來。</p>
   <h4>自己加分類</h4>
-  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。改名和刪除到 <strong>Settings → 分類與清理 → 分類清單</strong>。</p>
+  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study；Notes 另有內建的<strong>資格考</strong>（Questions 的下拉不會出現）。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。改名和刪除到 <strong>Settings → 分類與清理 → 分類清單</strong>。</p>
   <h4>Questions</h4>
   <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊、一列一張，因為手上還沒解決的東西就是該一眼看完。卡片<strong>不標狀態</strong>——沒解決的都在上面，已解決的都在 Resolved 裡，不需要再貼標籤講一次。<strong>點問題本身可以把答案收起來</strong>，收起時標題後面會有一個 ⌄；再點一次展開。</p>
   <p><strong>Resolved</strong>（粗體那行）<strong>分成左目錄、右清單</strong>。左邊窄欄底色較深，依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。<strong>預設展開、先顯示最近解決的 3 筆</strong>，底下的「更多」看全部；Resolved 右邊的雙箭號可以把整區收起來。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
   <p>卡片只顯示問題、答案、標籤、附件、狀態；分類和標籤在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
   <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
-  <h4>資格考考古題</h4>
-  <p>老師說「這個之前考過」就記成考古題：新增或 ✎ 編輯問題時勾 <strong>🎓 資格考考古題</strong>，會多出<strong>出處</strong>（哪堂課、哪位老師、哪天）和 <strong>Textbooks 主題</strong>兩欄，都可以留空。卡片上會出現 🎓 考古、主題和出處。考古題和分類無關，Mine、Study 或自訂分類都能勾；舊版用「資格考」分類記的問題，升級時自動標成考古題。</p>
-  <p>搜尋框下方標籤列<strong>最前面的 🎓 考古題</strong>（有考古題才出現）：點一下只列考古題（含已解決，Notes 暫時隱藏），再點一次回來。考古題，依 Textbooks 主題分組、照書的章節順序，沒選主題的放最後；每組顯示題數，組內新到舊，標題列的雙箭號可以收合。在這個檢視按 ＋ 新增，會預先勾好考古題。<code>↑ Card</code> 產生的複習卡會帶著考古題標記和主題。搜尋也會比對出處和主題名稱。</p>
+  <h4>資格考（考古題）</h4>
+  <p>老師說「這個之前考過」就在 Notes 新增一則、分類選 <strong>資格考</strong>：會多出<strong>出處</strong>（課程／老師／日期）和 <strong>Textbooks 主題</strong>兩欄，都可以留空；標題和內容改叫<strong>題目</strong>和<strong>答案</strong>。</p>
+  <p>答案寫好按 Save（或編輯後按「完成」／✓），就<strong>自動在 Review 產生一張 🎓 考古卡</strong>（題目→正面、答案→背面、主題→卡片主題），筆記上會出現 🎓 考古卡 標記；之後改答案再按完成，那張卡會跟著更新。考古卡刪掉後不會自動重建（從回收桶還原即可）。資格考筆記不需要 <code>↑ Card</code>，所以那顆按鈕不顯示。左側目錄點「資格考」就只看考古題。</p>
   <h4>Notes</h4>
   <p>想查的東西、課程資料、待整理的想法。版面和 Resolved 一樣是<strong>左目錄、右清單</strong>：左邊依分類顯示筆數、選中才展開月份；右邊不分類，依最後修改時間新到舊排成單欄。<strong>收合時和 Resolved 長得一樣</strong>：圓點、標題、標籤、最後修改日期一行帶過，點一下才展開成完整卡片（含內容、✎ 編輯、✕ 刪除），再點一次收回去。</p>
   <p>分類和標籤在編輯時<strong>並排在同一列</strong>。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
@@ -4712,9 +4691,9 @@ document.getElementById('helpBox').innerHTML=`
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
   <p>間隔重複：答「會」等級 +1、間隔拉長，答「不會」退兩級。Lv0–6 對應 1、3、7、14、30、60、120 天。</p>
-  <p>點卡片翻面看答案。<strong>Exam mode</strong> 整批跑選定主題的所有卡片，<strong>不會改動任何卡的到期日</strong>。勾 <strong>🎓 只跑考古題</strong> 只跑考古題卡片：有選主題就只跑那些主題的考古題，沒選主題就跑全部考古題。主題旁的數字是卡片數與其中的考古題數。</p>
-  <p>考古題卡片有 🎓 考古 標記；從考古題 <code>↑ Card</code> 會自動帶上，自己新增或 ✎ 編輯時也可以勾。</p>
+  <p>點卡片翻面看答案。<strong>Exam mode</strong> 整批跑選定主題的所有卡片，<strong>不會改動任何卡的到期日</strong>。</p>
   <p>卡片可從 Notes 的 Question 用 <code>↑ Card</code> 產生，也可以直接新增。✎ 和 ✕ 在卡片右下角。</p>
+  <p><strong>🎓 考古卡</strong>由 Notes 的「資格考」筆記自動產生，<strong>不進每日排程</strong>（不算在 DUE TODAY、不能按會／不會）。要練的時候打開 Exam mode 勾 <strong>🎓 只跑考古題</strong>：只勾它＝跑全部考古卡；同時選主題＝只跑那些主題的考古卡。沒勾時，選主題只跑一般卡片。主題旁的數字是「一般卡片數 · 考古 N」。</p>
 </div></details>
 
 <details class="card fold"><summary>💬 Meeting</summary><div class="help">
