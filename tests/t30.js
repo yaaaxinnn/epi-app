@@ -1,4 +1,4 @@
-// v49：Library 分頁（主題／卡片／多個 HTML）、拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
+// v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
 const {JSDOM}=require('jsdom');const fs=require('fs');const fidb=require('fake-indexeddb');
 const html=fs.readFileSync('/home/claude/index.html','utf8');
 const now=Date.now();
@@ -73,6 +73,13 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
 
  // ── 主題 ──
  click($('.tab[data-p="library"]'));
+ t('左欄是主題清單，右欄是卡片',()=>!!$('#p-library .dirwrap #ucNav')&&!!$('#p-library .dirbody #unitList')&&!$('#ucBar'));
+ t('左欄列出主題與卡片數，最下面是＋ 主題',()=>{const b=$$('#ucNav .dnav');return b.length===2&&b[0].textContent.includes('因果推論')&&b[0].querySelector('.ct').textContent==='1'&&b[1].id==='ucAddBtn'});
+ t('預設選第一個主題',()=>$('#ucNav [data-ucf="ucA"]').getAttribute('aria-pressed')==='true');
+ click($('#ucAddBtn'));
+ t('按＋ 主題打開表單',()=>$('#ucForm').style.display==='');
+ click($('#ucAddBtn'));
+ t('再按一次收起',()=>$('#ucForm').style.display==='none');
  click($('#ucAddBtn'));type($('#uc-name'),'Methods Seminar');
  t('英文名稱自動帶出代碼',()=>$('#uc-code').value==='methods-seminar');
  type($('#uc-code'),'因果');click($('#saveUC'));
@@ -82,35 +89,42 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  type($('#uc-code'),'seminar');$('#uc-desc').value='林老師・PhD1 上';click($('#saveUC'));
  const T2=S.ucourses.find(x=>x.code==='seminar');
  t('建立主題 {name,desc,code}',()=>T2&&T2.name==='Methods Seminar'&&T2.desc==='林老師・PhD1 上');
- t('選中主題時顯示說明與 library/代碼/',()=>$('#ucInfo').textContent.includes('林老師・PhD1 上')&&$('#ucInfo').textContent.includes('library/seminar/'));
+ t('新主題自動選中，右欄顯示說明與 library/代碼/',()=>$('#ucInfo').textContent.includes('林老師・PhD1 上')&&$('#ucInfo').textContent.includes('library/seminar/')&&$('#ucNav [data-ucf="'+T2.id+'"]').getAttribute('aria-pressed')==='true');
+ t('沒有卡片的主題顯示提示',()=>$('#unitList .empty').textContent.includes('還沒有卡片'));
 
  // ── 卡片表單 ──
- A.eval("ucSel='ucA';renderLib()");
+ click($('#ucNav [data-ucf="ucA"]'));
+ t('點左欄主題切換右欄',()=>$('#ucInfo').textContent.includes('因果推論')&&$$('#unitList .item').length===1);
+ t('卡片不重複顯示主題說明',()=>!$('#unitList .item').textContent.includes('林老師'));
+ t('指定閱讀不顯示（舊資料保留在存檔裡）',()=>!$('#p-library').textContent.includes('指定閱讀')&&!$('#p-library').textContent.includes('必讀')&&S.units[0].reads.length===1);
+ t('卡片直接是概覽：日期、標題、📄，不用點開',()=>{const it=$('#u-uOld');return it.textContent.includes('10/19（一）')&&it.textContent.includes('W7 DAG 與 confounding')&&!!it.querySelector('[data-ufopen]')&&!it.querySelector('[data-utog]')});
  click($('#addUnitBtn'));
- t('表單沒有週次欄',()=>!$('#unitForm [data-ud="week"]')&&!!$('#unitForm [data-ud="title"]')&&!!$('#unitForm [data-ud="date"]'));
- t('指定閱讀一列五格（書名、章節、必選讀、主題、✕）',()=>{const r=$('#unitForm .urow');return r&&r.children.length===5&&getComputedStyleOk(r)});
- function getComputedStyleOk(){return /grid-template-columns:minmax\(0,1\.6fr\) 42px 60px minmax\(0,1\.2fr\) 18px/.test(html)}
- type($('[data-ud="title"]'),'因果推論預習包');type($('[data-ud="date"]'),'2026-10-20');
- type($('[data-ur="0|book"]'),'Modern Epidemiology 4e (2021)');type($('[data-ur="0|ch"]'),'3');
- t('ME Ch3 自動對 Causation & Causal Inference',()=>$('select[data-ur="0|tb"]').value==='Causation & Causal Inference');
- click($('[data-uradd]'));type($('[data-ur="1|book"]'),'What If (Hernán & Robins)');type($('[data-ur="1|ch"]'),'6');change($('select[data-ur="1|req"]'),'0');
- t('What If Ch6 → Causal Diagrams',()=>$('select[data-ur="1|tb"]').value==='Causal Diagrams');
- click($('#saveUnit'));
- const U1=S.units.find(u=>u.title==='因果推論預習包');
- t('卡片存入 title／date／reads',()=>U1&&U1.date==='2026-10-20'&&U1.reads.length===2&&U1.reads[1].req===false&&U1.reads[1].tb==='Causal Diagrams');
- click($('#addUnitBtn'));click($('#saveUnit'));
- t('標題必填',()=>toastTxt().includes('標題'));click($('#cancelUnit'));
- t('依日期新到舊',()=>$$('#unitList .uti').map(x=>x.textContent).join('|')==='因果推論預習包|W7 DAG 與 confounding');
-
- // ── 上傳多個 HTML ──
- click($('#u-'+U1.id+' [data-upopen]'));
+ t('表單：主題、日期、標題、備註、HTML，沒有週次和指定閱讀',()=>!!$('#unitForm [data-ud="title"]')&&!!$('#unitForm [data-ud="date"]')&&!!$('#unitForm [data-ud="note"]')&&!!$('#unitForm .udrop')&&!$('#unitForm [data-ud="week"]')&&!$('#unitForm .urow'));
+ t('新卡片預設目前的主題',()=>$('#unitForm [data-ud="cid"]').value==='ucA');
+ type($('[data-ud="title"]'),'因果推論預習包');type($('[data-ud="date"]'),'2026-10-20');type($('[data-ud="note"]'),'**非同步**課程，先看步驟 A');
  A.eval(`ufAdd('causal-prep.html','<!doctype html><html><head><title>p</title></head><body>prep</body></html>',100)`);
  A.eval(`ufAdd('slides.html','<html><head></head><body>slides $1 $$</body></html>',80)`);
  t('預設路徑 library/代碼/檔名',()=>$('[data-uppath="0"]').value==='library/causal/causal-prep.html');
- await A.eval(`ufPush('${U1.id}')`);
- t('上傳兩個並綁到同一張卡',()=>U1.files.length===2&&'library/causal/causal-prep.html' in REPO&&'library/causal/slides.html' in REPO&&U1.files.every(f=>/^f/.test(f.fid)));
- click($('#u-'+U1.id+' [data-utog]'));
- t('收合時就有 📄 按鈕（每個 HTML 一顆，加 ↗）',()=>$$('#u-'+U1.id+' [data-ufopen]').length===2&&$$('#u-'+U1.id+' [data-ufnew]').length===2&&!$('#u-'+U1.id+' .usec'));
+ change($('#unitForm [data-ud="cid"]'),T2.id);
+ t('換主題時，還沒上傳的路徑跟著換資料夾',()=>$('[data-uppath="0"]').value==='library/seminar/causal-prep.html');
+ change($('#unitForm [data-ud="cid"]'),'ucA');
+ click($('#saveUnit'));await sleep(400);
+ const U1=S.units.find(u=>u.title==='因果推論預習包');
+ t('Save：存卡片並上傳兩個 HTML 綁上去',()=>U1&&U1.date==='2026-10-20'&&U1.files.length===2&&'library/causal/causal-prep.html' in REPO&&'library/causal/slides.html' in REPO&&U1.files.every(f=>/^f/.test(f.fid)));
+ t('上傳完表單收起',()=>$('#unitForm').style.display==='none');
+ t('備註用 Markdown 顯示',()=>$('#u-'+U1.id+' .unote strong').textContent==='非同步');
+ click($('#addUnitBtn'));click($('#saveUnit'));
+ t('標題必填',()=>toastTxt().includes('標題'));click($('#addUnitBtn'));
+ t('＋ 再按一次收起表單',()=>$('#unitForm').style.display==='none');
+ t('依日期新到舊',()=>$$('#unitList .uti').map(x=>x.textContent).join('|')==='因果推論預習包|W7 DAG 與 confounding');
+ t('每個 HTML 一顆 📄 加 ↗',()=>$$('#u-'+U1.id+' [data-ufopen]').length===2&&$$('#u-'+U1.id+' [data-ufnew]').length===2);
+ click($('#u-'+U1.id+' [data-uedit]'));
+ t('✎ 編輯框列出已綁的 HTML（可長按解除）與上傳區',()=>$$('#unitForm .ufile').length===2&&!!$('#unitForm .ufile [data-hold^="ufile|"]')&&!!$('#unitForm .udrop'));
+ type($('#unitForm [data-ud="bind"]'),'courses/causal/old');click($('#saveUnit'));await sleep(200);
+ t('✎ 裡填 repo 路徑綁定（自動補 .html）',()=>U1.files.length===3&&U1.files[2].path==='courses/causal/old.html');
+ click($('#u-'+U1.id+' [data-uedit]'));type($('#unitForm [data-ud="bind"]'),'../secret');click($('#saveUnit'));await sleep(100);
+ t('擋掉 .. 路徑',()=>U1.files.length===3&&toastTxt().includes('不合法'));click($('#cancelUnit'));
+ await A.eval(`doHold('ufile|'+S.units.find(u=>u.title==='因果推論預習包').files[2].fid)`);
  const F1=U1.files[0],F2=U1.files[1];
 
  // ── 檢視 ──
@@ -148,8 +162,7 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  await idbPut(A,'causalPrep','kv','state',{version:1,entries:{n1:[{id:'e1',q:'Q1',a:'答案一（改）'}]},todo:{t1:123}});
  const v2=await A.eval(`libPush('${F1.fid}',{quiet:true})`);
  t('有變動就上傳（每分鐘的背景同步走這條）',()=>v2==='pushed'&&JSON.stringify(JSON.parse(REPO[dp]).dbs).includes('答案一（改）'));
- click($('#u-'+U1.id+' [data-utog]'));
- t('展開卡片顯示每個 HTML 的同步時間',()=>/☁ \d+\/\d+ \d\d:\d\d/.test($('#u-'+U1.id+' .ufile .us').textContent));
+ t('滑鼠停在 📄 上看得到同步時間',()=>/上次同步 \d+\/\d+ \d\d:\d\d/.test($('#u-'+U1.id+' [data-ufopen]').title));
  await sleep(400);
 
  // ── 裝置 B：還原 ──
@@ -190,7 +203,7 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  // ── 解除綁定、刪除 ──
  await A.eval(`doHold('ufile|${F2.fid}')`);
  t('✕ 長按只解除綁定',()=>U1.files.length===1&&'library/causal/slides.html' in REPO&&toastTxt().includes('還在'));
- A.eval("ucSel='ucA';renderLib()");
+ A.eval("libPick('ucA');renderLib()");
  await A.eval("doHold('ucourse|ucA')");
  t('還有卡片的主題不能刪',()=>S.ucourses.some(x=>x.id==='ucA')&&toastTxt().includes('還有 2 張卡片'));
  await A.eval(`doHold('unit|uOld')`);
@@ -198,15 +211,14 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  click(D.querySelector(`[data-undel="${S.trash[0].tid}"]`));
  t('從回收桶還原',()=>S.units.some(u=>u.id==='uOld'));
 
- // ── Textbooks、清理、HELP ──
- A.eval(`openU.add('${U1.id}');renderLib()`);
- click($(`#u-${U1.id} [data-tbgo="${ix('Causal Diagrams')}"]`));
- t('點主題 pill 跳到 Textbooks 並展開',()=>$('.tab[data-p="textbooks"]').getAttribute('aria-selected')==='true'&&A.eval(`th(${ix('Causal Diagrams')}).open`)===true&&A.__sv==='th-'+ix('Causal Diagrams'));
- t('orphUsed 含 Library 綁的 HTML',()=>{const u=A.eval('orphUsed()');return u.has('library/causal/causal-prep.html')&&u.has('courses/causal/old.html')&&u.has('papers/a.html')});
+ // ── 清理、HELP ──
+ t('沒有指定閱讀與 Textbooks 跳轉的程式',()=>!html.includes('data-tbgo')&&!html.includes('tbGuess'));
+ t('orphUsed 含 Library 綁的 HTML',()=>{const u=A.eval('orphUsed()');return u.has('library/causal/causal-prep.html')&&u.has('papers/a.html')});
  await A.eval('orphScan()');
  const op=A.eval('orphans').map(o=>o.path).sort().join('|');
  t('清理只列沒人指向的 HTML（.data.json 不列）',()=>op==='library/causal/slides.html|library/causal/unused.html'||op);
  const hb=$('#helpBox').innerHTML;
+ t('版本標示 v51',()=>$('#appVer').textContent.includes('v51'));
  t('HELP：📚 Library、八個分頁、同步說明、沒有 Guide',()=>hb.includes('<summary>📚 Library</summary>')&&hb.includes('八個分頁在做什麼')&&hb.includes('.data.backup-日期.json')&&!hb.includes('📑 Guide')&&!/<strong>Guide<\/strong>/.test(hb));
  t('全分頁可切換',()=>{$$('#tabs button').forEach(b=>click(b));return A.__errs.length===0||A.__errs.join('|')});
  await sleep(400);

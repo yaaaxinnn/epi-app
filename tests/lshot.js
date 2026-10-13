@@ -35,22 +35,18 @@ async function addEntry(fr,q,a){
     await pa.goto('http://localhost:8766/index.html');await pa.waitForTimeout(600);
     await pa.evaluate(GHJS);
     await pa.click('.tab[data-p="library"]');
-    await pa.click('#ucAddBtn');await pa.fill('#uc-name','高等流行病學方法');await pa.fill('#uc-desc','林老師・PhD1 上');await pa.fill('#uc-code','causal');await pa.click('#saveUC');
+    await pa.click('#ucAddBtn');await pa.fill('#uc-name','高等流行病學方法');await pa.fill('#uc-desc','方啓泰/林先和/李文宗');await pa.fill('#uc-code','epm7110');await pa.click('#saveUC');
+    await pa.click('#ucAddBtn');await pa.fill('#uc-name','Methods Seminar');await pa.fill('#uc-code','seminar');await pa.click('#saveUC');
+    await pa.click('#ucNav [data-ucf]');
     await pa.click('#addUnitBtn');
-    await pa.fill('[data-ud="title"]','因果推論預習包');await pa.fill('[data-ud="date"]','2026-10-20');
-    await pa.fill('[data-ur="0|book"]','Modern Epidemiology 4e (2021)');await pa.fill('[data-ur="0|ch"]','3');
-    await pa.click('[data-uradd]');await pa.fill('[data-ur="1|book"]','What If (Hernán & Robins)');await pa.fill('[data-ur="1|ch"]','6');await pa.selectOption('[data-ur="1|req"]','0');
-    await (await pa.$('#unitForm')).screenshot({path:OUT+label+'_1_form.png'});
-    const rowH=await pa.evaluate(()=>{const r=document.querySelector('#unitForm .urow');const kids=[...r.children].map(c=>{const b=c.getBoundingClientRect();return (b.top+b.bottom)/2});return Math.max(...kids)-Math.min(...kids)});
-    if(rowH>4)bad.push(label+' 指定閱讀沒有在同一列 '+rowH);
-    await pa.click('#saveUnit');
-    const uid=await pa.evaluate(()=>S.units[0].id);
-    await pa.click(`#u-${uid} [data-upopen]`);
+    await pa.fill('[data-ud="title"]','Week 6. 干擾作用預習');await pa.fill('[data-ud="date"]','2026-10-14');
+    await pa.fill('[data-ud="note"]','先做 **步驟 A**，再看 ME Ch12');
     await pa.setInputFiles('#uf-file','/home/claude/serve/causal-prep.html');await pa.waitForTimeout(300);
-    await pa.click(`#u-${uid} [data-upgo]`);await pa.waitForTimeout(500);
-    const fid=await pa.evaluate(()=>S.units[0].files[0].fid);
-    if(!REPO['library/causal/causal-prep.html'])bad.push(label+' HTML 沒上傳');
-    await pa.click(`#u-${uid} [data-utog]`);await pa.waitForTimeout(150);
+    await (await pa.$('#unitForm')).screenshot({path:OUT+label+'_1_form.png'});
+    await pa.click('#saveUnit');await pa.waitForTimeout(800);
+    const uid=await pa.evaluate(()=>S.units.find(u=>u.title.startsWith('Week 6')).id);
+    const fid=await pa.evaluate(id=>S.units.find(u=>u.id===id).files[0].fid,uid);
+    if(!REPO['library/epm7110/causal-prep.html'])bad.push(label+' HTML 沒上傳');
     await pa.screenshot({path:OUT+label+'_2_list.png'});
     // 打開、在頁面裡新增一則問答
     await pa.click(`#u-${uid} [data-ufopen="${fid}"]`);await pa.waitForTimeout(1200);
@@ -61,7 +57,7 @@ async function addEntry(fr,q,a){
     if(JSON.stringify(dbs)!=='["causalPrep"]')bad.push(label+' 沒偵測到 causalPrep');
     await pa.screenshot({path:OUT+label+'_3_viewer.png'});
     await pa.click('#uvClose');await pa.waitForTimeout(1500);
-    const dp='library/causal/causal-prep.data.json';
+    const dp='library/epm7110/causal-prep.data.json';
     log(label,'關閉後 data.json',REPO[dp]?('有，含 A 的答案：'+REPO[dp].includes('A 的答案')):'沒有');
     if(!REPO[dp]||!REPO[dp].includes('A 裝置的問題'))bad.push(label+' 關閉後沒上傳');
     // 開新分頁、右上角 ✕
@@ -80,14 +76,14 @@ async function addEntry(fr,q,a){
     log(label,'按 ✕ 分頁有關？',didClose,'data.json 有第二題？',REPO[dp].includes('第二題答案'));
     if(!didClose)bad.push(label+' ✕ 沒關掉分頁');
     if(!REPO[dp].includes('第二題答案'))bad.push(label+' ✕ 沒先同步');
-    await pa.click(`#u-${uid} [data-utog]`);await pa.waitForTimeout(150);
-    await (await pa.$(`#u-${uid}`)).screenshot({path:OUT+label+'_5_card.png'});
+    await pa.waitForTimeout(300);await (await pa.$(`#u-${uid}`)).screenshot({path:OUT+label+'_5_card.png'});
     const stateA=await pa.evaluate(()=>localStorage.getItem('epi-yaxin'));
     // ===== 裝置 B（另一個瀏覽器、空的 IndexedDB）=====
     const B=await ctxFor(b,w);await B.addInitScript(s=>{if(!localStorage.getItem('epi-yaxin'))localStorage.setItem('epi-yaxin',s)},stateA);
     const pb=await B.newPage();const eb=[];pb.on('pageerror',e=>eb.push(e.message));
     await pb.goto('http://localhost:8766/index.html');await pb.waitForTimeout(600);
     await pb.evaluate(GHJS);await pb.evaluate(()=>{document.querySelector('.tab[data-p="library"]').click()});
+    await pb.evaluate(cid=>{libPick(cid);renderLib()},await pa.evaluate(id=>S.units.find(u=>u.id===id).cid,uid));
     await pb.click(`#u-${uid} [data-ufopen="${fid}"]`);await pb.waitForTimeout(1400);
     const fb=pb.frame({url:/^blob:/});
     await fb.click('#nav a[href="#n1"]');await fb.waitForTimeout(300);
