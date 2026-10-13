@@ -115,7 +115,7 @@ setTimeout(async()=>{
    D.querySelector('[data-orph]').checked=true;
    await W.eval("doHold('orphdel|1')");
    const d=calls.filter(x=>x.method==='DELETE').pop();
-   return D.getElementById('orphList').textContent.includes('每個 HTML 都有卡片指向')
+   return D.getElementById('orphList').textContent.includes('每個 HTML 與圖片都有卡片指向')
      &&decodeURIComponent(d.url).includes('notes/隨手.html')});
 
  await ta('repo 太大時會警告',async()=>{

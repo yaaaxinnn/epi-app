@@ -1,9 +1,9 @@
-// v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
+// v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
 const {JSDOM}=require('jsdom');const fs=require('fs');const fidb=require('fake-indexeddb');
 const html=fs.readFileSync('/home/claude/index.html','utf8');
 const now=Date.now();
 const REPO={'courses/causal/old.html':'<html><head></head><body>舊頁</body></html>'};const SHA={};let shaN=0;
-const calls=[];
+const calls=[];let BlobC=null;const B64={};
 const mkFetch=()=>(url,opt)=>{
   opt=opt||{};const u=decodeURIComponent(String(url).split('?')[0]),m=opt.method||'GET';
   const acc=(opt.headers||{}).Accept;calls.push({url:u,method:m,accept:acc});
@@ -13,9 +13,10 @@ const mkFetch=()=>(url,opt)=>{
     .concat([{type:'blob',path:'papers/a.html',sha:'pa',size:9},{type:'blob',path:'library/causal/unused.html',sha:'un',size:9}])});
   if(/\/repos\/[^/]+\/[^/]+$/.test(u))return R(true,200,{size:1000});
   if(m==='PUT'){const b=JSON.parse(opt.body);if(REPO[path]!==undefined&&b.sha!==SHA[path])return R(false,409);
-    REPO[path]=Buffer.from(b.content,'base64').toString('utf8');SHA[path]='s'+(++shaN);return R(true,201,{content:{sha:SHA[path]}})}
+    REPO[path]=/\.jpg$/.test(path)?b.content:Buffer.from(b.content,'base64').toString('utf8');SHA[path]='s'+(++shaN);return R(true,201,{content:{sha:SHA[path]}})}
   if(m==='GET'&&path){if(!(path in REPO))return R(false,404);
-    return acc==='application/vnd.github.raw'?R(true,200,{},REPO[path]):R(true,200,{sha:SHA[path]||'x0',size:REPO[path].length})}
+    if(acc==='application/vnd.github.raw')return Promise.resolve({ok:true,status:200,json:()=>Promise.resolve({}),text:()=>Promise.resolve(REPO[path]),blob:()=>Promise.resolve(new BlobC([Buffer.from(REPO[path],'base64')],{type:'image/jpeg'}))});
+    return R(true,200,{sha:SHA[path]||'x0',size:REPO[path].length})}
   return R(false,404);
 };
 const OLD={v:1,papers:[{id:'p1',created:now,title:'P',file:'papers/a.html',tags:[]}],cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},classes:[],trash:[],tomb:{},kd:[],prog:[],
@@ -49,7 +50,7 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
 (async()=>{
  await sleep(10);
  const R=[];const t=(n,f)=>{try{const r=f();R.push([r===true?'PASS':'FAIL',n,r===true?'':String(r)])}catch(e){R.push(['FAIL',n,e.message])}};
- const A=device('a',OLD,new fidb.IDBFactory());await sleep(1200);
+ const A=device('a',OLD,new fidb.IDBFactory());await sleep(1200);BlobC=A.Blob;
  const S=A.eval('S'),D=A.document,$=s=>D.querySelector(s),$$=s=>[...D.querySelectorAll(s)];
  const click=el=>el.dispatchEvent(new A.MouseEvent('click',{bubbles:true}));
  const type=(el,v)=>{el.value=v;el.dispatchEvent(new A.Event('input',{bubbles:true}))};
@@ -99,31 +100,53 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  t('指定閱讀不顯示（舊資料保留在存檔裡）',()=>!$('#p-library').textContent.includes('指定閱讀')&&!$('#p-library').textContent.includes('必讀')&&S.units[0].reads.length===1);
  t('卡片直接是概覽：日期、標題、📄，不用點開',()=>{const it=$('#u-uOld');return it.textContent.includes('10/19（一）')&&it.textContent.includes('W7 DAG 與 confounding')&&!!it.querySelector('[data-ufopen]')&&!it.querySelector('[data-utog]')});
  click($('#addUnitBtn'));
- t('表單：主題、日期、標題、備註、HTML，沒有週次和指定閱讀',()=>!!$('#unitForm [data-ud="title"]')&&!!$('#unitForm [data-ud="date"]')&&!!$('#unitForm [data-ud="note"]')&&!!$('#unitForm .udrop')&&!$('#unitForm [data-ud="week"]')&&!$('#unitForm .urow'));
+ t('表單：主題、日期、標題、說明、圖片區、HTML 區，沒有週次和指定閱讀',()=>!!$('#unitForm [data-ud="title"]')&&!!$('#unitForm [data-ud="date"]')&&!!$('#unitForm [data-ud="note"]')&&!!$('#unitForm [data-idrop]')&&!!$('#unitForm [data-udrop]')&&!$('#unitForm [data-ud="week"]')&&!$('#unitForm .urow'));
+ t('「備註」改名「說明」',()=>$('#unitForm').textContent.includes('說明（Markdown')&&!$('#unitForm').textContent.includes('備註'));
+ t('HTML 區沒有手填路徑的輸入框',()=>!$('#unitForm [data-ud="bind"]')&&!$('#unitForm [data-uppath]'));
+ t('全站輸入框沒有提示字',()=>!/placeholder=/.test(html)&&D.querySelectorAll('[placeholder]').length===0);
  t('新卡片預設目前的主題',()=>$('#unitForm [data-ud="cid"]').value==='ucA');
  type($('[data-ud="title"]'),'因果推論預習包');type($('[data-ud="date"]'),'2026-10-20');type($('[data-ud="note"]'),'**非同步**課程，先看步驟 A');
  A.eval(`ufAdd('causal-prep.html','<!doctype html><html><head><title>p</title></head><body>prep</body></html>',100)`);
  A.eval(`ufAdd('slides.html','<html><head></head><body>slides $1 $$</body></html>',80)`);
- t('預設路徑 library/代碼/檔名',()=>$('[data-uppath="0"]').value==='library/causal/causal-prep.html');
- change($('#unitForm [data-ud="cid"]'),T2.id);
- t('換主題時，還沒上傳的路徑跟著換資料夾',()=>$('[data-uppath="0"]').value==='library/seminar/causal-prep.html');
- change($('#unitForm [data-ud="cid"]'),'ucA');
+
+ const JPG='/9j/4AAQSkZJRgABAQ';
+ A.eval(`uiAdd('data:image/jpeg;base64,${JPG}','Figure 3.1')`);A.eval(`uiAdd('data:image/jpeg;base64,${JPG}','')`);
+ t('圖片排隊：縮圖＋小說明輸入框',()=>$$('#unitForm .uirow').length===2&&$('#unitForm [data-qcap="0"]').value==='Figure 3.1');
+ type($('#unitForm [data-qcap="1"]'),'DAG 截圖');
+ t('排隊的 HTML 只顯示檔名與大小、可移除',()=>$$('#unitForm .ufile').length===2&&$('#unitForm .ufile').textContent.includes('causal-prep')&&!!$('#unitForm [data-updel="0"]'));
  click($('#saveUnit'));await sleep(400);
  const U1=S.units.find(u=>u.title==='因果推論預習包');
  t('Save：存卡片並上傳兩個 HTML 綁上去',()=>U1&&U1.date==='2026-10-20'&&U1.files.length===2&&'library/causal/causal-prep.html' in REPO&&'library/causal/slides.html' in REPO&&U1.files.every(f=>/^f/.test(f.fid)));
+ t('圖片上傳到 library/代碼/img/、存小說明',()=>U1.imgs.length===2&&U1.imgs.every(g=>/^library\/causal\/img\/u.+-i.+\.jpg$/.test(g.path)&&REPO[g.path]===JPG)&&U1.imgs.map(g=>g.cap).join('|')==='Figure 3.1|DAG 截圖');
+ t('卡片上只顯示 🖼 小說明，不直接顯示大圖',()=>$$('#u-'+U1.id+' [data-uimg]').map(b=>b.textContent).join('|')==='🖼 Figure 3.1|🖼 DAG 截圖'&&!$('#u-'+U1.id+' img'));
+ click($$('#u-'+U1.id+' [data-uimg]')[1]);await sleep(150);
+ t('點了放大看，顯示小說明與張數',()=>$('#imgv').classList.contains('on')&&$('#ivCap').textContent.includes('DAG 截圖')&&$('#ivCap').textContent.includes('2 / 2')&&!!$('#ivImg').getAttribute('src'));
+ click($('#ivNext'));await sleep(100);
+ t('下一張會繞回第一張',()=>$('#ivCap').textContent.includes('Figure 3.1'));
+ click($('#imgv'));
+ t('點背景關閉',()=>!$('#imgv').classList.contains('on'));
  t('上傳完表單收起',()=>$('#unitForm').style.display==='none');
- t('備註用 Markdown 顯示',()=>$('#u-'+U1.id+' .unote strong').textContent==='非同步');
+ t('說明用 Markdown 顯示',()=>$('#u-'+U1.id+' .unote strong').textContent==='非同步');
  click($('#addUnitBtn'));click($('#saveUnit'));
  t('標題必填',()=>toastTxt().includes('標題'));click($('#addUnitBtn'));
  t('＋ 再按一次收起表單',()=>$('#unitForm').style.display==='none');
  t('依日期新到舊',()=>$$('#unitList .uti').map(x=>x.textContent).join('|')==='因果推論預習包|W7 DAG 與 confounding');
  t('每個 HTML 一顆 📄 加 ↗',()=>$$('#u-'+U1.id+' [data-ufopen]').length===2&&$$('#u-'+U1.id+' [data-ufnew]').length===2);
  click($('#u-'+U1.id+' [data-uedit]'));
- t('✎ 編輯框列出已綁的 HTML（可長按解除）與上傳區',()=>$$('#unitForm .ufile').length===2&&!!$('#unitForm .ufile [data-hold^="ufile|"]')&&!!$('#unitForm .udrop'));
- type($('#unitForm [data-ud="bind"]'),'courses/causal/old');click($('#saveUnit'));await sleep(200);
- t('✎ 裡填 repo 路徑綁定（自動補 .html）',()=>U1.files.length===3&&U1.files[2].path==='courses/causal/old.html');
- click($('#u-'+U1.id+' [data-uedit]'));type($('#unitForm [data-ud="bind"]'),'../secret');click($('#saveUnit'));await sleep(100);
- t('擋掉 .. 路徑',()=>U1.files.length===3&&toastTxt().includes('不合法'));click($('#cancelUnit'));
+ t('✎ 編輯框列出已綁的 HTML（可長按解除）與上傳區',()=>$$('#unitForm .ufile').length===2&&!!$('#unitForm .ufile [data-hold^="ufile|"]')&&!!$('#unitForm [data-udrop]'));
+ t('✎ 編輯框列出圖片：縮圖、可改小說明、可長按移除',()=>$$('#unitForm .uirow').length===2&&!!$('#unitForm [data-hold^="uimg|"]'));
+ type($('#unitForm [data-ucap="'+U1.imgs[0].iid+'"]'),'Figure 3.1（ME p.109）');click($('#saveUnit'));await sleep(200);
+ t('改小說明存回去',()=>U1.imgs[0].cap==='Figure 3.1（ME p.109）');
+ click($('#u-'+U1.id+' [data-uedit]'));
+ const pasteEv=new A.Event('paste',{bubbles:true});
+ pasteEv.clipboardData={items:[{kind:'file',type:'image/png',getAsFile:()=>new A.File(['x'],'s.png',{type:'image/png'})}]};
+ A.eval('window.__shr=libShrink;libShrink=()=>Promise.resolve("data:image/jpeg;base64,'+JPG+'")');
+ $('#unitForm [data-ud="note"]').dispatchEvent(pasteEv);await sleep(100);
+ t('在說明框貼上圖片會加進圖片區',()=>$$('#unitForm .uirow').length===3);
+ click($('#cancelUnit'));
+ await A.eval(`doHold('uimg|${U1.id}~'+S.units.find(u=>u.id==='${U1.id}').imgs[1].iid)`);
+ t('長按 ✕ 從卡片移除圖片（repo 檔還在）',()=>U1.imgs.length===1&&Object.keys(REPO).filter(p=>p.includes('/img/')).length===2);
+ A.eval(`ufBind(S.units.find(u=>u.id==='${U1.id}'),'courses/causal/old.html')`);
  await A.eval(`doHold('ufile|'+S.units.find(u=>u.title==='因果推論預習包').files[2].fid)`);
  const F1=U1.files[0],F2=U1.files[1];
 
@@ -216,9 +239,9 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  t('orphUsed 含 Library 綁的 HTML',()=>{const u=A.eval('orphUsed()');return u.has('library/causal/causal-prep.html')&&u.has('papers/a.html')});
  await A.eval('orphScan()');
  const op=A.eval('orphans').map(o=>o.path).sort().join('|');
- t('清理只列沒人指向的 HTML（.data.json 不列）',()=>op==='library/causal/slides.html|library/causal/unused.html'||op);
+ t('清理列出沒人指向的 HTML 與 Library 圖片（.data.json 不列）',()=>op===['library/causal/slides.html','library/causal/unused.html',U1.imgs.length?Object.keys(REPO).find(p=>p.includes('/img/')&&p!==U1.imgs[0].path):''].sort().join('|')||op);
  const hb=$('#helpBox').innerHTML;
- t('版本標示 v51',()=>$('#appVer').textContent.includes('v51'));
+ t('版本標示 v52',()=>$('#appVer').textContent.includes('v52'));
  t('HELP：📚 Library、八個分頁、同步說明、沒有 Guide',()=>hb.includes('<summary>📚 Library</summary>')&&hb.includes('八個分頁在做什麼')&&hb.includes('.data.backup-日期.json')&&!hb.includes('📑 Guide')&&!/<strong>Guide<\/strong>/.test(hb));
  t('全分頁可切換',()=>{$$('#tabs button').forEach(b=>click(b));return A.__errs.length===0||A.__errs.join('|')});
  await sleep(400);

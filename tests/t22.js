@@ -124,7 +124,7 @@ setTimeout(()=>{
    return hs.join('|')==='同步|備份|Google 日曆|分類與清理|使用說明'});
  t('底下兩個折疊區',()=>{
    const sums=[...D.querySelectorAll('#p-settings details summary')].map(x=>x.textContent);
-   return sums.includes('🗑️ 回收桶')&&sums.includes('沒有卡片指向的 HTML')
+   return sums.includes('🗑️ 回收桶')&&sums.includes('沒有卡片指向的 HTML 與圖片')
      &&!sums.includes('孤兒 HTML')});
  t('「孤兒」字樣已換掉',()=>!/孤兒 HTML|孤兒檔案/.test(D.getElementById('p-settings').textContent));
  t('回收桶內容還在',()=>!!D.getElementById('trashList')

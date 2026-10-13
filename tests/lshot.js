@@ -9,10 +9,11 @@ async function ctxFor(b,w){
   await ctx.route('https://api.github.com/**',async r=>{
     const q=r.request(),u=decodeURIComponent(q.url().split('?')[0]),path=u.split('/contents/')[1]||'';
     if(q.method()==='PUT'){const j=JSON.parse(q.postData());if(REPO[path]!==undefined&&j.sha!==SHA[path])return r.fulfill({status:409,body:'{}'});
-      REPO[path]=Buffer.from(j.content,'base64').toString('utf8');SHA[path]='s'+(++n);
+      REPO[path]=/\.jpg$/.test(path)?j.content:Buffer.from(j.content,'base64').toString('utf8');SHA[path]='s'+(++n);
       return r.fulfill({status:201,contentType:'application/json',body:JSON.stringify({content:{sha:SHA[path]}})})}
     if(path&&q.method()==='GET'){if(!(path in REPO))return r.fulfill({status:404,body:'{}'});
-      if((q.headers()['accept']||'').includes('raw'))return r.fulfill({status:200,contentType:'text/plain; charset=utf-8',body:REPO[path]});
+      if((q.headers()['accept']||'').includes('raw')){if(/\.jpg$/.test(path))return r.fulfill({status:200,contentType:'image/jpeg',body:Buffer.from(REPO[path],'base64')});
+        return r.fulfill({status:200,contentType:'text/plain; charset=utf-8',body:REPO[path]})}
       return r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({sha:SHA[path],size:REPO[path].length})})}
     return r.fulfill({status:404,body:'{}'});
   });
@@ -28,6 +29,9 @@ async function addEntry(fr,q,a){
 }
 (async()=>{
   const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
+  if(!fs.existsSync('/home/claude/serve/fig1.png')){const p=await b.newPage({viewport:{width:900,height:600}});
+    await p.setContent('<body style="margin:0;background:#fff;font:40px sans-serif"><svg width=900 height=600><circle cx=200 cy=300 r=120 fill=#4B5BA6 /><text x=380 y=310>Figure 3.1 DAG</text></svg></body>');
+    await p.screenshot({path:'/home/claude/serve/fig1.png'});await p.setViewportSize({width:500,height:800});await p.screenshot({path:'/home/claude/serve/fig2.png'});await p.close()}
   for(const [label,w] of [['desk',1100],['phone',390]]){
     for(const k of Object.keys(REPO))delete REPO[k];
     // ===== 裝置 A =====
@@ -42,12 +46,25 @@ async function addEntry(fr,q,a){
     await pa.fill('[data-ud="title"]','Week 6. 干擾作用預習');await pa.fill('[data-ud="date"]','2026-10-14');
     await pa.fill('[data-ud="note"]','先做 **步驟 A**，再看 ME Ch12');
     await pa.setInputFiles('#uf-file','/home/claude/serve/causal-prep.html');await pa.waitForTimeout(300);
+    await pa.setInputFiles('#ui-file',['/home/claude/serve/fig1.png','/home/claude/serve/fig2.png']);await pa.waitForTimeout(800);
+    await pa.fill('[data-qcap="0"]','Figure 3.1 六張 DAG');
     await (await pa.$('#unitForm')).screenshot({path:OUT+label+'_1_form.png'});
     await pa.click('#saveUnit');await pa.waitForTimeout(800);
     const uid=await pa.evaluate(()=>S.units.find(u=>u.title.startsWith('Week 6')).id);
     const fid=await pa.evaluate(id=>S.units.find(u=>u.id===id).files[0].fid,uid);
     if(!REPO['library/epm7110/causal-prep.html'])bad.push(label+' HTML 沒上傳');
     await pa.screenshot({path:OUT+label+'_2_list.png'});
+    const imgs=await pa.evaluate(id=>S.units.find(u=>u.id===id).imgs.map(g=>g.path+'|'+g.cap),uid);
+    log(label,'圖片',JSON.stringify(imgs));
+    if(imgs.length!==2||!imgs.every(p=>/library\/epm7110\/img\/.+\.jpg/.test(p))||!REPO[imgs[0].split('|')[0]])bad.push(label+' 圖片沒上傳');
+    if(await pa.$(`#u-${uid} img`))bad.push(label+' 卡片上直接出現大圖');
+    await pa.click(`#u-${uid} [data-uimg]`);await pa.waitForTimeout(800);
+    const iv=await pa.evaluate(()=>{const i=document.getElementById('ivImg');return {on:document.getElementById('imgv').classList.contains('on'),w:i.naturalWidth,cap:document.getElementById('ivCap').textContent}});
+    log(label,'放大看',JSON.stringify(iv));
+    if(!iv.on||!iv.w||!iv.cap.includes('Figure 3.1'))bad.push(label+' 放大看圖失敗');
+    await pa.screenshot({path:OUT+label+'_2b_image.png'});
+    await pa.keyboard.press('Escape');await pa.waitForTimeout(200);
+    const ph=await pa.evaluate(()=>document.querySelectorAll('[placeholder]').length);if(ph)bad.push(label+' 還有提示字 '+ph);
     // 打開、在頁面裡新增一則問答
     await pa.click(`#u-${uid} [data-ufopen="${fid}"]`);await pa.waitForTimeout(1200);
     let fr=pa.frame({url:/^blob:/});

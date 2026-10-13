@@ -404,6 +404,21 @@ button.ufo:hover{text-decoration:underline}
 .ufile .us{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .udrop{border:2px dashed var(--line-strong);border-radius:10px;padding:12px 10px;text-align:center;cursor:pointer;background:var(--surface);font-size:13px;color:var(--muted)}
 .udrop:hover,.udrop.over{border-color:var(--ac);background:var(--ac-soft)}
+.uimgs{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:7px}
+.uimg{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:2px 10px;font-size:12.5px;color:var(--muted);cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.uimg:hover{color:var(--ac);border-color:var(--ac-mid)}
+.uirow{display:flex;align-items:center;gap:8px;margin-top:6px}
+.uirow input{flex:1;min-width:0}
+.uthumb{flex:0 0 auto;width:52px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:var(--surface-2)}
+.uthumb.bad{opacity:.4}
+#unitForm textarea.over{border-color:var(--ac);background:var(--ac-soft)}
+@media(max-width:560px){#unitForm .grid2{grid-template-columns:1fr;gap:0}#unitForm .uirow .pill,#unitForm .ufile .pill{display:none}.uthumb{width:44px;height:34px}}
+#imgv{z-index:125;background:rgba(20,18,15,.88);align-items:center;justify-content:center;padding:14px;gap:10px}
+#imgv .ivbox{max-width:100%;max-height:calc(100% - 50px);display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+#ivImg{max-width:calc(100% - 90px);max-height:100%;border-radius:6px;background:#fff;object-fit:contain}
+#imgv .ivnav{flex:0 0 auto;background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer}
+#ivCap{color:#eee;font-size:14px;text-align:center;max-width:90%}
+#ivClose{position:absolute;top:10px;right:12px;background:none;border:0;color:#fff;font-size:24px;cursor:pointer}
 #uv{padding:8px}
 #uv .ov-top{max-width:none;gap:6px}
 #uvSyncSt{font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
@@ -438,7 +453,7 @@ button.ufo:hover{text-decoration:underline}
       <button data-view="list" aria-pressed="true">Cards</button>
       <button data-view="table" aria-pressed="false">Compare</button>
     </div>
-    <span class="srch"><input type="text" id="qPaper" placeholder="搜尋任何欄位…"><button class="clr" data-clr="qPaper">✕</button></span>
+    <span class="srch"><input type="text" id="qPaper"><button class="clr" data-clr="qPaper">✕</button></span>
     <button class="iconb" id="tagBtn" title="tag 篩選">🏷️</button>
     <button class="iconb" id="importJsonBtn" title="從 Claude 匯入">📥</button>
     <button class="iconb" id="addPaperBtn" title="新增">＋</button>
@@ -448,7 +463,7 @@ button.ufo:hover{text-decoration:underline}
 
   <div class="card" id="jsonForm" style="display:none">
     <div class="srclab">① 卡片 JSON</div>
-    <textarea id="jsonBox" style="min-height:110px;font-family:var(--mono);font-size:12.5px" placeholder='{ "title": … }'></textarea>
+    <textarea id="jsonBox" style="min-height:110px;font-family:var(--mono);font-size:12.5px"></textarea>
     <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="jsonState"></span>
       <button class="btn mini" id="doImportJson">建立卡片</button></div>
 
@@ -482,7 +497,7 @@ button.ufo:hover{text-decoration:underline}
     <div class="linkrow"><span class="ic">🏷️</span><input type="text" id="pf-tags"><button class="iconb" id="tagPlus" title="tag 清單">＋</button></div>
     <div id="tagPanel" style="display:none;margin-bottom:12px">
       <div class="row" id="tagAll" style="margin-bottom:8px"></div>
-      <div class="row"><input type="text" id="newTag" placeholder="新增 tag" style="flex:1;min-width:150px"><button class="btn mini" id="addTagBtn">加入</button></div>
+      <div class="row"><input type="text" id="newTag" style="flex:1;min-width:150px"><button class="btn mini" id="addTagBtn">加入</button></div>
       <p class="hint" style="margin:8px 0 0">點一下加入，長按 1.5 秒從清單刪除。</p>
     </div>
     <div class="linkrow"><span class="ic">🔗</span><input type="text" id="pf-file"></div>
@@ -513,7 +528,7 @@ button.ufo:hover{text-decoration:underline}
       <button data-f="course" aria-pressed="false">Course order</button>
       <button data-f="active" aria-pressed="false">In progress</button>
     </div>
-    <span class="srch"><input type="text" id="qSec" placeholder="搜尋章節…"><button class="clr" data-clr="qSec">✕</button></span>
+    <span class="srch"><input type="text" id="qSec"><button class="clr" data-clr="qSec">✕</button></span>
   </div>
   <div id="themeList"></div>
 </section>
@@ -522,7 +537,7 @@ button.ufo:hover{text-decoration:underline}
 <!-- ========== Notes ========== -->
 <section class="panel" id="p-courses">
   <div class="nsrch">
-    <input type="search" id="nsearch" placeholder="搜尋問題與筆記（標題／內容／答案／來源／標籤）">
+    <input type="search" id="nsearch">
     <button class="cx" id="nsearchX" title="清除搜尋">✕</button>
   </div>
   <div class="tagbar" id="ntagbar"></div>
@@ -535,7 +550,7 @@ button.ufo:hover{text-decoration:underline}
     <label class="f"><span>Question</span><textarea id="q-q"></textarea></label>
     <div class="grid2">
       <label class="f"><span>分類</span><select id="q-kind"></select></label>
-      <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="q-tags" placeholder="e.g. confounding, HBV"></label>
+      <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="q-tags"></label>
     </div>
     <div class="saverow"><button class="btn ghost" id="cancelQ">Cancel</button><button class="btn" id="addQ">Save</button></div>
   </div>
@@ -544,15 +559,15 @@ button.ufo:hover{text-decoration:underline}
   <div class="blockhead"><span class="bt">📒 NOTES</span><span class="spacer"></span>
     <button class="iconb" id="addNtBtn" title="新增筆記">＋</button></div>
   <div class="card" id="ntForm" style="display:none">
-    <label class="f"><span id="ntTitleLb">標題</span><input type="text" id="nt-title" placeholder="e.g. 高流方法 W5 講義"></label>
+    <label class="f"><span id="ntTitleLb">標題</span><input type="text" id="nt-title"></label>
     <div class="grid2">
       <label class="f"><span>分類</span><select id="nt-kind"></select></label>
-      <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
+      <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags"></label>
     </div>
     <div id="ntExamBox" style="display:none">
       <div class="grid2">
         <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">出處（課程／老師／日期）<button class="qm" type="button" data-tip="tipExam" aria-expanded="false" title="說明">ⓘ</button></span>
-          <input type="text" id="nt-psrc" placeholder="e.g. 高流方法 W5 陳老師 10/6" style="margin-top:4px"></div>
+          <input type="text" id="nt-psrc" style="margin-top:4px"></div>
         <label class="f"><span>Textbooks 主題</span><select id="nt-tb"></select></label>
       </div>
       <div class="tip" id="tipExam">「資格考」分類放老師說考過的題目：<strong>題目</strong>寫題目或老師的原話，<strong>答案</strong>寫你準備的答案，出處和主題都可以留空。答案寫好按 Save（或編輯後按「完成」），就會<strong>自動在 Review 產生一張 🎓 考古卡</strong>；之後改答案，按完成就會同步更新那張卡。考古卡<strong>不進每日排程</strong>，只在 Review → Exam mode 勾「只跑考古題」時出現。</div>
@@ -564,8 +579,8 @@ button.ufo:hover{text-decoration:underline}
     <details class="fold" style="margin-bottom:10px"><summary>🔗附件</summary>
       <div id="ntNewLinks" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
       <div class="lrow">
-        <input type="text" id="nt-link-name" placeholder="名稱" style="flex:0 0 30%">
-        <input type="text" id="nt-link-url" placeholder="https://..." style="flex:1">
+        <input type="text" id="nt-link-name" style="flex:0 0 30%">
+        <input type="text" id="nt-link-url" style="flex:1">
         <button class="btn icon" id="ntAddLink" type="button">＋</button>
       </div>
     </details>
@@ -581,18 +596,19 @@ button.ufo:hover{text-decoration:underline}
     <button class="iconb" id="addUnitBtn" title="新增卡片">＋</button></div>
   <div class="tip" id="tipLib"><ul>
     <li>左邊是主題，點一下右邊列出這個主題的卡片（新到舊）；最下面「＋ 主題」新增，再按一次收起</li>
-    <li>右上 ＋ 新增卡片：標題、日期（選填）、備註、HTML（拖進來或選檔案，可多選），按 Save 時上傳到 epi-data 的 <code>library/代碼/</code></li>
+    <li>右上 ＋ 新增卡片：標題、日期（選填）、說明、HTML（拖進來或選檔案，可多選），按 Save 時上傳到 epi-data 的 <code>library/代碼/</code></li>
+    <li>說明可以放圖片：拖進來、點選，或在說明框按 Ctrl+V 貼上，可一次多張、各加一行小說明；卡片上只顯示 🖼 小說明，點了才看大圖</li>
     <li>點 📄 全螢幕開啟；↗ 開新分頁，分頁右上角的 ✕ 會先同步再關閉</li>
-    <li>卡片的 ✎ 可以改內容、再加 HTML、解除綁定（repo 裡的檔案不會刪）</li>
+    <li>卡片的 ✎ 可以改內容、再加 HTML 或圖片、移除（repo 裡的檔案不會刪，到 Settings 清理）</li>
     <li>頁面裡存的東西（問答、截圖、勾選）會同步到 HTML 旁邊的 <code>.data.json</code>：打開時先取雲端較新的，關閉時上傳，頂列 ☁ 可以手動同步</li>
     <li>兩台裝置都改過時會問你要用哪一份，沒選的那份存成備份檔</li>
     <li>只放你自己產生的 HTML：這裡開的頁面讀得到 app 的本機資料</li>
   </ul></div>
   <div class="card" id="ucForm" style="display:none">
-    <label class="f"><span>主題名稱</span><input type="text" id="uc-name" list="ucNames" placeholder="e.g. 高等流行病學方法"></label>
+    <label class="f"><span>主題名稱</span><input type="text" id="uc-name" list="ucNames"></label>
     <div class="grid2">
-      <label class="f"><span>說明（選填）</span><input type="text" id="uc-desc" placeholder="e.g. 方啓泰/林先和/李文宗"></label>
-      <label class="f"><span>代碼（資料夾名）</span><input type="text" id="uc-code" placeholder="英數與 -，e.g. epm7110"></label>
+      <label class="f"><span>說明（選填）</span><input type="text" id="uc-desc"></label>
+      <label class="f"><span>代碼（資料夾名）</span><input type="text" id="uc-code"></label>
     </div>
     <div class="saverow"><button class="btn ghost" id="cancelUC">Cancel</button><button class="btn" id="saveUC">Save</button></div>
   </div>
@@ -610,6 +626,7 @@ button.ufo:hover{text-decoration:underline}
     </div>
   </div>
   <input type="file" id="uf-file" accept=".html,.htm" multiple style="display:none">
+  <input type="file" id="ui-file" accept="image/*" multiple style="display:none">
 </section>
 
 <!-- ========== Review ========== -->
@@ -638,7 +655,7 @@ button.ufo:hover{text-decoration:underline}
       <button data-csort="new" aria-pressed="false">Newest</button>
       <button data-csort="theme" aria-pressed="false">By theme</button>
     </div>
-    <span class="srch"><input type="text" id="qCard" placeholder="搜尋卡片…"><button class="clr" data-clr="qCard">✕</button></span>
+    <span class="srch"><input type="text" id="qCard"><button class="clr" data-clr="qCard">✕</button></span>
     <button class="iconb" id="addCardBtn" title="新增">＋</button>
   </div>
   <div class="card" id="cardForm" style="display:none">
@@ -674,8 +691,8 @@ button.ufo:hover{text-decoration:underline}
     <details class="fold" style="margin-bottom:10px"><summary>🔗附件</summary>
       <div id="mtNewLinksBox" class="row" style="margin:6px 0 4px;flex-wrap:wrap"></div>
       <div class="lrow">
-        <input type="text" id="mt-lk-name" placeholder="名稱" style="flex:0 0 22%">
-        <input type="text" id="mt-lk-url" placeholder="https://..." style="flex:1">
+        <input type="text" id="mt-lk-name" style="flex:0 0 22%">
+        <input type="text" id="mt-lk-url" style="flex:1">
         <button class="btn icon" id="mtAddLk" type="button">＋</button>
       </div>
     </details>
@@ -691,14 +708,14 @@ button.ufo:hover{text-decoration:underline}
     </div>
     <button class="iconb" id="addDIRBtn" title="新增方向">＋</button></div>
   <div class="card" id="dirForm" style="display:none">
-    <label class="f"><span>方向／題目</span><input type="text" id="dir-title" placeholder="老師給的研究方向"></label>
+    <label class="f"><span>方向／題目</span><input type="text" id="dir-title"></label>
     <div class="grid2">
       <label class="f"><span>來源日期</span><input type="date" id="dir-date"></label>
       <label class="f"><span>狀態</span><select id="dir-status">
         <option value="todo">未開始</option><option value="doing">進行中</option>
         <option value="paused">暫停</option><option value="done">完成</option></select></label>
     </div>
-    <label class="f"><span>下一步（選填）</span><input type="text" id="dir-next" placeholder="e.g. 先做 systematic search"></label>
+    <label class="f"><span>下一步（選填）</span><input type="text" id="dir-next"></label>
     <div class="saverow"><button class="btn ghost" id="cancelDIR">Cancel</button><button class="btn" id="addDIR">Save</button></div>
   </div>
   <div id="dirList"></div>
@@ -788,8 +805,8 @@ button.ufo:hover{text-decoration:underline}
         <label class="f"><span>私密 repo 名稱</span><input type="text" id="gh-repo"></label>
       </div>
       <div class="grid2">
-        <label class="f"><span>Branch</span><input type="text" id="gh-branch" placeholder="main"></label>
-        <label class="f"><span>檔案路徑</span><input type="text" id="gh-path" placeholder="data/notes.json"></label>
+        <label class="f"><span>Branch</span><input type="text" id="gh-branch"></label>
+        <label class="f"><span>檔案路徑</span><input type="text" id="gh-path"></label>
       </div>
       <label class="f"><span>Fine-grained token</span><input type="password" id="gh-token" autocomplete="off"></label>
       <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="gh-auto"><span style="flex:1">開啟自動同步</span></label>
@@ -829,9 +846,9 @@ button.ufo:hover{text-decoration:underline}
   <div class="tip" id="tipGc">嵌入網址顯示在 Calendar 分頁最下面；ID 與金鑰用來自動抓 KEY DATES（只抓標題以 <code>*</code> 開頭的事件）。取得方式見使用說明。</div>
   <div class="setbody" id="sg-gcal" style="display:none">
     <div class="card">
-      <div class="linkrow"><span class="ic">🔗</span><input type="text" id="gcUrl" placeholder="嵌入網址"></div>
+      <div class="linkrow"><span class="ic">🔗</span><input type="text" id="gcUrl"></div>
       <div class="grid2" style="margin-top:12px">
-        <label class="f"><span>日曆 ID</span><input type="text" id="gc-id" placeholder="…@group.calendar.google.com"></label>
+        <label class="f"><span>日曆 ID</span><input type="text" id="gc-id"></label>
         <label class="f"><span>API 金鑰</span><input type="password" id="gc-key" autocomplete="off"></label>
       </div>
       <div class="grid2">
@@ -851,7 +868,7 @@ button.ufo:hover{text-decoration:underline}
   <div class="kdgroup setg">分類與清理<button class="qm" data-tip="tipClean" aria-expanded="false" title="說明">ⓘ</button></div>
   <div class="tip" id="tipClean"><strong>分類清單</strong>：三組分類各自獨立（Reading／Questions 與 Notes／KEY DATES）。在下拉選單最下面選「＋ 新增…」就能加。名字可直接改，卡片存的是代號，改名不動資料。內建的只能改名不能刪；刪掉自訂分類時底下項目退回預設，不會被刪。<br>
   <strong>回收桶</strong>：刪掉的卡片保留 30 天。✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記墓碑跟著同步，其他裝置不會送回來。<br>
-  <strong>沒有卡片指向的 HTML</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
+  <strong>沒有卡片指向的 HTML 與圖片</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
   <div class="setbody" id="sg-clean">
     <details class="card fold"><summary>分類清單</summary>
       <div id="catMgr" style="margin-top:6px"></div>
@@ -859,7 +876,7 @@ button.ufo:hover{text-decoration:underline}
     <details class="card fold"><summary>🗑️ 回收桶</summary>
       <div id="trashList" style="margin-top:6px"></div>
     </details>
-    <details class="card fold"><summary>沒有卡片指向的 HTML</summary>
+    <details class="card fold"><summary>沒有卡片指向的 HTML 與圖片</summary>
       <p class="hint" style="margin:6px 0 10px" id="repoSize">repo 用量：尚未查詢</p>
       <div class="row" style="margin-bottom:8px">
         <button class="btn ghost mini" id="orphScan">🔍 掃描</button>
@@ -874,7 +891,7 @@ button.ufo:hover{text-decoration:underline}
 
   <div class="kdgroup setg">使用說明<button class="kx" data-setg="help" aria-expanded="false" title="展開"></button></div>
   <div class="setbody" id="sg-help" style="display:none"><div id="helpBox"></div></div>
-  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin v51 · 2026-10-13</p>
+  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin v52 · 2026-10-13</p>
 
 </section>
 
@@ -914,6 +931,11 @@ button.ufo:hover{text-decoration:underline}
     <iframe id="uvFrame" allow="clipboard-write" title="Library HTML"
       style="display:block;width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
   </div>
+</div>
+<div class="ov" id="imgv">
+  <button id="ivClose" title="關閉">✕</button>
+  <div class="ivbox"><button class="ivnav" id="ivPrev" title="上一張">‹</button><img id="ivImg" alt=""><button class="ivnav" id="ivNext" title="下一張">›</button></div>
+  <div id="ivCap"></div>
 </div>
 <div class="ov" id="libAsk" style="--ac:#4B5BA6;--ac-soft:#E9EBF6;--ac-mid:#CDD2EC">
   <div class="card">
@@ -1162,8 +1184,8 @@ function linkEditor(kind,oid,list){
   const n=rows.filter(l=>l.url).length;
   return `<details class="fold" style="margin-bottom:8px"><summary>🔗附件</summary>
     ${rows.map(l=>`<div class="lrow">
-      <input type="text" data-lk="${kind}|${oid}|${l.id}|label" value="${esc(l.label||'')}" placeholder="名稱" style="flex:0 0 22%">
-      <input type="text" data-lk="${kind}|${oid}|${l.id}|url" value="${esc(l.url||'')}" placeholder="https://..." style="flex:1">
+      <input type="text" data-lk="${kind}|${oid}|${l.id}|label" value="${esc(l.label||'')}" style="flex:0 0 22%">
+      <input type="text" data-lk="${kind}|${oid}|${l.id}|url" value="${esc(l.url||'')}" style="flex:1">
       <button class="x" data-hold="lk|${kind}:${oid}:${l.id}" title="長按 1.5 秒刪除" style="font-size:12px">✕</button>
     </div>`).join('')}
     <div class="row" style="margin-top:4px"><span class="spacer"></span>
@@ -1428,6 +1450,10 @@ async function doHold(spec){
   if(t==='ucourse'){const n=(S.units||[]).filter(u=>u.cid===id).length;
     if(n){toast('這個主題還有 '+n+' 張卡片，先刪掉或改到別的主題');return}
     if(ucSel===id)libPick('')}
+  if(t==='uimg'){const k=id.lastIndexOf('~'),u=(S.units||[]).find(x=>x.id===id.slice(0,k)),ii=id.slice(k+1);
+    if(u&&Array.isArray(u.imgs)){u.imgs=u.imgs.filter(g=>g.iid!==ii);u.mtime=Date.now();save();renderLib();if(uDraft)renderUnitForm();
+      toast('已從卡片移除（repo 裡的圖片還在，可到 Settings 清理）')}
+    return}
   if(t==='ufile'){const r=fileById(id);
     if(r){r.u.files=r.u.files.filter(x=>x!==r.f);r.u.mtime=Date.now();save();renderLib();if(uDraft)renderUnitForm();
       toast('已解除綁定（repo 裡的 '+r.f.path.split('/').pop()+' 還在）')}
@@ -1493,7 +1519,7 @@ document.getElementById('tabs').addEventListener('click',e=>{
 });
 
 /* ================= LIBRARY（主題 S.ucourses、卡片 S.units、頁面資料同步）================= */
-let ucSel='',editUC=null,ucAfter=null,editUnit=null,uDraft=null,upFiles=[],upBusy=false,
+let ucSel='',editUC=null,ucAfter=null,editUnit=null,uDraft=null,upFiles=[],upImgs=[],upBusy=false,
     uvUrl=null,uvFid=null,uvHtml='';
 const libActive=new Set(),libBusy={};
 const LIBSYNC='epi-yaxin-libsync',LIBSEL='epi-yaxin-libsel';
@@ -1503,6 +1529,7 @@ function libMigrate(){
   if(!Array.isArray(S.units))S.units=[];
   S.ucourses.forEach(c=>{if(c.desc==null){c.desc=c.teacher||'';delete c.teacher}});
   S.units.forEach(u=>{
+    if(!Array.isArray(u.imgs))u.imgs=[];
     if(u.title==null){u.title=[u.week,u.topic].filter(Boolean).join(' ')||'(未命名)';delete u.week;delete u.topic}
     if(!Array.isArray(u.files))u.files=[];
     u.files.forEach(f=>{if(!f.fid)f.fid='f'+uid();if(!Array.isArray(f.dbs))f.dbs=[]});
@@ -1542,19 +1569,6 @@ function renderLib(){
     :`<div class="empty">${c?'這個主題還沒有卡片，按右上 ＋ 新增。':'先按左邊「＋ 主題」建立主題。'}</div>`)
     +(lost.length?`<div class="kdgroup" style="margin-top:18px">主題已刪除的卡片</div>`+lost.map(unitItem).join(''):'');
 }
-function unitItem(u){
-  const fs=u.files||[];
-  const chips=fs.map(f=>{const rec=libRec(f.fid);
-    const tip='全螢幕開啟'+(rec&&rec.at?'（頁面資料上次同步 '+libTime(rec.at)+'）':'');
-    return `<span class="ufc"><button class="ufo" data-ufopen="${esc(f.fid)}" title="${esc(tip)}">📄 ${esc(f.name||f.path)}</button>`
-      +`<button class="cx e" data-ufnew="${esc(f.fid)}" title="開新分頁">↗</button></span>`}).join('');
-  return `<div class="item unit" id="u-${esc(u.id)}">
-    <div class="uhead">${u.date?`<span class="udt">${esc(uDate(u.date))}</span>`:''}<span class="uti">${esc(u.title||'(未命名)')}</span>
-      <span class="cxg"><button class="cx e" data-uedit="${esc(u.id)}" title="編輯">✎</button><button class="cx" data-hold="unit|${esc(u.id)}" title="長按 1.5 秒刪除">✕</button></span></div>
-    ${u.note?`<div class="mdview unote">${md(u.note)}</div>`:''}
-    ${chips?`<div class="ufiles">${chips}</div>`:''}</div>`;
-}
-
 /* ---------- 主題表單（「＋ 主題」再按一次收起） ---------- */
 function ucOpen(id,after){
   editUC=id||null;ucAfter=after||null;const c=id?ucGet(id):null;
@@ -1583,80 +1597,129 @@ document.getElementById('saveUC').onclick=()=>{
   else{id='uc'+uid();ucs().push({id,created:Date.now(),mtime:Date.now(),name,desc,code})}
   libPick(id);
   const after=ucAfter;editUC=null;ucAfter=null;show('ucForm',false);saved();renderLib();
-  if(after==='form'&&uDraft){libRepath(uDraft.cid,id);uDraft.cid=id;renderUnitForm()}
+  if(after==='form'&&uDraft){uDraft.cid=id;renderUnitForm()}
   else if(after==='new')unitOpen(null);
 };
 
-/* ---------- 卡片表單：標題、日期、備註、HTML（新增、解除綁定、填路徑綁定都在這裡） ---------- */
+
+function unitItem(u){
+  const fs=u.files||[],im=u.imgs||[];
+  const chips=fs.map(f=>{const rec=libRec(f.fid);
+    const tip='全螢幕開啟'+(rec&&rec.at?'（頁面資料上次同步 '+libTime(rec.at)+'）':'');
+    return `<span class="ufc"><button class="ufo" data-ufopen="${esc(f.fid)}" title="${esc(tip)}">📄 ${esc(f.name||f.path)}</button>`
+      +`<button class="cx e" data-ufnew="${esc(f.fid)}" title="開新分頁">↗</button></span>`}).join('');
+  const pics=im.map((g,i)=>`<button class="uimg" data-uimg="${esc(u.id)}|${esc(g.iid)}" title="點一下看圖">🖼 ${esc(g.cap||('圖 '+(i+1)))}</button>`).join('');
+  return `<div class="item unit" id="u-${esc(u.id)}">
+    <div class="uhead">${u.date?`<span class="udt">${esc(uDate(u.date))}</span>`:''}<span class="uti">${esc(u.title||'(未命名)')}</span>
+      <span class="cxg"><button class="cx e" data-uedit="${esc(u.id)}" title="編輯">✎</button><button class="cx" data-hold="unit|${esc(u.id)}" title="長按 1.5 秒刪除">✕</button></span></div>
+    ${u.note?`<div class="mdview unote">${md(u.note)}</div>`:''}
+    ${pics?`<div class="uimgs">${pics}</div>`:''}
+    ${chips?`<div class="ufiles">${chips}</div>`:''}</div>`;
+}
+
+/* ---------- 卡片表單：主題、日期、標題、說明（含圖片）、HTML ---------- */
 function unitOpen(id){
   if(!ucs().length){toast('先建立主題');ucOpen(null,'new');return}
-  editUnit=id||null;upFiles=[];
+  editUnit=id||null;upFiles=[];upImgs=[];
   if(id){const u=(S.units||[]).find(x=>x.id===id);if(!u)return;
-    uDraft={cid:u.cid,title:u.title||'',date:u.date||'',note:u.note||'',bind:''}}
-  else uDraft={cid:ucGet(ucSel)?ucSel:ucSorted()[0].id,title:'',date:'',note:'',bind:''};
+    const caps={};(u.imgs||[]).forEach(g=>{caps[g.iid]=g.cap||''});
+    uDraft={cid:u.cid,title:u.title||'',date:u.date||'',note:u.note||'',caps}}
+  else uDraft={cid:ucGet(ucSel)?ucSel:ucSorted()[0].id,title:'',date:'',note:'',caps:{}};
   document.getElementById('upState').textContent='';
   renderUnitForm();show('unitForm',true);
   const f=document.getElementById('unitForm');if(f.scrollIntoView)f.scrollIntoView({block:'nearest'});
   const t=document.querySelector('#unitForm [data-ud="title"]');if(t)t.focus();
 }
-function unitClose(){show('unitForm',false);editUnit=null;uDraft=null;upFiles=[]}
+function unitClose(){show('unitForm',false);editUnit=null;uDraft=null;upFiles=[];upImgs=[]}
 function renderUnitForm(){
   const d=uDraft;if(!d)return;
-  const u=editUnit&&(S.units||[]).find(x=>x.id===editUnit),have=u?(u.files||[]):[],c=ucGet(d.cid);
+  const u=editUnit&&(S.units||[]).find(x=>x.id===editUnit),have=u?(u.files||[]):[],imgs=u?(u.imgs||[]):[];
+  const kb=n=>Math.max(1,Math.round((n||0)/1024))+' KB';
   document.getElementById('unitFormBody').innerHTML=`
     <div class="grid2">
       <label class="f"><span>主題</span><select data-ud="cid">${ucSorted().map(x=>`<option value="${esc(x.id)}"${d.cid===x.id?' selected':''}>${esc(x.name)}</option>`).join('')}<option value="__new">＋ 新增主題…</option></select></label>
       <label class="f"><span>日期（選填）</span><input type="date" data-ud="date" value="${esc(d.date)}"></label></div>
-    <label class="f"><span>標題</span><input type="text" data-ud="title" value="${esc(d.title)}" placeholder="e.g. Week 6. 干擾作用預習"></label>
-    <label class="f"><span>備註（Markdown，選填）</span><textarea data-ud="note" style="min-height:64px">${esc(d.note)}</textarea></label>
+    <label class="f"><span>標題</span><input type="text" data-ud="title" value="${esc(d.title)}"></label>
+    <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">說明（Markdown，選填；可以貼上圖片）</span>
+      <textarea data-ud="note" style="min-height:64px;margin-top:4px">${esc(d.note)}</textarea>
+      ${imgs.map(g=>`<div class="uirow"><img class="uthumb" data-ipath="${esc(g.path)}" alt="">
+        <input type="text" data-ucap="${esc(g.iid)}" value="${esc(d.caps[g.iid]!=null?d.caps[g.iid]:(g.cap||''))}" title="圖片小說明">
+        <button class="cx" type="button" data-hold="uimg|${esc(u.id)}~${esc(g.iid)}" title="長按 1.5 秒從卡片移除">✕</button></div>`).join('')}
+      ${upImgs.map((g,i)=>`<div class="uirow"><img class="uthumb" src="${g.url}" alt="">
+        <input type="text" data-qcap="${i}" value="${esc(g.cap)}" title="圖片小說明">
+        <span class="pill" style="font-size:10.5px">${kb(g.size)}</span><button class="x" type="button" data-qdel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
+      <div class="udrop" data-idrop="1" style="margin-top:6px">🖼 把圖片拖進來、點一下選檔案，或在說明框按 Ctrl+V 貼上（可多張），按 Save 時上傳</div>
+    </div>
     <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">HTML</span>
       ${have.map(f=>{const rec=libRec(f.fid);return `<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name||f.path)}</span>`
         +`<span class="mono up">${esc(f.path)}</span><span class="us">${rec&&rec.at?'☁ '+libTime(rec.at):''}</span>`
         +`<button class="cx" type="button" data-hold="ufile|${esc(f.fid)}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></div>`}).join('')}
+      ${upFiles.map((f,i)=>`<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name)}</span><span class="up"></span>
+        <span class="pill" style="font-size:10.5px">${kb(f.size)}</span><button class="x" type="button" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
       <div class="udrop" data-udrop="1" style="margin-top:6px">📄 把 HTML 拖進來，或點一下選檔案（可多選），按 Save 時上傳</div>
-      ${upFiles.map((f,i)=>`<div class="lrow" style="margin-top:6px"><input type="text" data-uppath="${i}" value="${esc(f.path)}" style="flex:1">
-        <span class="pill" style="font-size:10.5px">${Math.max(1,Math.round((f.size||0)/1024))} KB</span><button class="x" type="button" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
-      <div class="lrow" style="margin-top:6px"><input type="text" data-ud="bind" value="${esc(d.bind)}" placeholder="或填 repo 裡已有的路徑，e.g. library/${esc((c&&c.code)||'code')}/xxx.html" style="flex:1"></div>
     </div>`;
+  libThumbs(document.getElementById('unitFormBody'));
 }
 const uForm=document.getElementById('unitForm');
 uForm.addEventListener('input',e=>{
   if(!uDraft)return;let f;
   if((f=e.target.closest('[data-ud]'))&&f.tagName!=='SELECT'){uDraft[f.dataset.ud]=f.value;return}
-  if((f=e.target.closest('[data-uppath]'))&&upFiles[+f.dataset.uppath])upFiles[+f.dataset.uppath].path=f.value;
+  if((f=e.target.closest('[data-ucap]'))){uDraft.caps[f.dataset.ucap]=f.value;return}
+  if((f=e.target.closest('[data-qcap]'))&&upImgs[+f.dataset.qcap])upImgs[+f.dataset.qcap].cap=f.value;
 });
 uForm.addEventListener('change',e=>{
   if(!uDraft)return;const f=e.target.closest('select[data-ud="cid"]');if(!f)return;
   if(f.value==='__new'){f.value=uDraft.cid;ucOpen(null,'form');return}
-  libRepath(uDraft.cid,f.value);uDraft.cid=f.value;renderUnitForm();
+  uDraft.cid=f.value;renderUnitForm();
 });
 uForm.addEventListener('click',e=>{
   if(!uDraft||hEl)return;let b;
   if(e.target.closest('[data-hold]'))return;
   if((b=e.target.closest('[data-udrop]'))){document.getElementById('uf-file').click();return}
+  if((b=e.target.closest('[data-idrop]'))){document.getElementById('ui-file').click();return}
   if((b=e.target.closest('[data-updel]'))){upFiles.splice(+b.dataset.updel,1);renderUnitForm();return}
+  if((b=e.target.closest('[data-qdel]'))){upImgs.splice(+b.dataset.qdel,1);renderUnitForm();return}
 });
-['dragenter','dragover'].forEach(ev=>uForm.addEventListener(ev,e=>{const d=e.target.closest('.udrop');if(!d)return;e.preventDefault();d.classList.add('over')}));
-['dragleave','drop'].forEach(ev=>uForm.addEventListener(ev,e=>{const d=e.target.closest('.udrop');if(!d)return;e.preventDefault();d.classList.remove('over');
-  if(ev==='drop')ufTake(e.dataTransfer&&e.dataTransfer.files)}));
+/* 拖進來：圖片進說明的圖片、HTML 進 HTML，不分落在哪一區 */
+function libDropFiles(list){
+  const a=[...(list||[])];
+  const im=a.filter(f=>/^image\//.test(f.type||'')),ht=a.filter(f=>/\.html?$/i.test(f.name||''));
+  if(!im.length&&!ht.length){toast('只收圖片和 .html 檔');return}
+  if(im.length)uiTake(im);if(ht.length)ufTake(ht);
+}
+['dragenter','dragover'].forEach(ev=>uForm.addEventListener(ev,e=>{const d=e.target.closest('.udrop,textarea[data-ud="note"]');if(!d)return;e.preventDefault();d.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>uForm.addEventListener(ev,e=>{const d=e.target.closest('.udrop,textarea[data-ud="note"]');if(!d)return;
+  const fl=e.dataTransfer&&e.dataTransfer.files;
+  if(ev==='drop'&&(!fl||!fl.length))return;
+  e.preventDefault();d.classList.remove('over');
+  if(ev==='drop')libDropFiles(fl)}));
+/* 在說明框（或表單任何地方）貼上圖片 */
+uForm.addEventListener('paste',e=>{
+  if(!uDraft)return;
+  const items=[...((e.clipboardData&&e.clipboardData.items)||[])];
+  const im=items.filter(it=>it.kind==='file'&&/^image\//.test(it.type)).map(it=>it.getAsFile()).filter(Boolean);
+  if(!im.length)return;
+  if(!items.some(it=>it.type==='text/plain'))e.preventDefault();
+  uiTake(im);
+});
 document.getElementById('uf-file').addEventListener('change',e=>{ufTake(e.target.files);e.target.value=''});
+document.getElementById('ui-file').addEventListener('change',e=>{uiTake([...e.target.files]);e.target.value=''});
 document.getElementById('cancelUnit').onclick=()=>{if(!upBusy)unitClose()};
 document.getElementById('saveUnit').onclick=async()=>{
   const d=uDraft;if(!d||upBusy)return;
   if(!d.cid||!ucGet(d.cid)){toast('請選主題');return}
   if(!String(d.title).trim()){toast('請填標題');return}
-  const bindP=String(d.bind||'').trim()?uPath(d.bind):'';
-  if(String(d.bind||'').trim()&&!bindP){toast('repo 路徑不合法，例如 library/causal/xxx.html');return}
-  if(upFiles.length&&!ghOn()){toast('要上傳 HTML 請先在 Settings 設定 GitHub 同步');return}
+  if((upFiles.length||upImgs.length)&&!ghOn()){toast('要上傳檔案請先在 Settings 設定 GitHub 同步');return}
   const o={cid:d.cid,title:String(d.title).trim(),date:d.date||'',note:d.note||'',mtime:Date.now()};
   let u;
   if(editUnit){u=(S.units||[]).find(x=>x.id===editUnit);if(u)Object.assign(u,o)}
-  else{if(!Array.isArray(S.units))S.units=[];u=Object.assign({id:'u'+uid(),created:Date.now(),files:[]},o);S.units.push(u);editUnit=u.id}
-  if(bindP){ufBind(u,bindP);d.bind=''}
+  else{if(!Array.isArray(S.units))S.units=[];u=Object.assign({id:'u'+uid(),created:Date.now(),files:[],imgs:[]},o);S.units.push(u);editUnit=u.id}
+  if(!Array.isArray(u.imgs))u.imgs=[];
+  u.imgs.forEach(g=>{if(d.caps[g.iid]!=null)g.cap=String(d.caps[g.iid]).trim()});
   libPick(d.cid);save();renderLib();
-  if(upFiles.length){
-    upBusy=true;const msg=await ufPush(u);upBusy=false;
-    if(upFiles.length){document.getElementById('upState').textContent=msg;renderUnitForm();return}
+  if(upFiles.length||upImgs.length){
+    upBusy=true;const msg=await libUpload(u);upBusy=false;
+    if(upFiles.length||upImgs.length){document.getElementById('upState').textContent=msg;renderUnitForm();return}
     toast(msg);
   }else toast('已儲存');
   unitClose();renderLib();
@@ -1665,7 +1728,7 @@ document.getElementById('addUnitBtn').onclick=()=>{
   if(document.getElementById('unitForm').style.display===''&&!editUnit){unitClose();return}
   unitOpen(null)};
 
-/* ---------- 上傳與綁定 HTML（存到 epi-data 的 library/代碼/） ---------- */
+/* ---------- HTML 與圖片：排隊，按 Save 才上傳到 epi-data 的 library/代碼/（圖片在 img/） ---------- */
 function uPath(p){p=String(p||'').trim().replace(/^\.?\/+/,'');
   if(!p||/^[a-z]+:/i.test(p)||/(^|\/)\.\.(\/|$)/.test(p))return'';
   if(!/\.html?$/i.test(p))p+='.html';return p}
@@ -1677,23 +1740,42 @@ function ufBind(u,path,name){
   u.mtime=Date.now();
 }
 function libCode(cid){const c=ucGet(cid);return (c&&c.code)||'misc'}
-/* 換主題時，還沒上傳的檔案預設路徑跟著換資料夾 */
-function libRepath(oldCid,newCid){
-  const a='library/'+libCode(oldCid)+'/',b='library/'+libCode(newCid)+'/';
-  upFiles.forEach(f=>{if(f.path.indexOf(a)===0)f.path=b+f.path.slice(a.length)});
+function libSafeName(fname,ext){
+  let nm=String(fname).replace(/\.[a-z0-9]+$/i,'').replace(/[^A-Za-z0-9._-]/g,'-').replace(/-+/g,'-').replace(/^-+|-+$/g,'');
+  if(!/[A-Za-z0-9]/.test(nm))nm='file-'+new Date().toISOString().slice(0,10);
+  return nm+ext;
 }
 function ufAdd(fname,text,size){
   if(!uDraft)return;
-  let nm=String(fname).replace(/[^A-Za-z0-9._-]/g,'-').replace(/-+/g,'-');
-  if(!/[A-Za-z0-9]/.test(nm.replace(/\.html?$/i,'')))nm='file-'+new Date().toISOString().slice(0,10)+'.html';
-  if(!/\.html?$/i.test(nm))nm+='.html';
-  upFiles.push({name:String(fname).replace(/\.html?$/i,''),text,size:size||text.length,path:'library/'+libCode(uDraft.cid)+'/'+nm});
+  upFiles.push({name:String(fname).replace(/\.html?$/i,''),file:libSafeName(fname,'.html'),text,size:size||text.length});
   document.getElementById('upState').textContent='';renderUnitForm();
 }
 function ufTake(files){
   const ok=[...(files||[])].filter(f=>/\.html?$/i.test(f.name));
   if(files&&files.length&&!ok.length){toast('只收 .html 檔');return}
   ok.forEach(f=>{const r=new FileReader();r.onload=()=>ufAdd(f.name,String(r.result),f.size);r.readAsText(f)});
+}
+/* 圖片：最長邊 1600px、白底 JPG */
+function libShrink(file){return new Promise(res=>{
+  const fr=new FileReader();
+  fr.onload=()=>{const im=new Image();
+    im.onload=()=>{const sc=Math.min(1,1600/Math.max(im.width,im.height));
+      const cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(im.width*sc));cv.height=Math.max(1,Math.round(im.height*sc));
+      const x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,cv.width,cv.height);x.drawImage(im,0,0,cv.width,cv.height);
+      res(cv.toDataURL('image/jpeg',0.85))};
+    im.onerror=()=>res(null);im.src=fr.result};
+  fr.onerror=()=>res(null);fr.readAsDataURL(file);
+})}
+function uiAdd(url,cap){
+  if(!uDraft||!url)return;
+  const b64=String(url).split(',')[1]||'';
+  upImgs.push({iid:'i'+uid(),url,b64,cap:cap||'',size:Math.round(b64.length*3/4)});
+  document.getElementById('upState').textContent='';renderUnitForm();
+}
+async function uiTake(files){
+  const ok=[...(files||[])].filter(f=>f&&/^image\//.test(f.type||''));
+  if(files&&files.length&&!ok.length){toast('只收圖片');return}
+  for(const f of ok){const url=await libShrink(f);if(url)uiAdd(url);else toast('這張圖讀不出來')}
 }
 function ghUrl2(path){return 'https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
   +'/contents/'+path.split('/').map(encodeURIComponent).join('/')}
@@ -1723,20 +1805,75 @@ async function ghRaw(path){
   return await r.text();
 }
 
-/* 上傳表單裡排隊的檔案並綁到卡片；成功的從佇列移除，回傳一句結果 */
-async function ufPush(u){
-  let ok=0,over=0,fail=0,last='';const done=[];
-  for(const f of upFiles){
-    const p=uPath(f.path);
-    document.getElementById('upState').textContent='上傳中… '+(ok+fail+1)+'/'+upFiles.length;
-    if(!p){fail++;last='路徑不合法：'+f.path;continue}
-    try{const r=await ghPut(p,f.text,'add '+p);if(r.existed)over++;ufBind(u,p,f.name);ok++;done.push(f)}
-    catch(e){fail++;last=e.message}
-  }
-  upFiles=upFiles.filter(f=>done.indexOf(f)<0);
-  save();renderLib();
-  return (ok?'已上傳 '+ok+' 個 HTML'+(over?'（覆蓋 '+over+'）':''):'')+(fail?(ok?'，':'')+'失敗 '+fail+' 個：'+last:'');
+async function ghPutB64(path,b64,msg){
+  const m=await ghMeta(path),payload={message:msg||('add '+path),content:b64,branch:GH.branch};if(m)payload.sha=m.sha;
+  const r=await ghFetch(ghUrl2(path),{method:'PUT',
+    headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+    body:JSON.stringify(payload)},60000);
+  if(!r.ok)throw new Error(ghErrMsg(r.status));
 }
+/* 上傳排隊的 HTML 與圖片並綁到卡片；成功的從佇列移除，回傳一句結果 */
+async function libUpload(u){
+  const code=libCode(u.cid),tot=upFiles.length+upImgs.length;let n=0,okF=0,okI=0,fail=0,last='';
+  const st=()=>{const el=document.getElementById('upState');if(el)el.textContent='上傳中… '+(++n)+'/'+tot};
+  const doneF=[],doneI=[];
+  for(const f of upFiles){st();
+    const p='library/'+code+'/'+f.file;
+    try{await ghPut(p,f.text,'add '+p);ufBind(u,p,f.name);okF++;doneF.push(f)}catch(e){fail++;last=e.message}}
+  for(const g of upImgs){st();
+    const p='library/'+code+'/img/'+u.id+'-'+g.iid+'.jpg';
+    try{await ghPutB64(p,g.b64,'add '+p);if(!Array.isArray(u.imgs))u.imgs=[];
+      u.imgs.push({iid:g.iid,path:p,cap:String(g.cap||'').trim()});u.mtime=Date.now();libImgCache[p]=g.url;okI++;doneI.push(g)}
+    catch(e){fail++;last=e.message}}
+  upFiles=upFiles.filter(f=>doneF.indexOf(f)<0);upImgs=upImgs.filter(g=>doneI.indexOf(g)<0);
+  save();renderLib();
+  const ok=[okF?okF+' 個 HTML':'',okI?okI+' 張圖片':''].filter(Boolean).join('、');
+  return (ok?'已上傳 '+ok:'')+(fail?(ok?'，':'')+'失敗 '+fail+' 個：'+last:'');
+}
+
+/* ---------- 圖片：從 epi-data 讀回來顯示（本次開啟期間快取） ---------- */
+const libImgCache={};
+async function libImgUrl(path){
+  if(libImgCache[path])return libImgCache[path];
+  if(!ghOn())throw new Error('請先在 Settings 設定 GitHub 同步');
+  const r=await ghFetch(ghUrl2(path)+'?ref='+encodeURIComponent(GH.branch),
+    {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github.raw'}},60000);
+  if(r.status===404)throw new Error('repo 裡沒有 '+path);
+  if(!r.ok)throw new Error(ghErrMsg(r.status));
+  const b=await r.blob();
+  return libImgCache[path]=URL.createObjectURL(b.type&&/^image\//.test(b.type)?b:new Blob([b],{type:'image/jpeg'}));
+}
+function libThumbs(root){
+  (root||document).querySelectorAll('img[data-ipath]').forEach(im=>{
+    libImgUrl(im.dataset.ipath).then(u=>{im.src=u}).catch(()=>{im.alt='讀不到';im.classList.add('bad')})});
+}
+let ivList=[],ivIdx=0;
+function ivShow(){
+  const g=ivList[ivIdx];if(!g)return;
+  const im=document.getElementById('ivImg');im.removeAttribute('src');
+  document.getElementById('ivCap').textContent=(g.cap||('圖 '+(ivIdx+1)))+(ivList.length>1?'　'+(ivIdx+1)+' / '+ivList.length:'');
+  document.getElementById('ivPrev').style.visibility=ivList.length>1?'':'hidden';
+  document.getElementById('ivNext').style.visibility=ivList.length>1?'':'hidden';
+  document.getElementById('imgv').classList.add('on');
+  libImgUrl(g.path).then(u=>{if(ivList[ivIdx]===g)im.src=u}).catch(e=>{toast('讀不到圖片：'+e.message)});
+}
+function ivOpen(uid_,iid){
+  const u=(S.units||[]).find(x=>x.id===uid_);if(!u)return;
+  ivList=(u.imgs||[]).slice();ivIdx=Math.max(0,ivList.findIndex(g=>g.iid===iid));ivShow();
+}
+function ivClose(){document.getElementById('imgv').classList.remove('on');document.getElementById('ivImg').removeAttribute('src')}
+document.getElementById('imgv').addEventListener('click',e=>{
+  if(e.target.closest('#ivPrev')){ivIdx=(ivIdx-1+ivList.length)%ivList.length;ivShow();return}
+  if(e.target.closest('#ivNext')){ivIdx=(ivIdx+1)%ivList.length;ivShow();return}
+  if(e.target.closest('#ivImg'))return;
+  ivClose();
+});
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('imgv').classList.contains('on'))return;
+  if(e.key==='Escape')ivClose();
+  else if(e.key==='ArrowLeft'&&ivList.length>1){ivIdx=(ivIdx-1+ivList.length)%ivList.length;ivShow()}
+  else if(e.key==='ArrowRight'&&ivList.length>1){ivIdx=(ivIdx+1)%ivList.length;ivShow()}
+});
 
 /* ---------- Library 分頁事件 ---------- */
 document.getElementById('ucNav').addEventListener('click',e=>{
@@ -1754,6 +1891,7 @@ document.getElementById('unitList').addEventListener('click',e=>{
   if(e.target.closest('[data-hold]'))return;
   if((b=e.target.closest('[data-ufopen]'))){uvOpen(b.dataset.ufopen,false);return}
   if((b=e.target.closest('[data-ufnew]'))){uvOpen(b.dataset.ufnew,true);return}
+  if((b=e.target.closest('[data-uimg]'))){const[a,i]=b.dataset.uimg.split('|');ivOpen(a,i);return}
   if((b=e.target.closest('[data-uedit]'))){
     if(document.getElementById('unitForm').style.display===''&&editUnit===b.dataset.uedit){if(!upBusy)unitClose();return}
     unitOpen(b.dataset.uedit);return}
@@ -2220,7 +2358,7 @@ function renderPapers(){
           ${S.cats.map(x=>`<option value="${esc(x.id)}"${p.cat===x.id?' selected':''}>${esc(x.name)}</option>`).join('')}
           <option value="__new">＋ 新增分類…</option>
         </select></label>
-        <label class="f"><span>簡短備註</span><input type="text" data-pf="${p.id}|snote" value="${esc(p.snote||'')}" placeholder="e.g. meeting 前要讀完"></label>
+        <label class="f"><span>簡短備註</span><input type="text" data-pf="${p.id}|snote" value="${esc(p.snote||'')}"></label>
       </div>
       ${PF.map(f=>f[0]==='sum'
         ? `<div class="linkrow"><span class="ic">📌</span><input type="text" data-pf="${p.id}|sum" value="${esc(p.sum||'')}"></div>`
@@ -3037,8 +3175,8 @@ function mtLinkEditor(m,key){
   if(!arr.length)m[key]=rows;
   return `<details class="fold" style="margin-bottom:8px"><summary>🔗附件</summary>
     ${rows.map((l,i)=>`<div class="lrow">
-      <input type="text" data-mlname="${m.id}|${key}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 22%">
-      <input type="text" data-mlurl="${m.id}|${key}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
+      <input type="text" data-mlname="${m.id}|${key}|${i}" value="${esc(l.name)}" style="flex:0 0 22%">
+      <input type="text" data-mlurl="${m.id}|${key}|${i}" value="${esc(l.url)}" style="flex:1">
       <button class="x" data-mldel="${m.id}|${key}|${i}" style="font-size:12px" title="刪除">✕</button>
     </div>`).join('')}
     <div class="row" style="margin-top:4px"><span class="spacer"></span>
@@ -3116,7 +3254,7 @@ function renderMT(){
         </div>`).join('')}
         </div>
         <div class="linkrow" style="margin-top:6px"><span class="ic">＋</span>
-          <input type="text" data-mnew-act="${m.id}" placeholder="新增一項，按 Enter"></div>
+          <input type="text" data-mnew-act="${m.id}"></div>
       </details>
       ${mtLinkEditor(m,'linksL')}
       <div class="saverow"><button class="btn" data-msave="${m.id}">完成</button></div>
@@ -3266,7 +3404,7 @@ function renderDIR(){
         <label class="f"><span>狀態</span><select data-ds="${d.id}">
           ${Object.keys(DIRSTAT).map(k=>`<option value="${k}"${d.status===k?' selected':''}>${DIRSTAT[k][0]}</option>`).join('')}</select></label>
       </div>
-      <label class="f"><span>下一步</span><input type="text" data-df="${d.id}|next" value="${esc(d.next||'')}" placeholder="現在該做什麼"></label>
+      <label class="f"><span>下一步</span><input type="text" data-df="${d.id}|next" value="${esc(d.next||'')}"></label>
       <details class="fold" style="margin-bottom:8px"><summary>進度紀錄</summary>
         <div style="margin:6px 0 4px">
         ${(d.log||[]).slice().reverse().map((en,ri)=>`<div class="linkrow" style="margin-bottom:3px">
@@ -3275,15 +3413,15 @@ function renderDIR(){
           <button class="x" data-dlogdel="${d.id}|${(d.log||[]).length-1-ri}" style="font-size:12px" title="刪除">✕</button></div>`).join('')||'<p class="hint" style="margin:0 0 6px">還沒有進度紀錄。</p>'}
         </div>
         <div class="linkrow">
-          <input type="text" data-dnew-log="${d.id}" placeholder="記一筆進度，自動帶日期" style="flex:1">
+          <input type="text" data-dnew-log="${d.id}" style="flex:1">
           <button class="btn icon" data-dlog-go="${d.id}" title="加入">＋</button></div>
       </details>
       ${(()=>{const arr=d.links.length?d.links:(d.links=[{name:'',url:''}]);
         const n=arr.filter(l=>l.url).length;
         return `<details class="fold" style="margin-bottom:8px"><summary>🔗附件</summary>
         ${arr.map((l,i)=>`<div class="lrow">
-          <input type="text" data-dlname="${d.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 22%">
-          <input type="text" data-dlurl="${d.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
+          <input type="text" data-dlname="${d.id}|${i}" value="${esc(l.name)}" style="flex:0 0 22%">
+          <input type="text" data-dlurl="${d.id}|${i}" value="${esc(l.url)}" style="flex:1">
           <button class="x" data-dldel2="${d.id}|${i}" style="font-size:12px" title="刪除">✕</button>
         </div>`).join('')}
         <div class="row" style="margin-top:4px"><span class="spacer"></span>
@@ -3421,8 +3559,8 @@ function ntItem(n){
   const attach=()=>{const arr=n.links.length?n.links:(n.links=[{name:'',url:''}]);
     return `<details class="fold" style="margin-bottom:8px"><summary>🔗附件</summary>
       ${arr.map((l,i)=>`<div class="lrow">
-        <input type="text" data-ntlname="${n.id}|${i}" value="${esc(l.name)}" placeholder="名稱" style="flex:0 0 22%">
-        <input type="text" data-ntlurl="${n.id}|${i}" value="${esc(l.url)}" placeholder="https://..." style="flex:1">
+        <input type="text" data-ntlname="${n.id}|${i}" value="${esc(l.name)}" style="flex:0 0 22%">
+        <input type="text" data-ntlurl="${n.id}|${i}" value="${esc(l.url)}" style="flex:1">
         <button class="x" data-ntldel="${n.id}|${i}" style="font-size:12px" title="刪除">✕</button>
       </div>`).join('')}
       <div class="row" style="margin-top:4px"><span class="spacer"></span>
@@ -3460,7 +3598,7 @@ function ntItem(n){
         <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       </div>
       ${ex?`<div class="grid2">
-        <label class="f"><span>出處（課程／老師／日期）</span><input type="text" data-ntf="${n.id}|psrc" value="${esc(n.psrc||'')}" placeholder="e.g. 高流方法 W5 陳老師 10/6"></label>
+        <label class="f"><span>出處（課程／老師／日期）</span><input type="text" data-ntf="${n.id}|psrc" value="${esc(n.psrc||'')}"></label>
         <label class="f"><span>Textbooks 主題</span><select data-nttb="${n.id}">${tbOpts(n.tb||'')}</select></label></div>`:''}
       <div class="f"><div class="row" style="align-items:center">
         <span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">${ex?'答案':'內容／備忘'}</span>
@@ -4082,6 +4220,7 @@ let orphans=[],orphTrunc=false;
 function orphUsed(){
   const u=new Set((S.papers||[]).map(p=>String(p.file||'').replace(/^\.?\//,'')).filter(Boolean));
   libFiles().forEach(x=>{const p=String(x.f.path||'').replace(/^\.?\//,'');if(p)u.add(p)});
+  (S.units||[]).forEach(x=>(x.imgs||[]).forEach(g=>{if(g.path)u.add(g.path)}));
   return u;
 }
 function renderOrph(){
@@ -4091,9 +4230,9 @@ function renderOrph(){
   const linked=orphUsed().size;
   const warn=orphTrunc?'<span style="color:var(--clay)">repo 檔案太多，清單可能不完整。</span><br>':'';
   if(!orphans.length){
-    el.innerHTML=`<div class="empty" style="padding:12px">每個 HTML 都有卡片指向，不用清。</div>`;
+    el.innerHTML=`<div class="empty" style="padding:12px">每個 HTML 與圖片都有卡片指向，不用清。</div>`;
     del.style.display='none';all.style.display='none';
-    st.innerHTML=warn+`repo 裡的 HTML 都有卡片指向（已比對 ${linked} 張有附檔的卡片）。`;
+    st.innerHTML=warn+`repo 裡的 HTML 與圖片都有卡片指向（已比對 ${linked} 張有附檔的卡片）。`;
     return;
   }
   el.innerHTML=orphans.map((o,i)=>`<label class="chk" style="margin-bottom:4px">
@@ -4103,7 +4242,7 @@ function renderOrph(){
     <button class="cx" data-orphopen="${i}" title="先看看內容">👁</button>
   </label>`).join('');
   del.style.display='';all.style.display='';
-  st.innerHTML=warn+`找到 ${orphans.length} 個沒有卡片指向的 HTML（已比對 ${linked} 張有附檔的卡片）。`;
+  st.innerHTML=warn+`找到 ${orphans.length} 個沒有卡片指向的 HTML 與圖片（已比對 ${linked} 張有附檔的卡片）。`;
 }
 async function repoSize(){
   const el=document.getElementById('repoSize');if(!el||!ghOn())return;
@@ -4136,7 +4275,7 @@ async function orphScan(){
     const used=orphUsed();
     orphTrunc=!!j.truncated;
     orphans=(j.tree||[])
-      .filter(x=>x.type==='blob'&&/\.html?$/i.test(x.path)&&!used.has(x.path))
+      .filter(x=>x.type==='blob'&&(/\.html?$/i.test(x.path)||/^library\/.+\/img\/[^/]+\.(jpe?g|png|webp|gif)$/i.test(x.path))&&!used.has(x.path))
       .sort((a,b)=>a.path.localeCompare(b.path))
       .map(x=>({path:x.path,sha:x.sha,size:x.size}));
     renderOrph();
@@ -4513,7 +4652,7 @@ document.getElementById('helpBox').innerHTML=`
   <p>刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設：Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other。</p>
   <h4>刪除與 GitHub 的關係</h4>
   <p><strong>卡片資料會同步刪除</strong>：刪掉時會留一個「墓碑」記號跟著上傳，所以其他裝置合併後也會跟著刪，不會把已刪的東西送回來。墓碑保留 180 天。GitHub 的 <strong>commit 歷史仍留著舊版本</strong>，真的刪錯可以到 repo 的 <code>data/notes.json</code> → History 翻回去。</p>
-  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
+  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片指向的 HTML 與圖片</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings → 分類與清理 → 回收桶，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
@@ -4549,12 +4688,13 @@ document.getElementById('helpBox').innerHTML=`
   <ul>
     <li><strong>左邊是主題</strong>，數字是卡片數；點一下，右邊只列出這個主題的卡片，依日期新到舊（沒填日期的用建立時間）。最下面「＋ 主題」新增，再按一次收起。</li>
     <li>主題有名稱、說明（選填，例如授課老師）、<strong>代碼</strong>（資料夾名，只能英數與 -，英文名稱會自動帶出）。右邊最上面一行是主題說明、資料夾，旁邊 ✎ 改、✕ 長按刪（還有卡片的主題不能刪）。</li>
-    <li>右上 ＋ 新增卡片：主題、日期（選填）、標題、備註（Markdown，選填）、HTML。卡片不用點開，標題、日期、備註和 📄 按鈕都直接看得到。</li>
+    <li>右上 ＋ 新增卡片：主題、日期（選填）、標題、說明（Markdown，選填）、HTML。卡片不用點開，標題、日期、說明和 📄 按鈕都直接看得到。</li>
+    <li><strong>說明可以放圖片</strong>：拖進來、點「🖼」那一區選檔案，或在說明框按 Ctrl+V 貼上截圖，可一次多張。每張可以加一行小說明。圖片會壓成最長邊 1600px 的 JPG，按 Save 時上傳到 <code>library/代碼/img/</code>。卡片上只顯示「🖼 小說明」，點了才放大看，左右箭頭（或鍵盤 ← →）換張，Esc 關閉。</li>
   </ul>
   <h4>HTML</h4>
   <ul>
-    <li>一張卡片可以放多個 HTML。在新增或 ✎ 編輯時，拖進或點選檔案（可多選），預設存到 epi-data 的 <code>library/代碼/檔名.html</code>，路徑可改，按 Save 才上傳，同路徑會覆蓋；也可以填 repo 裡已有的路徑。</li>
-    <li>點 📄 全螢幕開啟，↗ 開新分頁。✎ 編輯裡每個 HTML 後面的 ✕ 長按只解除綁定，repo 裡的檔案還在，要清到 Settings → 分類與清理。</li>
+    <li>一張卡片可以放多個 HTML。在新增或 ✎ 編輯時，拖進或點選檔案（可多選），存到 epi-data 的 <code>library/代碼/檔名.html</code>，按 Save 才上傳，同檔名會覆蓋。</li>
+    <li>點 📄 全螢幕開啟，↗ 開新分頁。✎ 編輯裡每個 HTML 或圖片後面的 ✕ 長按只從卡片移除，repo 裡的檔案還在，要清到 Settings → 分類與清理（會列出沒有卡片指向的 HTML 與圖片）。</li>
     <li>頁面用 blob 網址載入、不加 sandbox，所以頁內分頁（#n6 這類）、複製按鈕、頁面自己的瀏覽器儲存都能用。代價是它讀得到 app 的本機資料（含 GitHub token），所以<strong>只放你自己產生的 HTML</strong>。</li>
   </ul>
   <h4>頁面資料同步</h4>
