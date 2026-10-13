@@ -9,4 +9,6 @@ cd /home/claude && npm i jsdom playwright fake-indexeddb
 ```
 
 - `lshot.js` 是 Library 兩台裝置實測，需要另外開 http.server（/home/claude/serve/，放 index.html 與 causal-prep.html；測試圖片會自動產生），見交接文件。
+- `rshot.js` 是 1.1 的 Chromium 截圖檢查（Review 開關、Notes 酒紅 ●、使用說明表格不超寬），單獨跑 `node rshot.js`。
+- 最新一支版本測試是 `t33.js`（1.1）。
 - Chromium 用預裝的，不要跑 `playwright install`。

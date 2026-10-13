@@ -1,4 +1,4 @@
-// 1.0：HTML 與圖片同一個拖放區、卡片上都是小標籤（沒有 ↗）、右欄一列兩張、🖼️、搜尋框提示字加回來、Settings 說明更新；沿用 v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
+// 1.1：Review 每日複習開關（暫停時不顯示紅點、打開時到期日順延）、評分會蓋 mtime（跨裝置同步）、Notes 內容空著的 ● 變酒紅色、使用說明改成列點與表格、Library 說明 ☁️／長按 ✕／img 路徑；沿用 1.0：HTML 與圖片同一個拖放區、卡片上都是小標籤（沒有 ↗）、右欄一列兩張、🖼️、搜尋框提示字加回來、Settings 說明更新；沿用 v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
 const {JSDOM}=require('jsdom');const fs=require('fs');const fidb=require('fake-indexeddb');
 const html=fs.readFileSync('/home/claude/index.html','utf8');
 const now=Date.now();
@@ -242,10 +242,71 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  const op=A.eval('orphans').map(o=>o.path).sort().join('|');
  t('清理列出沒人指向的 HTML 與 Library 圖片（.data.json 不列）',()=>op===['library/causal/slides.html','library/causal/unused.html',U1.imgs.length?Object.keys(REPO).find(p=>p.includes('/img/')&&p!==U1.imgs[0].path):''].sort().join('|')||op);
  const hb=$('#helpBox').innerHTML;
- t('版本標示 1.0',()=>$('#appVer').textContent.includes('Epi_Yaxin 1.0'));
+ t('版本標示 1.1',()=>$('#appVer').textContent.includes('Epi_Yaxin 1.1'));
  t('Settings 說明補上 Library',()=>$('#tipGh').textContent.includes('library/')&&$('#tipData').textContent.includes('不含檔案')&&$('#tipClean').textContent.includes('Library'));
  t('使用說明：資料夾圖有 library/、沒有 Guide、Textbooks 改 📕',()=>{const h=$('#helpBox').innerHTML;return h.includes('<code>library/代碼/</code>')&&h.includes('<code>tests/</code>')&&!h.includes('Guide')&&h.includes('<summary>📕 Textbooks</summary>')});
  t('HELP：📚 Library、八個分頁、同步說明、沒有 Guide',()=>hb.includes('<summary>📚 Library</summary>')&&hb.includes('八個分頁在做什麼')&&hb.includes('.data.backup-日期.json')&&!hb.includes('📑 Guide')&&!/<strong>Guide<\/strong>/.test(hb));
+
+ // ── 1.1：Review 開關 ──
+ const DAY=864e5,T0=Date.now();
+ A.eval(`S.cards.push(
+   {id:'rv1',created:${T0-30*DAY},q:'未來卡',a:'x',theme:-1,links:[],level:2,due:${T0-10*DAY+2*DAY},last:${T0-20*DAY},n:2},
+   {id:'rv2',created:${T0-30*DAY},q:'到期卡',a:'y',theme:-1,links:[],level:0,due:${T0-11*DAY},last:null,n:0},
+   {id:'rv3',created:${T0-3*DAY},q:'暫停中新增',a:'z',theme:-1,links:[],level:0,due:${T0-3*DAY},last:null,n:0},
+   {id:'rv4',created:${T0-30*DAY},q:'考古',a:'w',theme:-1,links:[],level:0,due:null,last:null,n:0,past:true});
+   renderCards();updateBadge()`);
+ const badge=()=>{const b=D.querySelector('.tab[data-p="review"] .badge');return b?+b.textContent:0};
+ const sw=$('#revSw');
+ t('開關預設打開（role=switch、綠色那種）',()=>sw&&sw.getAttribute('role')==='switch'&&sw.getAttribute('aria-checked')==='true'&&S.revOn!==false);
+ const b0=badge();
+ t('打開時分頁有紅點、DUE TODAY 顯示',()=>b0>=2&&$('#revDue').style.display===''||('badge '+b0));
+ click(sw);
+ t('關掉：沒有紅點、收起 DUE TODAY、記下暫停時間',()=>badge()===0&&$('#revDue').style.display==='none'&&S.revOn===false&&S.revOffAt>0&&$('#revState').textContent.includes('已暫停')||[badge(),$('#revDue').style.display,S.revOn].join());
+ t('暫停時卡片不能按會／不會、倒數凍結',()=>{A.eval("flipped.add('rv1');renderCards()");const it=D.querySelector('[data-flip="rv1"]');
+   return !it.querySelector('[data-grade]')&&it.textContent.includes('⏸')});
+ t('暫停時 Exam mode 照樣在',()=>!!D.querySelector('#p-review details.fold #startExam')&&D.querySelector('#p-review details.fold').style.display!=='none');
+ t('暫停狀態寫進存檔（會同步）',()=>{A.eval('save()');return true});
+ // 假裝暫停了 10 天
+ A.eval(`S.revOffAt=${T0-10*DAY}`);
+ const bef={rv1:S.cards.find(c=>c.id==='rv1').due,rv2:S.cards.find(c=>c.id==='rv2').due,rv3:S.cards.find(c=>c.id==='rv3').due};
+ click(sw);
+ const C1=S.cards.find(c=>c.id==='rv1'),C2=S.cards.find(c=>c.id==='rv2'),C3=S.cards.find(c=>c.id==='rv3'),C4=S.cards.find(c=>c.id==='rv4');
+ const near=(a,b)=>Math.abs(a-b)<5000;
+ t('打開：到期日順延暫停的 10 天',()=>near(C1.due,bef.rv1+10*DAY)&&near(C2.due,bef.rv2+10*DAY)||[C1.due-bef.rv1,C2.due-bef.rv2].join());
+ t('暫停中新增的卡只順延自己存在的天數',()=>near(C3.due,bef.rv3+3*DAY)||(C3.due-bef.rv3));
+ t('考古卡不動、順延的卡蓋了 mtime',()=>C4.due===null&&C1.mtime>=T0&&C2.mtime>=T0);
+ t('打開後：未來卡還沒到期、到期卡仍到期，紅點回來',()=>{const due=A.eval('dueCards()').map(c=>c.id);return !due.includes('rv1')&&due.includes('rv2')&&due.includes('rv3')&&badge()===due.length||due.join()});
+ t('revAt 有記、revOffAt 清掉',()=>S.revOn===true&&S.revOffAt===0&&S.revAt>=T0);
+ A.eval(`mergeState({revOn:false,revOffAt:${T0},revAt:${T0+60000}})`);
+ t('合併：較新的開關狀態蓋過來',()=>S.revOn===false&&S.revOffAt===T0);
+ A.eval(`mergeState({revOn:true,revOffAt:0,revAt:${T0-60000}})`);
+ t('合併：較舊的開關狀態不理',()=>S.revOn===false);
+ A.eval('S.revOn=true;S.revOffAt=0;renderCards();updateBadge()');
+ A.eval("const c=S.cards.find(x=>x.id==='rv2');c.mtime=1;gradeCard(c,true)");
+ t('評分會蓋 mtime（另一台合併才拿得到）',()=>S.cards.find(c=>c.id==='rv2').mtime>=T0);
+ A.eval(`mergeState({cards:[Object.assign({},S.cards.find(c=>c.id==='rv2'),{level:0,mtime:5})]})`);
+ t('舊的評分不會蓋掉新的',()=>S.cards.find(c=>c.id==='rv2').level===1);
+
+ // ── 1.1：Notes 空內容的紅點 ──
+ const EX=A.eval('EXAM');
+ A.eval(`S.notes.push({id:'nE1',created:${T0},mtime:${T0},title:'空的',body:'',cat:S.qcats[0].id,tags:[],links:[]},
+   {id:'nE2',created:${T0},mtime:${T0},title:'有內容',body:'寫了',cat:S.qcats[0].id,tags:[],links:[]},
+   {id:'nE3',created:${T0},mtime:${T0},title:'考古沒答案',body:'  ',kind:'${EX}',cat:'${EX}',tags:[],links:[]});renderNt()`);
+ const dot=id=>{const r=D.querySelector('[data-ntcard="'+id+'"] .ck');return r?r.getAttribute('style'):'none'};
+ t('內容空的 ● 是酒紅色',()=>dot('nE1').includes('var(--wine)')||dot('nE1'));
+ t('有內容的 ● 是灰色',()=>dot('nE2').includes('var(--faint)')||dot('nE2'));
+ t('資格考沒答案也是酒紅色、提示「還沒寫答案」',()=>dot('nE3').includes('var(--wine)')&&D.querySelector('[data-ntcard="nE3"] .ck').title==='還沒寫答案'||dot('nE3'));
+ t('--wine 有定義',()=>html.includes('--wine:#8A2E3B'));
+
+ // ── 1.1：使用說明與 Library 說明 ──
+ const hb2=$('#helpBox').innerHTML;
+ t('說明全用列點與表格（沒有段落）',()=>(hb2.match(/<p[ >]/g)||[]).length===0&&(hb2.match(/<table>/g)||[]).length>=15&&(hb2.match(/<ul>/g)||[]).length>=20||[(hb2.match(/<p[ >]/g)||[]).length,(hb2.match(/<table>/g)||[]).length]);
+ t('說明有每日複習開關與酒紅 ●',()=>hb2.includes('每日複習開關')&&hb2.includes('暫停期間不算天數')&&hb2.includes('● 是酒紅色'));
+ t('說明拿掉過時內容',()=>!hb2.includes('完全沙箱化')&&!hb2.includes('跟著回收桶存 30 天')&&!hb2.includes('換版本是不同儲存空間')&&!hb2.includes('共通操作')&&!hb2.includes('手動</strong> commit'));
+ t('說明有 ② 精讀 HTML 上傳、墓碑 180 天',()=>hb2.includes('② 精讀 HTML')&&hb2.includes('180 天'));
+ t('全站沒有不帶 FE0F 的 ☁',()=>!/☁(?!️)/.test(D.documentElement.innerHTML)||'有');
+ t('檢視器同步鈕是 ☁️',()=>$('#uvSync').textContent==='☁️');
+ t('Library ⓘ：長按 ✕ 移除、圖片在 img/',()=>$('#tipLib').textContent.includes('長按 ✕ 從卡片移除')&&$('#tipLib').innerHTML.includes('<code>library/代碼/img/</code>'));
  t('全分頁可切換',()=>{$$('#tabs button').forEach(b=>click(b));return A.__errs.length===0||A.__errs.join('|')});
  await sleep(400);
  const sv=JSON.parse(A.localStorage.getItem('epi-yaxin'));

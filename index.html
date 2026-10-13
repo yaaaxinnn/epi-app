@@ -22,6 +22,7 @@
   --line:#E3DED2;--line-strong:#CFC9BA;
   --pine:#1E6B58;--pine-soft:#E4EFEA;--pine-mid:#C6DED4;
   --amber:#A87B22;--amber-soft:#F6EEDC;--amber-mid:#E7D6AF;
+  --wine:#8A2E3B;
   --clay:#A8483B;--clay-soft:#F6E7E4;--clay-mid:#EBCBC5;
   --ac:#3E6B4E;--ac-soft:#E7EEE8;--ac-mid:#C8D8CC;
   --r:10px;
@@ -314,6 +315,11 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 #drop{border:2px dashed var(--line-strong);border-radius:12px;padding:20px 16px;text-align:center;
   cursor:pointer;background:var(--surface-2);transition:background .15s,border-color .15s}
 #drop:hover,#drop.over{border-color:var(--ac);background:var(--ac-soft)}
+.sw{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:46px;height:28px;border-radius:14px;border:0;padding:0;margin:0;background:#C7C7CC;position:relative;cursor:pointer;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.sw[aria-checked="true"]{background:#34C759}
+.sw[aria-checked="true"]::after{transform:translateX(18px)}
+.sw:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 .help h4{font-size:14px;font-weight:600;margin:16px 0 6px;color:var(--ink)}
 .help h4:first-child{margin-top:4px}
 .help p{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0 0 8px}
@@ -601,11 +607,11 @@ button.ufo:hover{text-decoration:underline}
     <button class="iconb" id="addUnitBtn" title="新增卡片">＋</button></div>
   <div class="tip" id="tipLib"><ul>
     <li>左邊是主題，點一下右邊列出這個主題的卡片（新到舊）；最下面「＋ 主題」新增，再按一次收起</li>
-    <li>右上 ＋ 新增卡片：標題、日期（選填）、說明，HTML 和圖片拖進同一個框（或點選、Ctrl+V 貼上圖片，可多選），按 Save 時上傳到 epi-data 的 <code>library/代碼/</code></li>
+    <li>右上 ＋ 新增卡片：標題、日期（選填）、說明，HTML 和圖片拖進同一個框（或點選、Ctrl+V 貼上圖片，可多選），按 Save 時上傳到 epi-data：HTML 在 <code>library/代碼/</code>，圖片在 <code>library/代碼/img/</code></li>
     <li>卡片上的 📄 和 🖼️ 都是小標籤：點 📄 全螢幕開 HTML，點 🖼️ 看大圖；圖片可以各加一行小說明</li>
     <li>要開新分頁：全螢幕頂列的 ↗；新分頁右上角的 ✕ 會先同步再關閉</li>
-    <li>卡片的 ✎ 可以改內容、再加 HTML 或圖片、移除（repo 裡的檔案不會刪，到 Settings 清理）</li>
-    <li>頁面裡存的東西（問答、截圖、勾選）會同步到 HTML 旁邊的 <code>.data.json</code>：打開時先取雲端較新的，關閉時上傳，頂列 ☁ 可以手動同步</li>
+    <li>卡片的 ✎ 可以改內容、再加 HTML 或圖片；長按 ✕ 從卡片移除（repo 裡的檔案不會刪，到 Settings 清理）</li>
+    <li>頁面裡存的東西（問答、截圖、勾選）會同步到 HTML 旁邊的 <code>.data.json</code>：打開時先取雲端較新的，關閉時上傳，頂列 ☁️ 可以手動同步</li>
     <li>兩台裝置都改過時會問你要用哪一份，沒選的那份存成備份檔</li>
     <li>只放你自己產生的 HTML：這裡開的頁面讀得到 app 的本機資料</li>
   </ul></div>
@@ -636,6 +642,11 @@ button.ufo:hover{text-decoration:underline}
 <!-- ========== Review ========== -->
 <section class="panel" id="p-review">
   <div class="card">
+    <div class="row" style="align-items:center">
+      <div style="flex:1"><div style="font-weight:600">每日複習</div><div class="hint" id="revState" style="margin:2px 0 0"></div></div>
+      <button type="button" class="sw" id="revSw" role="switch" aria-checked="true" aria-label="每日複習開關" title="關掉＝暫停：不顯示紅點，打開時到期日順延"></button>
+    </div>
+    <div id="revDue" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
     <div class="row">
       <div style="flex:1">
         <div class="mono" style="font-size:12px;color:var(--muted)">DUE TODAY</div>
@@ -644,6 +655,7 @@ button.ufo:hover{text-decoration:underline}
       <button class="btn" id="startReview">Start review</button>
     </div>
     <div class="row" style="margin-top:12px"><span class="mono" style="font-size:12px;color:var(--muted)" id="cardTotals"></span></div>
+    </div>
   </div>
   <details class="card fold"><summary>🎓 Exam mode</summary>
     <div style="margin-top:10px">
@@ -895,7 +907,7 @@ button.ufo:hover{text-decoration:underline}
 
   <div class="kdgroup setg">使用說明<button class="kx" data-setg="help" aria-expanded="false" title="展開"></button></div>
   <div class="setbody" id="sg-help" style="display:none"><div id="helpBox"></div></div>
-  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin 1.0 · 2026-10-13</p>
+  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin 1.1 · 2026-10-13</p>
 
 </section>
 
@@ -927,7 +939,7 @@ button.ufo:hover{text-decoration:underline}
   <div class="ov-top">
     <span class="mono" id="uvName" style="font-size:12.5px;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
     <span id="uvSyncSt"></span>
-    <button class="btn ghost mini" id="uvSync" title="立即同步頁面資料">☁</button>
+    <button class="btn ghost mini" id="uvSync" title="立即同步頁面資料">☁️</button>
     <button class="btn ghost mini" id="uvNew" title="在新分頁開啟">↗</button>
     <button class="x" id="uvClose" style="font-size:20px" title="同步後關閉">✕</button>
   </div>
@@ -1166,8 +1178,9 @@ function migrateProg(){
   S.kdcats=S.kdcats.filter(x=>x.id!=='todo');
   S.kd.forEach(k=>{if(!S.kdcats.some(x=>x.id===k.type))k.type='other'});
 }
-function defaults(){return{v:1,prog:[],gsrc:[],gtopic:[],grow:[],papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],ucourses:[],units:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
+function defaults(){return{v:1,prog:[],gsrc:[],gtopic:[],grow:[],papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],ucourses:[],units:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,revOn:true,revOffAt:0,revAt:0,trash:[],tomb:{},
   tombT:{},kdcats:DEFAULT_KDCATS.map(c=>Object.assign({},c)),tagLib:DEFAULT_TAGS.slice(),cats:DEFAULT_CATS.map(c=>Object.assign({},c)),qcats:DEFAULT_QCATS.map(c=>Object.assign({},c)),lastExport:null,lastBak:null,bakIdx:0}}
+function fmtMD(t){const d=new Date(t);return (d.getMonth()+1)+'/'+d.getDate()}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function norm(x){return String(x==null?'':x).toLowerCase()}
@@ -1468,7 +1481,7 @@ async function doHold(spec){
   }
   if(t==='paper'){save();renderPapers();renderTrash();toast('已移到回收桶')}
   else if(t==='card'){save();renderCards();updateBadge();renderTrash();toast('已移到回收桶')}
-  else if(t==='creset'){const c=S.cards.find(x=>x.id===id);if(c){c.level=0;c.due=Date.now();c.n=0;c.last=null;save();renderCards();updateBadge();toast('排程已重設')}}
+  else if(t==='creset'){const c=S.cards.find(x=>x.id===id);if(c){c.level=0;c.due=Date.now();c.n=0;c.last=null;c.mtime=Date.now();save();renderCards();updateBadge();toast('排程已重設')}}
   else if(t==='q'){save();renderQ();renderTrash();toast('已移到回收桶')}
   else if(t==='mt'){save();renderMT();renderTrash();toast('已移到回收桶')}
   else if(t==='dir'){save();renderDIR();renderTrash();toast('已移到回收桶')}
@@ -1510,8 +1523,9 @@ async function doHold(spec){
     try{const r=await store.get(BAK[+id]);const o=JSON.parse(r.value);
       S=Object.assign(defaults(),o.data);save();renderAll();toast('已還原')}catch(x){toast('還原失敗')}}
 }
+function revOn(){return S.revOn!==false}
 function updateBadge(){
-  const n=dueCards().length;
+  const n=revOn()?dueCards().length:0;
   const t=document.querySelector('.tab[data-p="review"]');
   if(t)t.innerHTML='Review'+(n?`<span class="badge">${n}</span>`:'');
 }
@@ -1645,7 +1659,7 @@ function renderUnitForm(){
     <label class="f"><span>說明（Markdown，選填）</span><textarea data-ud="note" style="min-height:64px">${esc(d.note)}</textarea></label>
     <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">HTML 與圖片</span>
       ${have.map(f=>{const rec=libRec(f.fid);return `<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name||f.path)}</span>`
-        +`<span class="mono up">${esc(f.path)}</span><span class="us">${rec&&rec.at?'☁ '+libTime(rec.at):''}</span>`
+        +`<span class="mono up">${esc(f.path)}</span><span class="us">${rec&&rec.at?'☁️ '+libTime(rec.at):''}</span>`
         +`<button class="cx" type="button" data-hold="ufile|${esc(f.fid)}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></div>`}).join('')}
       ${upFiles.map((f,i)=>`<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name)}</span><span class="up"></span>
         <span class="pill" style="font-size:10.5px">${kb(f.size)}</span><button class="x" type="button" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
@@ -2592,7 +2606,11 @@ document.getElementById('savePaper').onclick=()=>{
 /* ================= REVIEW ================= */
 function dueCards(){const n=Date.now();return S.cards.filter(c=>!c.past&&(!c.due||c.due<=n))}
 function renderCards(){
-  const due=dueCards();
+  const due=dueCards(),on=revOn();
+  const sw=document.getElementById('revSw');sw.setAttribute('aria-checked',on?'true':'false');
+  document.getElementById('revDue').style.display=on?'':'none';
+  document.getElementById('revState').textContent=on?'照排程複習，到期數顯示在分頁的紅點'
+    :'已暫停'+(S.revOffAt?'（'+fmtMD(S.revOffAt)+' 起）':'')+'：不顯示紅點，打開後到期日順延暫停的天數';
   document.getElementById('dueCount').textContent=due.length;
   document.getElementById('startReview').disabled=!due.length;
   document.getElementById('cardTotals').textContent='';
@@ -2612,15 +2630,16 @@ function renderCards(){
   else if(cardSort==='new')a.sort((x,y)=>y.created-x.created);
   else a.sort((x,y)=>(x.theme==null?99:x.theme)-(y.theme==null?99:y.theme));
   el.innerHTML=a.map(c=>{
-    const overdue=!c.due||c.due<=Date.now();
-    const d=c.due?Math.ceil((c.due-Date.now())/DAY):0;
+    const ref=on?Date.now():(S.revOffAt||Date.now());
+    const overdue=!c.due||c.due<=ref;
+    const d=c.due?Math.ceil((c.due-ref)/DAY):0;
     const flip=flipped.has(c.id), ed=editCard===c.id;
     return `<div class="item rv" data-flip="${c.id}">
       <div class="row"><div style="flex:1;font-weight:500;line-height:1.45">${esc(c.q)}</div></div>
       <div class="row" style="margin-top:6px;gap:5px;flex-wrap:wrap">
         ${c.theme>=0&&C[c.theme]?`<span class="pill pine">${C[c.theme].e} ${esc(C[c.theme].en)}</span>`:''}
         ${c.past?'<span class="pill amber" title="考古卡不進每日排程，只在 Exam mode 勾「只跑考古題」時出現">🎓 考古</span>'
-          :`<span class="pill ${overdue?'clay':''}">${overdue?'今天要複習':d+' 天後'}</span>
+          :`<span class="pill ${overdue&&on?'clay':''}"${on?'':' title="暫停中，打開後才開始倒數"'}>${on?(overdue?'今天要複習':d+' 天後'):'⏸️ '+(overdue?'到期':'剩 '+d+' 天')}</span>
         <span class="pill" title="間隔重複的等級 0–6">Lv${c.level||0} · 複習 ${c.n||0} 次</span>`}
         <span style="flex:1"></span>
         <span class="cxg">
@@ -2628,7 +2647,7 @@ function renderCards(){
           <button class="cx" data-hold="card|${c.id}" title="長按 1.5 秒刪除">✕</button></span></div>
       ${flip?`<div class="ans">${esc(c.a)||'（沒寫答案）'}</div>
         ${(c.links||[]).filter(l=>l.url).length?`<div class="row" style="margin-top:10px">${linkChips(c.links)}</div>`:''}
-        ${c.past?'':`<div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`}`
+        ${c.past||!on?'':`<div class="grade"><button data-grade="${c.id}|0">不會</button><button class="good" data-grade="${c.id}|1">會</button></div>`}`
         :`<div class="flipcue">點卡片看答案</div>`}
       ${ed?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
         <label class="f"><span>Question</span><textarea data-cf="${c.id}|q">${esc(c.q)}</textarea></label>
@@ -2652,7 +2671,7 @@ document.getElementById('cardList').addEventListener('change',e=>{
 function gradeCard(c,ok){
   c.n=(c.n||0)+1;c.last=Date.now();
   c.level=ok?Math.min((c.level||0)+1,IVL.length-1):Math.max((c.level||0)-2,0);
-  c.due=Date.now()+IVL[c.level]*DAY;
+  c.due=Date.now()+IVL[c.level]*DAY;c.mtime=Date.now();
   flipped.delete(c.id);save();renderCards();updateBadge();
   toast(ok?'下次 '+IVL[c.level]+' 天後':'退兩級，'+IVL[c.level]+' 天後再見');
 }
@@ -2715,6 +2734,28 @@ function grade(ok){
   qi++;showCard();
 }
 document.getElementById('startReview').onclick=()=>startQueue(dueCards(),false);
+/* 每日複習開關：關＝暫停；打開時把暫停的時間加回每張卡的到期日 */
+function revSet(on){
+  const now=Date.now();
+  if(on===revOn())return;
+  if(on){
+    const off=S.revOffAt||now;let k=0;
+    S.cards.forEach(c=>{
+      if(c.past||!c.due)return;
+      const base=Math.max(off,c.created||0,c.last||0);
+      const sh=now-base;if(sh<=0)return;
+      c.due+=sh;c.mtime=now;k++;
+    });
+    S.revOn=true;S.revOffAt=0;S.revAt=now;
+    const days=Math.round((now-off)/DAY);
+    toast(days>0&&k?'已打開，'+k+' 張卡的到期日順延 '+days+' 天':'每日複習已打開');
+  }else{
+    S.revOn=false;S.revOffAt=now;S.revAt=now;
+    toast('已暫停：不顯示紅點，到期日先凍結');
+  }
+  save();renderCards();updateBadge();
+}
+document.getElementById('revSw').onclick=()=>revSet(!revOn());
 document.getElementById('startExam').onclick=()=>{
   const sel=[...document.querySelectorAll('#examThemes input:checked')].map(x=>+x.value);
   const po=document.getElementById('examPast').checked;
@@ -3568,7 +3609,7 @@ function ntItem(n){
     const tg=(n.tags||[]).filter(Boolean).slice(0,3).map(t=>
       `<span class="pill tg" data-ntag="${esc(t)}" aria-pressed="${nTags.has(String(t).toLowerCase())}">${esc(t)}</span>`).join('');
     return `<div class="rsvrow" data-ntcard="${n.id}" title="點一下展開">
-      <span class="ck" style="color:var(--faint);font-size:9px">●</span>
+      <span class="ck" style="color:${String(n.body||'').trim()?'var(--faint)':'var(--wine)'};font-size:9px"${String(n.body||'').trim()?'':` title="${ex?'還沒寫答案':'內容還是空的'}"`}>●</span>
       <span class="rtx">${esc(n.title)}</span>
       ${tg?`<span class="rtag" data-ntstop="1">${tg}</span>`:''}
       <span class="rdt">${dt}</span></div>`;
@@ -4182,6 +4223,7 @@ function mergeState(inc){
     S.gcMonths=inc.gcMonths||12;S.gcAuto=!!inc.gcAuto}
   else if(!S.gc&&inc.gc){S.gc=inc.gc;S.gcAt=inc.gcAt||0}
   if(inc.lastExport&&(!S.lastExport||inc.lastExport>S.lastExport))S.lastExport=inc.lastExport;
+  if((inc.revAt||0)>(S.revAt||0)){S.revOn=inc.revOn!==false;S.revOffAt=inc.revOffAt||0;S.revAt=inc.revAt}
   migrateProg();
   ensureExamCat();
   libMigrate();
@@ -4606,226 +4648,352 @@ document.getElementById('helpBox').innerHTML=`
 <line x1="30" y1="712" x2="650" y2="712" stroke="#E3DED2"/>
 <text x="30" y="732" font-size="12" fill="#6E6A60">綠 = Zotero 桌機　紫 = 閱讀與判斷　黃 = 產出判斷與題目　藍 = 寫作</text>
 </svg>
-<p><strong>第 4 步一定要在第 5 步之前。</strong>先看我的拆解，你就會用我的框架讀那篇論文。精讀稿的角色是<strong>答案卷</strong>，不是導讀。</p>
-<p>tag 分兩次標：分流時標<strong>主題 tag</strong>（HBV、cohort、NHIRD），精讀後才補<strong>方法 tag</strong>（immortal-time、competing-risk）。</p>
+<ul>
+  <li><strong>第 4 步一定要在第 5 步之前。</strong>先看我的拆解，你就會用我的框架讀那篇論文；精讀稿的角色是<strong>答案卷</strong>，不是導讀。</li>
+  <li>tag 分兩次標：分流時標<strong>主題 tag</strong>（HBV、cohort、NHIRD），精讀後才補<strong>方法 tag</strong>（immortal-time、competing-risk）。</li>
+</ul>
 <h4>🔁 什麼會自動、什麼要手動</h4>
 <table><thead><tr><th>東西</th><th>怎麼同步</th></tr></thead><tbody>
   <tr><td>PDF 與標註</td><td>Zotero 自動</td></tr>
-  <tr><td>卡片資料</td><td>網頁自動讀寫 epi-data</td></tr>
-  <tr><td>精讀 HTML、手寫圖</td><td><strong>手動</strong> commit 上去</td></tr>
+  <tr><td>卡片、筆記、進度（notes.json）</td><td>網頁自動讀寫 epi-data</td></tr>
+  <tr><td>Reading 的精讀 HTML</td><td>Reading 的「📥 → ② 精讀 HTML」直接上傳</td></tr>
+  <tr><td>Library 的 HTML、圖片、頁面資料</td><td>卡片按 Save 上傳；頁面資料開關時自動同步</td></tr>
+  <tr><td>手寫圖（GoodNotes PDF）</td><td><strong>手動</strong>上傳到 epi-data 的 <code>figures/</code></td></tr>
 </tbody></table>
 <h4>💻 裝置分工</h4>
-<p><strong>Epi_Yaxin 本身在兩台裝置上完全一樣</strong>——同一個網址、同一份資料、全部功能都能用。真正有差別的是<strong>其他三個工具</strong>：</p>
 <table><thead><tr><th></th><th>桌機／筆電</th><th>iPad</th></tr></thead><tbody>
-  <tr><td>Epi_Yaxin</td><td colspan="2" style="text-align:center">一模一樣</td></tr>
+  <tr><td>Epi_Yaxin</td><td colspan="2" style="text-align:center">一模一樣（同一個網址、同一份資料）</td></tr>
   <tr><td>Zotero</td><td>整理、Word 引用、Saved Search</td><td>讀 PDF、畫線（沒有 Word 外掛）</td></tr>
   <tr><td>GoodNotes</td><td>-</td><td>手寫推導、畫 DAG</td></tr>
-  <tr><td>上傳檔案到 GitHub</td><td>好操作</td><td>可以但較麻煩</td></tr>
+  <tr><td>上傳大量檔案</td><td>好操作</td><td>可以但較麻煩</td></tr>
 </tbody></table>
-<p>所以實務上的分工是：<strong>iPad 讀 PDF、畫線、隨手補 Note；桌機做整理、寫長篇 Note、上傳檔案、寫論文引用。</strong>不是系統限制，是鍵盤和螢幕的差別。</p>
-<p>GoodNotes 不能同步到 Windows，所以只當<strong>拋棄式練習場</strong>——關鍵圖匯出 PDF 收進 figures/。</p>
+<ul>
+  <li>實務分工：<strong>iPad 讀 PDF、畫線、隨手補 Note；桌機整理、寫長篇 Note、上傳檔案、寫論文引用。</strong>不是系統限制，是鍵盤和螢幕的差別。</li>
+  <li>GoodNotes 不能同步到 Windows，只當<strong>拋棄式練習場</strong>，關鍵圖匯出 PDF 收進 <code>figures/</code>。</li>
+</ul>
 </div></details>
 
-
-
 <details class="card fold"><summary>🧭 八個分頁在做什麼</summary><div class="help">
-  <p>由左到右：<strong>Reading</strong> 讀過的論文卡片　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Notes</strong> 疑問與零散資料　<strong>Library</strong> 依主題收納的 HTML 頁面（課程預習包等）　<strong>Calendar</strong> 重要日期與課表　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Review</strong> 間隔重複複習卡　<strong>Settings</strong> 同步、備份、說明。</p>
-  <h4>資料怎麼在分頁之間流動</h4>
-  <ul>
-    <li><strong>Notes 的 Question</strong> 是總樞紐，展開後有三個出口：<code>↑ Card</code> 進 Review 變複習卡、<code>↑ Note</code> 變同分頁的筆記、<code>↑ 方向</code> 進 Meeting 的 Research directions。</li>
-    <li><strong>Meeting 的 Action items</strong> 自動彙整到同分頁最下方的 To-do。</li>
-    <li><strong>Google 日曆</strong>的星號事件自動流進 Calendar 的 KEY DATES。</li>
-    <li>其餘分頁各自獨立，靠 <strong>🔗附件</strong> 互相指向（精讀 HTML、Drive 檔案、paper 連結）。</li>
-  </ul>
+<table><thead><tr><th>分頁</th><th>放什麼</th></tr></thead><tbody>
+  <tr><td><strong>Reading</strong></td><td>讀過的論文卡片、精讀 HTML</td></tr>
+  <tr><td><strong>Meeting</strong></td><td>與老師的會議、研究方向、待辦</td></tr>
+  <tr><td><strong>Notes</strong></td><td>疑問（Questions）、筆記、資格考考古題</td></tr>
+  <tr><td><strong>Library</strong></td><td>依主題收納自己產生的 HTML 頁面（課程預習包等）與圖片</td></tr>
+  <tr><td><strong>Calendar</strong></td><td>論文進度、重要日期、課表</td></tr>
+  <tr><td><strong>Textbooks</strong></td><td>教科書各小節的閱讀進度與筆記</td></tr>
+  <tr><td><strong>Review</strong></td><td>間隔重複複習卡、考古卡、Exam mode</td></tr>
+  <tr><td><strong>Settings</strong></td><td>同步、備份、Google 日曆、分類與清理、使用說明、版本</td></tr>
+</tbody></table>
+<h4>資料怎麼在分頁之間流動</h4>
+<ul>
+  <li><strong>Notes 的 Question</strong> 是總樞紐，三個出口：<code>↑ Card</code> 進 Review、<code>↑ Note</code> 變筆記、<code>↑ 方向</code> 進 Meeting 的 Research directions。</li>
+  <li><strong>Notes 的「資格考」筆記</strong>寫好答案，自動在 Review 產生 🎓 考古卡。</li>
+  <li><strong>Meeting 的 Action items</strong> 自動彙整到同分頁最下方的 To-do。</li>
+  <li><strong>Google 日曆</strong>的星號事件自動流進 Calendar 的 KEY DATES。</li>
+  <li>Library、Textbooks 各自獨立；其他地方靠 <strong>🔗附件</strong> 互相指向（精讀 HTML、Drive 檔案、paper 連結）。</li>
+</ul>
 </div></details>
 
 <details class="card fold"><summary>🎛️ 全站共通約定</summary><div class="help">
-  <h4>圖示</h4>
-  <p><strong>✎</strong> 編輯　<strong>✕</strong> 刪除（長按 1.5 秒）　<strong>🌐</strong> 原文　<strong>🔗</strong> 精讀 HTML／附件　<strong>🖼️</strong> 插入圖片　<strong>＋</strong> 新增　<strong>☆／★</strong> 置頂　<strong>📝</strong> 備註。圖示鍵一律沒有外框。</p>
-  <h4>分類怎麼加、怎麼刪</h4>
-  <p>有三組彼此獨立的分類：<strong>Reading 的分類標籤</strong>、<strong>Questions 與 Notes 共用的分類</strong>、<strong>KEY DATES 的類型</strong>（Exam／School／Other；PROGRESS 不需要選類型）。每一組的下拉選單最下面都有 <code>＋ 新增…</code>，加完同組的所有下拉立刻都看得到。課表的必修／選修／Lab 和選修領域是學程規定的固定選項，不開放自訂。</p>
-  <p><strong>Settings → 分類與清理 → 分類清單</strong>列出三組的全部分類，顯示每個分類底下有幾筆。名字可以直接在那裡改——卡片存的是代號不是名字，改名不會動到任何資料。自訂的右邊有 ✕ 可長按刪除，<strong>連一筆都沒有的空分類也刪得掉</strong>。內建的可以改名但不能刪。</p>
-  <p>刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設：Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other。</p>
-  <h4>刪除與 GitHub 的關係</h4>
-  <p><strong>卡片資料會同步刪除</strong>：刪掉時會留一個「墓碑」記號跟著上傳，所以其他裝置合併後也會跟著刪，不會把已刪的東西送回來。墓碑保留 180 天。GitHub 的 <strong>commit 歷史仍留著舊版本</strong>，真的刪錯可以到 repo 的 <code>data/notes.json</code> → History 翻回去。</p>
-  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片指向的 HTML 與圖片</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
-  <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings → 分類與清理 → 回收桶，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
-  <h4>分區與折疊</h4>
-  <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
-  <h4>閱讀模式與編輯模式</h4>
-  <p>Reading、Notes、Meetings 的卡片<strong>收合時只顯示標題</strong>，點一下展開是閱讀模式——排版好的內容、圖片和附件都在這裡，沒有輸入框擋路。要改內容才按右上的 <strong>✎</strong> 切到編輯模式，改完按 <strong>✓</strong> 或底部「完成」存檔回閱讀模式。收合卡片會自動離開編輯模式。</p>
-  <h4>🔗附件</h4>
-  <p>全站統一：展開後預設一列空白，左邊短格填名稱、右邊長格貼網址，按 <code>＋</code> 再加一列，長按 ✕ 刪除。沒填的空白列在收合時自動清掉。卡片上只顯示有網址的附件，點一下開啟。</p>
-  <h4>🖼️ 插入圖片</h4>
-  <p>三種方式：按 <strong>🖼️ 選檔</strong>、在輸入框<strong>直接 Ctrl+V 貼上</strong>、或<strong>貼圖片網址</strong>。前兩種會自動壓縮到寬 900px，文字裡只留 <code>![](img:xxxx)</code> 短代號，不會塞一長串編碼。單張上限 900 KB；刪掉引用的文字後圖片會自動回收。</p>
-  <h4>Markdown</h4>
-  <p><strong>Reading 的九個欄位</strong>（研究問題／目標、研究設計與資料來源、研究對象、暴露與結果的定義、分析、主要結果、解釋、Gap、Note）、Meeting 重點、Question 的 Answer、Note 內容，以及 Library 卡片的說明都吃 Markdown。</p>
-  <p>支援：<code>## 標題</code>（# 與 ## 同一級，### 與 #### 小一級）、<code>**粗體**</code>、<code>*斜體*</code>、<code>~~刪節~~</code>、<code>&#96;程式碼&#96;</code>、<code>- 清單</code>（<strong>縮排兩格可以巢狀</strong>）、<code>1. 編號</code>、<code>&gt; 引用</code>（連續行會併成一塊）、<code>---</code> 分隔線、<code>[文字](網址)</code>、<code>&#96;&#96;&#96;</code> 程式碼區塊。</p>
-  <p><strong>表格</strong>用管線寫，對齊靠第二行的冒號控制，表格太寬會自己橫向捲動：</p>
-  <pre style="background:var(--surface-2);padding:8px 10px;border-radius:6px;overflow-x:auto;font-size:12px;line-height:1.5">| 變項 | 定義 | n |
+<h4>圖示</h4>
+<table><thead><tr><th>圖示</th><th>意思</th></tr></thead><tbody>
+  <tr><td>✎</td><td>編輯</td></tr>
+  <tr><td>✕</td><td>刪除，要<strong>長按 1.5 秒</strong>（滑開或太早放開會取消）</td></tr>
+  <tr><td>＋</td><td>新增；表單開著時再按一次收起</td></tr>
+  <tr><td>ⓘ</td><td>說明，點開看、再點收起</td></tr>
+  <tr><td>雙箭號</td><td>展開其餘／收合，在標題列最右邊</td></tr>
+  <tr><td>🌐</td><td>論文原文連結</td></tr>
+  <tr><td>🔗</td><td>精讀 HTML／附件</td></tr>
+  <tr><td>📄 ／ 🖼️</td><td>Library 卡片上的 HTML／圖片標籤</td></tr>
+  <tr><td>↗ ／ ☁️</td><td>Library 全螢幕頂列：開新分頁／立即同步頁面資料</td></tr>
+  <tr><td>☆／★</td><td>置頂</td></tr>
+</tbody></table>
+<ul><li>圖示鍵一律沒有外框。輸入框不放灰色提示字，只有四個搜尋框例外。</li></ul>
+<h4>分類</h4>
+<table><thead><tr><th>分類組</th><th>用在</th><th>內建（可改名、不能刪）</th></tr></thead><tbody>
+  <tr><td>Reading 分類</td><td>Reading 卡片</td><td>老師指定、課程、探索、發表</td></tr>
+  <tr><td>Questions／Notes 分類</td><td>兩邊共用</td><td>Mine、Study、資格考（只出現在 Notes）</td></tr>
+  <tr><td>KEY DATES 類型</td><td>Calendar 的 KEY DATES</td><td>Exam、School、Other</td></tr>
+</tbody></table>
+<ul>
+  <li>每個分類下拉最下面都有 <code>＋ 新增…</code>，加完同組所有下拉立刻看得到。</li>
+  <li>改名、刪除到 <strong>Settings → 分類與清理 → 分類清單</strong>；卡片存的是代號，改名不動資料。</li>
+  <li>刪掉自訂分類時，底下的項目<strong>不會被刪</strong>，退回預設：Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other。</li>
+  <li>Library 的主題不在這裡管，在 Library 左欄新增、右欄頂端改名或刪除。</li>
+</ul>
+<h4>刪除、回收桶與 GitHub</h4>
+<table><thead><tr><th>情況</th><th>結果</th></tr></thead><tbody>
+  <tr><td>長按 ✕ 刪卡片</td><td>進回收桶，30 天內可還原（Settings → 分類與清理 → 🗑️ 回收桶）</td></tr>
+  <tr><td>其他裝置</td><td>刪除會留「墓碑」跟著同步，其他裝置合併後也會刪，墓碑保留 180 天</td></tr>
+  <tr><td>刪錯又過了 30 天</td><td>GitHub 的 <code>data/notes.json</code> → History 可以翻回舊版</td></tr>
+  <tr><td>repo 裡的檔案（精讀 HTML、Library 的 HTML 與圖片）</td><td><strong>不會跟著刪</strong>，到「沒有卡片指向的 HTML 與圖片」掃描後清掉；刪前先用 👁 看一眼</td></tr>
+  <tr><td>KEY DATES 過期超過兩個月</td><td>直接永久刪除，不進回收桶</td></tr>
+</tbody></table>
+<h4>分區、折疊、閱讀與編輯</h4>
+<ul>
+  <li>Reading、Questions 的 Resolved、Notes 依分類分區或分目錄，每區只顯示前幾筆，標題最右邊的雙箭號展開其餘。</li>
+  <li>Reading、Notes、Meeting 的卡片收合時只顯示標題；點一下是<strong>閱讀模式</strong>（排版好的內容），按 ✎ 才進<strong>編輯模式</strong>，改完按 ✓ 或「完成」。收合會自動離開編輯模式。</li>
+  <li>長內容（附件、進度紀錄）收在折疊區，點標題展開。</li>
+</ul>
+<h4>🔗附件</h4>
+<ul>
+  <li>展開後預設一列空白：左邊短格填名稱、右邊長格貼網址，<code>＋</code> 再加一列，長按 ✕ 刪除。</li>
+  <li>沒填的空白列收合時自動清掉；卡片上只顯示有網址的附件。</li>
+  <li>Google Drive 分享連結可以直接貼（Drive 權限設成「知道連結的人可檢視」）。</li>
+</ul>
+<h4>🖼️ 在文字裡插入圖片（Reading、Notes、Meeting）</h4>
+<ul>
+  <li>三種方式：按 🖼️ 選檔、在輸入框 Ctrl+V 貼上、貼圖片網址。</li>
+  <li>前兩種自動壓縮到寬 900px，文字裡只留 <code>![](img:xxxx)</code> 短代號；單張上限 900 KB，刪掉引用文字後圖片自動回收。</li>
+  <li>Library 的圖片另外存成檔案，見 Library 一節。</li>
+</ul>
+<h4>Markdown</h4>
+<ul>
+  <li>吃 Markdown 的地方：Reading 的九個欄位、Meeting 重點、Question 的 Answer、Note 內容、Library 卡片的說明。</li>
+  <li>支援：<code>## 標題</code>、<code>**粗體**</code>、<code>*斜體*</code>、<code>~~刪節~~</code>、<code>&#96;程式碼&#96;</code>、<code>- 清單</code>（縮排兩格可巢狀）、<code>1. 編號</code>、<code>&gt; 引用</code>、<code>---</code>、<code>[文字](網址)</code>、<code>&#96;&#96;&#96;</code> 程式碼區塊。</li>
+  <li><strong>表格</strong>用管線寫，第二行的冒號控制對齊，太寬會橫向捲動：</li>
+</ul>
+<pre style="background:var(--surface-2);padding:8px 10px;border-radius:6px;overflow-x:auto;font-size:12px;line-height:1.5">| 變項 | 定義 | n |
 |---|:-:|---:|
 | 暴露 | HBsAg+ | 12,345 |</pre>
-  <p><strong>空一行分段</strong>，同一段裡換行就是換行。貼進去的 HTML 一律當純文字顯示，不會被執行。</p>
+<ul><li>空一行分段，同一段裡換行就是換行。貼進去的 HTML 一律當純文字顯示。</li></ul>
 </div></details>
 
 <details class="card fold"><summary>📖 Reading</summary><div class="help">
-  <p>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填。Note 沒填會標紅色——那一欄才是這張卡存在的理由。</p>
-  <p>卡片依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，分類標題最右端的雙箭號展開其餘。組內<strong>星號優先，再按加入時間新到舊</strong>（不是出版年）。分類在編輯模式的下拉選。</p>
-  <p><strong>自己加分類</strong>：下拉最下面的 <code>＋ 新增分類…</code>，打名字就會建一個（顏色自動配），之後每張卡的下拉都看得到。改名和刪除到 <strong>Settings → 分類與清理 → 分類清單</strong>。</p>
-  <p><strong>點 ✎ 或標題展開是閱讀模式</strong>：九個欄位排版後直接讀，<strong>完整支援 Markdown</strong>（標題、巢狀清單、表格、引用、程式碼——細節見「共通操作 → Markdown」），空欄位不顯示。每個欄位有自己的小標題列：<strong>左側分類色色條＋整條淡底色＋固定編號</strong>（01 研究問題 … 09 Note），編號不會因為某欄空著就跳號，所以看一眼就知道這張卡少了哪幾塊。編輯模式的輸入框用等寬字、加高到 110px，方便直接寫 Markdown。再按一次 ✎ 進編輯模式，改完按 ✓ 或「完成」存檔。<strong>點標題可收合</strong>。</p>
-  <p>作者用 APA7 格式（<em>Yu et al. (2000). JNCI.</em>），完整名單在「書目與檔案」折疊區。一句話摘要用左側粗色條標示。Tags 超過三個收成淺灰 <code>+N</code>。</p>
-  <p><strong>🌐</strong> 開原文連結（來自 JSON 的 url 欄位，不會自動抓），<strong>🔗</strong> 開精讀 HTML（填 repo 相對路徑如 <span class="mono">papers/2023-wong.html</span>，不是網址）。</p>
-  <p><strong>Compare</strong> 模式把選定欄位排成表格橫向比較，點格子可展開全文。</p>
+<ul>
+  <li>九個欄位裡 <strong>Note 是你寫的</strong>，其餘由 Claude 填；Note 沒填會標紅。</li>
+  <li>依<strong>老師指定／課程／探索／發表／未分類</strong>分區，每區最多 3 篇，雙箭號展開其餘。組內星號優先，再按加入時間新到舊（不是出版年）。</li>
+  <li>點 ✎ 或標題展開是閱讀模式：九個欄位排版顯示、完整支援 Markdown，每欄有固定編號（01 研究問題 … 09 Note），空欄位不顯示但編號不跳號，一眼看出少了哪幾塊。</li>
+  <li>作者用 APA7 格式，完整名單在「書目與檔案」折疊區；Tags 超過三個收成 <code>+N</code>。</li>
+</ul>
+<table><thead><tr><th>按鈕</th><th>做什麼</th></tr></thead><tbody>
+  <tr><td>📥 → ① 卡片 JSON</td><td>貼精讀 SKILL 產生的 JSON 建卡</td></tr>
+  <tr><td>📥 → ② 精讀 HTML</td><td>上傳精讀 HTML 到 epi-data 的 <code>papers/</code> 並綁到卡片</td></tr>
+  <tr><td>🌐</td><td>開原文連結（JSON 的 url 欄位）</td></tr>
+  <tr><td>🔗</td><td>開精讀 HTML（repo 相對路徑，例如 <span class="mono">papers/2023-wong.html</span>）</td></tr>
+  <tr><td>Compare</td><td>選定欄位排成表格橫向比較，點格子展開全文</td></tr>
+</tbody></table>
 </div></details>
 
 <details class="card fold"><summary>📚 Library</summary><div class="help">
-  <p>依主題收納你自己產生的 HTML 頁面，例如課程預習包、整理頁。</p>
-  <h4>主題與卡片</h4>
-  <ul>
-    <li><strong>左邊是主題</strong>，數字是卡片數；點一下，右邊只列出這個主題的卡片，依日期新到舊（沒填日期的用建立時間）。最下面「＋ 主題」新增，再按一次收起。</li>
-    <li>主題有名稱、說明（選填，例如授課老師）、<strong>代碼</strong>（資料夾名，只能英數與 -，英文名稱會自動帶出）。右邊最上面一行是主題說明、資料夾，旁邊 ✎ 改、✕ 長按刪（還有卡片的主題不能刪）。</li>
-    <li>右上 ＋ 新增卡片：主題、日期（選填）、標題、說明（Markdown，選填）、HTML 與圖片。右欄一列兩張（手機一列一張），卡片不用點開，標題、日期、說明和 📄、🖼️ 標籤都直接看得到。</li>
-    <li><strong>HTML 和圖片拖進同一個框</strong>（📎 那一區），也可以點一下選檔案，或在表單裡按 Ctrl+V 貼上截圖，可一次多個，App 依檔案類型自動分。每張圖可以加一行小說明，圖片會壓成最長邊 1600px 的 JPG，按 Save 時上傳到 <code>library/代碼/img/</code>。卡片上只顯示「🖼️ 小說明」，點了才放大看，左右箭頭（或鍵盤 ← →）換張，Esc 關閉。</li>
-  </ul>
-  <h4>HTML</h4>
-  <ul>
-    <li>一張卡片可以放多個 HTML，存到 epi-data 的 <code>library/代碼/檔名.html</code>，按 Save 才上傳，同檔名會覆蓋。</li>
-    <li>點 📄 全螢幕開啟，全螢幕頂列的 ↗ 開新分頁。✎ 編輯裡每個 HTML 或圖片後面的 ✕ 長按只從卡片移除，repo 裡的檔案還在，要清到 Settings → 分類與清理（會列出沒有卡片指向的 HTML 與圖片）。</li>
-    <li>頁面用 blob 網址載入、不加 sandbox，所以頁內分頁（#n6 這類）、複製按鈕、頁面自己的瀏覽器儲存都能用。代價是它讀得到 app 的本機資料（含 GitHub token），所以<strong>只放你自己產生的 HTML</strong>。</li>
-  </ul>
-  <h4>頁面資料同步</h4>
-  <ul>
-    <li>頁面自己存的東西（問答、截圖、待辦勾選）原本只在這台裝置的瀏覽器裡。app 會記下頁面用了哪個瀏覽器資料庫，把內容同步到 HTML 旁邊的 <code>檔名.data.json</code>。</li>
-    <li><strong>打開時</strong>：雲端比這台新就先還原再顯示。<strong>關閉時</strong>（檢視器的 ✕、新分頁右上角的 ✕）：有變動就上傳。開新分頁時，只要 app 的分頁還開著，每分鐘也會自動存一次；app 下次打開時會補上沒存到的。</li>
-    <li>檢視器頂列的 ☁ 立即同步，旁邊顯示最後同步時間；滑鼠停在 📄 標籤上也看得到。</li>
-    <li>兩台裝置都改過同一個頁面時會跳出來問你要用哪一份，沒選的那份另存成 <code>.data.backup-日期.json</code>。</li>
-    <li>截圖很多時同步檔會變大、同步比較慢。兩個 HTML 如果用同一個資料庫名稱，資料會混在一起，app 偵測到會提醒。重新上傳新版 HTML 不會清掉頁面資料。</li>
-  </ul>
+<ul><li>依主題收納你自己產生的 HTML 頁面（課程預習包、整理頁）和圖片。</li></ul>
+<h4>主題與卡片</h4>
+<ul>
+  <li><strong>左欄是主題</strong>（後面是卡片數），點一下右欄只列這個主題的卡片；最下面「＋ 主題」新增，再按一次收起。</li>
+  <li>主題有名稱、說明（選填，例如授課老師）、<strong>代碼</strong>（資料夾名，英數與 -）。右欄頂端顯示說明與資料夾，✎ 改、長按 ✕ 刪（還有卡片的主題不能刪）。</li>
+  <li>右欄<strong>一列兩張</strong>（手機一列一張），依日期新到舊，沒填日期的用建立時間。卡片不用點開：日期、標題、說明和 📄、🖼️ 標籤都直接看得到。</li>
+</ul>
+<h4>新增與編輯</h4>
+<ul>
+  <li>右上 ＋ 新增卡片：主題、日期（選填）、標題、說明（Markdown，選填）、HTML 與圖片。</li>
+  <li><strong>HTML 和圖片拖進同一個 📎 框</strong>，或點一下選檔、在表單裡 Ctrl+V 貼上截圖，可一次多個，App 依類型自動分。按 Save 才上傳。</li>
+  <li>每張圖可以加一行小說明，卡片上只顯示「🖼️ 小說明」，點了才放大（‹ › 或 ← → 換張、Esc 關閉）。</li>
+  <li>卡片的 ✎ 可以改內容、再加檔案、改圖片小說明；<strong>長按 ✕</strong> 從卡片移除 HTML 或圖片（repo 裡的檔案還在，到 Settings 清理）。</li>
+</ul>
+<table><thead><tr><th>檔案</th><th>存在 epi-data 的哪裡</th></tr></thead><tbody>
+  <tr><td>HTML</td><td><code>library/代碼/檔名.html</code>（同檔名覆蓋）</td></tr>
+  <tr><td>圖片</td><td><code>library/代碼/img/</code>（壓成最長邊 1600px 的 JPG）</td></tr>
+  <tr><td>頁面資料</td><td><code>library/代碼/檔名.data.json</code></td></tr>
+  <tr><td>衝突時沒選的那份</td><td><code>library/代碼/檔名.data.backup-日期.json</code></td></tr>
+</tbody></table>
+<h4>打開 HTML</h4>
+<ul>
+  <li>點 📄 全螢幕開啟；要開新分頁用全螢幕頂列的 ↗，新分頁右上角的 ✕ 會先同步再關閉。</li>
+  <li>頁面用 blob 網址載入、不加 sandbox，所以頁內分頁（#n6 這類）、複製按鈕、頁面自己的瀏覽器儲存都能用。代價是它讀得到 app 的本機資料（含 GitHub token），所以<strong>只放你自己產生的 HTML</strong>。</li>
+</ul>
+<h4>頁面資料同步</h4>
+<table><thead><tr><th>時機</th><th>做什麼</th></tr></thead><tbody>
+  <tr><td>打開 📄</td><td>雲端比這台新就先還原再顯示</td></tr>
+  <tr><td>關閉（全螢幕 ✕、新分頁 ✕）</td><td>有變動就上傳</td></tr>
+  <tr><td>新分頁開著</td><td>app 的分頁還開著時，每分鐘存一次</td></tr>
+  <tr><td>app 打開時</td><td>補上上次沒存到的</td></tr>
+  <tr><td>全螢幕頂列 ☁️</td><td>立即同步，旁邊顯示最後同步時間（滑鼠停在 📄 上也看得到）</td></tr>
+  <tr><td>兩台都改過</td><td>跳出來問要用哪一份，沒選的另存 <code>.data.backup-日期.json</code></td></tr>
+</tbody></table>
+<ul><li>截圖很多時同步檔會變大、比較慢；兩個 HTML 用同一個資料庫名稱會混在一起（app 會提醒）；重新上傳新版 HTML 不會清掉頁面資料。</li></ul>
 </div></details>
 
 <details class="card fold"><summary>📕 Textbooks</summary><div class="help">
-  <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>，Causal Inference: What If 收在「＋ CAUSAL INFERENCE: WHAT IF（補充）」折疊區，<strong>不計入上方 Progress</strong>。</p>
-  <p>每個小節點一下換狀態：未讀 → 讀過 → 懂了。右邊 <code>✎</code> 寫該節筆記和附件，有內容時會變色。</p>
+<ul>
+  <li>以 <strong>Modern Epidemiology 4e 為主軸</strong>；Causal Inference: What If 收在「＋ CAUSAL INFERENCE: WHAT IF（補充）」折疊區，<strong>不計入上方 Progress</strong>。</li>
+  <li>每個小節點一下換狀態：未讀 → 讀過 → 懂了。</li>
+  <li>右邊 ✎ 寫該節筆記和附件，有內容時會變色。</li>
+  <li>上方切換 Book order／Course order／In progress，搜尋框找章節。</li>
+</ul>
 </div></details>
 
 <details class="card fold"><summary>📝 Notes</summary><div class="help">
-  <h4>搜尋與標籤（久了以後怎麼找回東西）</h4>
-  <p>分頁最上方的<strong>搜尋框同時過濾 Questions 和 Notes</strong>，比對範圍是問題、答案、筆記標題、內容、附件名稱與標籤。<strong>空白分隔＝而且</strong>（打 <code>collider 偏誤</code> 只留兩個詞都出現的）。搜尋時<strong>所有分組自動展開</strong>，不必再一個個點箭號；按 <strong>✕</strong> 清掉搜尋與標籤篩選。</p>
-  <p><strong>標籤</strong>在編輯卡片時填，用逗號或空白分隔。搜尋框下方的<strong>標籤列</strong>列出所有用過的標籤（常用的排前面），點一下篩選、再點取消，可以疊加多個標籤（＝同時有這些標籤的才留下）。卡片上的標籤也能直接點。標籤和 Reading 分頁共用同一個標籤庫，所以 paper 和問題可以用同一套詞彙串起來。</p>
-  <h4>自己加分類</h4>
-  <p>Questions 和 Notes <strong>共用同一組分類</strong>，預設是 Mine 和 Study；Notes 另有內建的<strong>資格考</strong>（Questions 的下拉不會出現）。任何一個分類下拉的最下面都有 <code>＋ 新增分類…</code>，打名字就建一個（顏色自動配），新增表單和每張卡片的下拉立刻都看得到。改名和刪除到 <strong>Settings → 分類與清理 → 分類清單</strong>。</p>
-  <h4>Questions</h4>
-  <p><strong>未解決的問題不分類</strong>，全部依建立時間新到舊、一列一張，因為手上還沒解決的東西就是該一眼看完。卡片<strong>不標狀態</strong>——沒解決的都在上面，已解決的都在 Resolved 裡，不需要再貼標籤講一次。<strong>點問題本身可以把答案收起來</strong>，收起時標題後面會有一個 ⌄；再點一次展開。</p>
-  <p><strong>Resolved</strong>（粗體那行）<strong>分成左目錄、右清單</strong>。左邊窄欄底色較深，依分類列出筆數（全部／Mine／Study／自訂），點一下過濾；<strong>選中的分類底下才展開月份</strong>當次目錄，再點月份縮到那個月，同一項再點一次取消。右邊不分類，一行一題：✓、問題、解決日期，依日期新到舊，<strong>不顯示答案</strong>——點問題才展開，再點一次收回去。<strong>預設展開、先顯示最近解決的 3 筆</strong>，底下的「更多」看全部；Resolved 右邊的雙箭號可以把整區收起來。按 Resolve 的當下會記時間，Reopen 會清掉。</p>
-  <p>卡片只顯示問題、答案、標籤、附件、狀態；分類和標籤在展開編輯時並排顯示。四個出口：<code>Resolve</code> 標記解決、<code>↑ Card</code> 變複習卡、<code>↑ Note</code> 轉筆記、<code>↑ 方向</code> 升級成研究題目。</p>
-  <p><strong>Question → Note</strong> 的對應：Question→標題、Answer→內容、分類→分類、🔗附件→🔗附件，並自動標記已解決。</p>
-  <h4>資格考（考古題）</h4>
-  <p>老師說「這個之前考過」就在 Notes 新增一則、分類選 <strong>資格考</strong>：會多出<strong>出處</strong>（課程／老師／日期）和 <strong>Textbooks 主題</strong>兩欄，都可以留空；標題和內容改叫<strong>題目</strong>和<strong>答案</strong>。</p>
-  <p>答案寫好按 Save（或編輯後按「完成」／✓），就<strong>自動在 Review 產生一張 🎓 考古卡</strong>（題目→正面、答案→背面、主題→卡片主題），筆記上會出現 🎓 考古卡 標記；之後改答案再按完成，那張卡會跟著更新。考古卡刪掉後不會自動重建（從回收桶還原即可）。資格考筆記不需要 <code>↑ Card</code>，所以那顆按鈕不顯示。左側目錄點「資格考」就只看考古題。</p>
-  <h4>Notes</h4>
-  <p>想查的東西、課程資料、待整理的想法。版面和 Resolved 一樣是<strong>左目錄、右清單</strong>：左邊依分類顯示筆數、選中才展開月份；右邊不分類，依最後修改時間新到舊排成單欄。<strong>收合時和 Resolved 長得一樣</strong>：圓點、標題、標籤、最後修改日期一行帶過，點一下才展開成完整卡片（含內容、✎ 編輯、✕ 刪除），再點一次收回去。</p>
-  <p>分類和標籤在編輯時<strong>並排在同一列</strong>。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
+<h4>搜尋與標籤</h4>
+<ul>
+  <li>最上方的搜尋框<strong>同時過濾 Questions 和 Notes</strong>（問題、答案、標題、內容、附件名稱、標籤、出處）。<strong>空白分隔＝而且</strong>。搜尋時所有分組自動展開，✕ 清掉搜尋與標籤篩選。</li>
+  <li>標籤在編輯時填，逗號或空白分隔。搜尋框下方的標籤列點一下篩選、再點取消，可疊加；標籤和 Reading 共用同一個標籤庫。</li>
+</ul>
+<h4>Questions</h4>
+<ul>
+  <li><strong>未解決的不分類</strong>，依建立時間新到舊一列一張；點問題本身可收起答案（標題後出現 ⌄）。</li>
+  <li><strong>Resolved</strong> 是左目錄、右清單：左邊依分類列筆數，選中才展開月份；右邊一行一題、不顯示答案，點了才展開。預設先顯示最近 3 筆，「更多」看全部。</li>
+</ul>
+<table><thead><tr><th>出口</th><th>結果</th></tr></thead><tbody>
+  <tr><td>Resolve／Reopen</td><td>標記解決（記下時間）／取消</td></tr>
+  <tr><td>↑ Card</td><td>變複習卡（Question→正面、Answer→背面）</td></tr>
+  <tr><td>↑ Note</td><td>轉筆記（Question→標題、Answer→內容、分類與附件帶過去），並標成已解決</td></tr>
+  <tr><td>↑ 方向</td><td>進 Meeting 的 Research directions</td></tr>
+</tbody></table>
+<h4>Notes</h4>
+<ul>
+  <li>左目錄、右清單；右邊依最後修改時間新到舊，收合時一行帶過：圓點、標題、標籤、日期。</li>
+  <li><strong>內容還是空的筆記，前面的 ● 是酒紅色</strong>（資格考就是還沒寫答案），寫了內容變回灰色。</li>
+  <li>點一下展開，✎ 編輯；出口有 <code>↑ Card</code>（標題→正面、內容→背面）和 <code>↑ 方向</code>。</li>
+</ul>
+<h4>資格考（考古題）</h4>
+<ul>
+  <li>老師說「這個之前考過」就新增一則、分類選 <strong>資格考</strong>：多出<strong>出處</strong>（課程／老師／日期）和 <strong>Textbooks 主題</strong>兩欄，可留空；標題和內容改叫<strong>題目</strong>和<strong>答案</strong>。</li>
+  <li>答案寫好按 Save（或編輯後按「完成」／✓），<strong>自動在 Review 產生一張 🎓 考古卡</strong>；之後改答案再按完成，卡片跟著更新。</li>
+  <li>考古卡刪掉後不會自動重建（從回收桶還原即可）；資格考筆記不顯示 <code>↑ Card</code>。左目錄點「資格考」只看考古題。</li>
+</ul>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
-  <p>間隔重複：答「會」等級 +1、間隔拉長，答「不會」退兩級。Lv0–6 對應 1、3、7、14、30、60、120 天。</p>
-  <p>點卡片翻面看答案。<strong>Exam mode</strong> 整批跑選定主題的所有卡片，<strong>不會改動任何卡的到期日</strong>。</p>
-  <p>卡片可從 Notes 的 Question 用 <code>↑ Card</code> 產生，也可以直接新增。✎ 和 ✕ 在卡片右下角。</p>
-  <p><strong>🎓 考古卡</strong>由 Notes 的「資格考」筆記自動產生，<strong>不進每日排程</strong>（不算在 DUE TODAY、不能按會／不會）。要練的時候打開 Exam mode 勾 <strong>🎓 只跑考古題</strong>：只勾它＝跑全部考古卡；同時選主題＝只跑那些主題的考古卡。沒勾時，選主題只跑一般卡片。主題旁的數字是「一般卡片數 · 考古 N」。</p>
+<h4>每日複習開關</h4>
+<ul>
+  <li>Review 最上方的開關：<strong>開</strong>（綠）＝照排程複習，分頁顯示到期數的紅點；<strong>關</strong>（灰）＝暫停，不顯示紅點、收起 DUE TODAY 與 Start review。</li>
+  <li><strong>暫停期間不算天數</strong>：重新打開時，每張卡的到期日都順延暫停的天數，不會一打開就堆一大疊。</li>
+  <li>開關狀態跟著同步，各裝置一致。暫停時 Exam mode 照樣可以用。</li>
+</ul>
+<h4>間隔重複</h4>
+<table><thead><tr><th>等級</th><th>Lv0</th><th>Lv1</th><th>Lv2</th><th>Lv3</th><th>Lv4</th><th>Lv5</th><th>Lv6</th></tr></thead><tbody>
+  <tr><td>間隔（天）</td><td>1</td><td>3</td><td>7</td><td>14</td><td>30</td><td>60</td><td>120</td></tr>
+</tbody></table>
+<ul>
+  <li>答「會」等級 +1、間隔拉長；答「不會」退兩級。點卡片翻面看答案。</li>
+  <li>卡片可從 Notes 的 <code>↑ Card</code> 產生，也可以直接新增；✎ 和 ✕ 在卡片右下角。</li>
+</ul>
+<h4>Exam mode 與考古卡</h4>
+<ul>
+  <li><strong>Exam mode</strong> 整批跑選定主題的卡片，<strong>不會改動任何卡的到期日</strong>。</li>
+  <li><strong>🎓 考古卡</strong>由 Notes 的「資格考」筆記自動產生，<strong>不進每日排程</strong>（不算 DUE TODAY、不能按會／不會）。</li>
+</ul>
+<table><thead><tr><th>Exam mode 的選法</th><th>跑哪些卡</th></tr></thead><tbody>
+  <tr><td>只勾 🎓 只跑考古題</td><td>全部考古卡</td></tr>
+  <tr><td>勾 🎓 ＋ 選主題</td><td>那些主題的考古卡</td></tr>
+  <tr><td>不勾 🎓、只選主題</td><td>那些主題的一般卡片</td></tr>
+</tbody></table>
 </div></details>
 
 <details class="card fold"><summary>💬 Meeting</summary><div class="help">
-  <p>順序：<strong>Meetings → Research directions → To-do</strong>。</p>
-  <h4>📋 Meetings</h4>
-  <p>點卡片<strong>展開是閱讀模式</strong>：附件標籤、排版後的重點、可勾選的 action items。按右上 ✎ 切到編輯模式。收合時只顯示日期和標題。</p>
-  <p><strong>重點</strong>支援 Markdown，輸入框下方即時預覽排版後的樣子。長的討論內容直接寫進重點就好，Markdown 的標題和清單足以撐起結構。</p>
-  <p><strong>✅Action items</strong> 一次打一項按 Enter，成為可勾選的清單。</p>
-  <h4>🎯 Research directions</h4>
-  <p>老師給的方向獨立管理，不綁定單次 meeting。狀態篩選：進行中（預設）／All／完成。</p>
-  <p>每個方向有 <strong>👉 下一步</strong>（收合也看得到）、<strong>進度紀錄</strong>（按 Enter 記一筆，自動蓋日期，收合時顯示最新一筆）、<strong>🔗附件</strong>、以及<strong>距離老師給題的天數</strong>。</p>
-  <h4>✅ To-do</h4>
-  <p>把每一筆 meeting 裡<strong>還沒打勾的 action items 全部撈出來</strong>集中成一張清單，附來源日期。不用一張張翻卡片找自己還欠什麼，打勾就完成、從上方清單消失，全做完顯示 🎉。</p>
-  <p><strong>已完成的收在下方「已完成」折疊區</strong>，點開可以看、也可以把勾取消讓它回到待辦。Action items 的文字在 meeting 卡片的編輯模式直接改，改完 TO-DO 清單同步更新。</p>
+<ul><li>由上到下：<strong>📋 Meetings → 🎯 Research directions → ✅ To-do</strong>。</li></ul>
+<h4>📋 Meetings</h4>
+<ul>
+  <li>點卡片展開是閱讀模式（附件、排版後的重點、可勾的 action items），✎ 切到編輯；收合時只顯示日期和標題。</li>
+  <li><strong>重點</strong>支援 Markdown，輸入框下方即時預覽。</li>
+  <li><strong>✅Action items</strong> 一次打一項按 Enter。</li>
+</ul>
+<h4>🎯 Research directions</h4>
+<ul>
+  <li>老師給的方向獨立管理，不綁單次 meeting；狀態篩選：進行中（預設）／All／完成。</li>
+  <li>每個方向有 <strong>👉 下一步</strong>（收合也看得到）、<strong>進度紀錄</strong>（Enter 記一筆、自動蓋日期）、🔗附件、距離老師給題的天數。</li>
+</ul>
+<h4>✅ To-do</h4>
+<ul>
+  <li>自動撈出所有 meeting 裡<strong>還沒打勾的 action items</strong>，附來源日期；打勾就完成，全做完顯示 🎉。</li>
+  <li>已完成的收在下方「已完成」折疊區，可以取消勾回到待辦；文字在 meeting 卡片的編輯模式改。</li>
+</ul>
 </div></details>
 
 <details class="card fold"><summary>🗓️ Calendar</summary><div class="help">
-  <p>由上到下三區：<strong>📌 PROGRESS → 📅 KEY DATES → 🗓️ TIMETABLE</strong>。</p>
-  <h4>📌 PROGRESS</h4>
-  <p>寫「論文下一步該做什麼」。和 Meeting 分頁的 ✅ TO-DO 不一樣——那邊是從每場 meeting 的 action items 自動撈出來的。</p>
-  <p>樣式刻意和 KEY DATES 不同：一張卡裡一行一項（圓點、事項、日期、倒數），<strong>全部列出、不分類、不折疊</strong>。依日期排，<strong>逾期的排最上面並整列變紅</strong>。</p>
-  <p><strong>PROGRESS 和 KEY DATES 是兩份獨立的資料</strong>，各有各的 ＋ 和表單，互不影響。這裡的項目<strong>不會因為過期兩個月被自動刪除</strong>，除非你自己長按 ✕ 刪掉（會進回收桶）。Google 日曆只會流進 KEY DATES，不會流進這裡。</p>
-  <h4>📅 KEY DATES</h4>
-  <p>依 Type 分組（Exam、School、Other，以及你自己加的），<strong>每組預設顯示最近 2 筆</strong>。分類標題<strong>最右端的雙箭號</strong>展開該類剩下的事項，包含兩個月後的遠期項目。</p>
-  <p>左側色條依倒數變色：<strong>3 天內紅、7 天內橘、21 天內藍、更遠綠</strong>。最下方置中的「已過期」展開後<strong>不分類、直接按時間排</strong>，<strong>過期超過兩個月會自動永久刪除</strong>（不進回收桶）。</p>
-  <h4>自動抓取與自動分類</h4>
-  <p>Calendar 分頁最下面置中的「<strong>Google 日曆 ⌄⌄</strong>」展開嵌入的月曆，預設收著，不展開就不會載入。</p>
-  <p>設定在 <strong>Settings → Google 日曆</strong>：填日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並自動去掉星號。以 Google 事件 ID 比對，<strong>不會重複匯入</strong>；改期改名自動更新，日曆上刪掉這裡也跟著移除。</p>
-  <p><strong>類型碼（最準）</strong>：寫 <code>*E 資格考</code>，星號後第一個字母即類型——<code>E</code> Exam、<code>S</code> School，其他字母進 Other，抓進來後字母自動去掉。<strong>寫了類型碼一律照著套</strong>，會覆蓋舊分類。</p>
-  <p><strong>關鍵字（備援）</strong>：含「考／口試／資格」→ Exam；含「註冊／選課／開學／畢業」→ School；其餘 Other。關鍵字猜的只在類型還是 Other 時才填，不會動你手動分好的。</p>
-  <h4>🗓️ TIMETABLE</h4>
-  <p>管「星期幾幾點在哪間教室」。課程可填學分與領域，衝堂會提示。</p>
+<ul><li>由上到下：<strong>📌 PROGRESS → 📅 KEY DATES → 🗓️ TIMETABLE</strong>。</li></ul>
+<h4>📌 PROGRESS</h4>
+<ul>
+  <li>寫「論文下一步該做什麼」；和 Meeting 的 To-do（從 action items 自動撈）不同。</li>
+  <li>一張卡裡一行一項（圓點、事項、日期、倒數），全部列出、不分類；依日期排，<strong>逾期的排最上面並整列變紅</strong>。</li>
+  <li>和 KEY DATES 是兩份獨立資料；過期不會自動刪除，Google 日曆也不會流進來。</li>
+</ul>
+<h4>📅 KEY DATES</h4>
+<ul>
+  <li>依類型分組（Exam、School、Other、自訂），每組預設顯示最近 2 筆，雙箭號展開其餘。</li>
+  <li>最下方「已過期」不分類、依時間排；<strong>過期超過兩個月自動永久刪除</strong>。</li>
+</ul>
+<table><thead><tr><th>左側色條</th><th>倒數</th></tr></thead><tbody>
+  <tr><td>紅</td><td>3 天內</td></tr>
+  <tr><td>橘</td><td>7 天內</td></tr>
+  <tr><td>藍</td><td>21 天內</td></tr>
+  <tr><td>綠</td><td>更遠</td></tr>
+</tbody></table>
+<h4>Google 日曆自動抓取</h4>
+<ul>
+  <li>設定在 <strong>Settings → Google 日曆</strong>：日曆 ID 與 API 金鑰，只抓標題以 <code>*</code> 開頭的事件並去掉星號；以 Google 事件 ID 比對，不會重複，改期改名、刪除都會跟著更新。</li>
+  <li><strong>類型碼（最準）</strong>：<code>*E 資格考</code>，星號後第一個字母：<code>E</code> Exam、<code>S</code> School、其他字母 Other；寫了一律照套。</li>
+  <li><strong>關鍵字（備援）</strong>：含「考／口試／資格」→ Exam；含「註冊／選課／開學／畢業」→ School；只在類型還是 Other 時才填。</li>
+  <li>Calendar 最下面「Google 日曆 ⌄⌄」展開嵌入的月曆，不展開不會載入。</li>
+</ul>
+<h4>🗓️ TIMETABLE</h4>
+<ul><li>星期幾、幾點、哪間教室；可填學分與領域，衝堂會提示。</li></ul>
 </div></details>
 
 <details class="card fold"><summary>🗂️ Zotero</summary><div class="help">
-  <p><code>00_Inbox</code>　<code>01_DeepRead_Queue</code>　<code>02_InProgress</code></p>
-  <p>處理完就從資料夾移除，它會留在「我的文庫」。<strong>資料夾只是檢視窗口。</strong>主題分類一律用 tag ＋ Saved Search。</p>
-  <h4>🖍️ 五色標註</h4>
-  <table><thead><tr><th>顏色</th><th>意義</th></tr></thead><tbody>
-    <tr><td>黃</td><td>研究問題與設計</td></tr>
-    <tr><td>綠</td><td>結果數字</td></tr>
-    <tr><td><strong>紅</strong></td><td><strong>我懷疑的地方</strong></td></tr>
-    <tr><td><strong>藍</strong></td><td><strong>我可以拿來用的方法或句型</strong></td></tr>
-    <tr><td>紫</td><td>要追的引用</td></tr>
-  </tbody></table>
-  <p>紅藍兩色是回桌機後寫 Note 的原料。</p>
-  <p><strong>引用完全不看資料夾</strong>：Word 外掛按 Add Citation，搜的是整個文庫。</p>
-  <p>免費帳號只有 300 MB。不要用「連結檔案」省空間，那種檔案在 iPad 上看不到。</p>
+<ul>
+  <li>資料夾：<code>00_Inbox</code>　<code>01_DeepRead_Queue</code>　<code>02_InProgress</code>。處理完就移出資料夾，它還在「我的文庫」；<strong>資料夾只是檢視窗口</strong>，主題分類一律用 tag ＋ Saved Search。</li>
+  <li><strong>引用完全不看資料夾</strong>：Word 外掛按 Add Citation，搜的是整個文庫。</li>
+  <li>免費帳號只有 300 MB；不要用「連結檔案」省空間，iPad 上會看不到。</li>
+</ul>
+<h4>🖍️ 五色標註</h4>
+<table><thead><tr><th>顏色</th><th>意義</th></tr></thead><tbody>
+  <tr><td>黃</td><td>研究問題與設計</td></tr>
+  <tr><td>綠</td><td>結果數字</td></tr>
+  <tr><td><strong>紅</strong></td><td><strong>我懷疑的地方</strong>（寫 Note 的原料）</td></tr>
+  <tr><td><strong>藍</strong></td><td><strong>我可以拿來用的方法或句型</strong>（寫 Note 的原料）</td></tr>
+  <tr><td>紫</td><td>要追的引用</td></tr>
+</tbody></table>
 </div></details>
 
 <details class="card fold"><summary>🚀 GitHub 與多裝置</summary><div class="help">
-  <h4>📦 兩個 repo</h4>
-  <p><code>epi-app</code>　<span class="pill">公開</span><br>
-    ├ <code>index.html</code>　網站本體，開 Pages 產生網址（Claude 改版時直接更新）<br>
-    └ <code>tests/</code>　給 Claude 用的測試</p>
-  <p><code>epi-data</code>　<span class="pill clay">私密</span><br>
-    ├ <code>data/notes.json</code>　卡片、筆記、進度（自動同步）<br>
-    ├ <code>papers/</code>　精讀 HTML<br>
-    ├ <code>notes/</code>　小節筆記 HTML<br>
-    ├ <code>figures/</code>　GoodNotes 匯出的 PDF<br>
-    └ <code>library/代碼/</code>　Library 的 HTML、<code>.data.json</code>（頁面資料）、<code>img/</code>（圖片）</p>
-  <p><strong>公開的只是空殼，你的內容全在私密 repo。</strong>沒有 token 的人打開網址只會看到空白系統。全部免費。</p>
-  <p>桌機<strong>不需要安裝任何軟體</strong>，也不需要本機檔案——三台裝置都開同一個網址。要放檔案時用 GitHub 網頁的 <code>Add file</code> → <code>Create new file</code>，檔名打 <code>papers/2026-chen.html</code>（斜線會自動建資料夾），把內容貼進去即可。PDF 則用 <code>Upload files</code> 拖曳。</p>
-  <p>檔名用「書-章-節-關鍵字」，因為你會用檔名搜尋而不是點資料夾。GoodNotes 匯出用 <strong>PDF 而非 PNG</strong>。<strong>教科書本身的 PDF 不要放進 repo。</strong></p>
-  <h4>☁️ 自動同步（Settings 上方）</h4>
-  <p>填好 owner、私密 repo 名稱、branch、路徑、token，勾「開啟自動同步」，之後就<strong>不用再按匯出匯入</strong>：打開網頁自動下載合併，編輯完 8 秒自動上傳。</p>
-  <p>標題旁邊的圓點是狀態：<strong>灰</strong>沒設定、<strong>黃</strong>等待上傳、<strong>綠</strong>已同步、<strong>紅</strong>出錯。點它會跳到設定。</p>
-  <p>如果另一台先改過，上傳會被 GitHub 擋下來並顯示紅點，<strong>按「下載合併」再上傳就好</strong>——不會靜默覆蓋。</p>
-  <h4>🗑️ 刪除也會同步</h4>
-  <p>刪掉的東西會留下一筆紀錄跟著同步，所以<strong>在一台刪掉，另一台下載後也會消失</strong>。這筆紀錄跟著回收桶存 30 天，之後才真正清掉。</p>
-  <h4>⏱️ 多久同步一次</h4>
-  <p><strong>上傳</strong>：停止編輯 8 秒後自動送；切到別的分頁或關掉視窗時立刻送。<br>
-  <strong>下載</strong>：打開網頁時、切回這個分頁時、以及開著的時候每分鐘檢查一次（正在打字時會跳過，不會打斷你）。想立刻抓就按 <code>⬇ 下載合併</code>。</p>
-  <h4>🚦 燈號的意思</h4>
-  <table><thead><tr><th>顏色</th><th>意思</th></tr></thead><tbody>
-    <tr><td>灰</td><td>沒設定，或剛開啟還沒同步過</td></tr>
-    <tr><td>黃</td><td><strong>有變更還沒上雲端</strong>（自動同步會在 8 秒後送；沒開自動就要自己按 ⬆）</td></tr>
-    <tr><td>綠</td><td>已同步，本機和雲端一致</td></tr>
-    <tr><td>紅</td><td>出錯，點圓點看說明</td></tr>
-  </tbody></table>
-  <p><strong>換新裝置時的順序很重要</strong>：先填設定 → 按 <code>⬇ 下載合併</code> → 確認資料出現 → 才勾自動同步。系統也會擋：沒下載過就不讓空白的裝置上傳，避免蓋掉雲端。</p>
-  <h4>📄 檔案怎麼開</h4>
-  <p>網頁在公開的 <code>epi-app</code>，但 <code>papers/</code>、<code>notes/</code>、<code>figures/</code> 在私密的 <code>epi-data</code>。所以 🔗 不是用瀏覽器直接連，而是<strong>網頁拿 token 去私密 repo 把檔案抓下來顯示</strong>。沒有 token 的人點不開，也看不到。</p>
-  <p>HTML 在<strong>完全沙箱化的閱讀視窗</strong>裡渲染，不執行任何腳本，也碰不到你的 token；PDF 則開新分頁。</p>
-
-  <h4>🔑 token 安全</h4>
-  <p>token 只存在<strong>這台裝置的瀏覽器</strong>，不會寫進 HTML、不會被 Export、不會上傳。產生時請選 <strong>Fine-grained</strong>、只授權那一個私密 repo、權限只給 <strong>Contents: Read and write</strong>、並設到期日。</p>
-  <p>手動的 <code>📥 合併匯入</code> 仍然保留，逐筆比對 id 和修改時間；「覆蓋匯入」只在要完整還原某個時間點時用。</p>
+<h4>📦 兩個 repo</h4>
+<table><thead><tr><th>repo</th><th>裡面有什麼</th></tr></thead><tbody>
+  <tr><td><code>epi-app</code> <span class="pill">公開</span></td><td><code>index.html</code> 網站本體（GitHub Pages 網址；Claude 改版時直接更新，Settings 頁尾有版本號）<br><code>tests/</code> 給 Claude 用的測試</td></tr>
+  <tr><td><code>epi-data</code> <span class="pill clay">私密</span></td><td><code>data/notes.json</code> 卡片、筆記、進度<br><code>papers/</code> 精讀 HTML<br><code>notes/</code> 小節筆記 HTML<br><code>figures/</code> GoodNotes 匯出的 PDF<br><code>library/代碼/</code> Library 的 HTML、<code>.data.json</code>、<code>img/</code></td></tr>
+</tbody></table>
+<ul>
+  <li><strong>公開的只是空殼，內容全在私密 repo</strong>；沒有 token 的人打開網址只看到空白系統。全部免費。</li>
+  <li>不用安裝任何軟體，各裝置都開同一個網址。網站更新後資料還在（同一個網址、同一個瀏覽器儲存）。</li>
+  <li>手動放檔案：GitHub 網頁 <code>Add file</code> → <code>Upload files</code>，或 <code>Create new file</code> 打 <code>figures/xxx.pdf</code> 這種路徑（斜線自動建資料夾）。教科書本身的 PDF 不要放進 repo。</li>
+</ul>
+<h4>☁️ 自動同步（Settings → 同步）</h4>
+<ul>
+  <li>填 owner、私密 repo、branch、路徑、token，勾「開啟自動同步」，之後不用再匯出匯入。</li>
+  <li><strong>上傳</strong>：停止編輯 8 秒後自動送；切到別的分頁或關視窗時立刻送。</li>
+  <li><strong>下載</strong>：打開網頁、切回分頁、開著時每分鐘檢查一次（打字時會跳過）；想立刻抓就按 <code>⬇ 下載合併</code>。</li>
+  <li>另一台先改過時，上傳會被擋下並亮紅點，按「下載合併」再上傳就好，不會靜默覆蓋。</li>
+  <li><strong>換新裝置的順序</strong>：先填設定 → <code>⬇ 下載合併</code> → 確認資料出現 → 才勾自動同步。沒下載過的空白裝置不讓上傳，避免蓋掉雲端。</li>
+</ul>
+<h4>🚦 標題旁的圓點</h4>
+<table><thead><tr><th>顏色</th><th>意思</th></tr></thead><tbody>
+  <tr><td>灰</td><td>沒設定，或剛開啟還沒同步過</td></tr>
+  <tr><td>黃</td><td>有變更還沒上雲端（自動同步 8 秒後送；沒開就自己按 ⬆）</td></tr>
+  <tr><td>綠</td><td>已同步</td></tr>
+  <tr><td>紅</td><td>出錯，點圓點看說明</td></tr>
+</tbody></table>
+<h4>📄 檔案怎麼開</h4>
+<ul>
+  <li>檔案在私密的 <code>epi-data</code>，所以 🔗 和 📄 不是直接連結，而是<strong>網頁拿 token 把檔案抓下來顯示</strong>；沒有 token 的人點不開。</li>
+  <li>Reading 的精讀 HTML 在閱讀視窗裡顯示；Library 的 HTML 在全螢幕檢視裡顯示（可用頁內分頁和儲存）。兩者都會執行頁面裡的程式，所以<strong>只放自己產生的檔案</strong>。PDF 開新分頁。</li>
+</ul>
+<h4>🔑 token 安全</h4>
+<ul>
+  <li>token 只存在這台裝置的瀏覽器，不會寫進 HTML、不會被 Export、不會上傳。</li>
+  <li>產生時選 <strong>Fine-grained</strong>、只授權 epi-data、權限只給 <strong>Contents: Read and write</strong>、設到期日。</li>
+  <li>手動的 <code>⇊ Merge</code> 逐筆比對 id 和修改時間；<code>⟳ Replace</code> 只在要完整還原某個時間點時用。</li>
+</ul>
 </div></details>
 
 <details class="card fold"><summary>🔧 常見狀況</summary><div class="help">
-  <h4>資料不見了</h4><p>先看 Settings 的<strong>分類與清理 → 🗑️ 回收桶</strong>和<strong>備份 → 每日自動存檔</strong>。換版本是不同儲存空間，要舊版 Export、新版 Import。</p>
-  <h4>Google 日曆空白</h4><p>在 Claude 預覽視窗會被擋，存成檔案用瀏覽器開就正常。</p>
-  <h4>iPad 看不到 PDF</h4><p>檢查 Zotero 附件是「儲存的副本」而非「連結的檔案」。</p>
+<table><thead><tr><th>狀況</th><th>怎麼辦</th></tr></thead><tbody>
+  <tr><td>資料不見了</td><td>先看 Settings → 分類與清理 → 🗑️ 回收桶，再看 備份 → 每日自動存檔；超過 30 天到 GitHub 的 notes.json History 翻</td></tr>
+  <tr><td>網站好像還是舊版</td><td>重新整理（手機下拉重新整理），看 Settings 頁尾的版本號；GitHub Pages 更新後有幾分鐘快取</td></tr>
+  <tr><td>圓點變紅</td><td>點圓點看原因；多半是另一台先改過，按 ⬇ 下載合併 再上傳</td></tr>
+  <tr><td>Library 的 📄 打不開</td><td>確認 Settings 的 GitHub 同步有設好；在別台改過頁面就先按 ☁️ 同步</td></tr>
+  <tr><td>Google 日曆空白</td><td>在預覽視窗裡會被擋，用瀏覽器直接開網址就正常</td></tr>
+  <tr><td>iPad 看不到 PDF</td><td>Zotero 附件要是「儲存的副本」，不是「連結的檔案」</td></tr>
+</tbody></table>
 </div></details>
 `;
 }
