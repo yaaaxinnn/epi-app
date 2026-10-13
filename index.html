@@ -436,6 +436,36 @@ tr.sup .gsc .go{color:var(--muted)}
 .qpast .qps{font-size:12px;color:var(--muted)}
 .chk .ct{font-family:var(--mono);font-size:11px;color:var(--faint)}
 .f .qm{font-size:12px;padding:0 0 0 4px;vertical-align:1px}
+/* ===== v48 Courses ===== */
+#p-units{--ac:#4B5BA6;--ac-soft:#E9EBF6;--ac-mid:#CDD2EC}
+.tab[data-p="units"][aria-selected="true"]{color:#4B5BA6}
+.ucinfo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:0 2px 10px}
+.ucinfo .nm{font-weight:600;color:var(--ac)}
+.ucinfo .mono{font-size:11.5px;color:var(--faint)}
+.ucinfo .spacer{flex:1}
+.pill.ucadd{background:none;border-style:dashed;cursor:pointer;color:var(--ac);border-color:var(--ac-mid)}
+.item.unit{scroll-margin-top:96px}
+.uhead{display:flex;align-items:baseline;gap:8px;cursor:pointer;flex-wrap:wrap}
+.uhead .udt{flex:0 0 auto;display:flex;gap:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.uhead .udt b{color:var(--ac);font-weight:600}
+.uhead .uti{flex:1;min-width:0;font-weight:600;font-size:14.5px;line-height:1.4}
+.uhead .ufn{flex:0 0 auto;font-size:12px;color:var(--faint)}
+.usub{font-size:12.5px;color:var(--muted);margin-top:3px}
+.usec{margin-top:13px}
+.usec>.srclab{margin-bottom:6px}
+.urd{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px;font-size:13.5px}
+.ufile{display:flex;align-items:center;gap:6px;margin-bottom:3px;min-width:0}
+.ufo{background:none;border:0;padding:3px 0;color:var(--ac);font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;flex:0 1 auto;min-width:0}
+.ufile .up{flex:1;min-width:0;font-size:11px;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upbox{margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2)}
+.udrop{border:2px dashed var(--line-strong);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;background:var(--surface);font-size:13px;color:var(--muted)}
+.udrop:hover,.udrop.over{border-color:var(--ac);background:var(--ac-soft)}
+.urow{display:grid;grid-template-columns:64px 76px minmax(0,1fr) 26px;gap:6px;margin-bottom:10px;align-items:center}
+.urow .ubk{grid-column:1/-1}
+.theme{scroll-margin-top:96px}
+.pill.upill{cursor:pointer;background:#E9EBF6;border-color:#CDD2EC;color:#4B5BA6}
+#uv{padding:8px}
+#uv .ov-top{max-width:none}
 </style>
 </head>
 <body>
@@ -448,6 +478,7 @@ tr.sup .gsc .go{color:var(--muted)}
       <button class="tab" role="tab" data-p="guide" aria-selected="false">Guide</button>
       <button class="tab" role="tab" data-p="ideas" aria-selected="false">Meeting</button>
       <button class="tab" role="tab" data-p="courses" aria-selected="false">Notes</button>
+      <button class="tab" role="tab" data-p="units" aria-selected="false">Courses</button>
       <button class="tab" role="tab" data-p="calendar" aria-selected="false">Calendar</button>
       <button class="tab" role="tab" data-p="textbooks" aria-selected="false">Textbooks</button>
       <button class="tab" role="tab" data-p="review" aria-selected="false">Review</button>
@@ -604,6 +635,7 @@ tr.sup .gsc .go{color:var(--muted)}
       <label class="f"><span>分類</span><select id="nt-kind"></select></label>
       <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
     </div>
+    <label class="f"><span>課程單元</span><select id="nt-unit"></select></label>
     <div id="ntExamBox" style="display:none">
       <div class="grid2">
         <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">出處（課程／老師／日期）<button class="qm" type="button" data-tip="tipExam" aria-expanded="false" title="說明">ⓘ</button></span>
@@ -627,6 +659,32 @@ tr.sup .gsc .go{color:var(--muted)}
     <div class="saverow"><button class="btn ghost" id="cancelNt">Cancel</button><button class="btn" id="addNt">Save</button></div>
   </div>
   <div id="ntList"></div>
+</section>
+
+<!-- ========== Courses（課程單元）========== -->
+<section class="panel" id="p-units">
+  <div class="blockhead"><span class="bt">🧑‍🏫 UNITS</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipUnits" aria-expanded="false" title="說明">ⓘ</button>
+    <button class="iconb" id="addUnitBtn" title="新增單元">＋</button></div>
+  <div class="tip" id="tipUnits">老師課程的預習包，照<strong>週次和指定閱讀</strong>整理。先按「＋ 課程」建立課程（名稱、老師、代碼），再按 ＋ 新增單元。展開單元可以 <strong>＋ HTML</strong> 上傳預習頁（存到 epi-data 的 <code>courses/代碼/</code>），點 📄 全螢幕開啟、↗ 開新分頁。指定閱讀會自動對到 Textbooks 主題；Notes 的筆記選「課程單元」就會列在這裡。<strong>只綁你自己產生的 HTML</strong>：這裡開的頁面不加 sandbox，讀得到 app 的本機資料。</div>
+  <div class="tagbar" id="ucBar"></div>
+  <div class="card" id="ucForm" style="display:none">
+    <label class="f"><span>課程名稱</span><input type="text" id="uc-name" list="ucNames" placeholder="e.g. 高等流行病學方法"></label>
+    <div class="grid2">
+      <label class="f"><span>授課老師</span><input type="text" id="uc-teacher" placeholder="e.g. 林老師"></label>
+      <label class="f"><span>代碼（資料夾名）</span><input type="text" id="uc-code" placeholder="英數與 -，e.g. causal"></label>
+    </div>
+    <div class="saverow"><button class="btn ghost" id="cancelUC">Cancel</button><button class="btn" id="saveUC">Save</button></div>
+  </div>
+  <datalist id="ucNames"></datalist>
+  <datalist id="ubookList"><option value="Modern Epidemiology 4e (2021)"></option><option value="What If (Hernán & Robins)"></option></datalist>
+  <div id="ucInfo"></div>
+  <div class="card" id="unitForm" style="display:none">
+    <div id="unitFormBody"></div>
+    <div class="saverow"><button class="btn ghost" id="cancelUnit">Cancel</button><button class="btn" id="saveUnit">Save</button></div>
+  </div>
+  <div id="unitList"></div>
+  <input type="file" id="uf-file" accept=".html,.htm" multiple style="display:none">
 </section>
 
 <!-- ========== Review ========== -->
@@ -868,7 +926,7 @@ tr.sup .gsc .go{color:var(--muted)}
   <div class="kdgroup setg">分類與清理<button class="qm" data-tip="tipClean" aria-expanded="false" title="說明">ⓘ</button></div>
   <div class="tip" id="tipClean"><strong>分類清單</strong>：三組分類各自獨立（Reading／Questions 與 Notes／KEY DATES）。在下拉選單最下面選「＋ 新增…」就能加。名字可直接改，卡片存的是代號，改名不動資料。內建的只能改名不能刪；刪掉自訂分類時底下項目退回預設，不會被刪。<br>
   <strong>回收桶</strong>：刪掉的卡片保留 30 天。✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記墓碑跟著同步，其他裝置不會送回來。<br>
-  <strong>沒有卡片指向的 HTML</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
+  <strong>沒有卡片或單元指向的 HTML</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
   <div class="setbody" id="sg-clean">
     <details class="card fold"><summary>分類清單</summary>
       <div id="catMgr" style="margin-top:6px"></div>
@@ -876,7 +934,7 @@ tr.sup .gsc .go{color:var(--muted)}
     <details class="card fold"><summary>🗑️ 回收桶</summary>
       <div id="trashList" style="margin-top:6px"></div>
     </details>
-    <details class="card fold"><summary>沒有卡片指向的 HTML</summary>
+    <details class="card fold"><summary>沒有卡片或單元指向的 HTML</summary>
       <p class="hint" style="margin:6px 0 10px" id="repoSize">repo 用量：尚未查詢</p>
       <div class="row" style="margin-bottom:8px">
         <button class="btn ghost mini" id="orphScan">🔍 掃描</button>
@@ -915,6 +973,17 @@ tr.sup .gsc .go{color:var(--muted)}
   </div>
   <div style="flex:1;margin-top:10px;min-height:0">
     <iframe id="fvFrame" sandbox="allow-popups allow-scripts allow-same-origin"
+      style="display:block;width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
+  </div>
+</div>
+<div class="ov" id="uv" style="--ac:#4B5BA6">
+  <div class="ov-top">
+    <span class="mono" id="uvName" style="font-size:12.5px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+    <button class="btn ghost mini" id="uvNew" title="在新分頁開啟">↗ 開新分頁</button>
+    <button class="x" id="uvClose" style="font-size:20px" title="關閉">✕</button>
+  </div>
+  <div style="flex:1;margin-top:8px;min-height:0">
+    <iframe id="uvFrame" allow="clipboard-write" title="課程 HTML"
       style="display:block;width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
   </div>
 </div>
@@ -1153,7 +1222,7 @@ function migrateProg(){
   S.kdcats=S.kdcats.filter(x=>x.id!=='todo');
   S.kd.forEach(k=>{if(!S.kdcats.some(x=>x.id===k.type))k.type='other'});
 }
-function defaults(){return{v:1,prog:[],gsrc:[],gtopic:[],grow:[],papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
+function defaults(){return{v:1,prog:[],gsrc:[],gtopic:[],grow:[],papers:[],themes:{},cards:[],qs:[],mt:[],dirs:[],notes:[],imgs:{},kd:[],courses:[],classes:[],ucourses:[],units:[],gc:'',gcAt:0,gcId:'',gcKey:'',gcPrefix:'*',gcMonths:12,gcAuto:false,gcLast:0,trash:[],tomb:{},
   tombT:{},kdcats:DEFAULT_KDCATS.map(c=>Object.assign({},c)),tagLib:DEFAULT_TAGS.slice(),cats:DEFAULT_CATS.map(c=>Object.assign({},c)),qcats:DEFAULT_QCATS.map(c=>Object.assign({},c)),lastExport:null,lastBak:null,bakIdx:0}}
 function uid(){return Math.random().toString(36).slice(2,9)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -1307,6 +1376,8 @@ async function load(){
   gEnsureSeeds();
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
+  if(!Array.isArray(S.ucourses))S.ucourses=[];
+  if(!Array.isArray(S.units))S.units=[];
   (S.cards||[]).forEach(c=>{if(!Array.isArray(c.links)){c.links=c.link?[{id:uid(),label:'',url:c.link}]:[]}});
   (S.qs||[]).forEach(q=>{if(!Array.isArray(q.links))q.links=[]});
   Object.values(S.themes||{}).forEach(t=>{Object.values(t.sn||{}).forEach(n=>{
@@ -1388,6 +1459,7 @@ document.addEventListener('click',e=>{
 const BIN={paper:['papers','精讀卡片','title'],card:['cards','複習卡','q'],
   q:['qs','Question','q'],
   mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],note:['notes','Note','title'],kd:['kd','Key date','title'],prog:['prog','Progress','title'],cs:['courses','課表','name'],
+  ucourse:['ucourses','課程','name'],unit:['units','課程單元','topic'],
   gsrc:['gsrc','指引來源','title'],gtopic:['gtopic','指引主題','name'],grow:['grow','指引條目','title']};
 function bin(type,obj){
   if(!Array.isArray(S.trash))S.trash=[];
@@ -1437,6 +1509,13 @@ function renderTrash(){
 async function doHold(spec){
   const i=spec.indexOf('|'),t=spec.slice(0,i),id=spec.slice(i+1);
   if(t==='gsrc'||t==='gtopic'){gDelete(t,id);return}
+  if(t==='ucourse'){const n=(S.units||[]).filter(u=>u.cid===id).length;
+    if(n){toast('這門課還有 '+n+' 個單元，先刪掉或改到別的課程');return}
+    if(ucSel===id)ucSel=''}
+  if(t==='ufile'){const k=id.lastIndexOf('~'),u=(S.units||[]).find(x=>x.id===id.slice(0,k)),ix=+id.slice(k+1);
+    if(u&&u.files&&u.files[ix]){const f=u.files.splice(ix,1)[0];u.mtime=Date.now();save();renderUnits();
+      toast('已解除綁定（repo 裡的 '+f.path.split('/').pop()+' 還在）')}
+    return}
   if(t==='grow'){const o=(S.grow||[]).find(x=>x.id===id);if(o)o._label=gRowLabel(o)}
   if(BIN[t]){
     const arr=BIN[t][0],o=S[arr].find(x=>x.id===id);
@@ -1446,6 +1525,7 @@ async function doHold(spec){
   else if(t==='card'){save();renderCards();updateBadge();renderTrash();toast('已移到回收桶')}
   else if(t==='creset'){const c=S.cards.find(x=>x.id===id);if(c){c.level=0;c.due=Date.now();c.n=0;c.last=null;save();renderCards();updateBadge();toast('排程已重設')}}
   else if(t==='q'){save();renderQ();renderTrash();toast('已移到回收桶')}
+  else if(t==='unit'||t==='ucourse'){openU.delete(id);save();renderUnits();renderNt();renderTrash();toast('已移到回收桶')}
   else if(t==='mt'){save();renderMT();renderTrash();toast('已移到回收桶')}
   else if(t==='dir'){save();renderDIR();renderTrash();toast('已移到回收桶')}
   else if(t==='note'){save();renderNt();renderTrash();toast('已移到回收桶')}
@@ -2113,6 +2193,381 @@ document.getElementById('p-guide').addEventListener('change',e=>{
   if((f=e.target.closest('select[data-gsd]'))&&gSD)gSD[f.dataset.gsd]=f.value;
 });
 
+/* ================= COURSES（課程清單 S.ucourses、單元 S.units）================= */
+let ucSel='',ucLast='',editUC=null,ucAfter=null,editUnit=null,uDraft=null,upUnit=null,upFiles=[],upMsg='',uvUrl=null,uvKeep=false;
+const openU=new Set();
+const UBOOKS=[{k:'me',re:/modern\s*epi|rothman|^\s*me\s*\d*\s*(4e|e4)?\s*$/i},{k:'hr',re:/what\s*if|hern[aá]n|robins/i}];
+function ucs(){if(!Array.isArray(S.ucourses))S.ucourses=[];return S.ucourses}
+function ucGet(id){return ucs().find(x=>x.id===id)}
+function ucName(id){const c=ucGet(id);return c?c.name:'（未指定課程）'}
+function ucSorted(){return ucs().slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),'zh-Hant'))}
+function uTs(u){const d=u.date?Date.parse(u.date+'T00:00:00'):NaN;return isNaN(d)?(u.created||0):d}
+function unitsSorted(){return (S.units||[]).slice().sort((a,b)=>uTs(b)-uTs(a)||(b.created||0)-(a.created||0))}
+function uDate(d){if(!d)return'';const x=new Date(d+'T00:00:00');if(isNaN(x))return String(d);
+  return (x.getMonth()+1)+'/'+String(x.getDate()).padStart(2,'0')+'（'+'日一二三四五六'[x.getDay()]+'）'}
+function unitLabel(u){return [ucName(u.cid),u.week,u.topic].filter(Boolean).join(' · ')}
+function uLabel(id){const u=id&&(S.units||[]).find(x=>x.id===id);return u?unitLabel(u):''}
+function unitOpts(cur){
+  const L=unitsSorted(),opt=u=>`<option value="${esc(u.id)}"${cur===u.id?' selected':''}>${esc([u.week,u.date?uDate(u.date):'',u.topic].filter(Boolean).join(' · ')||'(未命名單元)')}</option>`;
+  let h='<option value="">— 無 —</option>';
+  ucSorted().forEach(c=>{const g=L.filter(u=>u.cid===c.id);if(g.length)h+=`<optgroup label="${esc(c.name)}">${g.map(opt).join('')}</optgroup>`});
+  const lost=L.filter(u=>!ucGet(u.cid));if(lost.length)h+=`<optgroup label="（未指定課程）">${lost.map(opt).join('')}</optgroup>`;
+  return h;
+}
+function fillNtUnit(){const s=document.getElementById('nt-unit');if(!s)return;const v=s.value;s.innerHTML=unitOpts(v);
+  s.value=(S.units||[]).some(u=>u.id===v)?v:''}
+/* 指定閱讀 → Textbooks 主題：ME 用章號、What If 用小節的章號 */
+function tbGuess(book,ch){
+  const n=parseInt(String(ch||'').replace(/^[^0-9]*/,''),10);if(!n)return'';
+  const b=UBOOKS.find(x=>x.re.test(String(book||'')));if(!b)return'';
+  const i=C.findIndex(c=>b.k==='me'?c.me.some(m=>+m[0]===n):c.hr.some(h=>parseInt(h[0],10)===n));
+  return i>=0?C[i].en:'';
+}
+function chLabel(ch){ch=String(ch||'').trim();return /^\d/.test(ch)?'Ch'+ch:ch}
+function unitPill(n){const u=n.unit&&(S.units||[]).find(x=>x.id===n.unit);if(!u)return'';
+  return `<div class="row" data-ntstop="1" style="margin-top:6px"><button type="button" class="pill upill" data-unitgo="${esc(u.id)}" title="到 Courses 看這個單元">🧑‍🏫 ${esc(ucName(u.cid))}${u.week?' '+esc(u.week):u.date?' '+esc(uDate(u.date)):''}</button></div>`}
+
+function renderUnits(){
+  const bar=document.getElementById('ucBar');if(!bar)return;
+  const all=S.units||[];
+  if(ucSel&&!ucGet(ucSel))ucSel='';
+  const cnt={};all.forEach(u=>{cnt[u.cid]=(cnt[u.cid]||0)+1});
+  bar.innerHTML=`<button type="button" class="pill tg" data-ucf="" aria-pressed="${!ucSel}">全部 ${all.length}</button>`
+    +ucSorted().map(c=>`<button type="button" class="pill tg" data-ucf="${esc(c.id)}" aria-pressed="${ucSel===c.id}">${esc(c.name)} ${cnt[c.id]||0}</button>`).join('')
+    +`<button type="button" class="pill ucadd" id="ucAddBtn" title="新增課程">＋ 課程</button>`;
+  const c=ucSel&&ucGet(ucSel);
+  document.getElementById('ucInfo').innerHTML=c?`<div class="ucinfo"><span class="nm">${esc(c.name)}</span>${c.teacher?`<span>${esc(c.teacher)}</span>`:''}`
+    +`<span class="mono">courses/${esc(c.code||'—')}/</span><span class="spacer"></span><span class="cxg">`
+    +`<button class="cx e" data-ucedit="${esc(c.id)}" title="編輯課程">✎</button><button class="cx" data-hold="ucourse|${esc(c.id)}" title="長按 1.5 秒刪除課程">✕</button></span></div>`:'';
+  const dl=document.getElementById('ucNames');
+  if(dl)dl.innerHTML=[...new Set((S.courses||[]).map(x=>x.name).filter(Boolean))].map(n=>`<option value="${esc(n)}"></option>`).join('');
+  const L=unitsSorted().filter(u=>!ucSel||u.cid===ucSel);
+  document.getElementById('unitList').innerHTML=L.length?L.map(unitItem).join('')
+    :`<div class="empty">${ucs().length?'還沒有單元，按右上 ＋ 新增。':'先按「＋ 課程」建立課程，再按右上 ＋ 新增單元。'}</div>`;
+  fillNtUnit();
+}
+function unitItem(u){
+  const op=openU.has(u.id),c=ucGet(u.cid),nf=(u.files||[]).length;
+  const head=`<div class="uhead" data-utog="${esc(u.id)}" title="${op?'收合':'展開'}">
+      <span class="udt">${u.date?`<span>${esc(uDate(u.date))}</span>`:''}${u.week?`<b>${esc(u.week)}</b>`:''}</span>
+      <span class="uti">${esc(u.topic||'(未命名單元)')}</span>
+      ${!ucSel?`<span class="pill">${esc(c?c.name:'（未指定課程）')}</span>`:''}
+      ${nf&&!op?`<span class="ufn" title="${nf} 個 HTML">📄${nf>1?nf:''}</span>`:''}</div>`;
+  if(!op)return `<div class="item unit" id="u-${esc(u.id)}">${head}</div>`;
+  const reads=(u.reads||[]).filter(r=>r.book||r.ch).map(r=>{const i=tbIdx(r.tb);
+    return `<div class="urd"><span class="pill ${r.req?'clay':''}">${r.req?'必讀':'選讀'}</span><span>${esc(r.book||'')}${r.ch?' · '+esc(chLabel(r.ch)):''}</span>`
+      +(i>=0?`<button type="button" class="pill pine" data-tbgo="${i}" title="到 Textbooks 看這個主題">${C[i].e} ${esc(C[i].en)}</button>`:'')+`</div>`}).join('');
+  const files=(u.files||[]).map((f,i)=>`<div class="ufile"><button class="ufo" data-ufopen="${esc(u.id)}|${i}" title="全螢幕開啟">📄 ${esc(f.name||f.path)}</button>`
+    +`<span class="mono up">${esc(f.path)}</span><span class="cxg"><button class="cx e" data-ufnew="${esc(u.id)}|${i}" title="開新分頁">↗</button>`
+    +`<button class="cx" data-hold="ufile|${esc(u.id)}~${i}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></span></div>`).join('');
+  const up=upUnit===u.id?`<div class="upbox">
+      <div class="udrop" data-udrop="${esc(u.id)}">📄 把 HTML 拖進來，或點一下選檔案（可多選）</div>
+      ${upFiles.map((f,i)=>`<div class="lrow" style="margin-top:6px"><input type="text" data-uppath="${i}" value="${esc(f.path)}" style="flex:1">
+        <span class="pill" style="font-size:10.5px">${Math.max(1,Math.round((f.size||0)/1024))} KB</span><button class="x" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
+      <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="upState">${esc(upMsg)}</span>
+        <button class="btn mini" data-upgo="${esc(u.id)}"${upFiles.length?'':' disabled'}>上傳</button></div>
+      <div class="lrow" style="margin-top:8px"><input type="text" data-ubindin="${esc(u.id)}" placeholder="或填 repo 裡已有的路徑，e.g. courses/${esc((c&&c.code)||'code')}/xxx.html" style="flex:1">
+        <button class="btn ghost mini" data-ubind="${esc(u.id)}">綁定</button></div></div>`:'';
+  const ns=(S.notes||[]).filter(n=>n.unit===u.id).sort((a,b)=>(b.mtime||b.created)-(a.mtime||a.created));
+  const notes=ns.map(n=>{const d=new Date(n.mtime||n.created);
+    return `<div class="rsvrow" data-ntgo="${esc(n.id)}" title="到 Notes 看這則筆記"><span class="ck" style="color:var(--faint);font-size:9px">●</span>`
+      +`<span class="rtx">${esc(n.title)}</span><span class="rdt">${(d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0')}</span></div>`}).join('');
+  return `<div class="item unit" id="u-${esc(u.id)}">${head}
+    ${c&&c.teacher?`<div class="usub">${esc(c.teacher)}</div>`:''}
+    ${reads?`<div class="usec"><div class="srclab">📖 指定閱讀</div>${reads}</div>`:''}
+    <div class="usec"><div class="row" style="align-items:center"><div class="srclab" style="flex:1;margin:0">📄 HTML</div>
+      <button class="iconb" data-upopen="${esc(u.id)}" title="上傳或綁定 HTML" style="font-size:14px;min-height:0;padding:0 6px">＋</button></div>
+      ${files||(up?'':'<p class="hint" style="margin:2px 0 0;font-size:12px">—</p>')}${up}</div>
+    <div class="usec"><div class="row" style="align-items:center"><div class="srclab" style="flex:1;margin:0">📒 筆記</div>
+      <button class="iconb" data-unote="${esc(u.id)}" title="新增一則綁定這個單元的筆記" style="font-size:14px;min-height:0;padding:0 6px">＋</button></div>
+      ${notes||'<p class="hint" style="margin:2px 0 0;font-size:12px">—</p>'}</div>
+    ${u.note?`<div class="usec"><div class="srclab">備註</div><div class="mdview" style="font-size:13.5px;line-height:1.65">${md(u.note)}</div></div>`:''}
+    <div class="row" style="margin-top:10px"><span style="flex:1"></span><span class="cxg">
+      <button class="cx e" data-uedit="${esc(u.id)}" title="編輯">✎</button>
+      <button class="cx" data-hold="unit|${esc(u.id)}" title="長按 1.5 秒刪除">✕</button></span></div></div>`;
+}
+
+/* ---- 課程表單 ---- */
+function ucOpen(id,after){
+  editUC=id||null;ucAfter=after||null;const c=id?ucGet(id):null;
+  document.getElementById('uc-name').value=c?c.name:'';
+  document.getElementById('uc-teacher').value=c?(c.teacher||''):'';
+  document.getElementById('uc-code').value=c?(c.code||''):'';
+  document.getElementById('uc-code').dataset.touched=c?'1':'';
+  show('ucForm',true);document.getElementById('uc-name').focus();
+}
+function ucSlug(s){return String(s||'').normalize('NFKC').toLowerCase().trim().replace(/\s+/g,'-').replace(/[^a-z0-9_-]/g,'').replace(/-+/g,'-').replace(/^-+|-+$/g,'')}
+document.getElementById('uc-name').addEventListener('input',e=>{
+  const cd=document.getElementById('uc-code');if(cd.dataset.touched)return;
+  cd.value=/^[\x20-\x7e]+$/.test(e.target.value)?ucSlug(e.target.value):''});
+document.getElementById('uc-code').addEventListener('input',e=>{e.target.dataset.touched='1'});
+document.getElementById('cancelUC').onclick=()=>{show('ucForm',false);editUC=null;ucAfter=null};
+document.getElementById('saveUC').onclick=()=>{
+  const name=document.getElementById('uc-name').value.trim(),teacher=document.getElementById('uc-teacher').value.trim();
+  const raw=document.getElementById('uc-code').value.trim(),code=ucSlug(raw);
+  if(!name){toast('請填課程名稱');return}
+  if(!code||code!==raw.toLowerCase()){toast('代碼只能用英文、數字與 -（例如 causal）');document.getElementById('uc-code').focus();return}
+  const dup=ucs().find(x=>x.id!==editUC&&x.code===code);
+  if(dup){toast('代碼已經給「'+dup.name+'」用了');return}
+  let id=editUC;
+  if(editUC){const c=ucGet(editUC);if(c)Object.assign(c,{name,teacher,code,mtime:Date.now()})}
+  else{id='uc'+uid();ucs().push({id,created:Date.now(),mtime:Date.now(),name,teacher,code});ucSel=id}
+  const after=ucAfter;editUC=null;ucAfter=null;show('ucForm',false);saved();renderUnits();
+  if(after==='form'&&uDraft){uDraft.cid=id;renderUnitForm()}
+  else if(after==='new')unitOpen(null);
+};
+
+/* ---- 單元表單 ---- */
+function unitOpen(id){
+  if(!ucs().length){toast('先建立課程');ucOpen(null,'new');return}
+  editUnit=id||null;
+  if(id){const u=(S.units||[]).find(x=>x.id===id);if(!u)return;
+    uDraft={cid:u.cid,week:u.week||'',date:u.date||'',topic:u.topic||'',note:u.note||'',
+      reads:(u.reads||[]).map(r=>({book:r.book||'',ch:r.ch||'',req:!!r.req,tb:r.tb||'',man:(r.tb||'')!==tbGuess(r.book,r.ch)}))}}
+  else uDraft={cid:(ucSel&&ucGet(ucSel)?ucSel:'')||(ucLast&&ucGet(ucLast)?ucLast:'')||ucSorted()[0].id,
+    week:'',date:'',topic:'',note:'',reads:[{book:'',ch:'',req:true,tb:'',man:false}]};
+  if(!uDraft.reads.length)uDraft.reads.push({book:'',ch:'',req:true,tb:'',man:false});
+  renderUnitForm();show('unitForm',true);
+  const f=document.getElementById('unitForm');if(f.scrollIntoView)f.scrollIntoView({block:'nearest'});
+  const t=document.querySelector('#unitForm [data-ud="topic"]');if(t)t.focus();
+}
+function renderUnitForm(){
+  const d=uDraft;if(!d)return;
+  document.getElementById('unitFormBody').innerHTML=`
+    <label class="f"><span>課程</span><select data-ud="cid">${ucSorted().map(c=>`<option value="${esc(c.id)}"${d.cid===c.id?' selected':''}>${esc(c.name)}${c.teacher?'（'+esc(c.teacher)+'）':''}</option>`).join('')}<option value="__new">＋ 新增課程…</option></select></label>
+    <div class="grid2">
+      <label class="f"><span>週次</span><input type="text" data-ud="week" value="${esc(d.week)}" placeholder="e.g. W7"></label>
+      <label class="f"><span>日期</span><input type="date" data-ud="date" value="${esc(d.date)}"></label></div>
+    <label class="f"><span>單元主題</span><input type="text" data-ud="topic" value="${esc(d.topic)}" placeholder="e.g. 因果推論與 DAG"></label>
+    <div class="f"><div class="row" style="align-items:center"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">指定閱讀</span>
+      <button class="iconb" type="button" data-uradd="1" title="再加一筆" style="font-size:14px;min-height:0;padding:0 6px">＋</button></div>
+      <div style="margin-top:6px">${d.reads.map((r,i)=>`<div class="urow">
+        <input class="ubk" type="text" list="ubookList" data-ur="${i}|book" value="${esc(r.book)}" placeholder="書名（可從清單選）">
+        <input type="text" data-ur="${i}|ch" value="${esc(r.ch)}" placeholder="章節">
+        <select data-ur="${i}|req"><option value="1"${r.req?' selected':''}>必讀</option><option value="0"${r.req?'':' selected'}>選讀</option></select>
+        <select data-ur="${i}|tb" title="對應的 Textbooks 主題">${tbOpts(r.tb)}</select>
+        <button class="x" type="button" data-urdel="${i}" title="刪掉這筆" style="font-size:12px">✕</button></div>`).join('')}</div></div>
+    <label class="f"><span>備註（Markdown）</span><textarea data-ud="note" style="min-height:70px">${esc(d.note)}</textarea></label>`;
+}
+const uForm=document.getElementById('unitForm');
+uForm.addEventListener('input',e=>{
+  if(!uDraft)return;let f;
+  if((f=e.target.closest('[data-ud]'))&&f.tagName!=='SELECT'){uDraft[f.dataset.ud]=f.value;return}
+  if((f=e.target.closest('[data-ur]'))&&f.tagName!=='SELECT'){const[i,k]=f.dataset.ur.split('|'),r=uDraft.reads[+i];if(!r)return;
+    r[k]=f.value;
+    if(!r.man){r.tb=tbGuess(r.book,r.ch);const sel=uForm.querySelector(`select[data-ur="${i}|tb"]`);if(sel)sel.value=r.tb}}
+});
+uForm.addEventListener('change',e=>{
+  if(!uDraft)return;let f;
+  if((f=e.target.closest('select[data-ud="cid"]'))){
+    if(f.value==='__new'){f.value=uDraft.cid;ucOpen(null,'form');return}
+    uDraft.cid=f.value;return}
+  if((f=e.target.closest('select[data-ur]'))){const[i,k]=f.dataset.ur.split('|'),r=uDraft.reads[+i];if(!r)return;
+    if(k==='req')r.req=f.value==='1';else{r.tb=f.value;r.man=true}}
+});
+uForm.addEventListener('click',e=>{
+  if(!uDraft)return;let b;
+  if((b=e.target.closest('[data-uradd]'))){uDraft.reads.push({book:'',ch:'',req:true,tb:'',man:false});renderUnitForm();
+    const el=uForm.querySelector(`[data-ur="${uDraft.reads.length-1}|book"]`);if(el)el.focus();return}
+  if((b=e.target.closest('[data-urdel]'))){uDraft.reads.splice(+b.dataset.urdel,1);renderUnitForm();return}
+});
+document.getElementById('cancelUnit').onclick=()=>{show('unitForm',false);editUnit=null;uDraft=null};
+document.getElementById('saveUnit').onclick=()=>{
+  const d=uDraft;if(!d)return;
+  if(!d.cid||!ucGet(d.cid)){toast('請選課程');return}
+  if(!String(d.topic).trim()&&!String(d.week).trim()){toast('請填單元主題或週次');return}
+  const reads=d.reads.filter(r=>String(r.book).trim()||String(r.ch).trim())
+    .map(r=>({book:String(r.book).trim(),ch:String(r.ch).trim(),req:!!r.req,tb:r.tb||''}));
+  const o={cid:d.cid,week:String(d.week).trim(),date:d.date||'',topic:String(d.topic).trim(),reads,note:d.note||'',mtime:Date.now()};
+  if(editUnit){const u=(S.units||[]).find(x=>x.id===editUnit);if(u)Object.assign(u,o)}
+  else{if(!Array.isArray(S.units))S.units=[];const u=Object.assign({id:'u'+uid(),created:Date.now(),files:[]},o);S.units.push(u);openU.add(u.id)}
+  ucLast=d.cid;editUnit=null;uDraft=null;show('unitForm',false);saved();renderUnits();
+};
+document.getElementById('addUnitBtn').onclick=()=>{
+  if(document.getElementById('unitForm').style.display===''&&!editUnit){show('unitForm',false);uDraft=null;return}
+  unitOpen(null)};
+
+/* ---- 上傳與綁定 HTML（存到 epi-data 的 courses/代碼/） ---- */
+function uPath(p){p=String(p||'').trim().replace(/^\.?\/+/,'');
+  if(!p||/^[a-z]+:/i.test(p)||/(^|\/)\.\.(\/|$)/.test(p))return'';
+  if(!/\.html?$/i.test(p))p+='.html';return p}
+function ufBind(u,path,name){
+  if(!Array.isArray(u.files))u.files=[];
+  const hit=u.files.find(x=>x.path===path);
+  if(hit){hit.at=Date.now();if(name)hit.name=name}
+  else u.files.push({path,name:name||path.split('/').pop().replace(/\.html?$/i,''),at:Date.now()});
+  u.mtime=Date.now();
+}
+function ufAdd(fname,text,size){
+  const u=(S.units||[]).find(x=>x.id===upUnit);if(!u)return;
+  const c=ucGet(u.cid),code=(c&&c.code)||'misc';
+  let nm=String(fname).replace(/[^A-Za-z0-9._-]/g,'-').replace(/-+/g,'-');
+  if(!/[A-Za-z0-9]/.test(nm.replace(/\.html?$/i,'')))nm='file-'+new Date().toISOString().slice(0,10)+'.html';
+  if(!/\.html?$/i.test(nm))nm+='.html';
+  upFiles.push({name:String(fname).replace(/\.html?$/i,''),text,size:size||text.length,path:'courses/'+code+'/'+nm});
+  upMsg='';renderUnits();
+}
+function ufTake(files){
+  const ok=[...(files||[])].filter(f=>/\.html?$/i.test(f.name));
+  if(files&&files.length&&!ok.length){toast('只收 .html 檔');return}
+  ok.forEach(f=>{const r=new FileReader();r.onload=()=>ufAdd(f.name,String(r.result),f.size);r.readAsText(f)});
+}
+async function ghPut(path,text,msg){
+  const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+    +'/contents/'+path.split('/').map(encodeURIComponent).join('/');
+  let sha=null;
+  const r0=await ghFetch(url+'?ref='+encodeURIComponent(GH.branch),
+    {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'},cache:'no-store'});
+  if(r0.ok){try{sha=(await r0.json()).sha}catch(e){}}
+  else if(r0.status!==404)throw new Error(ghErrMsg(r0.status));
+  const payload={message:msg||('add '+path),content:b64enc(text),branch:GH.branch};if(sha)payload.sha=sha;
+  const r=await ghFetch(url,{method:'PUT',
+    headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+    body:JSON.stringify(payload)},40000);
+  if(!r.ok)throw new Error(ghErrMsg(r.status));
+  return !!sha;
+}
+async function ufPush(uid_){
+  const u=(S.units||[]).find(x=>x.id===uid_);if(!u)return;
+  if(!ghOn()){upMsg='請先在 Settings 設定 GitHub 同步';renderUnits();return}
+  if(!upFiles.length){toast('請先選檔案');return}
+  let ok=0,over=0,fail=0,last='';const done=[];
+  for(const f of upFiles){
+    const p=uPath(f.path);
+    const st=document.getElementById('upState');if(st)st.textContent='上傳中… '+(ok+fail+1)+'/'+upFiles.length;
+    if(!p){fail++;last='路徑不合法：'+f.path;continue}
+    try{if(await ghPut(p,f.text,'add '+p))over++;ufBind(u,p,f.name);ok++;done.push(f)}
+    catch(e){fail++;last=e.message}
+  }
+  upFiles=upFiles.filter(f=>done.indexOf(f)<0);
+  upMsg=(ok?'已上傳 '+ok+' 個'+(over?'（覆蓋 '+over+'）':''):'')+(fail?(ok?'，':'')+'失敗 '+fail+' 個：'+last:'');
+  if(ok&&!fail)upUnit=null;
+  save();renderUnits();toast(fail?'有檔案上傳失敗':'已上傳');
+}
+
+/* ---- 全螢幕檢視：blob 網址、不加 sandbox（頁內 #分頁、IndexedDB、複製按鈕才能用） ---- */
+async function ghRaw(path){
+  const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+    +'/contents/'+path.split('/').map(encodeURIComponent).join('/')+'?ref='+encodeURIComponent(GH.branch);
+  const r=await ghFetch(url,{headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github.raw'},cache:'no-store'},30000);
+  if(r.status===404)throw new Error('repo 裡沒有 '+path);
+  if(!r.ok)throw new Error(ghErrMsg(r.status));
+  return await r.text();
+}
+function uvBlob(t){
+  if(!/<meta[^>]+charset/i.test(t))t=/<head[^>]*>/i.test(t)?t.replace(/(<head[^>]*>)/i,'$1<meta charset="utf-8">'):'<meta charset="utf-8">'+t;
+  return URL.createObjectURL(new Blob([t],{type:'text/html;charset=utf-8'}));
+}
+function uvClear(){if(uvUrl&&!uvKeep){try{URL.revokeObjectURL(uvUrl)}catch(e){}}uvUrl=null;uvKeep=false}
+async function uvOpen(uid_,i,newTab){
+  const u=(S.units||[]).find(x=>x.id===uid_),f=u&&(u.files||[])[i];if(!f)return;
+  if(!ghOn()){toast('請先在 Settings 設定 GitHub 同步');return}
+  const w=newTab?window.open('','_blank'):null;
+  setDot('pend','讀取 '+f.path+'…');
+  try{
+    const url=uvBlob(await ghRaw(f.path));
+    if(newTab){if(w&&!w.closed)w.location.href=url;else window.open(url,'_blank');setDot('ok','已在新分頁開啟 '+f.path);return}
+    uvClear();uvUrl=url;
+    document.getElementById('uvName').textContent=(f.name||'')+'　'+f.path;
+    document.getElementById('uvFrame').src=url;
+    document.getElementById('uv').classList.add('on');
+    setDot('ok','已開啟 '+f.path);
+  }catch(e){if(w)try{w.close()}catch(_){};setDot('err','讀取失敗：'+e.message);toast('讀取失敗：'+e.message)}
+}
+document.getElementById('uvClose').onclick=()=>{
+  document.getElementById('uv').classList.remove('on');
+  document.getElementById('uvFrame').src='about:blank';uvClear()};
+document.getElementById('uvNew').onclick=()=>{if(!uvUrl)return;window.open(uvUrl,'_blank');uvKeep=true};
+/* 預習頁裡「回到 Epi_Yaxin」的連結：在框內點會把 app 再開一次，改成關掉檢視器；其他外部連結開新分頁，不在框內換頁 */
+function uvIsApp(u){const k=x=>x.replace(/index\.html$/,'').replace(/\/$/,'');
+  return k(u.origin+u.pathname)===k(location.origin+location.pathname)||/^https:\/\/yaaaxinnn\.github\.io\/epi-app\/?(index\.html)?$/.test(u.origin+u.pathname)}
+document.getElementById('uvFrame').addEventListener('load',()=>{
+  let d;try{d=document.getElementById('uvFrame').contentDocument}catch(e){return}
+  if(!d||!d.addEventListener||d.__uvHooked)return;d.__uvHooked=1;
+  d.addEventListener('click',e=>{
+    const a=e.target&&e.target.closest&&e.target.closest('a[href]');if(!a)return;
+    const h=a.getAttribute('href')||'';if(!h||h[0]==='#'||/^javascript:/i.test(h))return;
+    let u;try{u=new URL(h,location.href)}catch(_){return}
+    if(!/^https?:$/.test(u.protocol))return;
+    if(uvIsApp(u)){e.preventDefault();document.getElementById('uvClose').click();return}
+    if(!a.target||a.target==='_self'){e.preventDefault();window.open(u.href,'_blank','noopener')}
+  },true);
+});
+
+/* ---- 跳轉：Courses ↔ Notes ↔ Textbooks ---- */
+function goTab(p){const b=document.querySelector('.tab[data-p="'+p+'"]');if(b)b.click()}
+function goUnit(id){
+  const u=(S.units||[]).find(x=>x.id===id);if(!u){toast('這個單元不在了');return}
+  if(ucSel&&u.cid!==ucSel)ucSel='';
+  openU.add(id);goTab('units');renderUnits();
+  const el=document.getElementById('u-'+id);if(el&&el.scrollIntoView)el.scrollIntoView({block:'start'});
+}
+function goNote(id){
+  const n=(S.notes||[]).find(x=>x.id===id);if(!n){toast('找不到這則筆記');return}
+  goTab('courses');
+  if(!ntHit(n)){nTags.clear();setSearch('')}
+  if(ntSelCat&&qcatFix(n.kind)!==ntSelCat){ntSelCat='';ntSelMon=''}
+  if(ntSelMon&&ym(n.mtime||n.created)!==ntSelMon)ntSelMon='';
+  openNt.add(id);renderNt();
+  const el=document.querySelector('#ntList [data-ntcard="'+id+'"]');if(el&&el.scrollIntoView)el.scrollIntoView({block:'center'});
+}
+function goNewNote(uid_){
+  goTab('courses');show('ntForm',true);
+  if(typeof ntExamUI==='function')ntExamUI();
+  fillNtUnit();document.getElementById('nt-unit').value=uid_;
+  bindImagePaste(document.getElementById('nt-body'));
+  const f=document.getElementById('ntForm');if(f.scrollIntoView)f.scrollIntoView({block:'start'});
+  document.getElementById('nt-title').focus();
+}
+function goTB(i){
+  if(!C[i])return;const t=th(i);t.open=true;
+  qSec='';const qs=document.getElementById('qSec');if(qs)qs.value='';
+  if(mFilter==='active'){mFilter='book';document.querySelectorAll('#mSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f==='book'))}
+  save();goTab('textbooks');renderMethod();
+  const el=document.getElementById('th-'+i);if(el&&el.scrollIntoView)el.scrollIntoView({block:'start'});
+}
+document.addEventListener('click',e=>{
+  if(hEl)return;let b;
+  if((b=e.target.closest('[data-unitgo]'))){goUnit(b.dataset.unitgo);return}
+  if((b=e.target.closest('[data-ntgo]'))){goNote(b.dataset.ntgo);return}
+  if((b=e.target.closest('[data-tbgo]'))){goTB(+b.dataset.tbgo);return}
+});
+
+/* ---- Courses 分頁事件 ---- */
+document.getElementById('ucBar').addEventListener('click',e=>{
+  if(e.target.closest('#ucAddBtn')){ucOpen(null);return}
+  const b=e.target.closest('[data-ucf]');if(!b)return;
+  ucSel=b.dataset.ucf===ucSel?'':b.dataset.ucf;renderUnits();
+});
+document.getElementById('ucInfo').addEventListener('click',e=>{
+  const b=e.target.closest('[data-ucedit]');if(b&&!hEl)ucOpen(b.dataset.ucedit)});
+const uList=document.getElementById('unitList');
+uList.addEventListener('click',e=>{
+  if(hEl)return;let b;
+  if(e.target.closest('[data-hold]'))return;
+  if((b=e.target.closest('[data-ufopen]'))){const[a,i]=b.dataset.ufopen.split('|');uvOpen(a,+i,false);return}
+  if((b=e.target.closest('[data-ufnew]'))){const[a,i]=b.dataset.ufnew.split('|');uvOpen(a,+i,true);return}
+  if((b=e.target.closest('[data-udrop]'))){upUnit=b.dataset.udrop;document.getElementById('uf-file').click();return}
+  if((b=e.target.closest('[data-upopen]'))){const id=b.dataset.upopen;
+    if(upUnit===id){upUnit=null}else{upUnit=id;upFiles=[];upMsg=''}renderUnits();return}
+  if((b=e.target.closest('[data-updel]'))){upFiles.splice(+b.dataset.updel,1);renderUnits();return}
+  if((b=e.target.closest('[data-upgo]'))){ufPush(b.dataset.upgo);return}
+  if((b=e.target.closest('[data-ubind]'))){const id=b.dataset.ubind,u=(S.units||[]).find(x=>x.id===id);
+    const inp=uList.querySelector('[data-ubindin="'+id+'"]'),p=uPath(inp&&inp.value);
+    if(!u)return;if(!p){toast('請填 repo 裡的路徑，例如 courses/causal/xxx.html');return}
+    ufBind(u,p);upMsg='';upUnit=null;saved();renderUnits();return}
+  if((b=e.target.closest('[data-uedit]'))){unitOpen(b.dataset.uedit);return}
+  if((b=e.target.closest('[data-unote]'))){goNewNote(b.dataset.unote);return}
+  if(e.target.closest('[data-tbgo]')||e.target.closest('[data-ntgo]'))return;
+  if((b=e.target.closest('[data-utog]'))){const id=b.dataset.utog;openU.has(id)?openU.delete(id):openU.add(id);
+    if(!openU.has(id)&&upUnit===id)upUnit=null;renderUnits();return}
+});
+uList.addEventListener('input',e=>{const f=e.target.closest('[data-uppath]');if(f&&upFiles[+f.dataset.uppath])upFiles[+f.dataset.uppath].path=f.value});
+['dragenter','dragover'].forEach(ev=>uList.addEventListener(ev,e=>{const d=e.target.closest('.udrop');if(!d)return;e.preventDefault();d.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>uList.addEventListener(ev,e=>{const d=e.target.closest('.udrop');if(!d)return;e.preventDefault();d.classList.remove('over');
+  if(ev==='drop'){upUnit=d.dataset.udrop;ufTake(e.dataTransfer&&e.dataTransfer.files)}}));
+document.getElementById('uf-file').addEventListener('change',e=>{ufTake(e.target.files);e.target.value=''});
+
 /* ================= TEXTBOOKS ================= */
 function th(i){if(!S.themes[i])S.themes[i]={sec:{},sn:{},tsec:{},note:''};const t=S.themes[i];if(!t.sn)t.sn={};if(!t.tsec)t.tsec={};return t}
 function themeStat(i){
@@ -2178,7 +2633,7 @@ function renderMethod(){
         }).join('')}</div></div>`};
     const body=secs('me',c.me)+secs('hr',c.hr);
     if(qSec&&!body)return;
-    html+=`<div class="theme${(t.open||qSec)?' open':''}">
+    html+=`<div class="theme${(t.open||qSec)?' open':''}" id="th-${i}">
       <div class="th-head" data-toggle="${i}">
         <span class="th-emo">${c.e}</span>
         <div class="th-name"><div class="en">${esc(c.en)}</div><div class="zh">${esc(c.zh)}</div></div>
@@ -2725,7 +3180,7 @@ function nFilterOn(){return nterms().length>0||nTags.size>0}
 function nhit(s){const t=nterms();if(!t.length)return true;const x=(s||'').toLowerCase();return t.every(w=>x.includes(w))}
 function nTagOk(tags){if(!nTags.size)return true;const a=(tags||[]).map(t=>String(t).toLowerCase());return[...nTags].every(t=>a.includes(t))}
 function qHit(q){return nTagOk(q.tags)&&nhit([q.q,q.a,(q.tags||[]).join(' ')].join(' '))}
-function ntHit(n){return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' '),n.psrc||'',tbName(n.tb)].join(' '))}
+function ntHit(n){return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' '),n.psrc||'',tbName(n.tb),uLabel(n.unit)].join(' '))}
 function parseTags(s){
   const out=[];
   String(s||'').split(/[,，、;；]+|\s{1,}/).forEach(t=>{t=t.trim();
@@ -3496,6 +3951,7 @@ document.getElementById('addNt').onclick=()=>{
     title:t||'(未命名)',body:b,kind,links:newNtLinks.slice(),
     tags:parseTags(document.getElementById('nt-tags').value)};
   if(ex){n.psrc=document.getElementById('nt-psrc').value.trim();n.tb=document.getElementById('nt-tb').value}
+  {const uv=document.getElementById('nt-unit').value;if(uv)n.unit=uv;document.getElementById('nt-unit').value=''}
   S.notes.push(n);
   ['nt-title','nt-body','nt-tags','nt-psrc','nt-tb'].forEach(i=>document.getElementById(i).value='');
   newNtLinks=[];renderNtNewLinks();show('ntForm',false);saved();renderNt();
@@ -3504,7 +3960,7 @@ document.getElementById('addNt').onclick=()=>{
 function renderNt(){
   const el=document.getElementById('ntList');if(!el)return;
   const list=(S.notes||[]).filter(ntHit).sort((a,b)=>(b.mtime||b.created)-(a.mtime||a.created));
-  if(!list.length){el.innerHTML=emptyRow();return}
+  if(!list.length){el.innerHTML=emptyRow();if(typeof renderUnits==='function')renderUnits();return}
   const catOf=n=>qcatFix(n.kind),tsOf=n=>n.mtime||n.created;
   if(ntSelCat&&!list.some(n=>catOf(n)===ntSelCat)){ntSelCat='';ntSelMon=''}
   let show=list;
@@ -3512,6 +3968,7 @@ function renderNt(){
   if(ntSelMon)show=show.filter(n=>ym(tsOf(n))===ntSelMon);
   el.innerHTML=`<div class="dirwrap"><div class="dirnav">${dirNav(list,catOf,tsOf,ntSelCat,ntSelMon,'ntsel')}</div>`
     +`<div class="dirbody">${show.length?show.map(ntItem).join(''):emptyRow()}</div></div>`;
+  if(typeof renderUnits==='function')renderUnits();
 }
 function ntItem(n){
   if(!Array.isArray(n.links))n.links=[];
@@ -3551,6 +4008,7 @@ function ntItem(n){
     </div>
     ${tagChips(n.tags,1)}
     ${meta}
+    ${unitPill(n)}
     ${open&&chips?`<div class="row" data-ntstop="1" style="margin-top:8px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
       ${n.body?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(n.body)}</div>`
@@ -3562,6 +4020,7 @@ function ntItem(n){
         <label class="f"><span>分類</span><select data-ntk="${n.id}">${qcatOpts(qcatFix(n.kind))}</select></label>
         <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       </div>
+      <label class="f"><span>課程單元</span><select data-ntu="${n.id}">${unitOpts(n.unit||'')}</select></label>
       ${ex?`<div class="grid2">
         <label class="f"><span>出處（課程／老師／日期）</span><input type="text" data-ntf="${n.id}|psrc" value="${esc(n.psrc||'')}" placeholder="e.g. 高流方法 W5 陳老師 10/6"></label>
         <label class="f"><span>Textbooks 主題</span><select data-nttb="${n.id}">${tbOpts(n.tb||'')}</select></label></div>`:''}
@@ -3628,6 +4087,9 @@ document.getElementById('ntList').addEventListener('change',e=>{
     const id=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
     if(n&&id){n.kind=id;n.mtime=Date.now();toast('已新增分類')}
     save();fillSelects();renderQ();renderNt();return}
+  const nu=e.target.closest('[data-ntu]');
+  if(nu){const n=S.notes.find(x=>x.id===nu.dataset.ntu);
+    if(n){n.unit=nu.value;n.mtime=Date.now();save();renderNt()}return}
   const tb=e.target.closest('[data-nttb]');
   if(tb){const n=S.notes.find(x=>x.id===tb.dataset.nttb);
     if(n){n.tb=tb.value;n.mtime=Date.now();save()}return}
@@ -3665,6 +4127,7 @@ function fillSelects(){
     if(s){const v=s.value;s.innerHTML=qcatOpts(qcatFix(v),id==='q-kind');s.value=qcatFix(v);
       if(id==='q-kind'&&s.value===EXAM)s.value=qcatIds()[0]}});
   {const s=document.getElementById('nt-tb');if(s&&!s.options.length)s.innerHTML=tbOpts('')}
+  fillNtUnit();
   if(typeof ntExamUI==='function')ntExamUI();
   {const s=document.getElementById('kd-type');
    if(s){const v=s.value;s.innerHTML=kdcatOpts(kdcatFix(v));s.value=kdcatFix(v)}}
@@ -4036,6 +4499,7 @@ document.getElementById('trashList').addEventListener('click',e=>{
     else if(x.type==='mt')renderMT();
     else if(x.type==='dir')renderDIR();
     else if(x.type==='note')renderNt();
+    else if(x.type==='unit'||x.type==='ucourse'){renderUnits();renderNt()}
     else if(x.type==='prog')renderProg();
     else if(x.type==='gsrc'||x.type==='gtopic'||x.type==='grow'){renderGuide();
       if(x.type==='grow'&&!(S.gtopic||[]).some(t=>t.id===o.topic)){toast('已還原；它的主題還在回收桶，先還原主題才看得到');return}}
@@ -4140,6 +4604,8 @@ function mergeState(inc){
   S.grow=applyTombs(mergeArr(S.grow||[],inc.grow||[]),tm);
   S.courses=applyTombs(mergeArr(S.courses,inc.courses),tm);
   S.classes=applyTombs(mergeArr(S.classes,inc.classes),tm);
+  S.ucourses=applyTombs(mergeArr(S.ucourses||[],inc.ucourses||[]),tm);
+  S.units=applyTombs(mergeArr(S.units||[],inc.units||[]),tm);
   S.themes=mergeThemes(S.themes,inc.themes);
   (inc.tagLib||[]).forEach(t=>{if(!S.tagLib.includes(t))S.tagLib.push(t)});
   (inc.cats||[]).forEach(x=>{if(x&&x.id&&!S.cats.some(y=>y.id===x.id))S.cats.push(x)});
@@ -4182,7 +4648,9 @@ function ghOn(){return !!(GH.owner&&GH.repo&&GH.token)}
 /* ===== repo 裡沒有卡片指向的 .html ===== */
 let orphans=[],orphTrunc=false;
 function orphUsed(){
-  return new Set((S.papers||[]).map(p=>String(p.file||'').replace(/^\.?\//,'')).filter(Boolean));
+  const u=new Set((S.papers||[]).map(p=>String(p.file||'').replace(/^\.?\//,'')).filter(Boolean));
+  (S.units||[]).forEach(x=>(x.files||[]).forEach(f=>{const p=String(f.path||'').replace(/^\.?\//,'');if(p)u.add(p)}));
+  return u;
 }
 function renderOrph(){
   const el=document.getElementById('orphList'),st=document.getElementById('orphState');
@@ -4191,9 +4659,9 @@ function renderOrph(){
   const linked=orphUsed().size;
   const warn=orphTrunc?'<span style="color:var(--clay)">repo 檔案太多，清單可能不完整。</span><br>':'';
   if(!orphans.length){
-    el.innerHTML=`<div class="empty" style="padding:12px">每個 HTML 都有卡片指向，不用清。</div>`;
+    el.innerHTML=`<div class="empty" style="padding:12px">每個 HTML 都有卡片或單元指向，不用清。</div>`;
     del.style.display='none';all.style.display='none';
-    st.innerHTML=warn+`repo 裡的 HTML 都有卡片指向（已比對 ${linked} 張有附檔的卡片）。`;
+    st.innerHTML=warn+`repo 裡的 HTML 都有卡片或單元指向（已比對 ${linked} 個卡片與單元綁定的檔案）。`;
     return;
   }
   el.innerHTML=orphans.map((o,i)=>`<label class="chk" style="margin-bottom:4px">
@@ -4203,7 +4671,7 @@ function renderOrph(){
     <button class="cx" data-orphopen="${i}" title="先看看內容">👁</button>
   </label>`).join('');
   del.style.display='';all.style.display='';
-  st.innerHTML=warn+`找到 ${orphans.length} 個沒有卡片指向的 HTML（已比對 ${linked} 張有附檔的卡片）。`;
+  st.innerHTML=warn+`找到 ${orphans.length} 個沒有卡片或單元指向的 HTML（已比對 ${linked} 個卡片與單元綁定的檔案）。`;
 }
 async function repoSize(){
   const el=document.getElementById('repoSize');if(!el||!ghOn())return;
@@ -4597,13 +5065,14 @@ document.getElementById('helpBox').innerHTML=`
 
 
 
-<details class="card fold"><summary>🧭 八個分頁在做什麼</summary><div class="help">
-  <p>由左到右：<strong>Reading</strong> 讀過的論文卡片　<strong>Guide</strong> 學會指引、WHO 與健保規定的比較表　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Notes</strong> 疑問與零散資料　<strong>Calendar</strong> 重要日期與課表　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Review</strong> 間隔重複複習卡　<strong>Settings</strong> 同步、備份、說明。</p>
+<details class="card fold"><summary>🧭 九個分頁在做什麼</summary><div class="help">
+  <p>由左到右：<strong>Reading</strong> 讀過的論文卡片　<strong>Guide</strong> 學會指引、WHO 與健保規定的比較表　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Notes</strong> 疑問與零散資料　<strong>Courses</strong> 老師課程的單元與預習包　<strong>Calendar</strong> 重要日期與課表　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Review</strong> 間隔重複複習卡　<strong>Settings</strong> 同步、備份、說明。</p>
   <h4>資料怎麼在分頁之間流動</h4>
   <ul>
     <li><strong>Notes 的 Question</strong> 是總樞紐，展開後有三個出口：<code>↑ Card</code> 進 Review 變複習卡、<code>↑ Note</code> 變同分頁的筆記、<code>↑ 方向</code> 進 Meeting 的 Research directions。</li>
     <li><strong>Meeting 的 Action items</strong> 自動彙整到同分頁最下方的 To-do。</li>
     <li><strong>Google 日曆</strong>的星號事件自動流進 Calendar 的 KEY DATES。</li>
+    <li><strong>Notes ↔ Courses</strong>：筆記選「課程單元」後，筆記上有 🧑‍🏫 標記可跳到單元，單元的 📒 筆記也列出它可跳回來。單元的指定閱讀可跳到 Textbooks 主題。</li>
     <li>其餘分頁各自獨立，靠 <strong>🔗附件</strong> 互相指向（精讀 HTML、Drive 檔案、paper 連結）。</li>
   </ul>
 </div></details>
@@ -4617,7 +5086,7 @@ document.getElementById('helpBox').innerHTML=`
   <p>刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設：Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other。</p>
   <h4>刪除與 GitHub 的關係</h4>
   <p><strong>卡片資料會同步刪除</strong>：刪掉時會留一個「墓碑」記號跟著上傳，所以其他裝置合併後也會跟著刪，不會把已刪的東西送回來。墓碑保留 180 天。GitHub 的 <strong>commit 歷史仍留著舊版本</strong>，真的刪錯可以到 repo 的 <code>data/notes.json</code> → History 翻回去。</p>
-  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
+  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片或單元指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings → 分類與清理 → 回收桶，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
@@ -4685,8 +5154,22 @@ document.getElementById('helpBox').innerHTML=`
   <p>老師說「這個之前考過」就在 Notes 新增一則、分類選 <strong>資格考</strong>：會多出<strong>出處</strong>（課程／老師／日期）和 <strong>Textbooks 主題</strong>兩欄，都可以留空；標題和內容改叫<strong>題目</strong>和<strong>答案</strong>。</p>
   <p>答案寫好按 Save（或編輯後按「完成」／✓），就<strong>自動在 Review 產生一張 🎓 考古卡</strong>（題目→正面、答案→背面、主題→卡片主題），筆記上會出現 🎓 考古卡 標記；之後改答案再按完成，那張卡會跟著更新。考古卡刪掉後不會自動重建（從回收桶還原即可）。資格考筆記不需要 <code>↑ Card</code>，所以那顆按鈕不顯示。左側目錄點「資格考」就只看考古題。</p>
   <h4>Notes</h4>
+  <p>筆記可以選<strong>課程單元</strong>，綁到 Courses 的某個單元；展開後會出現 🧑‍🏫 課程 週次 標記，點了跳過去（詳見 Courses）。</p>
   <p>想查的東西、課程資料、待整理的想法。版面和 Resolved 一樣是<strong>左目錄、右清單</strong>：左邊依分類顯示筆數、選中才展開月份；右邊不分類，依最後修改時間新到舊排成單欄。<strong>收合時和 Resolved 長得一樣</strong>：圓點、標題、標籤、最後修改日期一行帶過，點一下才展開成完整卡片（含內容、✎ 編輯、✕ 刪除），再點一次收回去。</p>
   <p>分類和標籤在編輯時<strong>並排在同一列</strong>。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
+</div></details>
+
+<details class="card fold"><summary>🧑‍🏫 Courses</summary><div class="help">
+  <p>老師課程的預習包，照<strong>週次和指定閱讀</strong>整理；Textbooks 則是照書的主題，適合自己讀。</p>
+  <h4>課程與單元</h4>
+  <p>先按「＋ 課程」建立課程：名稱、授課老師、<strong>代碼</strong>（資料夾名，只能英數與 -，例如 causal；英文課名會自動帶出）。課名可以從 Calendar 課表挑。上面那排按鈕篩選課程，選中時顯示老師與資料夾，旁邊 ✎ 改、✕ 長按刪（還有單元的課程不能刪）。</p>
+  <p>右上 ＋ 新增單元：課程、週次、日期、單元主題、指定閱讀（書名、章節、必讀／選讀）、備註（Markdown）。單元依日期新到舊，沒填日期的用建立時間；點標題展開、再點收起。</p>
+  <p>書名選 <strong>Modern Epidemiology 4e</strong> 或 <strong>What If</strong> 時，會依章節自動對到 Textbooks 主題（例如 ME Ch12 → Confounding、What If Ch6 → Causal Diagrams），對錯了用下拉改。展開後點主題 pill 跳到 Textbooks 那個主題。</p>
+  <h4>預習包 HTML</h4>
+  <p>展開單元，在 📄 HTML 右邊按 ＋：拖進或選檔案（可多選），預設存到 epi-data 的 <code>courses/代碼/檔名.html</code>，路徑可改，同路徑會覆蓋；也可以直接填 repo 裡已有的路徑按「綁定」。點 📄 全螢幕開啟，↗ 開新分頁。✕ 長按只解除綁定，repo 裡的檔案還在，要清到 Settings → 分類與清理。</p>
+  <p>這裡開的頁面用 blob 網址載入、<strong>不加 sandbox</strong>，所以頁內分頁（#n6 這類）、複製指令按鈕和頁面自己的瀏覽器儲存（IndexedDB）都能用。代價是它讀得到 app 的本機資料（含 GitHub token），所以<strong>只綁你自己產生的 HTML</strong>。頁面自己存的資料存在這個網站的瀏覽器空間，和在別處開同一個檔案是兩份，要搬就用頁面自己的同步。開新分頁的網址是暫時的，關掉 app 後失效，不能當書籤。</p>
+  <h4>和 Notes 互連</h4>
+  <p>Notes 新增或 ✎ 筆記時選「課程單元」，筆記會出現 🧑‍🏫 標記，點了跳到這個單元；單元的 📒 筆記列出綁定的筆記，點了跳回 Notes。單元的 📒 右邊 ＋ 直接開 Notes 新增表單、單元已選好。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
@@ -4790,7 +5273,7 @@ document.getElementById('helpBox').innerHTML=`
 `;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
-  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderTT();renderProg();renderKD();renderGuide();renderGC();updateBadge();renderExportState();renderTrash();renderCatMgr();renderHelp()}
+  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderUnits();renderTT();renderProg();renderKD();renderGuide();renderGC();updateBadge();renderExportState();renderTrash();renderCatMgr();renderHelp()}
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
