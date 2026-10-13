@@ -54,7 +54,6 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 .tab[data-p="ideas"][aria-selected="true"]{color:#9A6A2C}
 .tab[data-p="calendar"][aria-selected="true"]{color:#A0533F}
 .tab[data-p="settings"][aria-selected="true"]{color:#5A574E}
-.tab[data-p="guide"][aria-selected="true"]{color:#8A4A5E}
 #p-reading{--ac:#3E6B4E;--ac-soft:#E7EEE8;--ac-mid:#C8D8CC}
 #p-textbooks{--ac:#2F5670;--ac-soft:#E5EBF0;--ac-mid:#C3D2DE}
 #p-courses{--ac:#1F6B6B;--ac-soft:#E2EFEE;--ac-mid:#BFDCDA}
@@ -62,7 +61,6 @@ header.top{background:var(--cream);color:var(--ink);padding:14px 14px 0;position
 #p-ideas{--ac:#9A6A2C;--ac-soft:#F6EEE0;--ac-mid:#E7D5B6}
 #p-calendar{--ac:#A0533F;--ac-soft:#F6E9E4;--ac-mid:#E7CCC2}
 #p-settings{--ac:#5A574E;--ac-soft:#EDEBE6;--ac-mid:#D6D2C8}
-#p-guide{--ac:#8A4A5E;--ac-soft:#F4E9EC;--ac-mid:#E2C9D1}
 .ov{--ac:#6A4A6E;--ac-soft:#EFE8F0;--ac-mid:#DAC9DC}
 .syncdot{background:none;border:0;font-size:13px;line-height:1;padding:2px 4px;color:#B7B1A4}
 .syncdot.ok{color:#3E6B4E}.syncdot.pend{color:#9A6A2C}.syncdot.err{color:#A8483B}
@@ -370,75 +368,17 @@ table.tt .pt{font-family:var(--mono);font-size:8.5px;color:var(--faint);line-hei
 .flipcue{font-size:12px;color:var(--faint);margin-top:8px}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:20px;font-size:13.5px;z-index:120;opacity:0;pointer-events:none;transition:opacity .25s}
 .toast.on{opacity:1}
-/* ===== GUIDE ===== */
-.kdgroup.gth{font-family:var(--sans);font-size:13.5px;font-weight:600;letter-spacing:.01em;color:var(--ac);margin:18px 0 7px}
-.gtb:first-child>.gth{margin-top:8px}
-.gth .gn{font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--faint);letter-spacing:.04em}
-.gth .cxg{order:2}
-.gth .cx{font-size:13px;padding:0 4px}
-.gtw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);-webkit-overflow-scrolling:touch}
-table.gt{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;line-height:1.5}
-table.gt th,table.gt td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
-table.gt th{background:var(--surface-2);font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
-table.gt td{min-width:120px;overflow-wrap:anywhere}
-table.gt tbody tr{cursor:pointer}
-table.gt tbody tr:last-child td{border-bottom:0}
-table.gt tbody tr:hover td{background:var(--surface-2)}
-table.gt tbody tr.og td{border-top:1px solid var(--line-strong)}
-table.gt tbody tr.sel td{background:var(--ac-soft)}
-table.gt tbody tr.sup td{color:var(--faint)}
-table.gt .gsc{position:sticky;left:0;z-index:1;background:var(--surface);min-width:118px;max-width:156px;box-shadow:inset -1px 0 0 var(--line)}
-table.gt th.gsc{background:var(--surface-2);z-index:2}
-table.gt td.gev{min-width:52px;white-space:nowrap;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
-.gsc .go{font-weight:600;color:var(--ink)}
-tr.sup .gsc .go{color:var(--muted)}
-.gsc .gy{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
-.gsc .gs{display:block;font-size:12px;color:var(--muted);line-height:1.4;margin-top:2px}
-.gtag{display:inline-block;font-family:var(--mono);font-size:9.5px;line-height:14px;padding:0 5px;border-radius:8px;border:1px solid var(--line-strong);color:var(--faint);vertical-align:1px;white-space:nowrap}
-.gdh .gtag{align-self:center}
-.gtag.dr{border-color:var(--amber-mid);color:var(--amber)}
-.gna{color:var(--faint)}
-.gempty{margin:0 0 4px;padding-left:2px;font-size:12px}
-.gdet{border:1px solid var(--ac-mid);border-left:3px solid var(--ac);border-radius:var(--r);background:var(--surface);padding:11px 13px 12px;margin:8px 0 4px}
-.gdh{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
-.gdh .t{font-weight:600;font-size:14.5px}
-.gdh .s{font-size:13px;color:var(--muted)}
-.gdh .cxg{margin-left:auto;align-self:center}
-.gdsrc{font-size:12.5px;color:var(--muted);margin:2px 0 9px;line-height:1.45}
-.gkv{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0 0 4px;font-size:13.5px;line-height:1.55}
-.gkv dt{color:var(--muted);font-size:12px;font-weight:600;padding-top:1px}
-.gkv dd{margin:0;overflow-wrap:anywhere}
-.gdk{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--faint);margin:11px 0 3px}
-.gquote{margin:0;padding:3px 0 3px 10px;border-left:3px solid var(--ac-mid);color:var(--muted);font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
-.gpills{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
-.gsr{display:flex;align-items:center;gap:8px;padding:7px 6px 7px 3px;border-bottom:1px solid var(--line);cursor:pointer}
-.gsr:hover{background:var(--surface-2)}
-.gsr.on{background:var(--ac-soft)}
-.gsr .sd{flex:0 0 auto;width:7px;height:7px;border-radius:50%}
-.gsr .sy{flex:0 0 auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
-.gsr .st{flex:1;min-width:0;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gsr .sn{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
-.gsr.sup .st,.gsr.sup .sy{color:var(--faint)}
-.gsd{padding:9px 10px 11px 18px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:13.5px;line-height:1.55}
-.gsd .meta{font-size:11.5px;margin-bottom:4px;overflow-wrap:anywhere}
-.ged .gedh{font-size:12.5px;color:var(--muted);margin-bottom:9px}
-.ged textarea{min-height:60px}
-.ged textarea[rows="1"]{min-height:41px}
-.gcol{display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.gcol .k{flex:0 0 70px;font-family:var(--mono);font-size:11px;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gcol input[type=text]{flex:1;width:auto;min-width:0;padding:6px 9px;font-size:14px}
-.grep{margin-top:10px;font-size:13px;line-height:1.6}
-.grep ul{margin:4px 0 0;padding-left:18px;color:var(--muted)}
-@media(max-width:560px){.gkv{grid-template-columns:1fr;gap:0}.gkv dd{margin-bottom:7px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 /* ===== v47 資格考 ===== */
 .qpast{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:6px}
 .qpast .qps{font-size:12px;color:var(--muted)}
 .chk .ct{font-family:var(--mono);font-size:11px;color:var(--faint)}
 .f .qm{font-size:12px;padding:0 0 0 4px;vertical-align:1px}
-/* ===== v48 Courses ===== */
-#p-units{--ac:#4B5BA6;--ac-soft:#E9EBF6;--ac-mid:#CDD2EC}
-.tab[data-p="units"][aria-selected="true"]{color:#4B5BA6}
+/* ===== v49 Library ===== */
+#p-library{--ac:#4B5BA6;--ac-soft:#E9EBF6;--ac-mid:#CDD2EC}
+.tab[data-p="library"][aria-selected="true"]{color:#4B5BA6}
+.tip ul{margin:0;padding-left:1.15em}
+.tip li{margin:1px 0}
 .ucinfo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:0 2px 10px}
 .ucinfo .nm{font-weight:600;color:var(--ac)}
 .ucinfo .mono{font-size:11.5px;color:var(--faint)}
@@ -446,26 +386,31 @@ tr.sup .gsc .go{color:var(--muted)}
 .pill.ucadd{background:none;border-style:dashed;cursor:pointer;color:var(--ac);border-color:var(--ac-mid)}
 .item.unit{scroll-margin-top:96px}
 .uhead{display:flex;align-items:baseline;gap:8px;cursor:pointer;flex-wrap:wrap}
-.uhead .udt{flex:0 0 auto;display:flex;gap:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
-.uhead .udt b{color:var(--ac);font-weight:600}
+.uhead .udt{flex:0 0 auto;font-family:var(--mono);font-size:12px;color:var(--muted)}
 .uhead .uti{flex:1;min-width:0;font-weight:600;font-size:14.5px;line-height:1.4}
-.uhead .ufn{flex:0 0 auto;font-size:12px;color:var(--faint)}
-.usub{font-size:12.5px;color:var(--muted);margin-top:3px}
+.ufiles{display:flex;flex-wrap:wrap;gap:2px 12px;margin-top:6px}
+.ufc{display:inline-flex;align-items:center;gap:0;min-width:0}
+.ufo{background:none;border:0;padding:3px 0;color:var(--ac);font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;min-width:0}
+.ufo:hover{text-decoration:underline}
+.ufc .cx{font-size:12px;padding:0 4px}
 .usec{margin-top:13px}
 .usec>.srclab{margin-bottom:6px}
 .urd{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px;font-size:13.5px}
-.ufile{display:flex;align-items:center;gap:6px;margin-bottom:3px;min-width:0}
-.ufo{background:none;border:0;padding:3px 0;color:var(--ac);font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;flex:0 1 auto;min-width:0}
+.ufile{display:flex;align-items:center;gap:6px;margin-bottom:4px;min-width:0}
 .ufile .up{flex:1;min-width:0;font-size:11px;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ufile .us{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .upbox{margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2)}
 .udrop{border:2px dashed var(--line-strong);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;background:var(--surface);font-size:13px;color:var(--muted)}
 .udrop:hover,.udrop.over{border-color:var(--ac);background:var(--ac-soft)}
-.urow{display:grid;grid-template-columns:64px 76px minmax(0,1fr) 26px;gap:6px;margin-bottom:10px;align-items:center}
-.urow .ubk{grid-column:1/-1}
+.urow{display:grid;grid-template-columns:minmax(0,1.6fr) 42px 60px minmax(0,1.2fr) 18px;gap:5px;margin-bottom:6px;align-items:center}
+.urow input,.urow select{padding:6px 6px;font-size:13px;min-width:0}
+.urow .x{padding:0;font-size:12px}
 .theme{scroll-margin-top:96px}
-.pill.upill{cursor:pointer;background:#E9EBF6;border-color:#CDD2EC;color:#4B5BA6}
 #uv{padding:8px}
-#uv .ov-top{max-width:none}
+#uv .ov-top{max-width:none;gap:6px}
+#uvSyncSt{font-family:var(--mono);font-size:11px;color:var(--faint);white-space:nowrap}
+#libAsk{z-index:130;align-items:center;justify-content:center;background:rgba(30,26,22,.45)}
+#libAsk .card{max-width:430px;width:100%;margin:0}
 </style>
 </head>
 <body>
@@ -475,10 +420,9 @@ tr.sup .gsc .go{color:var(--muted)}
     <div class="brand" style="display:flex;align-items:center;gap:9px"><h1>🎓 Epi_Yaxin</h1><button class="syncdot" id="syncDot" title="同步狀態">●</button></div>
     <nav class="tabs" role="tablist" id="tabs">
       <button class="tab" role="tab" data-p="reading" aria-selected="true">Reading</button>
-      <button class="tab" role="tab" data-p="guide" aria-selected="false">Guide</button>
       <button class="tab" role="tab" data-p="ideas" aria-selected="false">Meeting</button>
       <button class="tab" role="tab" data-p="courses" aria-selected="false">Notes</button>
-      <button class="tab" role="tab" data-p="units" aria-selected="false">Courses</button>
+      <button class="tab" role="tab" data-p="library" aria-selected="false">Library</button>
       <button class="tab" role="tab" data-p="calendar" aria-selected="false">Calendar</button>
       <button class="tab" role="tab" data-p="textbooks" aria-selected="false">Textbooks</button>
       <button class="tab" role="tab" data-p="review" aria-selected="false">Review</button>
@@ -557,34 +501,6 @@ tr.sup .gsc .go{color:var(--muted)}
   <div id="paperTable" style="display:none"></div>
 </section>
 
-<!-- ========== Guide ========== -->
-<section class="panel" id="p-guide">
-  <div class="toolbar">
-    <span class="srch"><input type="text" id="gsearch" placeholder="搜尋學會、條件、數值、引文…"><button class="clr" data-clr="gsearch">✕</button></span>
-    <button class="iconb" id="gImpBtn" title="貼上 JSON 匯入">📥</button>
-    <button class="iconb" id="gExpBtn" title="匯出 Markdown">📤</button>
-  </div>
-  <div class="card" id="gImport" style="display:none">
-    <div class="srclab">指引 JSON</div>
-    <textarea id="gjson" style="min-height:120px;font-family:var(--mono);font-size:12.5px" placeholder='{ "source": {…}, "rows": […] }'></textarea>
-    <input type="file" id="gjsonFile" accept=".json,application/json" style="display:none">
-    <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="gjsonState">貼一包，或好幾包組成的陣列。</span>
-      <button class="btn ghost mini" id="gjsonPick">選檔</button>
-      <button class="btn mini" id="gjsonGo">匯入</button></div>
-    <div id="gjsonRep"></div>
-    <div class="saverow" style="margin-top:12px"><button class="btn ghost" id="gjsonClose">關閉</button></div>
-  </div>
-  <div class="srchinfo" id="gInfo" style="display:none"></div>
-
-  <div class="blockhead"><span class="bt">📊 COMPARE</span><span class="spacer"></span>
-    <div class="seg sm" id="gSeg"><button data-gview="all" aria-pressed="true">全部</button><button data-gview="cur" aria-pressed="false">現行</button></div>
-    <button class="iconb" id="gAddTopic" title="新增主題">＋</button></div>
-  <div id="gList"></div>
-
-  <div class="blockhead"><span class="bt">📚 SOURCES</span><span class="spacer"></span>
-    <button class="iconb" id="gAddSrc" title="新增來源">＋</button></div>
-  <div id="gSrcList"></div>
-</section>
 
 <!-- ========== Textbooks ========== -->
 <section class="panel" id="p-textbooks">
@@ -635,7 +551,6 @@ tr.sup .gsc .go{color:var(--muted)}
       <label class="f"><span>分類</span><select id="nt-kind"></select></label>
       <label class="f"><span>標籤（逗號分隔）</span><input type="text" id="nt-tags" placeholder="e.g. 方法學, W5"></label>
     </div>
-    <label class="f"><span>課程單元</span><select id="nt-unit"></select></label>
     <div id="ntExamBox" style="display:none">
       <div class="grid2">
         <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">出處（課程／老師／日期）<button class="qm" type="button" data-tip="tipExam" aria-expanded="false" title="說明">ⓘ</button></span>
@@ -661,17 +576,25 @@ tr.sup .gsc .go{color:var(--muted)}
   <div id="ntList"></div>
 </section>
 
-<!-- ========== Courses（課程單元）========== -->
-<section class="panel" id="p-units">
-  <div class="blockhead"><span class="bt">🧑‍🏫 UNITS</span><span class="spacer"></span>
-    <button class="qm" data-tip="tipUnits" aria-expanded="false" title="說明">ⓘ</button>
-    <button class="iconb" id="addUnitBtn" title="新增單元">＋</button></div>
-  <div class="tip" id="tipUnits">老師課程的預習包，照<strong>週次和指定閱讀</strong>整理。先按「＋ 課程」建立課程（名稱、老師、代碼），再按 ＋ 新增單元。展開單元可以 <strong>＋ HTML</strong> 上傳預習頁（存到 epi-data 的 <code>courses/代碼/</code>），點 📄 全螢幕開啟、↗ 開新分頁。指定閱讀會自動對到 Textbooks 主題；Notes 的筆記選「課程單元」就會列在這裡。<strong>只綁你自己產生的 HTML</strong>：這裡開的頁面不加 sandbox，讀得到 app 的本機資料。</div>
+<!-- ========== Library ========== -->
+<section class="panel" id="p-library">
+  <div class="blockhead"><span class="bt">📚 LIBRARY</span><span class="spacer"></span>
+    <button class="qm" data-tip="tipLib" aria-expanded="false" title="說明">ⓘ</button>
+    <button class="iconb" id="addUnitBtn" title="新增卡片">＋</button></div>
+  <div class="tip" id="tipLib"><ul>
+    <li>先按「＋ 主題」建立主題（名稱、說明、代碼），再按右上 ＋ 新增卡片</li>
+    <li>一張卡片可以放多個 HTML，上傳到 epi-data 的 <code>library/代碼/</code></li>
+    <li>點 📄 全螢幕開啟；↗ 開新分頁，分頁右上角的 ✕ 會先同步再關閉</li>
+    <li>頁面裡存的東西（問答、截圖、勾選）會同步到 HTML 旁邊的 <code>.data.json</code>：打開時先取雲端較新的，關閉時上傳，頂列 ☁ 可以手動同步</li>
+    <li>兩台裝置都改過時會問你要用哪一份，沒選的那份存成備份檔</li>
+    <li>指定閱讀會依書名和章節自動對到 Textbooks 主題</li>
+    <li>只放你自己產生的 HTML：這裡開的頁面讀得到 app 的本機資料</li>
+  </ul></div>
   <div class="tagbar" id="ucBar"></div>
   <div class="card" id="ucForm" style="display:none">
-    <label class="f"><span>課程名稱</span><input type="text" id="uc-name" list="ucNames" placeholder="e.g. 高等流行病學方法"></label>
+    <label class="f"><span>主題名稱</span><input type="text" id="uc-name" list="ucNames" placeholder="e.g. 高等流行病學方法"></label>
     <div class="grid2">
-      <label class="f"><span>授課老師</span><input type="text" id="uc-teacher" placeholder="e.g. 林老師"></label>
+      <label class="f"><span>說明（選填）</span><input type="text" id="uc-desc" placeholder="e.g. 林老師・PhD1 上"></label>
       <label class="f"><span>代碼（資料夾名）</span><input type="text" id="uc-code" placeholder="英數與 -，e.g. causal"></label>
     </div>
     <div class="saverow"><button class="btn ghost" id="cancelUC">Cancel</button><button class="btn" id="saveUC">Save</button></div>
@@ -926,7 +849,7 @@ tr.sup .gsc .go{color:var(--muted)}
   <div class="kdgroup setg">分類與清理<button class="qm" data-tip="tipClean" aria-expanded="false" title="說明">ⓘ</button></div>
   <div class="tip" id="tipClean"><strong>分類清單</strong>：三組分類各自獨立（Reading／Questions 與 Notes／KEY DATES）。在下拉選單最下面選「＋ 新增…」就能加。名字可直接改，卡片存的是代號，改名不動資料。內建的只能改名不能刪；刪掉自訂分類時底下項目退回預設，不會被刪。<br>
   <strong>回收桶</strong>：刪掉的卡片保留 30 天。✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記墓碑跟著同步，其他裝置不會送回來。<br>
-  <strong>沒有卡片或單元指向的 HTML</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
+  <strong>沒有卡片指向的 HTML</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
   <div class="setbody" id="sg-clean">
     <details class="card fold"><summary>分類清單</summary>
       <div id="catMgr" style="margin-top:6px"></div>
@@ -934,7 +857,7 @@ tr.sup .gsc .go{color:var(--muted)}
     <details class="card fold"><summary>🗑️ 回收桶</summary>
       <div id="trashList" style="margin-top:6px"></div>
     </details>
-    <details class="card fold"><summary>沒有卡片或單元指向的 HTML</summary>
+    <details class="card fold"><summary>沒有卡片指向的 HTML</summary>
       <p class="hint" style="margin:6px 0 10px" id="repoSize">repo 用量：尚未查詢</p>
       <div class="row" style="margin-bottom:8px">
         <button class="btn ghost mini" id="orphScan">🔍 掃描</button>
@@ -978,13 +901,22 @@ tr.sup .gsc .go{color:var(--muted)}
 </div>
 <div class="ov" id="uv" style="--ac:#4B5BA6">
   <div class="ov-top">
-    <span class="mono" id="uvName" style="font-size:12.5px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-    <button class="btn ghost mini" id="uvNew" title="在新分頁開啟">↗ 開新分頁</button>
-    <button class="x" id="uvClose" style="font-size:20px" title="關閉">✕</button>
+    <span class="mono" id="uvName" style="font-size:12.5px;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+    <span id="uvSyncSt"></span>
+    <button class="btn ghost mini" id="uvSync" title="立即同步頁面資料">☁</button>
+    <button class="btn ghost mini" id="uvNew" title="在新分頁開啟">↗</button>
+    <button class="x" id="uvClose" style="font-size:20px" title="同步後關閉">✕</button>
   </div>
   <div style="flex:1;margin-top:8px;min-height:0">
-    <iframe id="uvFrame" allow="clipboard-write" title="課程 HTML"
+    <iframe id="uvFrame" allow="clipboard-write" title="Library HTML"
       style="display:block;width:100%;height:100%;border:1px solid var(--line);border-radius:var(--r);background:#fff"></iframe>
+  </div>
+</div>
+<div class="ov" id="libAsk" style="--ac:#4B5BA6;--ac-soft:#E9EBF6;--ac-mid:#CDD2EC">
+  <div class="card">
+    <p id="libAskMsg" style="margin:0 0 10px;line-height:1.7"></p>
+    <p class="hint" style="margin:0 0 4px">沒選的那份會另存成備份檔（<span class="mono">.data.backup-日期.json</span>），不會直接蓋掉。</p>
+    <div class="saverow"><button class="btn ghost" id="libAskCloud">用雲端的</button><button class="btn" id="libAskLocal">用這台的</button></div>
   </div>
 </div>
 <input type="file" id="imgPick" accept="image/*" style="display:none">
@@ -1191,23 +1123,6 @@ const CMPCOLS=[['title','Title'],['sum','📌 一句話'],['design','Design'],['
 const cmpOn=new Set(['title','sum','design','result','note']);
 let qPaper='',qCard='',qSec='',tagFilter=new Set(),editKD=null,editCS=null,openSec=null;
 
-/* ===== GUIDE：指引比較（來源 gsrc／主題 gtopic／條目 grow）===== */
-const G_SEEDS=[
-  {id:'tx-start',name:'治療起始條件',cols:[{k:'dna',label:'HBV DNA'},{k:'alt',label:'ALT'},{k:'fib',label:'纖維化／肝硬化'},{k:'other',label:'其他條件'}]},
-  {id:'hcc-surv',name:'HCC 監測對象與間隔',cols:[{k:'who',label:'監測對象'},{k:'tool',label:'工具'},{k:'interval',label:'間隔'},{k:'start',label:'起始年齡／條件'}]},
-  {id:'nhi-cover',name:'健保給付條件與期程',cols:[{k:'indic',label:'適應症'},{k:'drug',label:'給付用藥'},{k:'dur',label:'給付期限'},{k:'review',label:'審查／續用條件'}]},
-  {id:'phase-def',name:'慢性 HBV 感染分期定義',cols:[{k:'stage',label:'分期名稱'},{k:'hbeag',label:'HBeAg'},{k:'dna',label:'HBV DNA'},{k:'alt',label:'ALT'},{k:'activity',label:'肝炎活性／纖維化'}]}];
-function gEnsureSeeds(){
-  if(!Array.isArray(S.gsrc))S.gsrc=[];
-  if(!Array.isArray(S.grow))S.grow=[];
-  if(!Array.isArray(S.gtopic))S.gtopic=[];
-  G_SEEDS.forEach((sd,i)=>{
-    const t=S.gtopic.find(x=>x.id===sd.id);
-    if(!t)S.gtopic.push({id:sd.id,name:sd.name,canon:sd.name,seed:true,order:i,
-      cols:sd.cols.map(x=>Object.assign({},x)),created:0,mtime:0});
-    else{t.seed=true;t.canon=sd.name;if(t.order==null)t.order=i}
-  });
-}
 /* v44：PROGRESS 從 KEY DATES 拆成獨立資料。Google 日曆來的（有 gid）留在 KEY DATES 改 Other */
 function migrateProg(){
   if(!Array.isArray(S.prog))S.prog=[];
@@ -1373,7 +1288,7 @@ async function load(){
   }
   migrateProg();
   ensureExamCat();
-  gEnsureSeeds();
+  libMigrate();
   activeTerm=classTerm=currentTerm();
   if(!Array.isArray(S.classes))S.classes=[];
   if(!Array.isArray(S.ucourses))S.ucourses=[];
@@ -1459,8 +1374,7 @@ document.addEventListener('click',e=>{
 const BIN={paper:['papers','精讀卡片','title'],card:['cards','複習卡','q'],
   q:['qs','Question','q'],
   mt:['mt','Meeting','date'],dir:['dirs','Direction','title'],note:['notes','Note','title'],kd:['kd','Key date','title'],prog:['prog','Progress','title'],cs:['courses','課表','name'],
-  ucourse:['ucourses','課程','name'],unit:['units','課程單元','topic'],
-  gsrc:['gsrc','指引來源','title'],gtopic:['gtopic','指引主題','name'],grow:['grow','指引條目','title']};
+  ucourse:['ucourses','Library 主題','name'],unit:['units','Library 卡片','title']};
 function bin(type,obj){
   if(!Array.isArray(S.trash))S.trash=[];
   if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
@@ -1508,15 +1422,13 @@ function renderTrash(){
 }
 async function doHold(spec){
   const i=spec.indexOf('|'),t=spec.slice(0,i),id=spec.slice(i+1);
-  if(t==='gsrc'||t==='gtopic'){gDelete(t,id);return}
   if(t==='ucourse'){const n=(S.units||[]).filter(u=>u.cid===id).length;
-    if(n){toast('這門課還有 '+n+' 個單元，先刪掉或改到別的課程');return}
+    if(n){toast('這個主題還有 '+n+' 張卡片，先刪掉或改到別的主題');return}
     if(ucSel===id)ucSel=''}
-  if(t==='ufile'){const k=id.lastIndexOf('~'),u=(S.units||[]).find(x=>x.id===id.slice(0,k)),ix=+id.slice(k+1);
-    if(u&&u.files&&u.files[ix]){const f=u.files.splice(ix,1)[0];u.mtime=Date.now();save();renderUnits();
-      toast('已解除綁定（repo 裡的 '+f.path.split('/').pop()+' 還在）')}
+  if(t==='ufile'){const r=fileById(id);
+    if(r){r.u.files=r.u.files.filter(x=>x!==r.f);r.u.mtime=Date.now();save();renderLib();
+      toast('已解除綁定（repo 裡的 '+r.f.path.split('/').pop()+' 還在）')}
     return}
-  if(t==='grow'){const o=(S.grow||[]).find(x=>x.id===id);if(o)o._label=gRowLabel(o)}
   if(BIN[t]){
     const arr=BIN[t][0],o=S[arr].find(x=>x.id===id);
     if(o){bin(t,o);S[arr]=S[arr].filter(x=>x.id!==id)}
@@ -1525,7 +1437,6 @@ async function doHold(spec){
   else if(t==='card'){save();renderCards();updateBadge();renderTrash();toast('已移到回收桶')}
   else if(t==='creset'){const c=S.cards.find(x=>x.id===id);if(c){c.level=0;c.due=Date.now();c.n=0;c.last=null;save();renderCards();updateBadge();toast('排程已重設')}}
   else if(t==='q'){save();renderQ();renderTrash();toast('已移到回收桶')}
-  else if(t==='unit'||t==='ucourse'){openU.delete(id);save();renderUnits();renderNt();renderTrash();toast('已移到回收桶')}
   else if(t==='mt'){save();renderMT();renderTrash();toast('已移到回收桶')}
   else if(t==='dir'){save();renderDIR();renderTrash();toast('已移到回收桶')}
   else if(t==='note'){save();renderNt();renderTrash();toast('已移到回收桶')}
@@ -1534,7 +1445,7 @@ async function doHold(spec){
 
   else if(t==='kd'){save();renderKD();renderTrash();toast('已移到回收桶')}
   else if(t==='prog'){save();renderProg();renderTrash();toast('已移到回收桶')}
-  else if(t==='grow'){if(gSel===id){gSel=null;gEdit=false}save();renderGuide();renderTrash();toast('已移到回收桶')}
+  else if(t==='unit'||t==='ucourse'){openU.delete(id);save();renderLib();renderTrash();toast('已移到回收桶')}
   else if(t==='cs'){editCS=null;show('csForm',false);save();renderTT();renderTrash();toast('已移到回收桶')}
   else if(t==='secnote'){const p=id.split('|'),ti=+p[0],kk=p[1],t2=th(ti);
     if(t2.sn[kk]){t2.sn[kk]={n:'',links:[],mtime:Date.now()};openSec=null;save();renderMethod();toast('已清除筆記')}}
@@ -1578,644 +1489,34 @@ document.getElementById('tabs').addEventListener('click',e=>{
   window.scrollTo({top:0});
 });
 
-/* ================= GUIDE ================= */
-let gQ='',gView='all',gSel=null,gEdit=false,gNewRow=null,gRD=null,gLastSrc='',
-    gTopicEd=null,gTD=null,gSrcOpen=null,gSrcEd=null,gSD=null;
-const gShut=new Set();
-const GSTAT={current:['現行','#3E6B4E'],superseded:['已取代','#B7B1A4'],draft:['草案','#B5761E']};
-function gNorm(s){return String(s==null?'':s).normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase()}
-function gSanKey(k){return String(k==null?'':k).normalize('NFKC').toLowerCase().replace(/[^a-z0-9_]+/g,'_').replace(/^_+|_+$/g,'')}
-function gSanId(k){return String(k==null?'':k).normalize('NFKC').trim().toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')}
-function gNewKey(taken,base){
-  if(base&&!taken.has(base))return base;
-  const stem=base||'c';let i=base?2:1;while(taken.has(stem+i))i++;return stem+i;
-}
-const G_COMMON={dna:'HBV DNA',alt:'ALT',hbeag:'HBeAg',fib:'纖維化／肝硬化'};
-function gSeedCol(k){return G_COMMON[k]||''}
-function gDateNorm(v){
-  v=String(v==null?'':v).trim();
-  const m=v.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
-  return m?m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0'):v;
-}
-function gDay(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function gTopics(){
-  const o=t=>t.order==null||isNaN(+t.order)?1e9:+t.order;
-  return (S.gtopic||[]).slice().sort((a,b)=>(o(a)-o(b))||((a.created||0)-(b.created||0)));
-}
-function gMaxOrder(){return (S.gtopic||[]).reduce((m,t)=>Math.max(m,isNaN(+t.order)?0:+t.order),-1)}
-function gTopicFind(x){
-  const n=gNorm(x);if(!n)return null;
-  return (S.gtopic||[]).find(t=>t.id===x||gNorm(t.name)===n||gNorm(t.canon)===n)||null;
-}
-function gSrc(id){return (S.gsrc||[]).find(s=>s.id===id)||null}
-function gSrcDate(s){return s?String(s.eff||s.year||''):''}
-function gSrcKey(s){return !s?'':(s.eff?String(s.eff):(s.year?String(s.year)+'-00-00':''))}
-function gSrcShort(s){
-  if(!s)return '（來源已刪除）';
-  const d=gSrcDate(s);return (s.org||s.id||'?')+(d?' '+d:'');
-}
-function gSrcRange(s){
-  if(!s)return '';
-  if(s.eff)return s.eff+(s.until?' → '+s.until:' 起');
-  return String(s.year||'');
-}
-function gOrgCmp(a,b){
-  a=String(a||'');b=String(b||'');
-  const la=/^[\x00-\x7F]/.test(a)?0:1,lb=/^[\x00-\x7F]/.test(b)?0:1;
-  return (la-lb)||a.localeCompare(b,la?'zh-Hant':'en',{sensitivity:'base'});
-}
-function gSrcSorted(){return (S.gsrc||[]).slice().sort((a,b)=>gOrgCmp(a.org||a.id,b.org||b.id)||gSrcKey(b).localeCompare(gSrcKey(a)))}
-function gRowCmp(a,b){
-  const sa=gSrc(a.source),sb=gSrc(b.source);
-  return gOrgCmp(sa?sa.org||sa.id:'',sb?sb.org||sb.id:'')
-    ||gSrcKey(sb).localeCompare(gSrcKey(sa))
-    ||String(a.source||'').localeCompare(String(b.source||''))
-    ||((a.created||0)-(b.created||0));
-}
-function gRowLabel(r){
-  const t=(S.gtopic||[]).find(x=>x.id===r.topic);
-  return gSrcShort(gSrc(r.source))+' · '+(t?t.name:'')+(r.sub?'（'+r.sub+'）':'');
-}
-function gPage(p){p=String(p||'').trim();return /^p/i.test(p)?p:'p. '+p}
-function gCell(v){v=v==null?'':String(v);return v.trim()?esc(v.trim()).replace(/\n/g,'<br>'):'<span class="gna">—</span>'}
-function gTerms(){return gNorm(gQ).split(' ').filter(Boolean)}
-function gRowHay(r,t,s){
-  const v=r.vals||{};
-  return gNorm([t&&t.name,s&&s.org,s&&s.title,s&&s.year,s&&s.eff,s&&s.id,r.sub,
-    ...Object.keys(v).map(k=>v[k]),r.grade,r.page,r.quote,r.note].join(' '));
-}
-function gSrcHay(s){return gNorm([s.org,s.title,s.year,s.eff,s.until,s.id,s.changes,s.note].join(' '))}
-function gRowsOf(t,terms){
-  return (S.grow||[]).filter(r=>{
-    if(r.topic!==t.id)return false;
-    const s=gSrc(r.source);
-    if(gView==='cur'&&s&&s.status==='superseded')return false;
-    if(!terms.length)return true;
-    const h=gRowHay(r,t,s);return terms.every(x=>h.includes(x));
-  }).sort(gRowCmp);
-}
-
-/* ---- 比較表 ---- */
-function gTable(t,rows){
-  const cols=t.cols||[],hasEv=rows.some(r=>String(r.grade||'').trim());
-  let prev=null;
-  const body=rows.map((r,i)=>{
-    const s=gSrc(r.source),org=s?(s.org||s.id):'';
-    const og=i>0&&org!==prev;prev=org;
-    const sup=s&&s.status==='superseded',dr=s&&s.status==='draft';
-    const cls=[og?'og':'',sup?'sup':'',r.id===gSel?'sel':''].filter(Boolean).join(' ');
-    const v=r.vals||{};
-    return `<tr data-grow="${esc(r.id)}"${cls?` class="${cls}"`:''}><td class="gsc"><span class="go">${esc(s?org:'（來源已刪除）')}</span> <span class="gy">${esc(gSrcDate(s))}</span>${sup?' <span class="gtag">已取代</span>':''}${dr?' <span class="gtag dr">草案</span>':''}${r.sub?`<span class="gs">${esc(r.sub)}</span>`:''}</td>`
-      +cols.map(c=>`<td>${gCell(v[c.k])}</td>`).join('')
-      +(hasEv?`<td class="gev">${esc(r.grade||'')}</td>`:'')+'</tr>';
-  }).join('');
-  return `<div class="gtw"><table class="gt"><thead><tr><th class="gsc">來源</th>${cols.map(c=>`<th>${esc(c.label)}</th>`).join('')}${hasEv?'<th>證據</th>':''}</tr></thead><tbody>${body}</tbody></table></div>`;
-}
-function gDetail(t,r){
-  const s=gSrc(r.source),cols=t.cols||[],v=r.vals||{};
-  const known=new Set(cols.map(c=>c.k));
-  const extra=Object.keys(v).filter(k=>!known.has(k)&&String(v[k]||'').trim());
-  const kv=cols.map(c=>`<dt>${esc(c.label)}</dt><dd>${gCell(v[c.k])}</dd>`).join('')
-    +extra.map(k=>`<dt class="mono" title="已移除的欄位">${esc(k)}</dt><dd>${gCell(v[k])}</dd>`).join('');
-  const sup=s&&s.status==='superseded';
-  return `<div class="gdet" id="gDet">
-    <div class="gdh"><span class="t">${esc(gSrcShort(s))}</span>${r.sub?`<span class="s">· ${esc(r.sub)}</span>`:''}${sup?'<span class="gtag">已取代</span>':''}
-      <span class="cxg"><button class="cx e" data-gredit="${esc(r.id)}" title="編輯">✎</button><button class="cx" data-hold="grow|${esc(r.id)}" title="長按 1.5 秒刪除">✕</button></span></div>
-    <div class="gdsrc">${s&&s.title?esc(s.title):''}${s&&s.url?` <button class="cx e" data-open="${esc(s.url)}" title="開啟原文">🌐</button>`:''}</div>
-    <dl class="gkv">${kv}</dl>
-    ${r.grade||r.page?`<div class="gpills">${r.grade?`<span class="pill pine">證據 ${esc(r.grade)}</span>`:''}${r.page?`<span class="pill">${esc(gPage(r.page))}</span>`:''}</div>`:''}
-    ${String(r.quote||'').trim()?`<div class="gdk">原文</div><blockquote class="gquote">${esc(String(r.quote).trim())}</blockquote>`:''}
-    ${String(r.note||'').trim()?`<div class="gdk">筆記</div><div class="mdview" style="font-size:13.5px;line-height:1.65">${md(r.note)}</div>`:''}
-  </div>`;
-}
-
-/* ---- 編輯器 ---- */
-function gSrcOpts(cur){
-  return '<option value="">— 選來源 —</option>'+gSrcSorted().map(s=>
-    `<option value="${esc(s.id)}"${cur===s.id?' selected':''}>${esc(gSrcShort(s))}${s.status==='superseded'?'（已取代）':''}</option>`).join('')
-    +'<option value="__new">＋ 新增來源…</option>';
-}
-function gRowEditor(t,r){
-  const d=gRD||{vals:{}},v=d.vals||{};
-  return `<div class="card ged" id="gRowEd">
-    <div class="gedh">${r?'編輯條目':'新增條目'} · ${esc(t.name)}</div>
-    <div class="grid2">
-      <label class="f"><span>來源</span><select data-grd="source">${gSrcOpts(d.source)}</select></label>
-      <label class="f"><span>子分組</span><input type="text" data-grd="sub" value="${esc(d.sub||'')}" placeholder="例：HBeAg 陽性、肝硬化"></label>
-    </div>
-    ${(t.cols||[]).map(c=>`<label class="f"><span>${esc(c.label)}</span><textarea data-grd="v:${esc(c.k)}" rows="1">${esc(v[c.k]||'')}</textarea></label>`).join('')}
-    <div class="grid2">
-      <label class="f"><span>證據等級</span><input type="text" data-grd="grade" value="${esc(d.grade||'')}"></label>
-      <label class="f"><span>頁碼</span><input type="text" data-grd="page" value="${esc(d.page||'')}"></label>
-    </div>
-    <label class="f"><span>原文引述</span><textarea data-grd="quote">${esc(d.quote||'')}</textarea></label>
-    <label class="f"><span>筆記（Markdown）</span><textarea data-grd="note">${esc(d.note||'')}</textarea></label>
-    <div class="saverow"><button class="btn ghost" data-grcancel="1">Cancel</button><button class="btn" data-grsave="1">Save</button></div>
-  </div>`;
-}
-function gTopicEditor(t){
-  const d=gTD||{name:'',cols:[]},isNew=!t;
-  return `<div class="card ged" id="gTopicEd">
-    <div class="gedh">${isNew?'新增主題':'編輯主題'}${t&&t.seed?' · 內建主題，改名不影響匯入比對':''}</div>
-    <label class="f"><span>主題名稱</span><input type="text" data-gtd="name" value="${esc(d.name||'')}"></label>
-    <div class="srclab">欄位（左邊灰字是匯入用的代號）</div>
-    ${d.cols.map((c,i)=>`<div class="gcol"><span class="k" title="${esc(c.k||'')}">${esc(c.k||'（新）')}</span><input type="text" data-gtc="${i}" value="${esc(c.label||'')}" placeholder="欄位名稱"><button class="cx e" data-gtcup="${i}" title="上移"${i?'':' disabled'}>↑</button><button class="cx" data-gtcdel="${i}" title="移除這個欄位（資料保留）">✕</button></div>`).join('')}
-    <div class="row" style="margin:2px 0 10px"><button class="btn ghost mini" data-gtcadd="1">＋ 欄位</button>
-      ${isNew?'':`<span class="spacer"></span><span class="hint" style="font-size:12px">主題順序</span><button class="btn ghost mini" data-gtmove="-1" title="上移">↑</button><button class="btn ghost mini" data-gtmove="1" title="下移">↓</button>`}</div>
-    <div class="saverow">${!isNew&&!t.seed?`<button class="btn warn mini" data-hold="gtopic|${esc(t.id)}" title="長按 1.5 秒刪除（連同底下的條目）" style="margin-right:auto">Delete</button>`:''}
-      <button class="btn ghost" data-gtcancel="1">Cancel</button><button class="btn" data-gtsave="1">Save</button></div>
-  </div>`;
-}
-function gSrcEditor(s){
-  const d=gSD||{},isNew=!s;
-  const orgs=[...new Set((S.gsrc||[]).map(x=>x.org).filter(Boolean))].sort(gOrgCmp);
-  const others=gSrcSorted().filter(x=>!s||x.id!==s.id);
-  const st=d.status||'current';
-  return `<div class="card ged" id="gSrcEd">
-    <div class="gedh">${isNew?'新增來源':'編輯來源 · <span class="mono">'+esc(s.id)+'</span>'}</div>
-    <div class="grid2">
-      <label class="f"><span>學會／機關</span><input type="text" data-gsd="org" list="gOrgList" value="${esc(d.org||'')}" placeholder="AASLD、EASL、WHO、健保署…"></label>
-      <label class="f"><span>年份</span><input type="text" data-gsd="year" value="${esc(d.year||'')}" inputmode="numeric"></label>
-    </div>
-    <datalist id="gOrgList">${orgs.map(o=>`<option value="${esc(o)}">`).join('')}</datalist>
-    <label class="f"><span>標題</span><input type="text" data-gsd="title" value="${esc(d.title||'')}"></label>
-    <div class="grid2">
-      <label class="f"><span>生效日（健保必填）</span><input type="date" data-gsd="eff" value="${esc(d.eff||'')}"></label>
-      <label class="f"><span>失效日</span><input type="date" data-gsd="until" value="${esc(d.until||'')}"></label>
-    </div>
-    <div class="grid2">
-      <label class="f"><span>狀態</span><select data-gsd="status">${Object.keys(GSTAT).map(k=>`<option value="${k}"${st===k?' selected':''}>${GSTAT[k][0]}</option>`).join('')}</select></label>
-      <label class="f"><span>取代哪一版</span><select data-gsd="supersedes"><option value="">—</option>${others.map(x=>`<option value="${esc(x.id)}"${d.supersedes===x.id?' selected':''}>${esc(gSrcShort(x))}</option>`).join('')}</select></label>
-    </div>
-    <label class="f"><span>🌐 網址</span><input type="text" data-gsd="url" value="${esc(d.url||'')}"></label>
-    <label class="f"><span>變更重點（Markdown）</span><textarea data-gsd="changes">${esc(d.changes||'')}</textarea></label>
-    <label class="f"><span>備註（Markdown）</span><textarea data-gsd="note">${esc(d.note||'')}</textarea></label>
-    ${isNew?`<label class="f"><span>代號（留空自動產生）</span><input type="text" data-gsd="id" value="${esc(d.id||'')}" placeholder="例：aasld-2018、nhi-2023-07"></label>`:''}
-    <div class="saverow"><button class="btn ghost" data-gscancel="1">Cancel</button><button class="btn" data-gssave="1">Save</button></div>
-  </div>`;
-}
-
-/* ---- 主畫面 ---- */
-function gTopicBlock(t,rows,q,total){
-  const open=q||!gShut.has(t.id);
-  let h=`<div class="gtb" data-gt="${esc(t.id)}">
-    <div class="kdgroup gth"><span>${esc(t.name)}</span><span class="gn">${rows.length}</span>
-      <span class="cxg"><button class="cx e" data-gtadd="${esc(t.id)}" title="新增一列">＋</button><button class="cx e" data-gtedit="${esc(t.id)}" title="編輯主題">✎</button></span>
-      ${q?'':`<button class="kx" data-gtshut="${esc(t.id)}" aria-expanded="${open}" title="${open?'收合':'展開'}">${CHEV}</button>`}</div>`;
-  if(gTopicEd===t.id)h+=gTopicEditor(t);
-  if(!open)return h+'</div>';
-  if(gNewRow===t.id)h+=gRowEditor(t,null);
-  if(!rows.length)h+=`<p class="hint gempty">${total?'目前的篩選下沒有條目。':'—'}</p>`;
-  else{
-    h+=gTable(t,rows);
-    const sel=rows.find(r=>r.id===gSel);
-    if(sel)h+=gEdit?gRowEditor(t,sel):gDetail(t,sel);
-  }
-  return h+'</div>';
-}
-function gSrcDetail(s,n){
-  const st=GSTAT[s.status]||GSTAT.current;
-  const sup=s.supersedes?gSrc(s.supersedes):null;
-  const by=(S.gsrc||[]).filter(x=>x.supersedes===s.id);
-  return `<div class="gsd">
-    <div class="meta">${esc(s.id)} · ${st[0]}${s.eff?' · 生效 '+esc(gSrcRange(s)):(s.year?' · '+esc(s.year):'')}</div>
-    ${s.title?`<div style="font-weight:600;margin-bottom:3px">${esc(s.title)}</div>`:''}
-    ${sup?`<div class="hint">取代 ${esc(gSrcShort(sup))}</div>`:(s.supersedes?`<div class="hint">取代 ${esc(s.supersedes)}（不在清單中）</div>`:'')}
-    ${by.length?`<div class="hint">已被 ${by.map(x=>esc(gSrcShort(x))).join('、')} 取代</div>`:''}
-    ${String(s.changes||'').trim()?`<div class="gdk">變更重點</div><div class="mdview">${md(s.changes)}</div>`:''}
-    ${String(s.note||'').trim()?`<div class="gdk">備註</div><div class="mdview">${md(s.note)}</div>`:''}
-    <div class="row" style="margin-top:8px"><span class="hint" style="font-size:12px">${n} 列條目</span><span class="spacer"></span>
-      <span class="cxg"><button class="cx e" data-gsedit="${esc(s.id)}" title="編輯">✎</button><button class="cx" data-hold="gsrc|${esc(s.id)}" title="長按 1.5 秒刪除${n?'（連同 '+n+' 列條目）':''}">✕</button></span></div>
-  </div>`;
-}
-function renderGSrc(terms){
-  const sl=document.getElementById('gSrcList');if(!sl)return 0;
-  let list=gSrcSorted();
-  if(terms.length)list=list.filter(s=>{const h=gSrcHay(s);return terms.every(x=>h.includes(x))});
-  const cnt={};(S.grow||[]).forEach(r=>{cnt[r.source]=(cnt[r.source]||0)+1});
-  let h=gSrcEd==='__new'?gSrcEditor(null):'',org=null;
-  list.forEach(s=>{
-    const o=s.org||s.id,st=GSTAT[s.status]?s.status:'current',open=gSrcOpen===s.id;
-    if(o!==org){org=o;h+=`<div class="kdgroup">${esc(o)}</div>`}
-    h+=`<div class="gsr${st==='superseded'?' sup':''}${open?' on':''}" data-gso="${esc(s.id)}">
-      <span class="sd" style="background:${GSTAT[st][1]}" title="${GSTAT[st][0]}"></span>
-      <span class="sy">${esc(gSrcDate(s))}</span>
-      <span class="st">${esc(s.title||'（未填標題）')}</span>
-      <span class="sn" title="條目數">${cnt[s.id]||0}</span>
-      ${s.url?`<button class="cx e" data-open="${esc(s.url)}" title="開啟原文">🌐</button>`:''}</div>`;
-    if(open)h+=gSrcEd===s.id?gSrcEditor(s):gSrcDetail(s,cnt[s.id]||0);
-  });
-  if(!list.length&&gSrcEd!=='__new')h+=`<div class="empty">${terms.length?'沒有符合的來源。':'還沒有來源。匯入 JSON 時會自動建立，也可以按 ＋ 手動新增。'}</div>`;
-  sl.innerHTML=h;
-  return list.length;
-}
-function renderGuide(){
-  const el=document.getElementById('gList');if(!el)return;
-  gEnsureSeeds();
-  const terms=gTerms(),q=terms.length>0;
-  document.querySelectorAll('#gSeg [data-gview]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.gview===gView));
-  const all=S.grow||[];
-  let h='';
-  if(gTopicEd==='__new')h+=gTopicEditor(null);
-  if(!all.length&&!q)h+=`<div class="empty" style="margin:4px 0 8px">還沒有任何指引條目。按右上 <strong>📥</strong> 貼上 hep-guideline 產生的 JSON，或在主題標題按 <strong>＋</strong> 手動新增。</div>`;
-  let n=0;
-  gTopics().forEach(t=>{
-    const rows=gRowsOf(t,terms);
-    if(q&&!rows.length&&gTopicEd!==t.id&&gNewRow!==t.id)return;
-    n+=rows.length;
-    h+=gTopicBlock(t,rows,q,all.filter(r=>r.topic===t.id).length);
-  });
-  if(q&&!n&&!h)h=`<div class="empty">沒有符合的條目。</div>`;
-  el.innerHTML=h;
-  const ns=renderGSrc(terms);
-  const info=document.getElementById('gInfo');
-  if(info){info.style.display=q?'':'none';info.textContent=q?`找到 ${n} 列條目 · ${ns} 個來源`:''}
-}
-function gFocus(sel){const x=document.querySelector(sel);if(x){x.focus();if(x.scrollIntoView)x.scrollIntoView({block:'nearest'})}}
-
-/* ---- 存檔 ---- */
-function gRowSave(){
-  const d=gRD;if(!d)return;
-  const t=(S.gtopic||[]).find(x=>x.id===d.topic);if(!t){toast('主題不存在');return}
-  if(!d.source||!gSrc(d.source)){toast('請先選來源');return}
-  const sub=String(d.sub||'').replace(/\s+/g,' ').trim();
-  const dup=(S.grow||[]).find(r=>r.id!==d.id&&r.topic===d.topic&&r.source===d.source&&gNorm(r.sub)===gNorm(sub));
-  if(dup){toast('這個來源在這個主題已經有「'+(sub||'無子分組')+'」這一列');return}
-  const vals={};Object.keys(d.vals||{}).forEach(k=>{vals[k]=String(d.vals[k]==null?'':d.vals[k])});
-  const f={source:d.source,sub,vals,grade:String(d.grade||'').trim(),page:String(d.page||'').trim(),
-    quote:String(d.quote||''),note:String(d.note||'')};
-  const now=Date.now();let r;
-  if(d.id){r=(S.grow||[]).find(x=>x.id===d.id);if(!r){toast('找不到這一列');return}Object.assign(r,f);r.mtime=now}
-  else{r=Object.assign({id:'r'+uid(),topic:d.topic,created:now,mtime:now},f);S.grow.push(r)}
-  gLastSrc=d.source;gSel=r.id;gEdit=false;gRD=null;if(gNewRow===d.topic)gNewRow=null;gShut.delete(d.topic);
-  saved();renderGuide();
-}
-function gTopicSave(){
-  const d=gTD;if(!d)return;
-  const name=String(d.name||'').trim();if(!name){toast('請填主題名稱');return}
-  const other=(S.gtopic||[]).find(x=>x.id!==gTopicEd&&(gNorm(x.name)===gNorm(name)||gNorm(x.canon)===gNorm(name)));
-  if(other){toast('已經有同名主題');return}
-  const taken=new Set(d.cols.map(c=>c.k).filter(Boolean)),cols=[];
-  d.cols.forEach(c=>{
-    const label=String(c.label||'').trim();
-    if(!label&&!c.k)return;
-    let k=c.k;
-    if(!k){k=gNewKey(taken,gSanKey(label));taken.add(k)}
-    if(cols.some(x=>x.k===k))return;
-    cols.push({k,label:label||k});
-  });
-  if(!cols.length){toast('至少要有一個欄位');return}
-  const now=Date.now();
-  if(gTopicEd==='__new'){
-    S.gtopic.push({id:'t'+uid(),name,canon:name,seed:false,order:gMaxOrder()+1,cols,created:now,mtime:now});
-  }else{const t=S.gtopic.find(x=>x.id===gTopicEd);if(!t)return;t.name=name;t.cols=cols;t.mtime=now}
-  gTopicEd=null;gTD=null;saved();renderGuide();
-}
-function gTopicMove(id,dir){
-  const L=gTopics(),i=L.findIndex(t=>t.id===id),j=i+dir;
-  if(i<0||j<0||j>=L.length)return;
-  const now=Date.now();
-  L.forEach((t,k)=>{if(t.order!==k){t.order=k;t.mtime=now}});
-  L[i].order=j;L[j].order=i;L[i].mtime=L[j].mtime=now;
-  save();renderGuide();
-}
-function gIdFor(org,year,eff){
-  const s=String(org||'').trim();
-  const sl=/健保/.test(s)?'nhi':(s.normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'src');
-  const dp=sl==='nhi'&&eff?String(eff).slice(0,7):String(year||(eff?String(eff).slice(0,4):''));
-  const base=sl+(dp?'-'+dp:'');
-  let id=base,i=2;while(gSrc(id))id=base+'-'+(i++);
-  return id;
-}
-function gSrcSave(){
-  const d=gSD;if(!d)return;
-  const org=String(d.org||'').trim();if(!org){toast('請填學會／機關');return}
-  const tr=k=>String(d[k]==null?'':d[k]).trim();
-  const f={org,title:tr('title'),year:tr('year'),eff:tr('eff'),until:tr('until'),
-    status:GSTAT[d.status]?d.status:'current',supersedes:tr('supersedes'),url:tr('url'),
-    changes:String(d.changes||''),note:String(d.note||'')};
-  const now=Date.now();let s;
-  if(gSrcEd==='__new'){
-    let id=gSanId(d.id);
-    if(id&&gSrc(id)){toast('代號「'+id+'」已經有人用了');return}
-    if(!id)id=gIdFor(f.org,f.year,f.eff);
-    s=Object.assign({id,created:now,mtime:now},f);S.gsrc.push(s);
-  }else{s=gSrc(gSrcEd);if(!s){toast('找不到這個來源');return}Object.assign(s,f);s.mtime=now}
-  if(s.supersedes===s.id)s.supersedes='';
-  const old=s.supersedes?gSrc(s.supersedes):null;
-  let msg='已儲存';
-  if(old&&s.status!=='draft'&&old.status!=='superseded'){old.status='superseded';old.mtime=now;msg='已儲存，'+gSrcShort(old)+' 標為已取代'}
-  gSrcEd=null;gSD=null;gSrcOpen=s.id;save();toast(msg);renderGuide();
-}
-function gQuickSrc(txt){
-  txt=String(txt||'').trim();if(!txt)return null;
-  const m=txt.match(/^(.*?)[\s,，]*(\d{4})(?:[-/.](\d{1,2})(?:[-/.](\d{1,2}))?)?\s*$/);
-  let org=txt,year='',eff='',ym='';
-  if(m&&m[1].trim()){
-    org=m[1].trim();year=m[2];
-    if(m[3])ym=m[2]+'-'+m[3].padStart(2,'0');
-    if(m[3]&&m[4])eff=ym+'-'+m[4].padStart(2,'0');
-  }
-  const now=Date.now(),id=gIdFor(org,year,eff||ym);
-  S.gsrc.push({id,org,title:'',year,eff,until:'',status:'current',supersedes:'',url:'',changes:'',note:'',created:now,mtime:now});
-  save();return id;
-}
-function gDelete(t,id){
-  if(!S.tomb||typeof S.tomb!=='object')S.tomb={};
-  const now=Date.now();
-  let rows=[];
-  if(t==='gtopic'){
-    const tp=(S.gtopic||[]).find(x=>x.id===id);if(!tp)return;
-    if(tp.seed){toast('內建主題不能刪除，可以改名');return}
-    rows=(S.grow||[]).filter(r=>r.topic===id);
-    bin('gtopic',Object.assign({},tp,{_rows:rows}));
-    S.gtopic=S.gtopic.filter(x=>x.id!==id);
-    S.grow=S.grow.filter(r=>r.topic!==id);
-    if(gTopicEd===id){gTopicEd=null;gTD=null}
-    if(gNewRow===id){gNewRow=null;gRD=null}
-  }else if(t==='gsrc'){
-    const s=gSrc(id);if(!s)return;
-    rows=(S.grow||[]).filter(r=>r.source===id);
-    bin('gsrc',Object.assign({},s,{_rows:rows,_label:gSrcShort(s)+(s.title?' · '+s.title:'')}));
-    S.gsrc=S.gsrc.filter(x=>x.id!==id);
-    S.grow=S.grow.filter(r=>r.source!==id);
-    if(gSrcOpen===id)gSrcOpen=null;
-    if(gSrcEd===id){gSrcEd=null;gSD=null}
-    if(gRD&&gRD.source===id)gRD.source='';
-  }else return;
-  rows.forEach(r=>{S.tomb[r.id]=now});
-  if(rows.some(r=>r.id===gSel)){gSel=null;gEdit=false;if(gRD&&gRD.id)gRD=null}
-  save();renderGuide();renderTrash();
-  toast('已移到回收桶'+(rows.length?'（含 '+rows.length+' 列條目）':''));
-}
-
-/* ---- JSON 匯入 ---- */
-function gColResolve(t,rawK,label,ali,rep,now){
-  if(!Array.isArray(t.cols))t.cols=[];
-  const raw=String(rawK==null?'':rawK).trim(),lab=String(label==null?'':label).trim();
-  const ak=t.id+'\u0001'+raw;
-  if(ali[ak])return ali[ak];
-  const k=gSanKey(raw);
-  let hit=k?t.cols.find(c=>c.k===k):null;
-  if(!hit&&(lab||raw)){const n=gNorm(lab||raw);hit=t.cols.find(c=>gNorm(c.label)===n)}
-  if(!hit&&lab&&raw){const n=gNorm(raw);hit=t.cols.find(c=>gNorm(c.label)===n)}
-  if(hit){ali[ak]=hit.k;return hit.k}
-  if(!raw&&!lab)return '';
-  const nk=gNewKey(new Set(t.cols.map(c=>c.k)),k);
-  t.cols.push({k:nk,label:lab||gSeedCol(k)||raw||nk});
-  t.mtime=now;if(!rep.newT.has(t.id))rep.colsAdded.push(t.name+'：'+t.cols[t.cols.length-1].label);
-  ali[ak]=nk;return nk;
-}
-function gTopicGet(name,rep,now){
-  let t=gTopicFind(name);if(t)return t;
-  t={id:'t'+uid(),name,canon:name,seed:false,order:gMaxOrder()+1,cols:[],created:now,mtime:now};
-  S.gtopic.push(t);rep.newT.add(t.id);return t;
-}
-function gImportData(data){
-  if(!Array.isArray(S.gsrc))S.gsrc=[];
-  if(!Array.isArray(S.grow))S.grow=[];
-  gEnsureSeeds();
-  const rep={srcNew:0,srcUpd:0,rowNew:0,rowUpd:0,topicNew:[],newT:new Set(),colsAdded:[],superseded:[],warn:[],skipped:0};
-  const warn=m=>{if(!rep.warn.includes(m))rep.warn.push(m)};
-  const pkgs=Array.isArray(data)?data:[data];
-  const now=Date.now(),ali={},F=['org','title','year','eff','until','status','url','changes','note'];
-  let seq=0;
-  pkgs.forEach((pk,pi)=>{
-    const no=pkgs.length>1?'第 '+(pi+1)+' 包':'這包';
-    if(!pk||typeof pk!=='object'||Array.isArray(pk)){warn(no+'不是物件，略過');return}
-    (Array.isArray(pk.topics)?pk.topics:[]).forEach(tp=>{
-      if(!tp||!String(tp.name||'').trim())return;
-      const t=gTopicGet(String(tp.name).trim(),rep,now);
-      (Array.isArray(tp.cols)?tp.cols:[]).forEach(c=>{if(c&&(c.k||c.label))gColResolve(t,c.k,c.label,ali,rep,now)});
-    });
-    const rows=Array.isArray(pk.rows)?pk.rows:[];
-    let sid='';
-    if(pk.source&&typeof pk.source==='object'){
-      const src=pk.source;sid=String(src.id==null?'':src.id).trim();
-      if(!sid){warn(no+'的 source 沒有 id，整包略過');rep.skipped+=rows.length;return}
-      let s=gSrc(sid);
-      if(!s){s={id:sid,org:'',title:'',year:'',eff:'',until:'',status:'current',supersedes:'',url:'',changes:'',note:'',created:now,mtime:now};S.gsrc.push(s);rep.srcNew++}
-      else rep.srcUpd++;
-      F.forEach(k=>{if(src[k]!==undefined&&src[k]!==null)s[k]=(k==='changes'||k==='note')?String(src[k]):String(src[k]).trim()});
-      s.eff=gDateNorm(s.eff);s.until=gDateNorm(s.until);
-      if(!GSTAT[s.status])s.status='current';
-      if(!s.org)s.org=sid;
-      const sups=Array.isArray(src.supersedes)?src.supersedes:(src.supersedes!=null&&src.supersedes!==''?[src.supersedes]:[]);
-      if(src.supersedes!==undefined)s.supersedes=sups.length?String(sups[0]).trim():'';
-      s.mtime=now;if(S.tomb)delete S.tomb[sid];
-      if(s.status!=='draft')sups.forEach(x=>{
-        const o=gSrc(String(x).trim());
-        if(!o){warn(gSrcShort(s)+' 要取代的「'+x+'」不在清單中');return}
-        if(o.id!==s.id&&o.status!=='superseded'){o.status='superseded';o.mtime=now;rep.superseded.push(gSrcShort(o))}
-      });
-    }
-    rows.forEach(r=>{
-      if(!r||typeof r!=='object'){rep.skipped++;return}
-      const tname=String(r.topic==null?'':r.topic).trim();
-      if(!tname){rep.skipped++;warn('有列沒有 topic，已略過');return}
-      const rs=String(r.source==null||r.source===''?sid:r.source).trim();
-      if(!rs){rep.skipped++;warn('有列不知道屬於哪個來源，已略過');return}
-      if(!gSrc(rs)){
-        S.gsrc.push({id:rs,org:rs,title:'',year:'',eff:'',until:'',status:'current',supersedes:'',url:'',changes:'',note:'',created:now,mtime:now});
-        rep.srcNew++;warn('來源「'+rs+'」不在這次匯入裡，先建了一個空白來源，記得補資料');
-      }
-      const t=gTopicGet(tname,rep,now);
-      const rv=r.vals&&typeof r.vals==='object'&&!Array.isArray(r.vals)?r.vals:{},vals={};
-      Object.keys(rv).forEach(k=>{const kk=gColResolve(t,k,null,ali,rep,now);if(kk)vals[kk]=rv[k]==null?'':String(rv[k])});
-      const sub=String(r.sub==null?'':r.sub).replace(/\s+/g,' ').trim();
-      const f={};['grade','page','quote','note'].forEach(k=>{if(r[k]!==undefined&&r[k]!==null)f[k]=String(r[k])});
-      const ex=S.grow.find(x=>x.topic===t.id&&x.source===rs&&gNorm(x.sub)===gNorm(sub));
-      if(ex){ex.vals=Object.assign({},ex.vals||{},vals);Object.assign(ex,f);ex.sub=sub;ex.mtime=now;if(S.tomb)delete S.tomb[ex.id];rep.rowUpd++}
-      else{S.grow.push(Object.assign({id:'r'+uid(),topic:t.id,source:rs,sub,vals,grade:'',page:'',quote:'',note:'',created:now+(seq++),mtime:now},f));rep.rowNew++}
-    });
-  });
-  rep.newT.forEach(id=>{const t=S.gtopic.find(x=>x.id===id);
-    if(t)rep.topicNew.push(t.name+((t.cols||[]).length?'（'+t.cols.map(c=>c.label).join('、')+'）':''))});
-  return rep;
-}
-function gRepHtml(r){
-  const p=[`來源：新增 ${r.srcNew}、更新 ${r.srcUpd}`,`條目：新增 ${r.rowNew}、更新 ${r.rowUpd}`];
-  if(r.topicNew.length)p.push('新主題：'+r.topicNew.map(esc).join('、'));
-  if(r.colsAdded.length)p.push('新欄位：'+r.colsAdded.map(esc).join('、'));
-  const li=r.superseded.map(x=>esc(x)+' 已標為「已取代」').concat(r.warn.map(esc));
-  if(r.skipped)li.push('略過 '+r.skipped+' 列');
-  return `<div class="grep"><strong>匯入完成</strong>　${p.join('　·　')}${li.length?`<ul>${li.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}</div>`;
-}
-function gStripFence(t){return String(t||'').trim().replace(/^```[\w-]*\s*\n?/,'').replace(/\n?```\s*$/,'').trim()}
-function gImportRun(){
-  const box=document.getElementById('gjson'),st=document.getElementById('gjsonState'),rp=document.getElementById('gjsonRep');
-  const txt=gStripFence(box.value);
-  rp.innerHTML='';
-  if(!txt){st.textContent='先貼上 JSON。';return}
-  let data;
-  try{data=JSON.parse(txt)}catch(e){st.innerHTML=`<span style="color:var(--clay)">JSON 讀不出來：${esc(e.message)}</span>`;return}
-  const snap=JSON.stringify({gsrc:S.gsrc,gtopic:S.gtopic,grow:S.grow,tomb:S.tomb});
-  let rep;
-  try{rep=gImportData(data)}catch(e){
-    const o=JSON.parse(snap);S.gsrc=o.gsrc;S.gtopic=o.gtopic;S.grow=o.grow;S.tomb=o.tomb;
-    st.innerHTML=`<span style="color:var(--clay)">匯入失敗，資料沒有變動：${esc(e.message)}</span>`;return}
-  st.textContent='';rp.innerHTML=gRepHtml(rep);box.value='';
-  gSel=null;gEdit=false;
-  save();renderGuide();toast('已匯入');
-}
-
-/* ---- Markdown 匯出 ---- */
-function gMdCell(v){v=v==null?'':String(v).trim();return v?v.replace(/\|/g,'\\|').replace(/\r?\n/g,'<br>'):'—'}
-function gExportMd(){
-  const terms=gTerms(),L=['# HBV 指引比較','',
-    '匯出：'+gDay()+(terms.length?'　搜尋：'+gQ:'')+(gView==='cur'?'　只含現行版本':''),''];
-  let n=0;const used=new Set();
-  gTopics().forEach(t=>{
-    const rows=gRowsOf(t,terms);if(!rows.length)return;
-    const cols=t.cols||[];
-    L.push('## '+t.name,'',
-      '| '+['來源','子分組',...cols.map(c=>c.label),'證據','頁碼'].map(gMdCell).join(' | ')+' |',
-      '|'+Array(cols.length+4).fill('---').join('|')+'|');
-    rows.forEach(r=>{
-      const s=gSrc(r.source),v=r.vals||{};used.add(r.source);n++;
-      L.push('| '+[gMdCell(gSrcShort(s)+(s&&s.status==='superseded'?'（已取代）':'')),gMdCell(r.sub),
-        ...cols.map(c=>gMdCell(v[c.k])),gMdCell(r.grade),gMdCell(r.page)].join(' | ')+' |');
-    });
-    const qs=rows.filter(r=>String(r.quote||'').trim());
-    if(qs.length){
-      L.push('','**原文引述**','');
-      qs.forEach(r=>{
-        L.push('- **'+gSrcShort(gSrc(r.source))+(r.sub?'・'+r.sub:'')+'**'+(r.page?'（'+gPage(r.page)+'）':''));
-        L.push('  > '+String(r.quote).trim().replace(/\r?\n/g,'\n  > '));
-      });
-    }
-    const ns=rows.filter(r=>String(r.note||'').trim());
-    if(ns.length){
-      L.push('','**筆記**','');
-      ns.forEach(r=>L.push('*'+gSrcShort(gSrc(r.source))+(r.sub?'・'+r.sub:'')+'*','',String(r.note).trim(),''));
-    }
-    L.push('');
-  });
-  if(!n){toast('沒有可以匯出的條目');return}
-  const srcs=gSrcSorted().filter(s=>used.has(s.id)
-    ||(!terms.length&&!(gView==='cur'&&s.status==='superseded'))
-    ||(terms.length&&terms.every(x=>gSrcHay(s).includes(x))));
-  L.push('## 來源清單','','| 學會／機關 | 標題 | 年份／生效 | 狀態 | 代號 |','|---|---|---|---|---|');
-  srcs.forEach(s=>{
-    const ti=s.url&&/^https?:\/\//i.test(s.url)?'['+(s.title||s.url).replace(/[\[\]]/g,'')+']('+s.url+')':(s.title||'');
-    L.push('| '+[gMdCell(s.org),gMdCell(ti),gMdCell(gSrcRange(s)),(GSTAT[s.status]||GSTAT.current)[0],gMdCell(s.id)].join(' | ')+' |');
-  });
-  const ch=srcs.filter(s=>String(s.changes||'').trim());
-  if(ch.length){L.push('','## 版本變更','');ch.forEach(s=>L.push('### '+gSrcShort(s)+(s.title?'｜'+s.title:''),'',String(s.changes).trim(),''))}
-  dl('epi-guide-'+gDay()+'.md',L.join('\n')+'\n','text/markdown');
-  toast('已匯出 '+n+' 列');
-}
-
-/* ---- 事件 ---- */
-document.getElementById('gImpBtn').onclick=()=>{if(toggle('gImport'))document.getElementById('gjson').focus()};
-document.getElementById('gjsonClose').onclick=()=>{show('gImport',false);document.getElementById('gjsonRep').innerHTML='';document.getElementById('gjsonState').textContent='貼一包，或好幾包組成的陣列。'};
-document.getElementById('gjsonGo').onclick=gImportRun;
-document.getElementById('gjsonPick').onclick=()=>document.getElementById('gjsonFile').click();
-document.getElementById('gjsonFile').onchange=e=>{
-  const f=e.target.files&&e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=()=>{document.getElementById('gjson').value=String(r.result||'');document.getElementById('gjsonState').textContent='已讀入 '+f.name+'，按「匯入」。';e.target.value=''};
-  r.readAsText(f);
-};
-document.getElementById('gExpBtn').onclick=gExportMd;
-document.getElementById('gAddTopic').onclick=()=>{
-  if(gTopicEd==='__new'){gTopicEd=null;gTD=null;renderGuide();return}
-  gTopicEd='__new';gTD={name:'',cols:[{k:'',label:''}]};renderGuide();gFocus('#gTopicEd [data-gtd="name"]');
-};
-document.getElementById('gAddSrc').onclick=()=>{
-  if(gSrcEd==='__new'){gSrcEd=null;gSD=null;renderGuide();return}
-  gSrcEd='__new';gSD={status:'current'};renderGuide();gFocus('#gSrcEd [data-gsd="org"]');
-};
-document.getElementById('p-guide').addEventListener('click',e=>{
-  if(e.target.closest('[data-hold]')||e.target.closest('[data-open]'))return;
-  let b;
-  if((b=e.target.closest('[data-gview]'))){gView=b.dataset.gview;renderGuide();return}
-  if((b=e.target.closest('[data-gtshut]'))){const id=b.dataset.gtshut;gShut.has(id)?gShut.delete(id):gShut.add(id);renderGuide();return}
-  if((b=e.target.closest('[data-gtadd]'))){
-    const id=b.dataset.gtadd;
-    if(gNewRow===id){gNewRow=null;gRD=null;renderGuide();return}
-    gNewRow=id;gSel=null;gEdit=false;gShut.delete(id);
-    gRD={id:null,topic:id,source:gSrc(gLastSrc)?gLastSrc:'',sub:'',vals:{},grade:'',page:'',quote:'',note:''};
-    renderGuide();gFocus('#gRowEd [data-grd="'+(gRD.source?'sub':'source')+'"]');return}
-  if((b=e.target.closest('[data-gtedit]'))){
-    const id=b.dataset.gtedit;
-    if(gTopicEd===id){gTopicEd=null;gTD=null;renderGuide();return}
-    const t=(S.gtopic||[]).find(x=>x.id===id);if(!t)return;
-    gTopicEd=id;gTD={name:t.name,cols:(t.cols||[]).map(c=>({k:c.k,label:c.label}))};gShut.delete(id);
-    renderGuide();gFocus('#gTopicEd [data-gtd="name"]');return}
-  if((b=e.target.closest('[data-gtcadd]'))&&gTD){gTD.cols.push({k:'',label:''});renderGuide();gFocus('#gTopicEd [data-gtc="'+(gTD.cols.length-1)+'"]');return}
-  if((b=e.target.closest('[data-gtcdel]'))&&gTD){gTD.cols.splice(+b.dataset.gtcdel,1);renderGuide();return}
-  if((b=e.target.closest('[data-gtcup]'))&&gTD){const i=+b.dataset.gtcup;if(i>0){const c=gTD.cols;[c[i-1],c[i]]=[c[i],c[i-1]]}renderGuide();return}
-  if((b=e.target.closest('[data-gtmove]'))){if(gTopicEd&&gTopicEd!=='__new')gTopicMove(gTopicEd,+b.dataset.gtmove);return}
-  if(e.target.closest('[data-gtcancel]')){gTopicEd=null;gTD=null;renderGuide();return}
-  if(e.target.closest('[data-gtsave]')){gTopicSave();return}
-  if((b=e.target.closest('[data-gredit]'))){
-    const r=(S.grow||[]).find(x=>x.id===b.dataset.gredit);if(!r)return;
-    gEdit=true;gNewRow=null;gRD=JSON.parse(JSON.stringify({id:r.id,topic:r.topic,source:r.source,sub:r.sub||'',vals:r.vals||{},
-      grade:r.grade||'',page:r.page||'',quote:r.quote||'',note:r.note||''}));
-    renderGuide();gFocus('#gRowEd [data-grd="sub"]');return}
-  if(e.target.closest('[data-grcancel]')){
-    if(gRD&&!gRD.id)gNewRow=null;gRD=null;gEdit=false;renderGuide();return}
-  if(e.target.closest('[data-grsave]')){gRowSave();return}
-  if((b=e.target.closest('tr[data-grow]'))){
-    const id=b.dataset.grow;
-    if(gSel===id){gSel=null;gEdit=false;if(gRD&&gRD.id)gRD=null}
-    else{gSel=id;gEdit=false;if(gRD&&gRD.id)gRD=null}
-    renderGuide();
-    const d=document.getElementById('gDet');if(d&&d.scrollIntoView)d.scrollIntoView({block:'nearest',behavior:'smooth'});
-    return}
-  if((b=e.target.closest('[data-gsedit]'))){
-    const s=gSrc(b.dataset.gsedit);if(!s)return;
-    gSrcEd=s.id;gSrcOpen=s.id;gSD=Object.assign({},s);renderGuide();gFocus('#gSrcEd [data-gsd="org"]');return}
-  if(e.target.closest('[data-gscancel]')){gSrcEd=null;gSD=null;renderGuide();return}
-  if(e.target.closest('[data-gssave]')){gSrcSave();return}
-  if((b=e.target.closest('[data-gso]'))){
-    const id=b.dataset.gso;
-    if(gSrcOpen===id){gSrcOpen=null;if(gSrcEd===id){gSrcEd=null;gSD=null}}else gSrcOpen=id;
-    renderGuide();return}
-});
-document.getElementById('p-guide').addEventListener('input',e=>{
-  let f;
-  if((f=e.target.closest('[data-grd]'))&&gRD){const k=f.dataset.grd;
-    if(k.indexOf('v:')===0){if(!gRD.vals)gRD.vals={};gRD.vals[k.slice(2)]=f.value}else if(k!=='source')gRD[k]=f.value;return}
-  if((f=e.target.closest('[data-gsd]'))&&gSD){gSD[f.dataset.gsd]=f.value;return}
-  if((f=e.target.closest('[data-gtd]'))&&gTD){gTD[f.dataset.gtd]=f.value;return}
-  if((f=e.target.closest('[data-gtc]'))&&gTD){const c=gTD.cols[+f.dataset.gtc];if(c)c.label=f.value}
-});
-document.getElementById('p-guide').addEventListener('change',e=>{
-  let f;
-  if((f=e.target.closest('select[data-grd="source"]'))&&gRD){
-    if(f.value==='__new'){
-      const id=gQuickSrc(window.prompt('新來源：學會／機關＋年份（例：AASLD 2018、健保署 2023-07-01）',''));
-      if(id){gRD.source=id;toast('已新增來源，細節可到下方 SOURCES 補')}
-      renderGuide();gFocus('#gRowEd [data-grd="sub"]');return}
-    gRD.source=f.value;return}
-  if((f=e.target.closest('select[data-gsd]'))&&gSD)gSD[f.dataset.gsd]=f.value;
-});
-
-/* ================= COURSES（課程清單 S.ucourses、單元 S.units）================= */
-let ucSel='',ucLast='',editUC=null,ucAfter=null,editUnit=null,uDraft=null,upUnit=null,upFiles=[],upMsg='',uvUrl=null,uvKeep=false;
-const openU=new Set();
+/* ================= LIBRARY（主題 S.ucourses、卡片 S.units、頁面資料同步）================= */
+let ucSel='',ucLast='',editUC=null,ucAfter=null,editUnit=null,uDraft=null,upUnit=null,upFiles=[],upMsg='',
+    uvUrl=null,uvFid=null,uvHtml='';
+const openU=new Set(),libActive=new Set(),libBusy={};
+const LIBSYNC='epi-yaxin-libsync';
 const UBOOKS=[{k:'me',re:/modern\s*epi|rothman|^\s*me\s*\d*\s*(4e|e4)?\s*$/i},{k:'hr',re:/what\s*if|hern[aá]n|robins/i}];
+/* v48 的「課程／單元」轉成 v49 的「主題／卡片」：teacher→desc、週次併進標題、每個 HTML 給 fid */
+function libMigrate(){
+  if(!Array.isArray(S.ucourses))S.ucourses=[];
+  if(!Array.isArray(S.units))S.units=[];
+  S.ucourses.forEach(c=>{if(c.desc==null){c.desc=c.teacher||'';delete c.teacher}});
+  S.units.forEach(u=>{
+    if(u.title==null){u.title=[u.week,u.topic].filter(Boolean).join(' ')||'(未命名)';delete u.week;delete u.topic}
+    if(!Array.isArray(u.files))u.files=[];
+    if(!Array.isArray(u.reads))u.reads=[];
+    u.files.forEach(f=>{if(!f.fid)f.fid='f'+uid();if(!Array.isArray(f.dbs))f.dbs=[]});
+  });
+}
 function ucs(){if(!Array.isArray(S.ucourses))S.ucourses=[];return S.ucourses}
 function ucGet(id){return ucs().find(x=>x.id===id)}
-function ucName(id){const c=ucGet(id);return c?c.name:'（未指定課程）'}
 function ucSorted(){return ucs().slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),'zh-Hant'))}
 function uTs(u){const d=u.date?Date.parse(u.date+'T00:00:00'):NaN;return isNaN(d)?(u.created||0):d}
 function unitsSorted(){return (S.units||[]).slice().sort((a,b)=>uTs(b)-uTs(a)||(b.created||0)-(a.created||0))}
 function uDate(d){if(!d)return'';const x=new Date(d+'T00:00:00');if(isNaN(x))return String(d);
   return (x.getMonth()+1)+'/'+String(x.getDate()).padStart(2,'0')+'（'+'日一二三四五六'[x.getDay()]+'）'}
-function unitLabel(u){return [ucName(u.cid),u.week,u.topic].filter(Boolean).join(' · ')}
-function uLabel(id){const u=id&&(S.units||[]).find(x=>x.id===id);return u?unitLabel(u):''}
-function unitOpts(cur){
-  const L=unitsSorted(),opt=u=>`<option value="${esc(u.id)}"${cur===u.id?' selected':''}>${esc([u.week,u.date?uDate(u.date):'',u.topic].filter(Boolean).join(' · ')||'(未命名單元)')}</option>`;
-  let h='<option value="">— 無 —</option>';
-  ucSorted().forEach(c=>{const g=L.filter(u=>u.cid===c.id);if(g.length)h+=`<optgroup label="${esc(c.name)}">${g.map(opt).join('')}</optgroup>`});
-  const lost=L.filter(u=>!ucGet(u.cid));if(lost.length)h+=`<optgroup label="（未指定課程）">${lost.map(opt).join('')}</optgroup>`;
-  return h;
-}
-function fillNtUnit(){const s=document.getElementById('nt-unit');if(!s)return;const v=s.value;s.innerHTML=unitOpts(v);
-  s.value=(S.units||[]).some(u=>u.id===v)?v:''}
+function libFiles(){const a=[];(S.units||[]).forEach(u=>(u.files||[]).forEach(f=>a.push({u,f})));return a}
+function fileById(fid){return libFiles().find(x=>x.f.fid===fid)||null}
+function dataPath(f){return String(f.path).replace(/\.html?$/i,'')+'.data.json'}
 /* 指定閱讀 → Textbooks 主題：ME 用章號、What If 用小節的章號 */
 function tbGuess(book,ch){
   const n=parseInt(String(ch||'').replace(/^[^0-9]*/,''),10);if(!n)return'';
@@ -2223,75 +1524,75 @@ function tbGuess(book,ch){
   const i=C.findIndex(c=>b.k==='me'?c.me.some(m=>+m[0]===n):c.hr.some(h=>parseInt(h[0],10)===n));
   return i>=0?C[i].en:'';
 }
+function tbOptsS(cur){return '<option value="">— Textbooks —</option>'+bookOrder().map(i=>
+  `<option value="${esc(C[i].en)}"${cur===C[i].en?' selected':''}>${C[i].e} ${esc(C[i].en)}</option>`).join('')}
 function chLabel(ch){ch=String(ch||'').trim();return /^\d/.test(ch)?'Ch'+ch:ch}
-function unitPill(n){const u=n.unit&&(S.units||[]).find(x=>x.id===n.unit);if(!u)return'';
-  return `<div class="row" data-ntstop="1" style="margin-top:6px"><button type="button" class="pill upill" data-unitgo="${esc(u.id)}" title="到 Courses 看這個單元">🧑‍🏫 ${esc(ucName(u.cid))}${u.week?' '+esc(u.week):u.date?' '+esc(uDate(u.date)):''}</button></div>`}
+function libTime(ts){if(!ts)return'';const d=new Date(ts);
+  return (d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 
-function renderUnits(){
+/* ---------- 畫面 ---------- */
+function renderLib(){
   const bar=document.getElementById('ucBar');if(!bar)return;
   const all=S.units||[];
   if(ucSel&&!ucGet(ucSel))ucSel='';
   const cnt={};all.forEach(u=>{cnt[u.cid]=(cnt[u.cid]||0)+1});
   bar.innerHTML=`<button type="button" class="pill tg" data-ucf="" aria-pressed="${!ucSel}">全部 ${all.length}</button>`
     +ucSorted().map(c=>`<button type="button" class="pill tg" data-ucf="${esc(c.id)}" aria-pressed="${ucSel===c.id}">${esc(c.name)} ${cnt[c.id]||0}</button>`).join('')
-    +`<button type="button" class="pill ucadd" id="ucAddBtn" title="新增課程">＋ 課程</button>`;
+    +`<button type="button" class="pill ucadd" id="ucAddBtn" title="新增主題">＋ 主題</button>`;
   const c=ucSel&&ucGet(ucSel);
-  document.getElementById('ucInfo').innerHTML=c?`<div class="ucinfo"><span class="nm">${esc(c.name)}</span>${c.teacher?`<span>${esc(c.teacher)}</span>`:''}`
-    +`<span class="mono">courses/${esc(c.code||'—')}/</span><span class="spacer"></span><span class="cxg">`
-    +`<button class="cx e" data-ucedit="${esc(c.id)}" title="編輯課程">✎</button><button class="cx" data-hold="ucourse|${esc(c.id)}" title="長按 1.5 秒刪除課程">✕</button></span></div>`:'';
+  document.getElementById('ucInfo').innerHTML=c?`<div class="ucinfo"><span class="nm">${esc(c.name)}</span>${c.desc?`<span>${esc(c.desc)}</span>`:''}`
+    +`<span class="mono">library/${esc(c.code||'—')}/</span><span class="spacer"></span><span class="cxg">`
+    +`<button class="cx e" data-ucedit="${esc(c.id)}" title="編輯主題">✎</button><button class="cx" data-hold="ucourse|${esc(c.id)}" title="長按 1.5 秒刪除主題">✕</button></span></div>`:'';
   const dl=document.getElementById('ucNames');
   if(dl)dl.innerHTML=[...new Set((S.courses||[]).map(x=>x.name).filter(Boolean))].map(n=>`<option value="${esc(n)}"></option>`).join('');
   const L=unitsSorted().filter(u=>!ucSel||u.cid===ucSel);
   document.getElementById('unitList').innerHTML=L.length?L.map(unitItem).join('')
-    :`<div class="empty">${ucs().length?'還沒有單元，按右上 ＋ 新增。':'先按「＋ 課程」建立課程，再按右上 ＋ 新增單元。'}</div>`;
-  fillNtUnit();
+    :`<div class="empty">${ucs().length?'還沒有卡片，按右上 ＋ 新增。':'先按「＋ 主題」建立主題，再按右上 ＋ 新增卡片。'}</div>`;
 }
 function unitItem(u){
-  const op=openU.has(u.id),c=ucGet(u.cid),nf=(u.files||[]).length;
+  const op=openU.has(u.id),c=ucGet(u.cid),fs=u.files||[];
   const head=`<div class="uhead" data-utog="${esc(u.id)}" title="${op?'收合':'展開'}">
-      <span class="udt">${u.date?`<span>${esc(uDate(u.date))}</span>`:''}${u.week?`<b>${esc(u.week)}</b>`:''}</span>
-      <span class="uti">${esc(u.topic||'(未命名單元)')}</span>
-      ${!ucSel?`<span class="pill">${esc(c?c.name:'（未指定課程）')}</span>`:''}
-      ${nf&&!op?`<span class="ufn" title="${nf} 個 HTML">📄${nf>1?nf:''}</span>`:''}</div>`;
-  if(!op)return `<div class="item unit" id="u-${esc(u.id)}">${head}</div>`;
+      ${u.date?`<span class="udt">${esc(uDate(u.date))}</span>`:''}
+      <span class="uti">${esc(u.title||'(未命名)')}</span>
+      ${!ucSel?`<span class="pill">${esc(c?c.name:'（未指定主題）')}</span>`:''}</div>`;
+  if(!op){
+    const chips=fs.length?`<div class="ufiles">${fs.map(f=>`<span class="ufc"><button class="ufo" data-ufopen="${esc(f.fid)}" title="全螢幕開啟">📄 ${esc(f.name||f.path)}</button>`
+      +`<button class="cx e" data-ufnew="${esc(f.fid)}" title="開新分頁">↗</button></span>`).join('')}</div>`:'';
+    return `<div class="item unit" id="u-${esc(u.id)}">${head}${chips}</div>`;
+  }
   const reads=(u.reads||[]).filter(r=>r.book||r.ch).map(r=>{const i=tbIdx(r.tb);
     return `<div class="urd"><span class="pill ${r.req?'clay':''}">${r.req?'必讀':'選讀'}</span><span>${esc(r.book||'')}${r.ch?' · '+esc(chLabel(r.ch)):''}</span>`
       +(i>=0?`<button type="button" class="pill pine" data-tbgo="${i}" title="到 Textbooks 看這個主題">${C[i].e} ${esc(C[i].en)}</button>`:'')+`</div>`}).join('');
-  const files=(u.files||[]).map((f,i)=>`<div class="ufile"><button class="ufo" data-ufopen="${esc(u.id)}|${i}" title="全螢幕開啟">📄 ${esc(f.name||f.path)}</button>`
-    +`<span class="mono up">${esc(f.path)}</span><span class="cxg"><button class="cx e" data-ufnew="${esc(u.id)}|${i}" title="開新分頁">↗</button>`
-    +`<button class="cx" data-hold="ufile|${esc(u.id)}~${i}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></span></div>`).join('');
+  const files=fs.map(f=>{const rec=libRec(f.fid);
+    return `<div class="ufile"><button class="ufo" data-ufopen="${esc(f.fid)}" title="全螢幕開啟">📄 ${esc(f.name||f.path)}</button>`
+    +`<span class="mono up">${esc(f.path)}</span><span class="us" title="這台裝置最後一次同步頁面資料的時間">${rec&&rec.at?'☁ '+libTime(rec.at):(f.dbs&&f.dbs.length?'☁ 未同步':'')}</span>`
+    +`<span class="cxg"><button class="cx e" data-ufnew="${esc(f.fid)}" title="開新分頁">↗</button>`
+    +`<button class="cx" data-hold="ufile|${esc(f.fid)}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></span></div>`}).join('');
   const up=upUnit===u.id?`<div class="upbox">
       <div class="udrop" data-udrop="${esc(u.id)}">📄 把 HTML 拖進來，或點一下選檔案（可多選）</div>
       ${upFiles.map((f,i)=>`<div class="lrow" style="margin-top:6px"><input type="text" data-uppath="${i}" value="${esc(f.path)}" style="flex:1">
         <span class="pill" style="font-size:10.5px">${Math.max(1,Math.round((f.size||0)/1024))} KB</span><button class="x" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
       <div class="row" style="margin-top:8px"><span class="hint" style="flex:1" id="upState">${esc(upMsg)}</span>
         <button class="btn mini" data-upgo="${esc(u.id)}"${upFiles.length?'':' disabled'}>上傳</button></div>
-      <div class="lrow" style="margin-top:8px"><input type="text" data-ubindin="${esc(u.id)}" placeholder="或填 repo 裡已有的路徑，e.g. courses/${esc((c&&c.code)||'code')}/xxx.html" style="flex:1">
+      <div class="lrow" style="margin-top:8px"><input type="text" data-ubindin="${esc(u.id)}" placeholder="或填 repo 裡已有的路徑，e.g. library/${esc((c&&c.code)||'code')}/xxx.html" style="flex:1">
         <button class="btn ghost mini" data-ubind="${esc(u.id)}">綁定</button></div></div>`:'';
-  const ns=(S.notes||[]).filter(n=>n.unit===u.id).sort((a,b)=>(b.mtime||b.created)-(a.mtime||a.created));
-  const notes=ns.map(n=>{const d=new Date(n.mtime||n.created);
-    return `<div class="rsvrow" data-ntgo="${esc(n.id)}" title="到 Notes 看這則筆記"><span class="ck" style="color:var(--faint);font-size:9px">●</span>`
-      +`<span class="rtx">${esc(n.title)}</span><span class="rdt">${(d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0')}</span></div>`}).join('');
   return `<div class="item unit" id="u-${esc(u.id)}">${head}
-    ${c&&c.teacher?`<div class="usub">${esc(c.teacher)}</div>`:''}
-    ${reads?`<div class="usec"><div class="srclab">📖 指定閱讀</div>${reads}</div>`:''}
+    ${c&&c.desc?`<div class="usub" style="font-size:12.5px;color:var(--muted);margin-top:3px">${esc(c.desc)}</div>`:''}
     <div class="usec"><div class="row" style="align-items:center"><div class="srclab" style="flex:1;margin:0">📄 HTML</div>
       <button class="iconb" data-upopen="${esc(u.id)}" title="上傳或綁定 HTML" style="font-size:14px;min-height:0;padding:0 6px">＋</button></div>
       ${files||(up?'':'<p class="hint" style="margin:2px 0 0;font-size:12px">—</p>')}${up}</div>
-    <div class="usec"><div class="row" style="align-items:center"><div class="srclab" style="flex:1;margin:0">📒 筆記</div>
-      <button class="iconb" data-unote="${esc(u.id)}" title="新增一則綁定這個單元的筆記" style="font-size:14px;min-height:0;padding:0 6px">＋</button></div>
-      ${notes||'<p class="hint" style="margin:2px 0 0;font-size:12px">—</p>'}</div>
+    ${reads?`<div class="usec"><div class="srclab">📖 指定閱讀</div>${reads}</div>`:''}
     ${u.note?`<div class="usec"><div class="srclab">備註</div><div class="mdview" style="font-size:13.5px;line-height:1.65">${md(u.note)}</div></div>`:''}
     <div class="row" style="margin-top:10px"><span style="flex:1"></span><span class="cxg">
       <button class="cx e" data-uedit="${esc(u.id)}" title="編輯">✎</button>
       <button class="cx" data-hold="unit|${esc(u.id)}" title="長按 1.5 秒刪除">✕</button></span></div></div>`;
 }
 
-/* ---- 課程表單 ---- */
+/* ---------- 主題表單 ---------- */
 function ucOpen(id,after){
   editUC=id||null;ucAfter=after||null;const c=id?ucGet(id):null;
   document.getElementById('uc-name').value=c?c.name:'';
-  document.getElementById('uc-teacher').value=c?(c.teacher||''):'';
+  document.getElementById('uc-desc').value=c?(c.desc||''):'';
   document.getElementById('uc-code').value=c?(c.code||''):'';
   document.getElementById('uc-code').dataset.touched=c?'1':'';
   show('ucForm',true);document.getElementById('uc-name').focus();
@@ -2303,51 +1604,50 @@ document.getElementById('uc-name').addEventListener('input',e=>{
 document.getElementById('uc-code').addEventListener('input',e=>{e.target.dataset.touched='1'});
 document.getElementById('cancelUC').onclick=()=>{show('ucForm',false);editUC=null;ucAfter=null};
 document.getElementById('saveUC').onclick=()=>{
-  const name=document.getElementById('uc-name').value.trim(),teacher=document.getElementById('uc-teacher').value.trim();
+  const name=document.getElementById('uc-name').value.trim(),desc=document.getElementById('uc-desc').value.trim();
   const raw=document.getElementById('uc-code').value.trim(),code=ucSlug(raw);
-  if(!name){toast('請填課程名稱');return}
+  if(!name){toast('請填主題名稱');return}
   if(!code||code!==raw.toLowerCase()){toast('代碼只能用英文、數字與 -（例如 causal）');document.getElementById('uc-code').focus();return}
   const dup=ucs().find(x=>x.id!==editUC&&x.code===code);
   if(dup){toast('代碼已經給「'+dup.name+'」用了');return}
   let id=editUC;
-  if(editUC){const c=ucGet(editUC);if(c)Object.assign(c,{name,teacher,code,mtime:Date.now()})}
-  else{id='uc'+uid();ucs().push({id,created:Date.now(),mtime:Date.now(),name,teacher,code});ucSel=id}
-  const after=ucAfter;editUC=null;ucAfter=null;show('ucForm',false);saved();renderUnits();
+  if(editUC){const c=ucGet(editUC);if(c)Object.assign(c,{name,desc,code,mtime:Date.now()})}
+  else{id='uc'+uid();ucs().push({id,created:Date.now(),mtime:Date.now(),name,desc,code});ucSel=id}
+  const after=ucAfter;editUC=null;ucAfter=null;show('ucForm',false);saved();renderLib();
   if(after==='form'&&uDraft){uDraft.cid=id;renderUnitForm()}
   else if(after==='new')unitOpen(null);
 };
 
-/* ---- 單元表單 ---- */
+/* ---------- 卡片表單 ---------- */
 function unitOpen(id){
-  if(!ucs().length){toast('先建立課程');ucOpen(null,'new');return}
+  if(!ucs().length){toast('先建立主題');ucOpen(null,'new');return}
   editUnit=id||null;
   if(id){const u=(S.units||[]).find(x=>x.id===id);if(!u)return;
-    uDraft={cid:u.cid,week:u.week||'',date:u.date||'',topic:u.topic||'',note:u.note||'',
+    uDraft={cid:u.cid,title:u.title||'',date:u.date||'',note:u.note||'',
       reads:(u.reads||[]).map(r=>({book:r.book||'',ch:r.ch||'',req:!!r.req,tb:r.tb||'',man:(r.tb||'')!==tbGuess(r.book,r.ch)}))}}
   else uDraft={cid:(ucSel&&ucGet(ucSel)?ucSel:'')||(ucLast&&ucGet(ucLast)?ucLast:'')||ucSorted()[0].id,
-    week:'',date:'',topic:'',note:'',reads:[{book:'',ch:'',req:true,tb:'',man:false}]};
+    title:'',date:'',note:'',reads:[{book:'',ch:'',req:true,tb:'',man:false}]};
   if(!uDraft.reads.length)uDraft.reads.push({book:'',ch:'',req:true,tb:'',man:false});
   renderUnitForm();show('unitForm',true);
   const f=document.getElementById('unitForm');if(f.scrollIntoView)f.scrollIntoView({block:'nearest'});
-  const t=document.querySelector('#unitForm [data-ud="topic"]');if(t)t.focus();
+  const t=document.querySelector('#unitForm [data-ud="title"]');if(t)t.focus();
 }
 function renderUnitForm(){
   const d=uDraft;if(!d)return;
   document.getElementById('unitFormBody').innerHTML=`
-    <label class="f"><span>課程</span><select data-ud="cid">${ucSorted().map(c=>`<option value="${esc(c.id)}"${d.cid===c.id?' selected':''}>${esc(c.name)}${c.teacher?'（'+esc(c.teacher)+'）':''}</option>`).join('')}<option value="__new">＋ 新增課程…</option></select></label>
     <div class="grid2">
-      <label class="f"><span>週次</span><input type="text" data-ud="week" value="${esc(d.week)}" placeholder="e.g. W7"></label>
-      <label class="f"><span>日期</span><input type="date" data-ud="date" value="${esc(d.date)}"></label></div>
-    <label class="f"><span>單元主題</span><input type="text" data-ud="topic" value="${esc(d.topic)}" placeholder="e.g. 因果推論與 DAG"></label>
-    <div class="f"><div class="row" style="align-items:center"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">指定閱讀</span>
+      <label class="f"><span>主題</span><select data-ud="cid">${ucSorted().map(c=>`<option value="${esc(c.id)}"${d.cid===c.id?' selected':''}>${esc(c.name)}</option>`).join('')}<option value="__new">＋ 新增主題…</option></select></label>
+      <label class="f"><span>日期（選填）</span><input type="date" data-ud="date" value="${esc(d.date)}"></label></div>
+    <label class="f"><span>標題</span><input type="text" data-ud="title" value="${esc(d.title)}" placeholder="e.g. 因果推論預習（ME Ch3、Ch12）"></label>
+    <div class="f"><div class="row" style="align-items:center"><span style="font-size:12px;color:var(--muted);font-weight:500;flex:1">指定閱讀（選填）</span>
       <button class="iconb" type="button" data-uradd="1" title="再加一筆" style="font-size:14px;min-height:0;padding:0 6px">＋</button></div>
       <div style="margin-top:6px">${d.reads.map((r,i)=>`<div class="urow">
-        <input class="ubk" type="text" list="ubookList" data-ur="${i}|book" value="${esc(r.book)}" placeholder="書名（可從清單選）">
+        <input type="text" list="ubookList" data-ur="${i}|book" value="${esc(r.book)}" placeholder="書名">
         <input type="text" data-ur="${i}|ch" value="${esc(r.ch)}" placeholder="章節">
         <select data-ur="${i}|req"><option value="1"${r.req?' selected':''}>必讀</option><option value="0"${r.req?'':' selected'}>選讀</option></select>
-        <select data-ur="${i}|tb" title="對應的 Textbooks 主題">${tbOpts(r.tb)}</select>
-        <button class="x" type="button" data-urdel="${i}" title="刪掉這筆" style="font-size:12px">✕</button></div>`).join('')}</div></div>
-    <label class="f"><span>備註（Markdown）</span><textarea data-ud="note" style="min-height:70px">${esc(d.note)}</textarea></label>`;
+        <select data-ur="${i}|tb" title="對應的 Textbooks 主題">${tbOptsS(r.tb)}</select>
+        <button class="x" type="button" data-urdel="${i}" title="刪掉這筆">✕</button></div>`).join('')}</div></div>
+    <label class="f"><span>備註（Markdown，選填）</span><textarea data-ud="note" style="min-height:70px">${esc(d.note)}</textarea></label>`;
 }
 const uForm=document.getElementById('unitForm');
 uForm.addEventListener('input',e=>{
@@ -2374,20 +1674,20 @@ uForm.addEventListener('click',e=>{
 document.getElementById('cancelUnit').onclick=()=>{show('unitForm',false);editUnit=null;uDraft=null};
 document.getElementById('saveUnit').onclick=()=>{
   const d=uDraft;if(!d)return;
-  if(!d.cid||!ucGet(d.cid)){toast('請選課程');return}
-  if(!String(d.topic).trim()&&!String(d.week).trim()){toast('請填單元主題或週次');return}
+  if(!d.cid||!ucGet(d.cid)){toast('請選主題');return}
+  if(!String(d.title).trim()){toast('請填標題');return}
   const reads=d.reads.filter(r=>String(r.book).trim()||String(r.ch).trim())
     .map(r=>({book:String(r.book).trim(),ch:String(r.ch).trim(),req:!!r.req,tb:r.tb||''}));
-  const o={cid:d.cid,week:String(d.week).trim(),date:d.date||'',topic:String(d.topic).trim(),reads,note:d.note||'',mtime:Date.now()};
+  const o={cid:d.cid,title:String(d.title).trim(),date:d.date||'',reads,note:d.note||'',mtime:Date.now()};
   if(editUnit){const u=(S.units||[]).find(x=>x.id===editUnit);if(u)Object.assign(u,o)}
   else{if(!Array.isArray(S.units))S.units=[];const u=Object.assign({id:'u'+uid(),created:Date.now(),files:[]},o);S.units.push(u);openU.add(u.id)}
-  ucLast=d.cid;editUnit=null;uDraft=null;show('unitForm',false);saved();renderUnits();
+  ucLast=d.cid;editUnit=null;uDraft=null;show('unitForm',false);saved();renderLib();
 };
 document.getElementById('addUnitBtn').onclick=()=>{
   if(document.getElementById('unitForm').style.display===''&&!editUnit){show('unitForm',false);uDraft=null;return}
   unitOpen(null)};
 
-/* ---- 上傳與綁定 HTML（存到 epi-data 的 courses/代碼/） ---- */
+/* ---------- 上傳與綁定 HTML（存到 epi-data 的 library/代碼/） ---------- */
 function uPath(p){p=String(p||'').trim().replace(/^\.?\/+/,'');
   if(!p||/^[a-z]+:/i.test(p)||/(^|\/)\.\.(\/|$)/.test(p))return'';
   if(!/\.html?$/i.test(p))p+='.html';return p}
@@ -2395,7 +1695,7 @@ function ufBind(u,path,name){
   if(!Array.isArray(u.files))u.files=[];
   const hit=u.files.find(x=>x.path===path);
   if(hit){hit.at=Date.now();if(name)hit.name=name}
-  else u.files.push({path,name:name||path.split('/').pop().replace(/\.html?$/i,''),at:Date.now()});
+  else u.files.push({fid:'f'+uid(),path,name:name||path.split('/').pop().replace(/\.html?$/i,''),at:Date.now(),dbs:[]});
   u.mtime=Date.now();
 }
 function ufAdd(fname,text,size){
@@ -2404,81 +1704,291 @@ function ufAdd(fname,text,size){
   let nm=String(fname).replace(/[^A-Za-z0-9._-]/g,'-').replace(/-+/g,'-');
   if(!/[A-Za-z0-9]/.test(nm.replace(/\.html?$/i,'')))nm='file-'+new Date().toISOString().slice(0,10)+'.html';
   if(!/\.html?$/i.test(nm))nm+='.html';
-  upFiles.push({name:String(fname).replace(/\.html?$/i,''),text,size:size||text.length,path:'courses/'+code+'/'+nm});
-  upMsg='';renderUnits();
+  upFiles.push({name:String(fname).replace(/\.html?$/i,''),text,size:size||text.length,path:'library/'+code+'/'+nm});
+  upMsg='';renderLib();
 }
 function ufTake(files){
   const ok=[...(files||[])].filter(f=>/\.html?$/i.test(f.name));
   if(files&&files.length&&!ok.length){toast('只收 .html 檔');return}
   ok.forEach(f=>{const r=new FileReader();r.onload=()=>ufAdd(f.name,String(r.result),f.size);r.readAsText(f)});
 }
-async function ghPut(path,text,msg){
-  const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
-    +'/contents/'+path.split('/').map(encodeURIComponent).join('/');
-  let sha=null;
-  const r0=await ghFetch(url+'?ref='+encodeURIComponent(GH.branch),
+function ghUrl2(path){return 'https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
+  +'/contents/'+path.split('/').map(encodeURIComponent).join('/')}
+async function ghMeta(path){
+  const r=await ghFetch(ghUrl2(path)+'?ref='+encodeURIComponent(GH.branch),
     {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json'},cache:'no-store'});
-  if(r0.ok){try{sha=(await r0.json()).sha}catch(e){}}
-  else if(r0.status!==404)throw new Error(ghErrMsg(r0.status));
-  const payload={message:msg||('add '+path),content:b64enc(text),branch:GH.branch};if(sha)payload.sha=sha;
-  const r=await ghFetch(url,{method:'PUT',
-    headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
-    body:JSON.stringify(payload)},40000);
+  if(r.status===404)return null;
   if(!r.ok)throw new Error(ghErrMsg(r.status));
-  return !!sha;
+  try{const j=await r.json();return {sha:j.sha,size:j.size}}catch(e){return null}
+}
+/* sha 傳 undefined＝先查；傳 null＝確定是新檔 */
+async function ghPut(path,text,msg,sha){
+  if(sha===undefined){const m=await ghMeta(path);sha=m?m.sha:null}
+  const payload={message:msg||('add '+path),content:b64enc(text),branch:GH.branch};if(sha)payload.sha=sha;
+  const r=await ghFetch(ghUrl2(path),{method:'PUT',
+    headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+    body:JSON.stringify(payload)},60000);
+  if(!r.ok)throw new Error(ghErrMsg(r.status));
+  let ns=null;try{const j=await r.json();ns=j&&j.content&&j.content.sha}catch(e){}
+  return {sha:ns,existed:!!sha};
+}
+async function ghRaw(path){
+  const r=await ghFetch(ghUrl2(path)+'?ref='+encodeURIComponent(GH.branch),
+    {headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github.raw'},cache:'no-store'},60000);
+  if(r.status===404)throw new Error('repo 裡沒有 '+path);
+  if(!r.ok)throw new Error(ghErrMsg(r.status));
+  return await r.text();
 }
 async function ufPush(uid_){
   const u=(S.units||[]).find(x=>x.id===uid_);if(!u)return;
-  if(!ghOn()){upMsg='請先在 Settings 設定 GitHub 同步';renderUnits();return}
+  if(!ghOn()){upMsg='請先在 Settings 設定 GitHub 同步';renderLib();return}
   if(!upFiles.length){toast('請先選檔案');return}
   let ok=0,over=0,fail=0,last='';const done=[];
   for(const f of upFiles){
     const p=uPath(f.path);
     const st=document.getElementById('upState');if(st)st.textContent='上傳中… '+(ok+fail+1)+'/'+upFiles.length;
     if(!p){fail++;last='路徑不合法：'+f.path;continue}
-    try{if(await ghPut(p,f.text,'add '+p))over++;ufBind(u,p,f.name);ok++;done.push(f)}
+    try{const r=await ghPut(p,f.text,'add '+p);if(r.existed)over++;ufBind(u,p,f.name);ok++;done.push(f)}
     catch(e){fail++;last=e.message}
   }
   upFiles=upFiles.filter(f=>done.indexOf(f)<0);
   upMsg=(ok?'已上傳 '+ok+' 個'+(over?'（覆蓋 '+over+'）':''):'')+(fail?(ok?'，':'')+'失敗 '+fail+' 個：'+last:'');
   if(ok&&!fail)upUnit=null;
-  save();renderUnits();toast(fail?'有檔案上傳失敗':'已上傳');
+  save();renderLib();toast(fail?'有檔案上傳失敗':'已上傳');
 }
 
-/* ---- 全螢幕檢視：blob 網址、不加 sandbox（頁內 #分頁、IndexedDB、複製按鈕才能用） ---- */
-async function ghRaw(path){
-  const url='https://api.github.com/repos/'+encodeURIComponent(GH.owner)+'/'+encodeURIComponent(GH.repo)
-    +'/contents/'+path.split('/').map(encodeURIComponent).join('/')+'?ref='+encodeURIComponent(GH.branch);
-  const r=await ghFetch(url,{headers:{Authorization:'Bearer '+GH.token,Accept:'application/vnd.github.raw'},cache:'no-store'},30000);
-  if(r.status===404)throw new Error('repo 裡沒有 '+path);
-  if(!r.ok)throw new Error(ghErrMsg(r.status));
-  return await r.text();
+/* ---------- 頁面資料同步：把頁面用的 IndexedDB 存成 HTML 旁的 .data.json ---------- */
+function libRecs(){try{return JSON.parse(localStorage.getItem(LIBSYNC)||'{}')||{}}catch(e){return{}}}
+function libRec(fid,o){const m=libRecs();if(o===undefined)return m[fid]||null;
+  if(o===null)delete m[fid];else m[fid]=o;try{localStorage.setItem(LIBSYNC,JSON.stringify(m))}catch(e){}}
+/* 頁面裡的 indexedDB.open 會呼叫這裡（同網域），記下它用了哪個資料庫 */
+function libSeen(fid,name){
+  const r=fileById(fid);if(!r||!name)return;const f=r.f;
+  if(!Array.isArray(f.dbs))f.dbs=[];
+  if(f.dbs.indexOf(name)>=0)return;
+  f.dbs.push(name);r.u.mtime=Date.now();save();if(uvFid===fid)uvSyncLabel();
+  const other=libFiles().find(x=>x.f.fid!==fid&&(x.f.dbs||[]).includes(name));
+  if(other)toast('注意：這個頁面和「'+(other.f.name||other.f.path)+'」用同一個資料庫 '+name+'，資料會混在一起');
 }
-function uvBlob(t){
+function libPushNow(fid){return libPush(fid,{quiet:true})}
+function libHash(dbs){
+  let n=0;(dbs||[]).forEach(d=>(d.stores||[]).forEach(s=>{n+=(s.records||[]).length}));
+  if(!n)return 'E';
+  const str=JSON.stringify(dbs);let h=0x811c9dc5;
+  for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}
+  return h.toString(36)+'-'+str.length.toString(36);
+}
+async function encV(v){
+  if(v===null||typeof v!=='object')return v;
+  const tg=Object.prototype.toString.call(v);
+  if(tg==='[object Date]')return {__t:'D',v:isNaN(v.getTime())?null:v.toISOString()};
+  if(tg==='[object Blob]'||tg==='[object File]')return {__t:'B',type:v.type,b:u8b64(new Uint8Array(await v.arrayBuffer()))};
+  if(tg==='[object ArrayBuffer]')return {__t:'AB',b:u8b64(new Uint8Array(v))};
+  if(ArrayBuffer.isView(v))return {__t:'U8',b:u8b64(new Uint8Array(v.buffer,v.byteOffset,v.byteLength))};
+  if(Array.isArray(v)){const a=[];for(const x of v)a.push(await encV(x));return a}
+  const o={};for(const k of Object.keys(v))o[k]=await encV(v[k]);
+  return '__t' in o?{__t:'O',v:o}:o;
+}
+function decV(v){
+  if(v===null||typeof v!=='object')return v;
+  if(Array.isArray(v))return v.map(decV);
+  if(v.__t==='D')return new Date(v.v==null?NaN:v.v);
+  if(v.__t==='B')return new Blob([b64u8(v.b)],{type:v.type||''});
+  if(v.__t==='AB')return b64u8(v.b).buffer;
+  if(v.__t==='U8')return b64u8(v.b);
+  const src=v.__t==='O'?v.v:v,o={};for(const k of Object.keys(src))o[k]=decV(src[k]);return o;
+}
+/* 打開既有的資料庫；不存在就回 null（不會順手建出一個空的） */
+function idbOpenExisting(name){return new Promise(res=>{
+  let created=false,rq;
+  try{rq=indexedDB.open(name)}catch(e){res(null);return}
+  rq.onupgradeneeded=e=>{created=true;try{e.target.transaction.abort()}catch(_){}};
+  rq.onsuccess=()=>{if(created){try{rq.result.close()}catch(_){}res(null)}else res(rq.result)};
+  rq.onerror=e=>{if(e&&e.preventDefault)e.preventDefault();res(null)};
+})}
+async function idbDump(names){
+  const out=[];
+  for(const name of (names||[]).slice().sort()){
+    const db=await idbOpenExisting(name);if(!db)continue;
+    try{
+      const stores=[];
+      for(const sn of [...db.objectStoreNames].sort()){
+        const tx=db.transaction(sn,'readonly'),st=tx.objectStore(sn);
+        const meta={name:sn,keyPath:st.keyPath,autoIncrement:st.autoIncrement,
+          indexes:[...st.indexNames].map(i=>{const x=st.index(i);return{name:x.name,keyPath:x.keyPath,unique:x.unique,multiEntry:x.multiEntry}})};
+        const recs=await new Promise((res,rej)=>{const a=[];const c=st.openCursor();
+          c.onsuccess=()=>{const cur=c.result;if(cur){a.push([cur.key,cur.value]);cur.continue()}else res(a)};c.onerror=()=>rej(c.error)});
+        const r2=[];for(const [k,v] of recs)r2.push([await encV(k),await encV(v)]);
+        stores.push(Object.assign(meta,{records:r2}));
+      }
+      out.push({name,version:db.version,stores});
+    }finally{try{db.close()}catch(e){}}
+  }
+  return out;
+}
+async function idbRestore(dump){
+  for(const d of dump||[]){
+    let db=await idbOpenExisting(d.name);
+    const ver=d.version||1,cur=db?db.version:0;
+    const missing=(d.stores||[]).filter(s=>!db||!db.objectStoreNames.contains(s.name));
+    if(!db||(missing.length&&cur<ver)){
+      if(db)db.close();
+      db=await new Promise((res,rej)=>{const rq=indexedDB.open(d.name,Math.max(ver,cur));
+        rq.onupgradeneeded=()=>{const x=rq.result;(d.stores||[]).forEach(s=>{if(x.objectStoreNames.contains(s.name))return;
+          const opt={};if(s.keyPath!=null)opt.keyPath=s.keyPath;if(s.autoIncrement)opt.autoIncrement=true;
+          const os=x.createObjectStore(s.name,opt);
+          (s.indexes||[]).forEach(i=>{try{os.createIndex(i.name,i.keyPath,{unique:!!i.unique,multiEntry:!!i.multiEntry})}catch(e){}})})};
+        rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error||new Error('開不了資料庫'));
+        rq.onblocked=()=>rej(new Error('頁面還開著，請先關閉再同步'))});
+    }
+    const names=(d.stores||[]).map(s=>s.name).filter(n=>db.objectStoreNames.contains(n));
+    if(names.length)await new Promise((res,rej)=>{const tx=db.transaction(names,'readwrite');
+      (d.stores||[]).forEach(s=>{if(names.indexOf(s.name)<0)return;const os=tx.objectStore(s.name);os.clear();
+        (s.records||[]).forEach(([k,v])=>{const vv=decV(v);if(os.keyPath==null)os.put(vv,decV(k));else os.put(vv)})});
+      tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error||new Error('寫入中斷'))});
+    try{db.close()}catch(e){}
+  }
+}
+let libAskRes=null;
+function libAsk(f,localAt){
+  document.getElementById('libAskMsg').innerHTML='「<strong>'+esc(f.name||f.path)+'</strong>」在這台裝置和雲端<strong>都改過</strong>（可能是兩台裝置都編輯過）。要用哪一份？'
+    +(localAt?'<br><span class="hint">這台上次同步：'+esc(libTime(localAt))+'</span>':'');
+  document.getElementById('libAsk').classList.add('on');
+  return new Promise(res=>{libAskRes=res});
+}
+function libAskDone(v){document.getElementById('libAsk').classList.remove('on');const r=libAskRes;libAskRes=null;if(r)r(v)}
+document.getElementById('libAskLocal').onclick=()=>libAskDone('local');
+document.getElementById('libAskCloud').onclick=()=>libAskDone('cloud');
+function libStamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())}
+async function libBackup(f,text){
+  const p=String(f.path).replace(/\.html?$/i,'')+'.data.backup-'+libStamp()+'.json';
+  await ghPut(p,text,'backup '+p);return p;
+}
+function libPayload(f,dbs){return JSON.stringify({v:1,fid:f.fid,path:f.path,updated:Date.now(),dbs})}
+/* 打開前：雲端較新就還原到這台。回傳 off／same／local／pulled／pushed */
+async function libPull(f,opt){
+  opt=opt||{};
+  if(!ghOn())return 'off';
+  const dp=dataPath(f),rec=libRec(f.fid)||{};
+  const meta=await ghMeta(dp);
+  const local=f.dbs&&f.dbs.length?await idbDump(f.dbs):[];
+  const lh=libHash(local),lChanged=lh!==(rec.h||'E');
+  if(!meta||meta.sha===rec.sha)return lChanged?'local':'same';
+  const txt=await ghRaw(dp);let remote;
+  try{remote=JSON.parse(txt)}catch(e){throw new Error('雲端的頁面資料檔壞了：'+dp)}
+  const rd=Array.isArray(remote.dbs)?remote.dbs:[];
+  let added=false;rd.forEach(d=>{if(!Array.isArray(f.dbs))f.dbs=[];if(f.dbs.indexOf(d.name)<0){f.dbs.push(d.name);added=true}});
+  if(added){const r=fileById(f.fid);if(r)r.u.mtime=Date.now();save()}
+  const rh=libHash(rd);
+  if(rh===lh){libRec(f.fid,{h:lh,sha:meta.sha,at:Date.now()});return 'same'}
+  if(lChanged&&lh!=='E'){
+    if(opt.quiet)return 'conflict';
+    const pick=await libAsk(f,rec.at);
+    if(pick==='local'){
+      await libBackup(f,txt);
+      const r=await ghPut(dp,libPayload(f,local),'sync '+dp,meta.sha);
+      libRec(f.fid,{h:lh,sha:r.sha,at:Date.now()});return 'pushed';
+    }
+    await libBackup(f,libPayload(f,local));
+  }
+  await idbRestore(rd);
+  libRec(f.fid,{h:rh,sha:meta.sha,at:Date.now()});
+  return 'pulled';
+}
+/* 關閉時：這台有改就上傳；雲端也改過時，quiet 模式先跳過，下次打開再問 */
+async function libPush(fid,opt){
+  opt=opt||{};
+  const r=fileById(fid);if(!r||!ghOn())return 'off';const f=r.f;
+  if(!f.dbs||!f.dbs.length)return 'none';
+  if(libBusy[fid])return libBusy[fid];
+  const p=(async()=>{
+    const local=await idbDump(f.dbs),lh=libHash(local),rec=libRec(fid)||{};
+    if(lh===(rec.h||'E'))return 'same';
+    const dp=dataPath(f),meta=await ghMeta(dp);
+    if(meta&&meta.sha!==rec.sha){
+      if(opt.quiet)return 'conflict';
+      return await libPull(f);
+    }
+    const res=await ghPut(dp,libPayload(f,local),'sync '+dp,meta?meta.sha:null);
+    libRec(fid,{h:lh,sha:res.sha,at:Date.now()});
+    return 'pushed';
+  })();
+  libBusy[fid]=p;
+  try{const v=await p;if(v!=='same')renderLib();if(uvFid===fid)uvSyncLabel();return v}
+  finally{delete libBusy[fid]}
+}
+function uvSyncLabel(msg){
+  const el=document.getElementById('uvSyncSt');if(!el)return;
+  if(msg){el.textContent=msg;return}
+  const r=uvFid&&fileById(uvFid),rec=uvFid&&libRec(uvFid);
+  el.textContent=rec&&rec.at?'已同步 '+libTime(rec.at).split(' ')[1]:(r&&r.f.dbs&&r.f.dbs.length?'未同步':'');
+}
+function libMsg(v){return {pushed:'頁面資料已上傳',pulled:'已從雲端還原頁面資料',same:'頁面資料已是最新',conflict:'雲端也有更新，下次打開時再決定',off:'',none:'',local:''}[v]||''}
+
+/* ---------- 檢視：blob 網址、不加 sandbox；先插入偵測程式（記錄資料庫、新分頁加 ✕） ---------- */
+function libShim(fid,isTab){
+  let js='(function(){var F='+JSON.stringify(fid)+';'
+    +'function H(){try{return window.parent!==window?window.parent:window.opener}catch(e){return null}}'
+    +'try{var o=indexedDB.open.bind(indexedDB);indexedDB.open=function(n){try{var h=H();if(h&&h.libSeen)h.libSeen(F,String(n))}catch(e){}return o.apply(null,arguments)}}catch(e){}';
+  if(isTab)js+='function X(){if(document.getElementById("__epiX"))return;var b=document.createElement("button");b.id="__epiX";b.type="button";b.textContent="✕";b.title="同步後關閉";'
+    +'b.style.cssText="position:fixed;top:10px;right:10px;z-index:2147483647;width:36px;height:36px;border-radius:50%;border:1px solid rgba(0,0,0,.18);background:rgba(255,255,255,.95);color:#333;font:17px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);padding:0";'
+    +'b.onclick=function(){b.disabled=true;b.textContent="…";var h=H(),p=null;try{p=h&&!h.closed&&h.libPushNow?h.libPushNow(F):null}catch(e){}'
+    +'Promise.resolve(p).catch(function(){}).then(function(){window.close();setTimeout(function(){b.disabled=false;b.textContent="✕";b.title="瀏覽器不讓這個分頁自己關閉，請手動關"},700)})};'
+    +'document.body.appendChild(b)}'
+    +'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",X);else X();';
+  js+='})();';
+  return '<script>'+js+'<\/script>';
+}
+function uvBlob(t,fid,isTab){
   if(!/<meta[^>]+charset/i.test(t))t=/<head[^>]*>/i.test(t)?t.replace(/(<head[^>]*>)/i,'$1<meta charset="utf-8">'):'<meta charset="utf-8">'+t;
+  const sh=libShim(fid,isTab);
+  t=/<head[^>]*>/i.test(t)?t.replace(/(<head[^>]*>)/i,'$1'+sh.replace(/\$/g,'$$$$')):sh+t;
   return URL.createObjectURL(new Blob([t],{type:'text/html;charset=utf-8'}));
 }
-function uvClear(){if(uvUrl&&!uvKeep){try{URL.revokeObjectURL(uvUrl)}catch(e){}}uvUrl=null;uvKeep=false}
-async function uvOpen(uid_,i,newTab){
-  const u=(S.units||[]).find(x=>x.id===uid_),f=u&&(u.files||[])[i];if(!f)return;
+function uvClear(){if(uvUrl){try{URL.revokeObjectURL(uvUrl)}catch(e){}}uvUrl=null}
+async function uvOpen(fid,newTab){
+  const r=fileById(fid);if(!r)return;const f=r.f;
   if(!ghOn()){toast('請先在 Settings 設定 GitHub 同步');return}
   const w=newTab?window.open('','_blank'):null;
+  if(w)try{w.document.title='載入中…';w.document.body.innerHTML='<p style="font:15px system-ui,sans-serif;padding:24px;color:#777">載入中…</p>'}catch(e){}
   setDot('pend','讀取 '+f.path+'…');
   try{
-    const url=uvBlob(await ghRaw(f.path));
-    if(newTab){if(w&&!w.closed)w.location.href=url;else window.open(url,'_blank');setDot('ok','已在新分頁開啟 '+f.path);return}
-    uvClear();uvUrl=url;
+    const html=await ghRaw(f.path);
+    let st='';
+    try{st=await libPull(f)}catch(e){toast('頁面資料同步失敗：'+e.message)}
+    libActive.add(fid);
+    if(newTab){const url=uvBlob(html,fid,true);
+      if(w&&!w.closed)w.location.href=url;else window.open(url,'_blank');
+      setDot('ok','已在新分頁開啟 '+f.path);if(st==='pulled')toast(libMsg(st));renderLib();return}
+    uvClear();uvHtml=html;uvFid=fid;uvUrl=uvBlob(html,fid,false);
     document.getElementById('uvName').textContent=(f.name||'')+'　'+f.path;
-    document.getElementById('uvFrame').src=url;
+    document.getElementById('uvFrame').src=uvUrl;
     document.getElementById('uv').classList.add('on');
-    setDot('ok','已開啟 '+f.path);
+    uvSyncLabel();setDot('ok','已開啟 '+f.path);if(st==='pulled')toast(libMsg(st));
   }catch(e){if(w)try{w.close()}catch(_){};setDot('err','讀取失敗：'+e.message);toast('讀取失敗：'+e.message)}
 }
-document.getElementById('uvClose').onclick=()=>{
+async function uvCloseNow(){
+  const fid=uvFid;
   document.getElementById('uv').classList.remove('on');
-  document.getElementById('uvFrame').src='about:blank';uvClear()};
-document.getElementById('uvNew').onclick=()=>{if(!uvUrl)return;window.open(uvUrl,'_blank');uvKeep=true};
-/* 預習頁裡「回到 Epi_Yaxin」的連結：在框內點會把 app 再開一次，改成關掉檢視器；其他外部連結開新分頁，不在框內換頁 */
+  document.getElementById('uvFrame').src='about:blank';uvClear();uvFid=null;uvHtml='';
+  if(!fid)return;
+  await new Promise(r=>setTimeout(r,250));
+  try{const v=await libPush(fid);const m=libMsg(v);if(m&&v!=='same')toast(m)}catch(e){toast('頁面資料同步失敗：'+e.message)}
+}
+document.getElementById('uvClose').onclick=()=>{uvCloseNow()};
+document.getElementById('uvNew').onclick=()=>{if(!uvHtml||!uvFid)return;window.open(uvBlob(uvHtml,uvFid,true),'_blank')};
+document.getElementById('uvSync').onclick=async()=>{
+  const fid=uvFid,r=fid&&fileById(fid);if(!r)return;
+  if(!r.f.dbs||!r.f.dbs.length){uvSyncLabel('這個頁面沒有存資料');return}
+  uvSyncLabel('同步中…');
+  try{
+    const a=await libPull(r.f);
+    if(a==='pulled'&&uvUrl&&uvFid===fid){document.getElementById('uvFrame').src=uvUrl}
+    const b=a==='pulled'||a==='pushed'?a:await libPush(fid);
+    uvSyncLabel();toast(libMsg(b)||'頁面資料已是最新');
+  }catch(e){uvSyncLabel('同步失敗');toast('同步失敗：'+e.message)}
+};
+/* 預習頁裡「回到 Epi_Yaxin」：在框內點會把 app 再開一次，改成關掉檢視器；其他外部連結開新分頁 */
 function uvIsApp(u){const k=x=>x.replace(/index\.html$/,'').replace(/\/$/,'');
   return k(u.origin+u.pathname)===k(location.origin+location.pathname)||/^https:\/\/yaaaxinnn\.github\.io\/epi-app\/?(index\.html)?$/.test(u.origin+u.pathname)}
 document.getElementById('uvFrame').addEventListener('load',()=>{
@@ -2489,55 +1999,29 @@ document.getElementById('uvFrame').addEventListener('load',()=>{
     const h=a.getAttribute('href')||'';if(!h||h[0]==='#'||/^javascript:/i.test(h))return;
     let u;try{u=new URL(h,location.href)}catch(_){return}
     if(!/^https?:$/.test(u.protocol))return;
-    if(uvIsApp(u)){e.preventDefault();document.getElementById('uvClose').click();return}
+    if(uvIsApp(u)){e.preventDefault();uvCloseNow();return}
     if(!a.target||a.target==='_self'){e.preventDefault();window.open(u.href,'_blank','noopener')}
   },true);
 });
+/* 開新分頁時 app 每分鐘存一次；app 打開時補存上次沒存到的 */
+setInterval(()=>{if(!ghOn())return;libActive.forEach(fid=>{libPush(fid,{quiet:true}).catch(()=>{})})},60000);
+setTimeout(()=>{if(!ghOn()||typeof indexedDB==='undefined')return;
+  libFiles().forEach(x=>{if(x.f.dbs&&x.f.dbs.length)libPush(x.f.fid,{quiet:true}).catch(()=>{})})},5000);
 
-/* ---- 跳轉：Courses ↔ Notes ↔ Textbooks ---- */
-function goTab(p){const b=document.querySelector('.tab[data-p="'+p+'"]');if(b)b.click()}
-function goUnit(id){
-  const u=(S.units||[]).find(x=>x.id===id);if(!u){toast('這個單元不在了');return}
-  if(ucSel&&u.cid!==ucSel)ucSel='';
-  openU.add(id);goTab('units');renderUnits();
-  const el=document.getElementById('u-'+id);if(el&&el.scrollIntoView)el.scrollIntoView({block:'start'});
-}
-function goNote(id){
-  const n=(S.notes||[]).find(x=>x.id===id);if(!n){toast('找不到這則筆記');return}
-  goTab('courses');
-  if(!ntHit(n)){nTags.clear();setSearch('')}
-  if(ntSelCat&&qcatFix(n.kind)!==ntSelCat){ntSelCat='';ntSelMon=''}
-  if(ntSelMon&&ym(n.mtime||n.created)!==ntSelMon)ntSelMon='';
-  openNt.add(id);renderNt();
-  const el=document.querySelector('#ntList [data-ntcard="'+id+'"]');if(el&&el.scrollIntoView)el.scrollIntoView({block:'center'});
-}
-function goNewNote(uid_){
-  goTab('courses');show('ntForm',true);
-  if(typeof ntExamUI==='function')ntExamUI();
-  fillNtUnit();document.getElementById('nt-unit').value=uid_;
-  bindImagePaste(document.getElementById('nt-body'));
-  const f=document.getElementById('ntForm');if(f.scrollIntoView)f.scrollIntoView({block:'start'});
-  document.getElementById('nt-title').focus();
-}
+/* ---------- 跳到 Textbooks ---------- */
 function goTB(i){
   if(!C[i])return;const t=th(i);t.open=true;
   qSec='';const qs=document.getElementById('qSec');if(qs)qs.value='';
   if(mFilter==='active'){mFilter='book';document.querySelectorAll('#mSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f==='book'))}
-  save();goTab('textbooks');renderMethod();
+  save();const b=document.querySelector('.tab[data-p="textbooks"]');if(b)b.click();renderMethod();
   const el=document.getElementById('th-'+i);if(el&&el.scrollIntoView)el.scrollIntoView({block:'start'});
 }
-document.addEventListener('click',e=>{
-  if(hEl)return;let b;
-  if((b=e.target.closest('[data-unitgo]'))){goUnit(b.dataset.unitgo);return}
-  if((b=e.target.closest('[data-ntgo]'))){goNote(b.dataset.ntgo);return}
-  if((b=e.target.closest('[data-tbgo]'))){goTB(+b.dataset.tbgo);return}
-});
 
-/* ---- Courses 分頁事件 ---- */
+/* ---------- Library 分頁事件 ---------- */
 document.getElementById('ucBar').addEventListener('click',e=>{
   if(e.target.closest('#ucAddBtn')){ucOpen(null);return}
   const b=e.target.closest('[data-ucf]');if(!b)return;
-  ucSel=b.dataset.ucf===ucSel?'':b.dataset.ucf;renderUnits();
+  ucSel=b.dataset.ucf===ucSel?'':b.dataset.ucf;renderLib();
 });
 document.getElementById('ucInfo').addEventListener('click',e=>{
   const b=e.target.closest('[data-ucedit]');if(b&&!hEl)ucOpen(b.dataset.ucedit)});
@@ -2545,22 +2029,21 @@ const uList=document.getElementById('unitList');
 uList.addEventListener('click',e=>{
   if(hEl)return;let b;
   if(e.target.closest('[data-hold]'))return;
-  if((b=e.target.closest('[data-ufopen]'))){const[a,i]=b.dataset.ufopen.split('|');uvOpen(a,+i,false);return}
-  if((b=e.target.closest('[data-ufnew]'))){const[a,i]=b.dataset.ufnew.split('|');uvOpen(a,+i,true);return}
+  if((b=e.target.closest('[data-ufopen]'))){uvOpen(b.dataset.ufopen,false);return}
+  if((b=e.target.closest('[data-ufnew]'))){uvOpen(b.dataset.ufnew,true);return}
+  if((b=e.target.closest('[data-tbgo]'))){goTB(+b.dataset.tbgo);return}
   if((b=e.target.closest('[data-udrop]'))){upUnit=b.dataset.udrop;document.getElementById('uf-file').click();return}
   if((b=e.target.closest('[data-upopen]'))){const id=b.dataset.upopen;
-    if(upUnit===id){upUnit=null}else{upUnit=id;upFiles=[];upMsg=''}renderUnits();return}
-  if((b=e.target.closest('[data-updel]'))){upFiles.splice(+b.dataset.updel,1);renderUnits();return}
+    if(upUnit===id){upUnit=null}else{upUnit=id;upFiles=[];upMsg=''}renderLib();return}
+  if((b=e.target.closest('[data-updel]'))){upFiles.splice(+b.dataset.updel,1);renderLib();return}
   if((b=e.target.closest('[data-upgo]'))){ufPush(b.dataset.upgo);return}
   if((b=e.target.closest('[data-ubind]'))){const id=b.dataset.ubind,u=(S.units||[]).find(x=>x.id===id);
     const inp=uList.querySelector('[data-ubindin="'+id+'"]'),p=uPath(inp&&inp.value);
-    if(!u)return;if(!p){toast('請填 repo 裡的路徑，例如 courses/causal/xxx.html');return}
-    ufBind(u,p);upMsg='';upUnit=null;saved();renderUnits();return}
+    if(!u)return;if(!p){toast('請填 repo 裡的路徑，例如 library/causal/xxx.html');return}
+    ufBind(u,p);upMsg='';upUnit=null;saved();renderLib();return}
   if((b=e.target.closest('[data-uedit]'))){unitOpen(b.dataset.uedit);return}
-  if((b=e.target.closest('[data-unote]'))){goNewNote(b.dataset.unote);return}
-  if(e.target.closest('[data-tbgo]')||e.target.closest('[data-ntgo]'))return;
   if((b=e.target.closest('[data-utog]'))){const id=b.dataset.utog;openU.has(id)?openU.delete(id):openU.add(id);
-    if(!openU.has(id)&&upUnit===id)upUnit=null;renderUnits();return}
+    if(!openU.has(id)&&upUnit===id)upUnit=null;renderLib();return}
 });
 uList.addEventListener('input',e=>{const f=e.target.closest('[data-uppath]');if(f&&upFiles[+f.dataset.uppath])upFiles[+f.dataset.uppath].path=f.value});
 ['dragenter','dragover'].forEach(ev=>uList.addEventListener(ev,e=>{const d=e.target.closest('.udrop');if(!d)return;e.preventDefault();d.classList.add('over')}));
@@ -3180,7 +2663,7 @@ function nFilterOn(){return nterms().length>0||nTags.size>0}
 function nhit(s){const t=nterms();if(!t.length)return true;const x=(s||'').toLowerCase();return t.every(w=>x.includes(w))}
 function nTagOk(tags){if(!nTags.size)return true;const a=(tags||[]).map(t=>String(t).toLowerCase());return[...nTags].every(t=>a.includes(t))}
 function qHit(q){return nTagOk(q.tags)&&nhit([q.q,q.a,(q.tags||[]).join(' ')].join(' '))}
-function ntHit(n){return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' '),n.psrc||'',tbName(n.tb),uLabel(n.unit)].join(' '))}
+function ntHit(n){return nTagOk(n.tags)&&nhit([n.title,n.body,(n.links||[]).map(l=>l.name).join(' '),(n.tags||[]).join(' '),n.psrc||'',tbName(n.tb)].join(' '))}
 function parseTags(s){
   const out=[];
   String(s||'').split(/[,，、;；]+|\s{1,}/).forEach(t=>{t=t.trim();
@@ -3951,7 +3434,6 @@ document.getElementById('addNt').onclick=()=>{
     title:t||'(未命名)',body:b,kind,links:newNtLinks.slice(),
     tags:parseTags(document.getElementById('nt-tags').value)};
   if(ex){n.psrc=document.getElementById('nt-psrc').value.trim();n.tb=document.getElementById('nt-tb').value}
-  {const uv=document.getElementById('nt-unit').value;if(uv)n.unit=uv;document.getElementById('nt-unit').value=''}
   S.notes.push(n);
   ['nt-title','nt-body','nt-tags','nt-psrc','nt-tb'].forEach(i=>document.getElementById(i).value='');
   newNtLinks=[];renderNtNewLinks();show('ntForm',false);saved();renderNt();
@@ -3960,7 +3442,7 @@ document.getElementById('addNt').onclick=()=>{
 function renderNt(){
   const el=document.getElementById('ntList');if(!el)return;
   const list=(S.notes||[]).filter(ntHit).sort((a,b)=>(b.mtime||b.created)-(a.mtime||a.created));
-  if(!list.length){el.innerHTML=emptyRow();if(typeof renderUnits==='function')renderUnits();return}
+  if(!list.length){el.innerHTML=emptyRow();return}
   const catOf=n=>qcatFix(n.kind),tsOf=n=>n.mtime||n.created;
   if(ntSelCat&&!list.some(n=>catOf(n)===ntSelCat)){ntSelCat='';ntSelMon=''}
   let show=list;
@@ -3968,7 +3450,6 @@ function renderNt(){
   if(ntSelMon)show=show.filter(n=>ym(tsOf(n))===ntSelMon);
   el.innerHTML=`<div class="dirwrap"><div class="dirnav">${dirNav(list,catOf,tsOf,ntSelCat,ntSelMon,'ntsel')}</div>`
     +`<div class="dirbody">${show.length?show.map(ntItem).join(''):emptyRow()}</div></div>`;
-  if(typeof renderUnits==='function')renderUnits();
 }
 function ntItem(n){
   if(!Array.isArray(n.links))n.links=[];
@@ -4008,7 +3489,6 @@ function ntItem(n){
     </div>
     ${tagChips(n.tags,1)}
     ${meta}
-    ${unitPill(n)}
     ${open&&chips?`<div class="row" data-ntstop="1" style="margin-top:8px;flex-wrap:wrap;gap:5px;cursor:default">${chips}</div>`:''}
     ${open&&!ed?`<div data-ntstop="1" style="cursor:default">
       ${n.body?`<div class="mdview" style="margin-top:9px;font-size:13.5px;line-height:1.65">${md(n.body)}</div>`
@@ -4020,7 +3500,6 @@ function ntItem(n){
         <label class="f"><span>分類</span><select data-ntk="${n.id}">${qcatOpts(qcatFix(n.kind))}</select></label>
         <label class="f"><span>標籤（逗號分隔）</span><input type="text" data-nttags="${n.id}" value="${esc((n.tags||[]).join(', '))}"></label>
       </div>
-      <label class="f"><span>課程單元</span><select data-ntu="${n.id}">${unitOpts(n.unit||'')}</select></label>
       ${ex?`<div class="grid2">
         <label class="f"><span>出處（課程／老師／日期）</span><input type="text" data-ntf="${n.id}|psrc" value="${esc(n.psrc||'')}" placeholder="e.g. 高流方法 W5 陳老師 10/6"></label>
         <label class="f"><span>Textbooks 主題</span><select data-nttb="${n.id}">${tbOpts(n.tb||'')}</select></label></div>`:''}
@@ -4087,9 +3566,6 @@ document.getElementById('ntList').addEventListener('change',e=>{
     const id=qcatAdd(window.prompt('新分類名稱（例如：方法學、Lab）',''));
     if(n&&id){n.kind=id;n.mtime=Date.now();toast('已新增分類')}
     save();fillSelects();renderQ();renderNt();return}
-  const nu=e.target.closest('[data-ntu]');
-  if(nu){const n=S.notes.find(x=>x.id===nu.dataset.ntu);
-    if(n){n.unit=nu.value;n.mtime=Date.now();save();renderNt()}return}
   const tb=e.target.closest('[data-nttb]');
   if(tb){const n=S.notes.find(x=>x.id===tb.dataset.nttb);
     if(n){n.tb=tb.value;n.mtime=Date.now();save()}return}
@@ -4127,7 +3603,6 @@ function fillSelects(){
     if(s){const v=s.value;s.innerHTML=qcatOpts(qcatFix(v),id==='q-kind');s.value=qcatFix(v);
       if(id==='q-kind'&&s.value===EXAM)s.value=qcatIds()[0]}});
   {const s=document.getElementById('nt-tb');if(s&&!s.options.length)s.innerHTML=tbOpts('')}
-  fillNtUnit();
   if(typeof ntExamUI==='function')ntExamUI();
   {const s=document.getElementById('kd-type');
    if(s){const v=s.value;s.innerHTML=kdcatOpts(kdcatFix(v));s.value=kdcatFix(v)}}
@@ -4499,10 +3974,8 @@ document.getElementById('trashList').addEventListener('click',e=>{
     else if(x.type==='mt')renderMT();
     else if(x.type==='dir')renderDIR();
     else if(x.type==='note')renderNt();
-    else if(x.type==='unit'||x.type==='ucourse'){renderUnits();renderNt()}
     else if(x.type==='prog')renderProg();
-    else if(x.type==='gsrc'||x.type==='gtopic'||x.type==='grow'){renderGuide();
-      if(x.type==='grow'&&!(S.gtopic||[]).some(t=>t.id===o.topic)){toast('已還原；它的主題還在回收桶，先還原主題才看得到');return}}
+    else if(x.type==='unit'||x.type==='ucourse')renderLib();
     else if(x.type==='kd')renderKD();
     else if(x.type==='cs')renderTT();
     toast('已還原');
@@ -4618,7 +4091,7 @@ function mergeState(inc){
   if(inc.lastExport&&(!S.lastExport||inc.lastExport>S.lastExport))S.lastExport=inc.lastExport;
   migrateProg();
   ensureExamCat();
-  gEnsureSeeds();
+  libMigrate();
 }
 let impMode='merge';
 document.getElementById('impBtn').onclick=()=>{impMode='merge';document.getElementById('impFile').click()};
@@ -4649,7 +4122,7 @@ function ghOn(){return !!(GH.owner&&GH.repo&&GH.token)}
 let orphans=[],orphTrunc=false;
 function orphUsed(){
   const u=new Set((S.papers||[]).map(p=>String(p.file||'').replace(/^\.?\//,'')).filter(Boolean));
-  (S.units||[]).forEach(x=>(x.files||[]).forEach(f=>{const p=String(f.path||'').replace(/^\.?\//,'');if(p)u.add(p)}));
+  libFiles().forEach(x=>{const p=String(x.f.path||'').replace(/^\.?\//,'');if(p)u.add(p)});
   return u;
 }
 function renderOrph(){
@@ -4659,9 +4132,9 @@ function renderOrph(){
   const linked=orphUsed().size;
   const warn=orphTrunc?'<span style="color:var(--clay)">repo 檔案太多，清單可能不完整。</span><br>':'';
   if(!orphans.length){
-    el.innerHTML=`<div class="empty" style="padding:12px">每個 HTML 都有卡片或單元指向，不用清。</div>`;
+    el.innerHTML=`<div class="empty" style="padding:12px">每個 HTML 都有卡片指向，不用清。</div>`;
     del.style.display='none';all.style.display='none';
-    st.innerHTML=warn+`repo 裡的 HTML 都有卡片或單元指向（已比對 ${linked} 個卡片與單元綁定的檔案）。`;
+    st.innerHTML=warn+`repo 裡的 HTML 都有卡片指向（已比對 ${linked} 張有附檔的卡片）。`;
     return;
   }
   el.innerHTML=orphans.map((o,i)=>`<label class="chk" style="margin-bottom:4px">
@@ -4671,7 +4144,7 @@ function renderOrph(){
     <button class="cx" data-orphopen="${i}" title="先看看內容">👁</button>
   </label>`).join('');
   del.style.display='';all.style.display='';
-  st.innerHTML=warn+`找到 ${orphans.length} 個沒有卡片或單元指向的 HTML（已比對 ${linked} 個卡片與單元綁定的檔案）。`;
+  st.innerHTML=warn+`找到 ${orphans.length} 個沒有卡片指向的 HTML（已比對 ${linked} 張有附檔的卡片）。`;
 }
 async function repoSize(){
   const el=document.getElementById('repoSize');if(!el||!ghOn())return;
@@ -4770,11 +4243,9 @@ async function ghSaveCfg(){
   setDot('',ghOn()?(GH.auto?'自動同步已開啟':'已設定'):'未設定同步');
   if(GH.auto&&ghOn()&&!ghPulled)await ghPull(true);
 }
-function b64enc(str){
-  const bytes=new TextEncoder().encode(str);
-  let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));
-  return btoa(bin);
-}
+function b64enc(str){return u8b64(new TextEncoder().encode(str))}
+function u8b64(bytes){let bin='';for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(bin)}
+function b64u8(b){const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u}
 function b64dec(b64){
   const bin=atob(b64.replace(/\s/g,''));
   const bytes=new Uint8Array(bin.length);
@@ -4914,14 +4385,12 @@ function bindSearch(id,setter,fn){
 bindSearch('qPaper',v=>qPaper=v,()=>renderPapers());
 bindSearch('qCard',v=>qCard=v,()=>renderCards());
 bindSearch('qSec',v=>qSec=v,()=>renderMethod());
-bindSearch('gsearch',v=>gQ=v,()=>renderGuide());
 document.body.addEventListener('click',e=>{
   const b=e.target.closest('[data-clr]');if(!b)return;
   document.getElementById(b.dataset.clr).value='';
   if(b.dataset.clr==='qPaper'){qPaper='';renderPapers()}
   if(b.dataset.clr==='qCard'){qCard='';renderCards()}
   if(b.dataset.clr==='qSec'){qSec='';renderMethod()}
-  if(b.dataset.clr==='gsearch'){gQ='';renderGuide()}
 });
 document.getElementById('tagbar').addEventListener('click',e=>{
   const b=e.target.closest('[data-tf]');if(!b)return;
@@ -5065,14 +4534,13 @@ document.getElementById('helpBox').innerHTML=`
 
 
 
-<details class="card fold"><summary>🧭 九個分頁在做什麼</summary><div class="help">
-  <p>由左到右：<strong>Reading</strong> 讀過的論文卡片　<strong>Guide</strong> 學會指引、WHO 與健保規定的比較表　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Notes</strong> 疑問與零散資料　<strong>Courses</strong> 老師課程的單元與預習包　<strong>Calendar</strong> 重要日期與課表　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Review</strong> 間隔重複複習卡　<strong>Settings</strong> 同步、備份、說明。</p>
+<details class="card fold"><summary>🧭 八個分頁在做什麼</summary><div class="help">
+  <p>由左到右：<strong>Reading</strong> 讀過的論文卡片　<strong>Meeting</strong> 與老師的會議、研究方向、待辦　<strong>Notes</strong> 疑問與零散資料　<strong>Library</strong> 依主題收納的 HTML 頁面（課程預習包等）　<strong>Calendar</strong> 重要日期與課表　<strong>Textbooks</strong> 教科書進度與小節筆記　<strong>Review</strong> 間隔重複複習卡　<strong>Settings</strong> 同步、備份、說明。</p>
   <h4>資料怎麼在分頁之間流動</h4>
   <ul>
     <li><strong>Notes 的 Question</strong> 是總樞紐，展開後有三個出口：<code>↑ Card</code> 進 Review 變複習卡、<code>↑ Note</code> 變同分頁的筆記、<code>↑ 方向</code> 進 Meeting 的 Research directions。</li>
     <li><strong>Meeting 的 Action items</strong> 自動彙整到同分頁最下方的 To-do。</li>
     <li><strong>Google 日曆</strong>的星號事件自動流進 Calendar 的 KEY DATES。</li>
-    <li><strong>Notes ↔ Courses</strong>：筆記選「課程單元」後，筆記上有 🧑‍🏫 標記可跳到單元，單元的 📒 筆記也列出它可跳回來。單元的指定閱讀可跳到 Textbooks 主題。</li>
     <li>其餘分頁各自獨立，靠 <strong>🔗附件</strong> 互相指向（精讀 HTML、Drive 檔案、paper 連結）。</li>
   </ul>
 </div></details>
@@ -5086,7 +4554,7 @@ document.getElementById('helpBox').innerHTML=`
   <p>刪掉自訂分類時底下的項目<strong>不會被刪</strong>，只會退回預設：Reading → 未分類、Questions／Notes → 第一個分類、KEY DATES → Other。</p>
   <h4>刪除與 GitHub 的關係</h4>
   <p><strong>卡片資料會同步刪除</strong>：刪掉時會留一個「墓碑」記號跟著上傳，所以其他裝置合併後也會跟著刪，不會把已刪的東西送回來。墓碑保留 180 天。GitHub 的 <strong>commit 歷史仍留著舊版本</strong>，真的刪錯可以到 repo 的 <code>data/notes.json</code> → History 翻回去。</p>
-  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片或單元指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
+  <p><strong>精讀 HTML 不會跟著刪</strong>：卡片沒了，<code>papers/xxx.html</code> 還在 repo 裡，沒有任何卡片指向它。到 <strong>Settings → 分類與清理 → 沒有卡片指向的 HTML</strong> 按掃描可以列出來，勾選後長按刪除鈕清掉。清單是「沒有卡片指向」而不是「沒用的」，刪之前先用 👁 看一眼。那一區也會顯示 repo 目前用了多少空間。</p>
   <p><strong>長按 ✕ 1.5 秒</strong>進回收桶（Settings → 分類與清理 → 回收桶，30 天內可還原）。滑開或放開太早都會取消，不會誤刪。<strong>例外</strong>：KEY DATES 過期超過兩個月會直接永久刪除，不進回收桶。</p>
   <h4>分區與折疊</h4>
   <p>Reading、Notes 的 Questions、Notes 的 Notes 都<strong>依分類分區</strong>，每區只顯示前幾筆。分類標題<strong>最右邊的雙箭號</strong>展開其餘項目，展開後箭號翻轉；滑過去會顯示還有幾筆。長內容（附件、進度紀錄）一律收在折疊區，點標題展開。</p>
@@ -5116,22 +4584,29 @@ document.getElementById('helpBox').innerHTML=`
   <p><strong>Compare</strong> 模式把選定欄位排成表格橫向比較，點格子可展開全文。</p>
 </div></details>
 
-<details class="card fold"><summary>📑 Guide</summary><div class="help">
-  <p>把<strong>學會指引、WHO、健保給付規定</strong>拆成同一套比較表：一個主題一張表，<strong>一列＝一個來源的一個子分組</strong>（例如 AASLD 2018・HBeAg 陽性），欄位是要比的條件。資料主要從 <code>hep-guideline</code> 產生的 JSON 匯入，也可以手動新增。</p>
-  <h4>📊 COMPARE 比較表</h4>
-  <p>內建四個主題：治療起始條件、HCC 監測對象與間隔、健保給付條件與期程、慢性 HBV 感染分期定義。內建主題可以改名、調欄位，但不能刪；<strong>改名後用原本的名稱匯入仍然對得上</strong>。主題標題右邊 <strong>＋</strong> 新增一列、<strong>✎</strong> 編輯主題（名稱、欄位、主題順序）、雙箭號收合；COMPARE 標題的 <strong>＋</strong> 新增自訂主題。自訂主題在 ✎ 裡長按 Delete 刪除，底下的條目一起進回收桶。</p>
-  <p>列的順序：<strong>英文學會在前、中文機關在後</strong>，同一機關<strong>新版在上</strong>，同一份指引內照匯入順序，不同機關之間有一條較深的分隔線。第一欄固定在左邊，手機上表格可以左右滑。空的格子顯示 —。</p>
-  <p><strong>點一列</strong>在表格下方展開細節：每個欄位的全文、證據等級、頁碼、原文引述、你的筆記。細節右上 ✎ 編輯、長按 ✕ 刪除。同一個來源在同一個主題裡，子分組不能重複。</p>
-  <p><strong>全部｜現行</strong>：已取代的舊版預設以淡色顯示，方便對照 NHIRD 研究期間當時的規定；切到「現行」只看目前有效的版本。</p>
-  <h4>📚 SOURCES 來源清單</h4>
-  <p>依機關分組，同機關新到舊。圓點：綠＝現行、灰＝已取代、黃＝草案；右邊數字是這個來源有幾列條目。點一下展開代號、生效期間、取代關係和<strong>變更重點</strong>。</p>
-  <p>健保每次修訂是一個獨立來源（代號像 <code>nhi-2023-07</code>）。在「取代哪一版」選上一版，舊版會自動標成已取代。刪除來源時，底下的條目一起進回收桶，還原時也一起回來。新增條目時，來源下拉最下面的 <code>＋ 新增來源…</code> 可以直接打「AASLD 2018」或「健保署 2023-07-01」先建一筆，細節之後再補。</p>
-  <h4>📥 匯入 JSON</h4>
-  <p>貼上 <code>hep-guideline</code> 產生的 JSON（一包，或多包組成的陣列；外面包著 <code>&#96;&#96;&#96;json</code> 也可以），或按「選檔」讀 .json 檔。<strong>同一個來源代號＋主題＋子分組再匯入會更新、不會重複</strong>，JSON 沒提到的欄位保留原值。新的主題或欄位會自動建立；匯入結果會列出新增、更新、被取代的版本，以及需要補資料的地方。JSON 寫錯時什麼都不會改。</p>
-  <h4>📤 匯出 Markdown</h4>
-  <p>匯出<strong>目前畫面上的內容</strong>（套用搜尋與「現行」篩選）：每個主題一張表、原文引述、筆記，最後附來源清單與版本變更，可以直接貼進論文筆記。</p>
-  <h4>搜尋</h4>
-  <p>比對主題名稱、機關、標題、年份、子分組、各欄數值、證據、頁碼、引文與筆記，<strong>空白分隔＝而且</strong>。搜尋時主題全部展開，沒有符合的主題先藏起來；來源清單也會一起篩，連變更重點都搜得到。</p>
+<details class="card fold"><summary>📚 Library</summary><div class="help">
+  <p>依主題收納你自己產生的 HTML 頁面，例如課程預習包、整理頁。Textbooks 是照書的主題自己讀；Library 放的是做好的網頁。</p>
+  <h4>主題與卡片</h4>
+  <ul>
+    <li>先按「＋ 主題」：名稱、說明（選填，例如老師、學期）、<strong>代碼</strong>（資料夾名，只能英數與 -，英文名稱會自動帶出）。上面那排按鈕篩選主題，選中時旁邊有 ✎ 改、✕ 長按刪（還有卡片的主題不能刪）。</li>
+    <li>右上 ＋ 新增卡片：主題、標題、日期（選填）、指定閱讀（選填，一筆一列：書名、章節、必讀／選讀、Textbooks 主題）、備註（Markdown）。卡片依日期新到舊，沒填日期的用建立時間。</li>
+    <li>書名選 Modern Epidemiology 4e 或 What If 時，會依章節自動對到 Textbooks 主題（ME Ch12 → Confounding、What If Ch6 → Causal Diagrams），對錯了用下拉改；展開卡片後點主題跳到 Textbooks。</li>
+  </ul>
+  <h4>HTML</h4>
+  <ul>
+    <li>一張卡片可以放多個 HTML。展開卡片，在 📄 HTML 右邊按 ＋：拖進或選檔案（可多選），預設存到 epi-data 的 <code>library/代碼/檔名.html</code>，路徑可改，同路徑會覆蓋；也可以填 repo 裡已有的路徑按「綁定」。</li>
+    <li>卡片收合時就看得到 📄 按鈕，點了全螢幕開啟；↗ 開新分頁。✕ 長按只解除綁定，repo 裡的檔案還在，要清到 Settings → 分類與清理。</li>
+    <li>頁面用 blob 網址載入、不加 sandbox，所以頁內分頁（#n6 這類）、複製按鈕、頁面自己的瀏覽器儲存都能用。代價是它讀得到 app 的本機資料（含 GitHub token），所以<strong>只放你自己產生的 HTML</strong>。</li>
+  </ul>
+  <h4>頁面資料同步</h4>
+  <ul>
+    <li>頁面自己存的東西（問答、截圖、待辦勾選）原本只在這台裝置的瀏覽器裡。app 會記下頁面用了哪個瀏覽器資料庫，把內容同步到 HTML 旁邊的 <code>檔名.data.json</code>。</li>
+    <li><strong>打開時</strong>：雲端比這台新就先還原再顯示。<strong>關閉時</strong>（檢視器的 ✕、新分頁右上角的 ✕）：有變動就上傳。開新分頁時，只要 app 的分頁還開著，每分鐘也會自動存一次；app 下次打開時會補上沒存到的。</li>
+    <li>檢視器頂列的 ☁ 立即同步，旁邊顯示最後同步時間；展開卡片時每個 HTML 後面也有。</li>
+    <li>兩台裝置都改過同一個頁面時會跳出來問你要用哪一份，沒選的那份另存成 <code>.data.backup-日期.json</code>。</li>
+    <li>截圖很多時同步檔會變大、同步比較慢。兩個 HTML 如果用同一個資料庫名稱，資料會混在一起，app 偵測到會提醒。</li>
+    <li>重新上傳新版 HTML 不會清掉頁面資料。</li>
+  </ul>
 </div></details>
 
 <details class="card fold"><summary>📚 Textbooks</summary><div class="help">
@@ -5154,22 +4629,8 @@ document.getElementById('helpBox').innerHTML=`
   <p>老師說「這個之前考過」就在 Notes 新增一則、分類選 <strong>資格考</strong>：會多出<strong>出處</strong>（課程／老師／日期）和 <strong>Textbooks 主題</strong>兩欄，都可以留空；標題和內容改叫<strong>題目</strong>和<strong>答案</strong>。</p>
   <p>答案寫好按 Save（或編輯後按「完成」／✓），就<strong>自動在 Review 產生一張 🎓 考古卡</strong>（題目→正面、答案→背面、主題→卡片主題），筆記上會出現 🎓 考古卡 標記；之後改答案再按完成，那張卡會跟著更新。考古卡刪掉後不會自動重建（從回收桶還原即可）。資格考筆記不需要 <code>↑ Card</code>，所以那顆按鈕不顯示。左側目錄點「資格考」就只看考古題。</p>
   <h4>Notes</h4>
-  <p>筆記可以選<strong>課程單元</strong>，綁到 Courses 的某個單元；展開後會出現 🧑‍🏫 課程 週次 標記，點了跳過去（詳見 Courses）。</p>
   <p>想查的東西、課程資料、待整理的想法。版面和 Resolved 一樣是<strong>左目錄、右清單</strong>：左邊依分類顯示筆數、選中才展開月份；右邊不分類，依最後修改時間新到舊排成單欄。<strong>收合時和 Resolved 長得一樣</strong>：圓點、標題、標籤、最後修改日期一行帶過，點一下才展開成完整卡片（含內容、✎ 編輯、✕ 刪除），再點一次收回去。</p>
   <p>分類和標籤在編輯時<strong>並排在同一列</strong>。展開編輯時有兩個出口：<code>↑ Card</code> 變複習卡（標題→正面、內容→背面）、<code>↑ 方向</code> 送進 Research directions（標題→題目、內容→第一筆進度）。<strong>Google Drive 分享連結直接貼進 🔗附件</strong>就能跨裝置開啟（記得把 Drive 權限設成「知道連結的人可檢視」）。</p>
-</div></details>
-
-<details class="card fold"><summary>🧑‍🏫 Courses</summary><div class="help">
-  <p>老師課程的預習包，照<strong>週次和指定閱讀</strong>整理；Textbooks 則是照書的主題，適合自己讀。</p>
-  <h4>課程與單元</h4>
-  <p>先按「＋ 課程」建立課程：名稱、授課老師、<strong>代碼</strong>（資料夾名，只能英數與 -，例如 causal；英文課名會自動帶出）。課名可以從 Calendar 課表挑。上面那排按鈕篩選課程，選中時顯示老師與資料夾，旁邊 ✎ 改、✕ 長按刪（還有單元的課程不能刪）。</p>
-  <p>右上 ＋ 新增單元：課程、週次、日期、單元主題、指定閱讀（書名、章節、必讀／選讀）、備註（Markdown）。單元依日期新到舊，沒填日期的用建立時間；點標題展開、再點收起。</p>
-  <p>書名選 <strong>Modern Epidemiology 4e</strong> 或 <strong>What If</strong> 時，會依章節自動對到 Textbooks 主題（例如 ME Ch12 → Confounding、What If Ch6 → Causal Diagrams），對錯了用下拉改。展開後點主題 pill 跳到 Textbooks 那個主題。</p>
-  <h4>預習包 HTML</h4>
-  <p>展開單元，在 📄 HTML 右邊按 ＋：拖進或選檔案（可多選），預設存到 epi-data 的 <code>courses/代碼/檔名.html</code>，路徑可改，同路徑會覆蓋；也可以直接填 repo 裡已有的路徑按「綁定」。點 📄 全螢幕開啟，↗ 開新分頁。✕ 長按只解除綁定，repo 裡的檔案還在，要清到 Settings → 分類與清理。</p>
-  <p>這裡開的頁面用 blob 網址載入、<strong>不加 sandbox</strong>，所以頁內分頁（#n6 這類）、複製指令按鈕和頁面自己的瀏覽器儲存（IndexedDB）都能用。代價是它讀得到 app 的本機資料（含 GitHub token），所以<strong>只綁你自己產生的 HTML</strong>。頁面自己存的資料存在這個網站的瀏覽器空間，和在別處開同一個檔案是兩份，要搬就用頁面自己的同步。開新分頁的網址是暫時的，關掉 app 後失效，不能當書籤。</p>
-  <h4>和 Notes 互連</h4>
-  <p>Notes 新增或 ✎ 筆記時選「課程單元」，筆記會出現 🧑‍🏫 標記，點了跳到這個單元；單元的 📒 筆記列出綁定的筆記，點了跳回 Notes。單元的 📒 右邊 ＋ 直接開 Notes 新增表單、單元已選好。</p>
 </div></details>
 
 <details class="card fold"><summary>🔁 Review</summary><div class="help">
@@ -5273,7 +4734,7 @@ document.getElementById('helpBox').innerHTML=`
 `;
 }
 function renderAll(){fillSelects();renderPFFields();renderTags();renderPapers();renderMethod();
-  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderUnits();renderTT();renderProg();renderKD();renderGuide();renderGC();updateBadge();renderExportState();renderTrash();renderCatMgr();renderHelp()}
+  renderCards();renderTagBar();renderQ();renderMT();renderNt();renderLib();renderTT();renderProg();renderKD();renderGC();updateBadge();renderExportState();renderTrash();renderCatMgr();renderHelp()}
 (async()=>{
   await load();purgeTrash();renderAll();
   await ghLoadCfg();
