@@ -1,4 +1,4 @@
-// v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
+// 1.0：HTML 與圖片同一個拖放區、卡片上都是小標籤（沒有 ↗）、右欄一列兩張、🖼️、搜尋框提示字加回來、Settings 說明更新；沿用 v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
 const {JSDOM}=require('jsdom');const fs=require('fs');const fidb=require('fake-indexeddb');
 const html=fs.readFileSync('/home/claude/index.html','utf8');
 const now=Date.now();
@@ -100,10 +100,10 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  t('指定閱讀不顯示（舊資料保留在存檔裡）',()=>!$('#p-library').textContent.includes('指定閱讀')&&!$('#p-library').textContent.includes('必讀')&&S.units[0].reads.length===1);
  t('卡片直接是概覽：日期、標題、📄，不用點開',()=>{const it=$('#u-uOld');return it.textContent.includes('10/19（一）')&&it.textContent.includes('W7 DAG 與 confounding')&&!!it.querySelector('[data-ufopen]')&&!it.querySelector('[data-utog]')});
  click($('#addUnitBtn'));
- t('表單：主題、日期、標題、說明、圖片區、HTML 區，沒有週次和指定閱讀',()=>!!$('#unitForm [data-ud="title"]')&&!!$('#unitForm [data-ud="date"]')&&!!$('#unitForm [data-ud="note"]')&&!!$('#unitForm [data-idrop]')&&!!$('#unitForm [data-udrop]')&&!$('#unitForm [data-ud="week"]')&&!$('#unitForm .urow'));
+ t('表單：主題、日期、標題、說明，HTML 與圖片只有一個拖放區，沒有週次和指定閱讀',()=>!!$('#unitForm [data-ud="title"]')&&!!$('#unitForm [data-ud="date"]')&&!!$('#unitForm [data-ud="note"]')&&$$('#unitForm .udrop').length===1&&!!$('#unitForm [data-adrop]')&&!!$('#ua-file')&&!$('#uf-file')&&!$('#ui-file')&&!$('#unitForm [data-ud="week"]')&&!$('#unitForm .urow'));
  t('「備註」改名「說明」',()=>$('#unitForm').textContent.includes('說明（Markdown')&&!$('#unitForm').textContent.includes('備註'));
  t('HTML 區沒有手填路徑的輸入框',()=>!$('#unitForm [data-ud="bind"]')&&!$('#unitForm [data-uppath]'));
- t('全站輸入框沒有提示字',()=>!/placeholder=/.test(html)&&D.querySelectorAll('[placeholder]').length===0);
+ t('只有四個搜尋框有提示字',()=>[...D.querySelectorAll('[placeholder]')].map(x=>x.id).sort().join('|')==='nsearch|qCard|qPaper|qSec');
  t('新卡片預設目前的主題',()=>$('#unitForm [data-ud="cid"]').value==='ucA');
  type($('[data-ud="title"]'),'因果推論預習包');type($('[data-ud="date"]'),'2026-10-20');type($('[data-ud="note"]'),'**非同步**課程，先看步驟 A');
  A.eval(`ufAdd('causal-prep.html','<!doctype html><html><head><title>p</title></head><body>prep</body></html>',100)`);
@@ -118,7 +118,7 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  const U1=S.units.find(u=>u.title==='因果推論預習包');
  t('Save：存卡片並上傳兩個 HTML 綁上去',()=>U1&&U1.date==='2026-10-20'&&U1.files.length===2&&'library/causal/causal-prep.html' in REPO&&'library/causal/slides.html' in REPO&&U1.files.every(f=>/^f/.test(f.fid)));
  t('圖片上傳到 library/代碼/img/、存小說明',()=>U1.imgs.length===2&&U1.imgs.every(g=>/^library\/causal\/img\/u.+-i.+\.jpg$/.test(g.path)&&REPO[g.path]===JPG)&&U1.imgs.map(g=>g.cap).join('|')==='Figure 3.1|DAG 截圖');
- t('卡片上只顯示 🖼 小說明，不直接顯示大圖',()=>$$('#u-'+U1.id+' [data-uimg]').map(b=>b.textContent).join('|')==='🖼 Figure 3.1|🖼 DAG 截圖'&&!$('#u-'+U1.id+' img'));
+ t('卡片上只顯示 🖼 小說明，不直接顯示大圖',()=>$$('#u-'+U1.id+' [data-uimg]').map(b=>b.textContent).join('|')==='🖼️ Figure 3.1|🖼️ DAG 截圖'&&!$('#u-'+U1.id+' img'));
  click($$('#u-'+U1.id+' [data-uimg]')[1]);await sleep(150);
  t('點了放大看，顯示小說明與張數',()=>$('#imgv').classList.contains('on')&&$('#ivCap').textContent.includes('DAG 截圖')&&$('#ivCap').textContent.includes('2 / 2')&&!!$('#ivImg').getAttribute('src'));
  click($('#ivNext'));await sleep(100);
@@ -131,9 +131,10 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  t('標題必填',()=>toastTxt().includes('標題'));click($('#addUnitBtn'));
  t('＋ 再按一次收起表單',()=>$('#unitForm').style.display==='none');
  t('依日期新到舊',()=>$$('#unitList .uti').map(x=>x.textContent).join('|')==='因果推論預習包|W7 DAG 與 confounding');
- t('每個 HTML 一顆 📄 加 ↗',()=>$$('#u-'+U1.id+' [data-ufopen]').length===2&&$$('#u-'+U1.id+' [data-ufnew]').length===2);
+ t('HTML 和圖片都是同一排小標籤，沒有 ↗',()=>$$('#u-'+U1.id+' .uimgs .uimg').length===4&&$$('#u-'+U1.id+' .uimg.uhtml[data-ufopen]').length===2&&!$('#u-'+U1.id+' [data-ufnew]')&&!html.includes('data-ufnew'));
+ t('右欄一列兩張（手機一列一張）',()=>/#unitList\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/.test(html)&&/@media\(max-width:700px\)\{#unitList\{grid-template-columns:minmax\(0,1fr\)\}\}/.test(html));
  click($('#u-'+U1.id+' [data-uedit]'));
- t('✎ 編輯框列出已綁的 HTML（可長按解除）與上傳區',()=>$$('#unitForm .ufile').length===2&&!!$('#unitForm .ufile [data-hold^="ufile|"]')&&!!$('#unitForm [data-udrop]'));
+ t('✎ 編輯框列出已綁的 HTML（可長按解除）與上傳區',()=>$$('#unitForm .ufile').length===2&&!!$('#unitForm .ufile [data-hold^="ufile|"]')&&!!$('#unitForm [data-adrop]'));
  t('✎ 編輯框列出圖片：縮圖、可改小說明、可長按移除',()=>$$('#unitForm .uirow').length===2&&!!$('#unitForm [data-hold^="uimg|"]'));
  type($('#unitForm [data-ucap="'+U1.imgs[0].iid+'"]'),'Figure 3.1（ME p.109）');click($('#saveUnit'));await sleep(200);
  t('改小說明存回去',()=>U1.imgs[0].cap==='Figure 3.1（ME p.109）');
@@ -241,7 +242,9 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  const op=A.eval('orphans').map(o=>o.path).sort().join('|');
  t('清理列出沒人指向的 HTML 與 Library 圖片（.data.json 不列）',()=>op===['library/causal/slides.html','library/causal/unused.html',U1.imgs.length?Object.keys(REPO).find(p=>p.includes('/img/')&&p!==U1.imgs[0].path):''].sort().join('|')||op);
  const hb=$('#helpBox').innerHTML;
- t('版本標示 v52',()=>$('#appVer').textContent.includes('v52'));
+ t('版本標示 1.0',()=>$('#appVer').textContent.includes('Epi_Yaxin 1.0'));
+ t('Settings 說明補上 Library',()=>$('#tipGh').textContent.includes('library/')&&$('#tipData').textContent.includes('不含檔案')&&$('#tipClean').textContent.includes('Library'));
+ t('使用說明：資料夾圖有 library/、沒有 Guide、Textbooks 改 📕',()=>{const h=$('#helpBox').innerHTML;return h.includes('<code>library/代碼/</code>')&&h.includes('<code>tests/</code>')&&!h.includes('Guide')&&h.includes('<summary>📕 Textbooks</summary>')});
  t('HELP：📚 Library、八個分頁、同步說明、沒有 Guide',()=>hb.includes('<summary>📚 Library</summary>')&&hb.includes('八個分頁在做什麼')&&hb.includes('.data.backup-日期.json')&&!hb.includes('📑 Guide')&&!/<strong>Guide<\/strong>/.test(hb));
  t('全分頁可切換',()=>{$$('#tabs button').forEach(b=>click(b));return A.__errs.length===0||A.__errs.join('|')});
  await sleep(400);

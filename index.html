@@ -404,9 +404,14 @@ button.ufo:hover{text-decoration:underline}
 .ufile .us{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
 .udrop{border:2px dashed var(--line-strong);border-radius:10px;padding:12px 10px;text-align:center;cursor:pointer;background:var(--surface);font-size:13px;color:var(--muted)}
 .udrop:hover,.udrop.over{border-color:var(--ac);background:var(--ac-soft)}
-.uimgs{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:7px}
+#unitList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start}
+#unitList>.item{margin:0}
+#unitList>.empty,#unitList>.kdgroup{grid-column:1/-1}
+@media(max-width:700px){#unitList{grid-template-columns:minmax(0,1fr)}}
+.uimgs{display:flex;flex-wrap:wrap;gap:5px 6px;margin-top:8px}
 .uimg{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:2px 10px;font-size:12.5px;color:var(--muted);cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .uimg:hover{color:var(--ac);border-color:var(--ac-mid)}
+.uimg.uhtml{background:var(--ac-soft);border-color:var(--ac-mid);color:var(--ac);font-weight:500}
 .uirow{display:flex;align-items:center;gap:8px;margin-top:6px}
 .uirow input{flex:1;min-width:0}
 .uthumb{flex:0 0 auto;width:52px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:var(--surface-2)}
@@ -453,7 +458,7 @@ button.ufo:hover{text-decoration:underline}
       <button data-view="list" aria-pressed="true">Cards</button>
       <button data-view="table" aria-pressed="false">Compare</button>
     </div>
-    <span class="srch"><input type="text" id="qPaper"><button class="clr" data-clr="qPaper">✕</button></span>
+    <span class="srch"><input type="text" id="qPaper" placeholder="搜尋任何欄位…"><button class="clr" data-clr="qPaper">✕</button></span>
     <button class="iconb" id="tagBtn" title="tag 篩選">🏷️</button>
     <button class="iconb" id="importJsonBtn" title="從 Claude 匯入">📥</button>
     <button class="iconb" id="addPaperBtn" title="新增">＋</button>
@@ -528,7 +533,7 @@ button.ufo:hover{text-decoration:underline}
       <button data-f="course" aria-pressed="false">Course order</button>
       <button data-f="active" aria-pressed="false">In progress</button>
     </div>
-    <span class="srch"><input type="text" id="qSec"><button class="clr" data-clr="qSec">✕</button></span>
+    <span class="srch"><input type="text" id="qSec" placeholder="搜尋章節…"><button class="clr" data-clr="qSec">✕</button></span>
   </div>
   <div id="themeList"></div>
 </section>
@@ -537,7 +542,7 @@ button.ufo:hover{text-decoration:underline}
 <!-- ========== Notes ========== -->
 <section class="panel" id="p-courses">
   <div class="nsrch">
-    <input type="search" id="nsearch">
+    <input type="search" id="nsearch" placeholder="搜尋問題與筆記（標題／內容／答案／來源／標籤）">
     <button class="cx" id="nsearchX" title="清除搜尋">✕</button>
   </div>
   <div class="tagbar" id="ntagbar"></div>
@@ -596,9 +601,9 @@ button.ufo:hover{text-decoration:underline}
     <button class="iconb" id="addUnitBtn" title="新增卡片">＋</button></div>
   <div class="tip" id="tipLib"><ul>
     <li>左邊是主題，點一下右邊列出這個主題的卡片（新到舊）；最下面「＋ 主題」新增，再按一次收起</li>
-    <li>右上 ＋ 新增卡片：標題、日期（選填）、說明、HTML（拖進來或選檔案，可多選），按 Save 時上傳到 epi-data 的 <code>library/代碼/</code></li>
-    <li>說明可以放圖片：拖進來、點選，或在說明框按 Ctrl+V 貼上，可一次多張、各加一行小說明；卡片上只顯示 🖼 小說明，點了才看大圖</li>
-    <li>點 📄 全螢幕開啟；↗ 開新分頁，分頁右上角的 ✕ 會先同步再關閉</li>
+    <li>右上 ＋ 新增卡片：標題、日期（選填）、說明，HTML 和圖片拖進同一個框（或點選、Ctrl+V 貼上圖片，可多選），按 Save 時上傳到 epi-data 的 <code>library/代碼/</code></li>
+    <li>卡片上的 📄 和 🖼️ 都是小標籤：點 📄 全螢幕開 HTML，點 🖼️ 看大圖；圖片可以各加一行小說明</li>
+    <li>要開新分頁：全螢幕頂列的 ↗；新分頁右上角的 ✕ 會先同步再關閉</li>
     <li>卡片的 ✎ 可以改內容、再加 HTML 或圖片、移除（repo 裡的檔案不會刪，到 Settings 清理）</li>
     <li>頁面裡存的東西（問答、截圖、勾選）會同步到 HTML 旁邊的 <code>.data.json</code>：打開時先取雲端較新的，關閉時上傳，頂列 ☁ 可以手動同步</li>
     <li>兩台裝置都改過時會問你要用哪一份，沒選的那份存成備份檔</li>
@@ -625,8 +630,7 @@ button.ufo:hover{text-decoration:underline}
       <div id="unitList"></div>
     </div>
   </div>
-  <input type="file" id="uf-file" accept=".html,.htm" multiple style="display:none">
-  <input type="file" id="ui-file" accept="image/*" multiple style="display:none">
+  <input type="file" id="ua-file" accept=".html,.htm,image/*" multiple style="display:none">
 </section>
 
 <!-- ========== Review ========== -->
@@ -655,7 +659,7 @@ button.ufo:hover{text-decoration:underline}
       <button data-csort="new" aria-pressed="false">Newest</button>
       <button data-csort="theme" aria-pressed="false">By theme</button>
     </div>
-    <span class="srch"><input type="text" id="qCard"><button class="clr" data-clr="qCard">✕</button></span>
+    <span class="srch"><input type="text" id="qCard" placeholder="搜尋卡片…"><button class="clr" data-clr="qCard">✕</button></span>
     <button class="iconb" id="addCardBtn" title="新增">＋</button>
   </div>
   <div class="card" id="cardForm" style="display:none">
@@ -797,7 +801,7 @@ button.ufo:hover{text-decoration:underline}
 
   <div class="kdgroup setg">同步<button class="qm" data-tip="tipGh" aria-expanded="false" title="說明">ⓘ</button><button class="kx" data-setg="sync" aria-expanded="false" title="展開"></button></div>
   <div class="tip" id="tipGh">設定後，網頁會自己去 GitHub 讀寫 <span class="mono">notes.json</span>，兩台裝置就不用手動匯出匯入。<br>
-    <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。</div>
+    <strong>金鑰只存在這台裝置的瀏覽器，不會被匯出、也不會上傳。</strong>產生時選 Fine-grained、只授權那一個私密 repo、權限給 Contents: Read and write。<br>Library 的 HTML、圖片和頁面資料也用同一把金鑰，存在同一個 repo 的 <span class="mono">library/</span> 資料夾。</div>
   <div class="setbody" id="sg-sync" style="display:none">
     <div class="card" id="ghFold">
       <div class="grid2">
@@ -821,7 +825,7 @@ button.ufo:hover{text-decoration:underline}
   </div>
 
   <div class="kdgroup setg">備份<button class="qm" data-tip="tipData" aria-expanded="false" title="說明">ⓘ</button></div>
-  <div class="tip" id="tipData"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br>
+  <div class="tip" id="tipData"><strong>Export</strong> 下載一個 <span class="mono">notes.json</span>，裡面是全部的資料。它跟同步防的不是同一件事：同步防的是換裝置、關分頁、瀏覽器清資料；這一份防的是 token 過期、repo 誤刪、GitHub 出事。<strong>它不依賴任何服務</strong>，十年後用記事本都打得開。<br><strong>不含檔案</strong>：Reading 的精讀 HTML、Library 的 HTML、圖片和頁面資料都是 repo 裡的檔案，不在 notes.json 裡，要整份留底請從 GitHub 下載 repo（Code → Download ZIP）。<br>
     <strong>Merge</strong> 合併：同一筆取較新版本，現有資料不會消失（換裝置用這個）。<strong>Replace</strong> 覆蓋：整包換掉，現有資料全部清空（只在還原備份時用）。<br>
   <strong>每日自動存檔</strong>：每天第一次開啟時自動複製一份，保留最近三份，手殘刪錯可以整包還原。這份副本跟本體存在同一個地方，擋不了儲存空間整個出事——真正的備份還是 Export。</div>
   <div class="setbody" id="sg-backup">
@@ -868,7 +872,7 @@ button.ufo:hover{text-decoration:underline}
   <div class="kdgroup setg">分類與清理<button class="qm" data-tip="tipClean" aria-expanded="false" title="說明">ⓘ</button></div>
   <div class="tip" id="tipClean"><strong>分類清單</strong>：三組分類各自獨立（Reading／Questions 與 Notes／KEY DATES）。在下拉選單最下面選「＋ 新增…」就能加。名字可直接改，卡片存的是代號，改名不動資料。內建的只能改名不能刪；刪掉自訂分類時底下項目退回預設，不會被刪。<br>
   <strong>回收桶</strong>：刪掉的卡片保留 30 天。✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記墓碑跟著同步，其他裝置不會送回來。<br>
-  <strong>沒有卡片指向的 HTML 與圖片</strong>：卡片刪掉時精讀 HTML 不會跟著刪，這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
+  <strong>沒有卡片指向的 HTML 與圖片</strong>：刪掉卡片、或從 Library 卡片移除 HTML／圖片時，repo 裡的檔案不會跟著刪（Reading 的精讀 HTML 也一樣），這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
   <div class="setbody" id="sg-clean">
     <details class="card fold"><summary>分類清單</summary>
       <div id="catMgr" style="margin-top:6px"></div>
@@ -891,7 +895,7 @@ button.ufo:hover{text-decoration:underline}
 
   <div class="kdgroup setg">使用說明<button class="kx" data-setg="help" aria-expanded="false" title="展開"></button></div>
   <div class="setbody" id="sg-help" style="display:none"><div id="helpBox"></div></div>
-  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin v52 · 2026-10-13</p>
+  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin 1.0 · 2026-10-13</p>
 
 </section>
 
@@ -1604,20 +1608,18 @@ document.getElementById('saveUC').onclick=()=>{
 
 function unitItem(u){
   const fs=u.files||[],im=u.imgs||[];
-  const chips=fs.map(f=>{const rec=libRec(f.fid);
+  const html=fs.map(f=>{const rec=libRec(f.fid);
     const tip='全螢幕開啟'+(rec&&rec.at?'（頁面資料上次同步 '+libTime(rec.at)+'）':'');
-    return `<span class="ufc"><button class="ufo" data-ufopen="${esc(f.fid)}" title="${esc(tip)}">📄 ${esc(f.name||f.path)}</button>`
-      +`<button class="cx e" data-ufnew="${esc(f.fid)}" title="開新分頁">↗</button></span>`}).join('');
-  const pics=im.map((g,i)=>`<button class="uimg" data-uimg="${esc(u.id)}|${esc(g.iid)}" title="點一下看圖">🖼 ${esc(g.cap||('圖 '+(i+1)))}</button>`).join('');
+    return `<button class="uimg uhtml" data-ufopen="${esc(f.fid)}" title="${esc(tip)}">📄 ${esc(f.name||f.path)}</button>`}).join('');
+  const pics=im.map((g,i)=>`<button class="uimg" data-uimg="${esc(u.id)}|${esc(g.iid)}" title="點一下看圖">🖼️ ${esc(g.cap||('圖 '+(i+1)))}</button>`).join('');
   return `<div class="item unit" id="u-${esc(u.id)}">
     <div class="uhead">${u.date?`<span class="udt">${esc(uDate(u.date))}</span>`:''}<span class="uti">${esc(u.title||'(未命名)')}</span>
       <span class="cxg"><button class="cx e" data-uedit="${esc(u.id)}" title="編輯">✎</button><button class="cx" data-hold="unit|${esc(u.id)}" title="長按 1.5 秒刪除">✕</button></span></div>
     ${u.note?`<div class="mdview unote">${md(u.note)}</div>`:''}
-    ${pics?`<div class="uimgs">${pics}</div>`:''}
-    ${chips?`<div class="ufiles">${chips}</div>`:''}</div>`;
+    ${html||pics?`<div class="uimgs">${html}${pics}</div>`:''}</div>`;
 }
 
-/* ---------- 卡片表單：主題、日期、標題、說明（含圖片）、HTML ---------- */
+/* ---------- 卡片表單：主題、日期、標題、說明、HTML 與圖片（同一個拖放區） ---------- */
 function unitOpen(id){
   if(!ucs().length){toast('先建立主題');ucOpen(null,'new');return}
   editUnit=id||null;upFiles=[];upImgs=[];
@@ -1640,23 +1642,20 @@ function renderUnitForm(){
       <label class="f"><span>主題</span><select data-ud="cid">${ucSorted().map(x=>`<option value="${esc(x.id)}"${d.cid===x.id?' selected':''}>${esc(x.name)}</option>`).join('')}<option value="__new">＋ 新增主題…</option></select></label>
       <label class="f"><span>日期（選填）</span><input type="date" data-ud="date" value="${esc(d.date)}"></label></div>
     <label class="f"><span>標題</span><input type="text" data-ud="title" value="${esc(d.title)}"></label>
-    <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">說明（Markdown，選填；可以貼上圖片）</span>
-      <textarea data-ud="note" style="min-height:64px;margin-top:4px">${esc(d.note)}</textarea>
+    <label class="f"><span>說明（Markdown，選填）</span><textarea data-ud="note" style="min-height:64px">${esc(d.note)}</textarea></label>
+    <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">HTML 與圖片</span>
+      ${have.map(f=>{const rec=libRec(f.fid);return `<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name||f.path)}</span>`
+        +`<span class="mono up">${esc(f.path)}</span><span class="us">${rec&&rec.at?'☁ '+libTime(rec.at):''}</span>`
+        +`<button class="cx" type="button" data-hold="ufile|${esc(f.fid)}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></div>`}).join('')}
+      ${upFiles.map((f,i)=>`<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name)}</span><span class="up"></span>
+        <span class="pill" style="font-size:10.5px">${kb(f.size)}</span><button class="x" type="button" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
       ${imgs.map(g=>`<div class="uirow"><img class="uthumb" data-ipath="${esc(g.path)}" alt="">
         <input type="text" data-ucap="${esc(g.iid)}" value="${esc(d.caps[g.iid]!=null?d.caps[g.iid]:(g.cap||''))}" title="圖片小說明">
         <button class="cx" type="button" data-hold="uimg|${esc(u.id)}~${esc(g.iid)}" title="長按 1.5 秒從卡片移除">✕</button></div>`).join('')}
       ${upImgs.map((g,i)=>`<div class="uirow"><img class="uthumb" src="${g.url}" alt="">
         <input type="text" data-qcap="${i}" value="${esc(g.cap)}" title="圖片小說明">
         <span class="pill" style="font-size:10.5px">${kb(g.size)}</span><button class="x" type="button" data-qdel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
-      <div class="udrop" data-idrop="1" style="margin-top:6px">🖼 把圖片拖進來、點一下選檔案，或在說明框按 Ctrl+V 貼上（可多張），按 Save 時上傳</div>
-    </div>
-    <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:500">HTML</span>
-      ${have.map(f=>{const rec=libRec(f.fid);return `<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name||f.path)}</span>`
-        +`<span class="mono up">${esc(f.path)}</span><span class="us">${rec&&rec.at?'☁ '+libTime(rec.at):''}</span>`
-        +`<button class="cx" type="button" data-hold="ufile|${esc(f.fid)}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></div>`}).join('')}
-      ${upFiles.map((f,i)=>`<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name)}</span><span class="up"></span>
-        <span class="pill" style="font-size:10.5px">${kb(f.size)}</span><button class="x" type="button" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
-      <div class="udrop" data-udrop="1" style="margin-top:6px">📄 把 HTML 拖進來，或點一下選檔案（可多選），按 Save 時上傳</div>
+      <div class="udrop" data-adrop="1" style="margin-top:6px">📎 把 HTML 或圖片拖進來、點一下選檔案，或按 Ctrl+V 貼上圖片（可多選），按 Save 時上傳</div>
     </div>`;
   libThumbs(document.getElementById('unitFormBody'));
 }
@@ -1675,8 +1674,7 @@ uForm.addEventListener('change',e=>{
 uForm.addEventListener('click',e=>{
   if(!uDraft||hEl)return;let b;
   if(e.target.closest('[data-hold]'))return;
-  if((b=e.target.closest('[data-udrop]'))){document.getElementById('uf-file').click();return}
-  if((b=e.target.closest('[data-idrop]'))){document.getElementById('ui-file').click();return}
+  if((b=e.target.closest('[data-adrop]'))){document.getElementById('ua-file').click();return}
   if((b=e.target.closest('[data-updel]'))){upFiles.splice(+b.dataset.updel,1);renderUnitForm();return}
   if((b=e.target.closest('[data-qdel]'))){upImgs.splice(+b.dataset.qdel,1);renderUnitForm();return}
 });
@@ -1702,8 +1700,7 @@ uForm.addEventListener('paste',e=>{
   if(!items.some(it=>it.type==='text/plain'))e.preventDefault();
   uiTake(im);
 });
-document.getElementById('uf-file').addEventListener('change',e=>{ufTake(e.target.files);e.target.value=''});
-document.getElementById('ui-file').addEventListener('change',e=>{uiTake([...e.target.files]);e.target.value=''});
+document.getElementById('ua-file').addEventListener('change',e=>{libDropFiles(e.target.files);e.target.value=''});
 document.getElementById('cancelUnit').onclick=()=>{if(!upBusy)unitClose()};
 document.getElementById('saveUnit').onclick=async()=>{
   const d=uDraft;if(!d||upBusy)return;
@@ -1890,7 +1887,6 @@ document.getElementById('unitList').addEventListener('click',e=>{
   if(hEl)return;let b;
   if(e.target.closest('[data-hold]'))return;
   if((b=e.target.closest('[data-ufopen]'))){uvOpen(b.dataset.ufopen,false);return}
-  if((b=e.target.closest('[data-ufnew]'))){uvOpen(b.dataset.ufnew,true);return}
   if((b=e.target.closest('[data-uimg]'))){const[a,i]=b.dataset.uimg.split('|');ivOpen(a,i);return}
   if((b=e.target.closest('[data-uedit]'))){
     if(document.getElementById('unitForm').style.display===''&&editUnit===b.dataset.uedit){if(!upBusy)unitClose();return}
@@ -4663,7 +4659,7 @@ document.getElementById('helpBox').innerHTML=`
   <h4>🖼️ 插入圖片</h4>
   <p>三種方式：按 <strong>🖼️ 選檔</strong>、在輸入框<strong>直接 Ctrl+V 貼上</strong>、或<strong>貼圖片網址</strong>。前兩種會自動壓縮到寬 900px，文字裡只留 <code>![](img:xxxx)</code> 短代號，不會塞一長串編碼。單張上限 900 KB；刪掉引用的文字後圖片會自動回收。</p>
   <h4>Markdown</h4>
-  <p><strong>Reading 的九個欄位</strong>（研究問題／目標、研究設計與資料來源、研究對象、暴露與結果的定義、分析、主要結果、解釋、Gap、Note）、Meeting 重點、Question 的 Answer、Note 內容，以及 Guide 的筆記、變更重點、備註都吃 Markdown（Guide 比較表的格子是純文字）。</p>
+  <p><strong>Reading 的九個欄位</strong>（研究問題／目標、研究設計與資料來源、研究對象、暴露與結果的定義、分析、主要結果、解釋、Gap、Note）、Meeting 重點、Question 的 Answer、Note 內容，以及 Library 卡片的說明都吃 Markdown。</p>
   <p>支援：<code>## 標題</code>（# 與 ## 同一級，### 與 #### 小一級）、<code>**粗體**</code>、<code>*斜體*</code>、<code>~~刪節~~</code>、<code>&#96;程式碼&#96;</code>、<code>- 清單</code>（<strong>縮排兩格可以巢狀</strong>）、<code>1. 編號</code>、<code>&gt; 引用</code>（連續行會併成一塊）、<code>---</code> 分隔線、<code>[文字](網址)</code>、<code>&#96;&#96;&#96;</code> 程式碼區塊。</p>
   <p><strong>表格</strong>用管線寫，對齊靠第二行的冒號控制，表格太寬會自己橫向捲動：</p>
   <pre style="background:var(--surface-2);padding:8px 10px;border-radius:6px;overflow-x:auto;font-size:12px;line-height:1.5">| 變項 | 定義 | n |
@@ -4688,26 +4684,26 @@ document.getElementById('helpBox').innerHTML=`
   <ul>
     <li><strong>左邊是主題</strong>，數字是卡片數；點一下，右邊只列出這個主題的卡片，依日期新到舊（沒填日期的用建立時間）。最下面「＋ 主題」新增，再按一次收起。</li>
     <li>主題有名稱、說明（選填，例如授課老師）、<strong>代碼</strong>（資料夾名，只能英數與 -，英文名稱會自動帶出）。右邊最上面一行是主題說明、資料夾，旁邊 ✎ 改、✕ 長按刪（還有卡片的主題不能刪）。</li>
-    <li>右上 ＋ 新增卡片：主題、日期（選填）、標題、說明（Markdown，選填）、HTML。卡片不用點開，標題、日期、說明和 📄 按鈕都直接看得到。</li>
-    <li><strong>說明可以放圖片</strong>：拖進來、點「🖼」那一區選檔案，或在說明框按 Ctrl+V 貼上截圖，可一次多張。每張可以加一行小說明。圖片會壓成最長邊 1600px 的 JPG，按 Save 時上傳到 <code>library/代碼/img/</code>。卡片上只顯示「🖼 小說明」，點了才放大看，左右箭頭（或鍵盤 ← →）換張，Esc 關閉。</li>
+    <li>右上 ＋ 新增卡片：主題、日期（選填）、標題、說明（Markdown，選填）、HTML 與圖片。右欄一列兩張（手機一列一張），卡片不用點開，標題、日期、說明和 📄、🖼️ 標籤都直接看得到。</li>
+    <li><strong>HTML 和圖片拖進同一個框</strong>（📎 那一區），也可以點一下選檔案，或在表單裡按 Ctrl+V 貼上截圖，可一次多個，App 依檔案類型自動分。每張圖可以加一行小說明，圖片會壓成最長邊 1600px 的 JPG，按 Save 時上傳到 <code>library/代碼/img/</code>。卡片上只顯示「🖼️ 小說明」，點了才放大看，左右箭頭（或鍵盤 ← →）換張，Esc 關閉。</li>
   </ul>
   <h4>HTML</h4>
   <ul>
-    <li>一張卡片可以放多個 HTML。在新增或 ✎ 編輯時，拖進或點選檔案（可多選），存到 epi-data 的 <code>library/代碼/檔名.html</code>，按 Save 才上傳，同檔名會覆蓋。</li>
-    <li>點 📄 全螢幕開啟，↗ 開新分頁。✎ 編輯裡每個 HTML 或圖片後面的 ✕ 長按只從卡片移除，repo 裡的檔案還在，要清到 Settings → 分類與清理（會列出沒有卡片指向的 HTML 與圖片）。</li>
+    <li>一張卡片可以放多個 HTML，存到 epi-data 的 <code>library/代碼/檔名.html</code>，按 Save 才上傳，同檔名會覆蓋。</li>
+    <li>點 📄 全螢幕開啟，全螢幕頂列的 ↗ 開新分頁。✎ 編輯裡每個 HTML 或圖片後面的 ✕ 長按只從卡片移除，repo 裡的檔案還在，要清到 Settings → 分類與清理（會列出沒有卡片指向的 HTML 與圖片）。</li>
     <li>頁面用 blob 網址載入、不加 sandbox，所以頁內分頁（#n6 這類）、複製按鈕、頁面自己的瀏覽器儲存都能用。代價是它讀得到 app 的本機資料（含 GitHub token），所以<strong>只放你自己產生的 HTML</strong>。</li>
   </ul>
   <h4>頁面資料同步</h4>
   <ul>
     <li>頁面自己存的東西（問答、截圖、待辦勾選）原本只在這台裝置的瀏覽器裡。app 會記下頁面用了哪個瀏覽器資料庫，把內容同步到 HTML 旁邊的 <code>檔名.data.json</code>。</li>
     <li><strong>打開時</strong>：雲端比這台新就先還原再顯示。<strong>關閉時</strong>（檢視器的 ✕、新分頁右上角的 ✕）：有變動就上傳。開新分頁時，只要 app 的分頁還開著，每分鐘也會自動存一次；app 下次打開時會補上沒存到的。</li>
-    <li>檢視器頂列的 ☁ 立即同步，旁邊顯示最後同步時間；滑鼠停在 📄 上也看得到。</li>
+    <li>檢視器頂列的 ☁ 立即同步，旁邊顯示最後同步時間；滑鼠停在 📄 標籤上也看得到。</li>
     <li>兩台裝置都改過同一個頁面時會跳出來問你要用哪一份，沒選的那份另存成 <code>.data.backup-日期.json</code>。</li>
     <li>截圖很多時同步檔會變大、同步比較慢。兩個 HTML 如果用同一個資料庫名稱，資料會混在一起，app 偵測到會提醒。重新上傳新版 HTML 不會清掉頁面資料。</li>
   </ul>
 </div></details>
 
-<details class="card fold"><summary>📚 Textbooks</summary><div class="help">
+<details class="card fold"><summary>📕 Textbooks</summary><div class="help">
   <p>以 <strong>Modern Epidemiology 4e 為主軸</strong>，Causal Inference: What If 收在「＋ CAUSAL INFERENCE: WHAT IF（補充）」折疊區，<strong>不計入上方 Progress</strong>。</p>
   <p>每個小節點一下換狀態：未讀 → 讀過 → 懂了。右邊 <code>✎</code> 寫該節筆記和附件，有內容時會變色。</p>
 </div></details>
@@ -4789,12 +4785,14 @@ document.getElementById('helpBox').innerHTML=`
 <details class="card fold"><summary>🚀 GitHub 與多裝置</summary><div class="help">
   <h4>📦 兩個 repo</h4>
   <p><code>epi-app</code>　<span class="pill">公開</span><br>
-    └ <code>index.html</code>　← 只有這一個，開 Pages 產生網址</p>
+    ├ <code>index.html</code>　網站本體，開 Pages 產生網址（Claude 改版時直接更新）<br>
+    └ <code>tests/</code>　給 Claude 用的測試</p>
   <p><code>epi-data</code>　<span class="pill clay">私密</span><br>
     ├ <code>data/notes.json</code>　卡片、筆記、進度（自動同步）<br>
     ├ <code>papers/</code>　精讀 HTML<br>
     ├ <code>notes/</code>　小節筆記 HTML<br>
-    └ <code>figures/</code>　GoodNotes 匯出的 PDF</p>
+    ├ <code>figures/</code>　GoodNotes 匯出的 PDF<br>
+    └ <code>library/代碼/</code>　Library 的 HTML、<code>.data.json</code>（頁面資料）、<code>img/</code>（圖片）</p>
   <p><strong>公開的只是空殼，你的內容全在私密 repo。</strong>沒有 token 的人打開網址只會看到空白系統。全部免費。</p>
   <p>桌機<strong>不需要安裝任何軟體</strong>，也不需要本機檔案——三台裝置都開同一個網址。要放檔案時用 GitHub 網頁的 <code>Add file</code> → <code>Create new file</code>，檔名打 <code>papers/2026-chen.html</code>（斜線會自動建資料夾），把內容貼進去即可。PDF 則用 <code>Upload files</code> 拖曳。</p>
   <p>檔名用「書-章-節-關鍵字」，因為你會用檔名搜尋而不是點資料夾。GoodNotes 匯出用 <strong>PDF 而非 PNG</strong>。<strong>教科書本身的 PDF 不要放進 repo。</strong></p>

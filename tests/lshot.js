@@ -45,8 +45,8 @@ async function addEntry(fr,q,a){
     await pa.click('#addUnitBtn');
     await pa.fill('[data-ud="title"]','Week 6. 干擾作用預習');await pa.fill('[data-ud="date"]','2026-10-14');
     await pa.fill('[data-ud="note"]','先做 **步驟 A**，再看 ME Ch12');
-    await pa.setInputFiles('#uf-file','/home/claude/serve/causal-prep.html');await pa.waitForTimeout(300);
-    await pa.setInputFiles('#ui-file',['/home/claude/serve/fig1.png','/home/claude/serve/fig2.png']);await pa.waitForTimeout(800);
+    await pa.setInputFiles('#ua-file',['/home/claude/serve/causal-prep.html','/home/claude/serve/fig1.png','/home/claude/serve/fig2.png']);await pa.waitForTimeout(1000);
+    if(await pa.$$eval('#unitForm .udrop',x=>x.length)!==1)bad.push(label+' 拖放區不只一個');
     await pa.fill('[data-qcap="0"]','Figure 3.1 六張 DAG');
     await (await pa.$('#unitForm')).screenshot({path:OUT+label+'_1_form.png'});
     await pa.click('#saveUnit');await pa.waitForTimeout(800);
@@ -64,7 +64,7 @@ async function addEntry(fr,q,a){
     if(!iv.on||!iv.w||!iv.cap.includes('Figure 3.1'))bad.push(label+' 放大看圖失敗');
     await pa.screenshot({path:OUT+label+'_2b_image.png'});
     await pa.keyboard.press('Escape');await pa.waitForTimeout(200);
-    const ph=await pa.evaluate(()=>document.querySelectorAll('[placeholder]').length);if(ph)bad.push(label+' 還有提示字 '+ph);
+    const ph=await pa.evaluate(()=>[...document.querySelectorAll('[placeholder]')].map(x=>x.id).sort().join('|'));if(ph!=='nsearch|qCard|qPaper|qSec')bad.push(label+' 搜尋框以外還有提示字 '+ph);
     // 打開、在頁面裡新增一則問答
     await pa.click(`#u-${uid} [data-ufopen="${fid}"]`);await pa.waitForTimeout(1200);
     let fr=pa.frame({url:/^blob:/});
@@ -78,7 +78,9 @@ async function addEntry(fr,q,a){
     log(label,'關閉後 data.json',REPO[dp]?('有，含 A 的答案：'+REPO[dp].includes('A 的答案')):'沒有');
     if(!REPO[dp]||!REPO[dp].includes('A 裝置的問題'))bad.push(label+' 關閉後沒上傳');
     // 開新分頁、右上角 ✕
-    const [tab]=await Promise.all([A.waitForEvent('page'),pa.click(`#u-${uid} [data-ufnew="${fid}"]`)]);
+    await pa.click(`#u-${uid} [data-ufopen="${fid}"]`);await pa.waitForTimeout(1000);
+    const [tab]=await Promise.all([A.waitForEvent('page'),pa.click('#uvNew')]);
+    await pa.click('#uvClose');
     await tab.waitForLoadState();await tab.waitForTimeout(1200);
     const xb=await tab.evaluate(()=>{const b=document.getElementById('__epiX');if(!b)return null;const r=b.getBoundingClientRect();return {top:Math.round(r.top),right:Math.round(innerWidth-r.right),w:Math.round(r.width)}});
     log(label,'新分頁 ✕',JSON.stringify(xb));
