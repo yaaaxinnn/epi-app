@@ -1,12 +1,14 @@
-// 1.1：Review 每日複習開關（暫停時不顯示紅點、打開時到期日順延）、評分會蓋 mtime（跨裝置同步）、Notes 內容空著的 ● 變酒紅色、使用說明改成列點與表格、Library 說明 ☁️／長按 ✕／img 路徑；沿用 1.0：HTML 與圖片同一個拖放區、卡片上都是小標籤（沒有 ↗）、右欄一列兩張、🖼️、搜尋框提示字加回來、Settings 說明更新；沿用 v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
+// 1.2：Library ＋ 空白筆記頁（templates/notebook.html）、覆蓋同名 HTML 前另存 .old-日期.html 與 .data.backup、頁面資料比雲端少一半以上先問；沿用 1.1：Review 每日複習開關（暫停時不顯示紅點、打開時到期日順延）、評分會蓋 mtime（跨裝置同步）、Notes 內容空著的 ● 變酒紅色、使用說明改成列點與表格、Library 說明 ☁️／長按 ✕／img 路徑；沿用 1.0：HTML 與圖片同一個拖放區、卡片上都是小標籤（沒有 ↗）、右欄一列兩張、🖼️、搜尋框提示字加回來、Settings 說明更新；沿用 v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
 const {JSDOM}=require('jsdom');const fs=require('fs');const fidb=require('fake-indexeddb');
 const html=fs.readFileSync('/home/claude/index.html','utf8');
+const TPL=fs.readFileSync('/home/claude/epi-app/templates/notebook.html','utf8');
 const now=Date.now();
 const REPO={'courses/causal/old.html':'<html><head></head><body>舊頁</body></html>'};const SHA={};let shaN=0;
 const calls=[];let BlobC=null;const B64={};
 const mkFetch=()=>(url,opt)=>{
   opt=opt||{};const u=decodeURIComponent(String(url).split('?')[0]),m=opt.method||'GET';
   const acc=(opt.headers||{}).Accept;calls.push({url:u,method:m,accept:acc});
+  if(/\/templates\/notebook\.html$/.test(u))return Promise.resolve({ok:true,status:200,text:()=>Promise.resolve(TPL),json:()=>Promise.resolve({})});
   const path=(u.split('/contents/')[1]||'');
   const R=(ok,status,j,t)=>Promise.resolve({ok,status,json:()=>Promise.resolve(j||{}),text:()=>Promise.resolve(t||'')});
   if(u.includes('/git/trees/'))return R(true,200,{truncated:false,tree:Object.keys(REPO).map(p=>({type:'blob',path:p,sha:SHA[p]||'x',size:REPO[p].length}))
@@ -242,7 +244,7 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  const op=A.eval('orphans').map(o=>o.path).sort().join('|');
  t('清理列出沒人指向的 HTML 與 Library 圖片（.data.json 不列）',()=>op===['library/causal/slides.html','library/causal/unused.html',U1.imgs.length?Object.keys(REPO).find(p=>p.includes('/img/')&&p!==U1.imgs[0].path):''].sort().join('|')||op);
  const hb=$('#helpBox').innerHTML;
- t('版本標示 1.1',()=>$('#appVer').textContent.includes('Epi_Yaxin 1.1'));
+ t('版本標示 1.2',()=>$('#appVer').textContent.includes('Epi_Yaxin 1.2'));
  t('Settings 說明補上 Library',()=>$('#tipGh').textContent.includes('library/')&&$('#tipData').textContent.includes('不含檔案')&&$('#tipClean').textContent.includes('Library'));
  t('使用說明：資料夾圖有 library/、沒有 Guide、Textbooks 改 📕',()=>{const h=$('#helpBox').innerHTML;return h.includes('<code>library/代碼/</code>')&&h.includes('<code>tests/</code>')&&!h.includes('Guide')&&h.includes('<summary>📕 Textbooks</summary>')});
  t('HELP：📚 Library、八個分頁、同步說明、沒有 Guide',()=>hb.includes('<summary>📚 Library</summary>')&&hb.includes('八個分頁在做什麼')&&hb.includes('.data.backup-日期.json')&&!hb.includes('📑 Guide')&&!/<strong>Guide<\/strong>/.test(hb));
@@ -307,6 +309,76 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  t('全站沒有不帶 FE0F 的 ☁',()=>!/☁(?!️)/.test(D.documentElement.innerHTML)||'有');
  t('檢視器同步鈕是 ☁️',()=>$('#uvSync').textContent==='☁️');
  t('Library ⓘ：長按 ✕ 移除、圖片在 img/',()=>$('#tipLib').textContent.includes('長按 ✕ 從卡片移除')&&$('#tipLib').innerHTML.includes('<code>library/代碼/img/</code>'));
+
+ // ── 1.2：＋ 空白筆記頁 ──
+ A.eval("libPick('ucA');renderLib()");
+ click($('#addUnitBtn'));await sleep(50);
+ type($('#unitForm [data-ud="title"]'),'HBV 治療指引');
+ click($('#unitForm [data-nbnew]'));await sleep(30);
+ t('按 ＋ 空白筆記頁：出現名稱欄，預設帶卡片標題、沒有提示字',()=>{const x=$('#unitForm [data-nbname]');return !!x&&x.value==='HBV 治療指引'&&!x.hasAttribute('placeholder')});
+ type($('#unitForm [data-nbname]'),'HBV Guideline 2025');
+ click($('#unitForm [data-nbok]'));await sleep(200);
+ const nb1=A.eval('upFiles').find(f=>f.nb);
+ t('加入：排進上傳佇列，檔名用英文、模板填好名稱與新的資料庫',()=>!!nb1&&nb1.file==='hbv-guideline-2025.html'&&/"db":"nb-[a-z0-9]+"/.test(nb1.text)&&nb1.text.includes('"title":"HBV Guideline 2025"')&&nb1.text.includes('<title>HBV Guideline 2025</title>')&&!nb1.text.includes('__NB_DB__')||(nb1&&nb1.file));
+ t('佇列裡顯示「新筆記頁 · 檔名」',()=>$('#unitForm').textContent.includes('新筆記頁 · hbv-guideline-2025.html'));
+ click($('#unitForm [data-nbnew]'));type($('#unitForm [data-nbname]'),'肝炎筆記');click($('#unitForm [data-nbok]'));await sleep(200);
+ click($('#unitForm [data-nbnew]'));type($('#unitForm [data-nbname]'),'肝炎筆記二');click($('#unitForm [data-nbok]'));await sleep(200);
+ const nbs=A.eval('upFiles').filter(f=>f.nb).map(f=>f.file).join('|');
+ t('中文名稱用 notebook.html，重複時加 -2',()=>nbs==='hbv-guideline-2025.html|notebook.html|notebook-2.html'||nbs);
+ const db2=A.eval('upFiles').filter(f=>f.nb).map(f=>(f.text.match(/"db":"([^"]+)"/)||[])[1]);
+ t('每一頁的資料庫名稱都不一樣',()=>new Set(db2).size===3);
+ click($('#unitForm [data-nbnew]'));click($('#unitForm [data-nbx]'));
+ t('取消：名稱欄收起來',()=>!$('#unitForm [data-nbname]')&&!!$('#unitForm [data-nbnew]'));
+ click($('#saveUnit'));await sleep(500);
+ const NBU=S.units.find(u=>u.title==='HBV 治療指引');
+ t('Save：三頁都上傳到 library/causal/ 並綁在卡片上',()=>!!NBU&&NBU.files.length===3&&REPO['library/causal/hbv-guideline-2025.html']&&REPO['library/causal/notebook-2.html']&&REPO['library/causal/hbv-guideline-2025.html'].includes('epi-notebook'));
+ t('模板本身沒有被改到（設定是空白的）',()=>TPL.includes('"db":"__NB_DB__"')&&TPL.includes('<script id="nb-seed" type="application/json">null</script>'));
+
+ // ── 1.2：覆蓋同名 HTML 前另存 ──
+ REPO['library/causal/over.html']='<html><body>v1</body></html>';SHA['library/causal/over.html']='ov1';
+ REPO['library/causal/over.data.json']='{"v":1,"dbs":[{"name":"overDB"}]}';SHA['library/causal/over.data.json']='od1';
+ const nOld=()=>Object.keys(REPO).filter(p=>/^library\/causal\/over\.old-\d{8}-\d{6}\.html$/.test(p));
+ const nBak=()=>Object.keys(REPO).filter(p=>/^library\/causal\/over\.data\.backup-\d{8}-\d{6}\.json$/.test(p));
+ click($('#addUnitBtn'));await sleep(30);type($('#unitForm [data-ud="title"]'),'覆蓋測試');
+ A.eval(`ufAdd('over.html','<html><body>v2</body></html>',30)`);click($('#saveUnit'));await sleep(500);
+ t('同檔名：舊版另存 .old-日期.html、頁面資料另存 .data.backup-日期.json，新版蓋上去',()=>nOld().length===1&&REPO[nOld()[0]].includes('v1')&&nBak().length===1&&REPO[nBak()[0]].includes('overDB')&&REPO['library/causal/over.html'].includes('v2')||[nOld().length,nBak().length,REPO['library/causal/over.html']].join());
+ t('提示說舊版已另存',()=>toastTxt().includes('舊版已另存'));
+ click($('#addUnitBtn'));await sleep(30);type($('#unitForm [data-ud="title"]'),'同內容');
+ A.eval(`ufAdd('over.html','<html><body>v2</body></html>',30)`);click($('#saveUnit'));await sleep(500);
+ t('內容一樣就不另存、也不重傳',()=>nOld().length===1&&nBak().length===1);
+ t('.old 檔會出現在清理清單（沒有卡片指向）',()=>!A.eval('orphUsed()').has(nOld()[0]));
+
+ // ── 1.2：頁面資料比雲端少一半以上先問 ──
+ const BIG='x'.repeat(9000);
+ A.eval(`(function(){const u=S.units.find(x=>x.title==='覆蓋測試');u.files.push({fid:'fbig',path:'library/causal/big.html',name:'big',at:1,dbs:['bigDB']});save()})()`);
+ await idbPut(A,'bigDB','kv','doc',{schema:'epi-notebook',body:BIG});
+ const bigDump=await A.eval(`idbDump(['bigDB'])`);
+ const dpB='library/causal/big.data.json';
+ REPO[dpB]=JSON.stringify({v:1,fid:'fbig',path:'library/causal/big.html',updated:1,dbs:bigDump});SHA[dpB]='bg1';
+ A.eval(`libRec('fbig',{h:libHash(${JSON.stringify(bigDump)}),sha:'bg1',at:1})`);
+ await idbPut(A,'bigDB','kv','doc',{schema:'epi-notebook',body:'small'});
+ const cloud0=REPO[dpB];
+ const q1=await A.eval(`libPush('fbig',{quiet:true})`);
+ t('背景同步（quiet）：資料變少不上傳，回 shrink',()=>q1==='shrink'&&REPO[dpB]===cloud0||q1);
+ const bakB=()=>Object.keys(REPO).filter(p=>/^library\/causal\/big\.data\.backup-/.test(p));
+ let prB=A.eval(`libPush('fbig')`);await sleep(300);
+ t('關閉時：跳出來問，說明少一半以上',()=>$('#libAsk').classList.contains('on')&&$('#libAskMsg').textContent.includes('少一半以上'));
+ click($('#libAskCloud'));const r1=await prB;
+ const back=await idbGet(A,'bigDB','kv','doc');
+ t('選「用雲端的」：還原雲端那份、這台的另存備份、雲端不動',()=>r1==='pulled'&&back&&back.body===BIG&&REPO[dpB]===cloud0&&bakB().length===1&&REPO[bakB()[0]].includes('small')||[r1,back&&back.body.length,bakB().length].join());
+ await sleep(1100);
+ await idbPut(A,'bigDB','kv','doc',{schema:'epi-notebook',body:'small2'});
+ prB=A.eval(`libPush('fbig')`);await sleep(300);click($('#libAskLocal'));const r2=await prB;
+ t('選「用這台的」：上傳這台、雲端那份另存備份',()=>r2==='pushed'&&REPO[dpB].includes('small2')&&bakB().length===2&&bakB().some(p=>REPO[p].includes(BIG))||[r2,bakB().length].join());
+ await idbPut(A,'bigDB','kv','doc',{schema:'epi-notebook',body:'small3'});
+ const r3=await A.eval(`libPush('fbig',{quiet:true})`);
+ t('雲端本來就小（< 4 KB）時照常上傳',()=>r3==='pushed'&&REPO[dpB].includes('small3')||r3);
+
+ // ── 1.2：說明 ──
+ const hb3=$('#helpBox').innerHTML;
+ t('Library ⓘ 有 ＋ 空白筆記頁、舊版另存、少一半先問',()=>$('#tipLib').textContent.includes('＋ 空白筆記頁')&&$('#tipLib').innerHTML.includes('.old-日期.html')&&$('#tipLib').textContent.includes('少一半以上'));
+ t('使用說明有 📓 筆記頁、.old-日期.html、少一半以上、templates/README.md',()=>hb3.includes('📓 筆記頁')&&hb3.includes('.old-日期.html')&&hb3.includes('少一半以上')&&hb3.includes('templates/README.md'));
+ t('清理說明提到 .old 檔',()=>$('#tipClean').innerHTML.includes('.old-日期.html'));
  t('全分頁可切換',()=>{$$('#tabs button').forEach(b=>click(b));return A.__errs.length===0||A.__errs.join('|')});
  await sleep(400);
  const sv=JSON.parse(A.localStorage.getItem('epi-yaxin'));

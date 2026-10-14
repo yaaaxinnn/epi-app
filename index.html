@@ -423,6 +423,8 @@ button.ufo:hover{text-decoration:underline}
 .uthumb{flex:0 0 auto;width:52px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--line);background:var(--surface-2)}
 .uthumb.bad{opacity:.4}
 #unitForm textarea.over{border-color:var(--ac);background:var(--ac-soft)}
+#unitForm .nbrow{display:flex;align-items:flex-end;gap:8px;margin-top:8px}
+#unitForm .nbrow .f{flex:1;margin:0}
 @media(max-width:560px){#unitForm .grid2{grid-template-columns:1fr;gap:0}#unitForm .uirow .pill,#unitForm .ufile .pill{display:none}.uthumb{width:44px;height:34px}}
 #imgv{z-index:125;background:rgba(20,18,15,.88);align-items:center;justify-content:center;padding:14px;gap:10px}
 #imgv .ivbox{max-width:100%;max-height:calc(100% - 50px);display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
@@ -610,9 +612,11 @@ button.ufo:hover{text-decoration:underline}
     <li>右上 ＋ 新增卡片：標題、日期（選填）、說明，HTML 和圖片拖進同一個框（或點選、Ctrl+V 貼上圖片，可多選），按 Save 時上傳到 epi-data：HTML 在 <code>library/代碼/</code>，圖片在 <code>library/代碼/img/</code></li>
     <li>卡片上的 📄 和 🖼️ 都是小標籤：點 📄 全螢幕開 HTML，點 🖼️ 看大圖；圖片可以各加一行小說明</li>
     <li>要開新分頁：全螢幕頂列的 ↗；新分頁右上角的 ✕ 會先同步再關閉</li>
+    <li><strong>＋ 空白筆記頁</strong>（在卡片表單的 📎 框下面）：填名稱就用內建模板建一頁筆記頁，裡面可以自己一層層加卡片，資料跟著同步</li>
     <li>卡片的 ✎ 可以改內容、再加 HTML 或圖片；長按 ✕ 從卡片移除（repo 裡的檔案不會刪，到 Settings 清理）</li>
+    <li>重新上傳同檔名的 HTML 時，舊版先另存成 <code>檔名.old-日期.html</code>，頁面資料也先備份一份，不會直接蓋掉</li>
     <li>頁面裡存的東西（問答、截圖、勾選）會同步到 HTML 旁邊的 <code>.data.json</code>：打開時先取雲端較新的，關閉時上傳，頂列 ☁️ 可以手動同步</li>
-    <li>兩台裝置都改過時會問你要用哪一份，沒選的那份存成備份檔</li>
+    <li>兩台裝置都改過時會問你要用哪一份，沒選的那份存成備份檔；這次要上傳的資料比雲端少一半以上時也會先問</li>
     <li>只放你自己產生的 HTML：這裡開的頁面讀得到 app 的本機資料</li>
   </ul></div>
   <div class="card" id="ucForm" style="display:none">
@@ -884,7 +888,7 @@ button.ufo:hover{text-decoration:underline}
   <div class="kdgroup setg">分類與清理<button class="qm" data-tip="tipClean" aria-expanded="false" title="說明">ⓘ</button></div>
   <div class="tip" id="tipClean"><strong>分類清單</strong>：三組分類各自獨立（Reading／Questions 與 Notes／KEY DATES）。在下拉選單最下面選「＋ 新增…」就能加。名字可直接改，卡片存的是代號，改名不動資料。內建的只能改名不能刪；刪掉自訂分類時底下項目退回預設，不會被刪。<br>
   <strong>回收桶</strong>：刪掉的卡片保留 30 天。✕ 長按永久刪除單筆，下方可清空整桶。清掉的會記墓碑跟著同步，其他裝置不會送回來。<br>
-  <strong>沒有卡片指向的 HTML 與圖片</strong>：刪掉卡片、或從 Library 卡片移除 HTML／圖片時，repo 裡的檔案不會跟著刪（Reading 的精讀 HTML 也一樣），這裡掃出來清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
+  <strong>沒有卡片指向的 HTML 與圖片</strong>：刪掉卡片、或從 Library 卡片移除 HTML／圖片時，repo 裡的檔案不會跟著刪（Reading 的精讀 HTML 也一樣）；重新上傳同檔名 HTML 時另存的 <code>.old-日期.html</code> 也會列在這裡，確定不需要再清掉。需要先設定 GitHub 同步。<span style="color:var(--clay)">清單是「沒有卡片指向」不是「沒用的」，刪前先用 👁 看一眼；刪除無法復原，但 commit 歷史仍留著。</span></div>
   <div class="setbody" id="sg-clean">
     <details class="card fold"><summary>分類清單</summary>
       <div id="catMgr" style="margin-top:6px"></div>
@@ -907,7 +911,7 @@ button.ufo:hover{text-decoration:underline}
 
   <div class="kdgroup setg">使用說明<button class="kx" data-setg="help" aria-expanded="false" title="展開"></button></div>
   <div class="setbody" id="sg-help" style="display:none"><div id="helpBox"></div></div>
-  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin 1.1 · 2026-10-13</p>
+  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin 1.2 · 2026-10-14</p>
 
 </section>
 
@@ -1661,7 +1665,7 @@ function renderUnitForm(){
       ${have.map(f=>{const rec=libRec(f.fid);return `<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name||f.path)}</span>`
         +`<span class="mono up">${esc(f.path)}</span><span class="us">${rec&&rec.at?'☁️ '+libTime(rec.at):''}</span>`
         +`<button class="cx" type="button" data-hold="ufile|${esc(f.fid)}" title="長按 1.5 秒解除綁定（repo 裡的檔案不會刪）">✕</button></div>`}).join('')}
-      ${upFiles.map((f,i)=>`<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name)}</span><span class="up"></span>
+      ${upFiles.map((f,i)=>`<div class="ufile" style="margin-top:6px"><span class="ufo" style="cursor:default">📄 ${esc(f.name)}</span><span class="mono up">${f.nb?'新筆記頁 · '+esc(f.file):''}</span>
         <span class="pill" style="font-size:10.5px">${kb(f.size)}</span><button class="x" type="button" data-updel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
       ${imgs.map(g=>`<div class="uirow"><img class="uthumb" data-ipath="${esc(g.path)}" alt="">
         <input type="text" data-ucap="${esc(g.iid)}" value="${esc(d.caps[g.iid]!=null?d.caps[g.iid]:(g.cap||''))}" title="圖片小說明">
@@ -1670,6 +1674,9 @@ function renderUnitForm(){
         <input type="text" data-qcap="${i}" value="${esc(g.cap)}" title="圖片小說明">
         <span class="pill" style="font-size:10.5px">${kb(g.size)}</span><button class="x" type="button" data-qdel="${i}" title="移除" style="font-size:12px">✕</button></div>`).join('')}
       <div class="udrop" data-adrop="1" style="margin-top:6px">📎 把 HTML 或圖片拖進來、點一下選檔案，或按 Ctrl+V 貼上圖片（可多選），按 Save 時上傳</div>
+      ${d.nb==null?`<div style="margin-top:8px"><button class="btn ghost mini" type="button" data-nbnew="1">＋ 空白筆記頁</button></div>`
+        :`<div class="nbrow"><label class="f"><span>筆記頁名稱</span><input type="text" data-nbname="1" value="${esc(d.nb)}"></label>
+          <button class="btn ghost mini" type="button" data-nbx="1">取消</button><button class="btn mini" type="button" data-nbok="1">加入</button></div>`}
     </div>`;
   libThumbs(document.getElementById('unitFormBody'));
 }
@@ -1678,6 +1685,7 @@ uForm.addEventListener('input',e=>{
   if(!uDraft)return;let f;
   if((f=e.target.closest('[data-ud]'))&&f.tagName!=='SELECT'){uDraft[f.dataset.ud]=f.value;return}
   if((f=e.target.closest('[data-ucap]'))){uDraft.caps[f.dataset.ucap]=f.value;return}
+  if((f=e.target.closest('[data-nbname]'))){uDraft.nb=f.value;return}
   if((f=e.target.closest('[data-qcap]'))&&upImgs[+f.dataset.qcap])upImgs[+f.dataset.qcap].cap=f.value;
 });
 uForm.addEventListener('change',e=>{
@@ -1691,7 +1699,27 @@ uForm.addEventListener('click',e=>{
   if((b=e.target.closest('[data-adrop]'))){document.getElementById('ua-file').click();return}
   if((b=e.target.closest('[data-updel]'))){upFiles.splice(+b.dataset.updel,1);renderUnitForm();return}
   if((b=e.target.closest('[data-qdel]'))){upImgs.splice(+b.dataset.qdel,1);renderUnitForm();return}
+  if((b=e.target.closest('[data-nbnew]'))){uDraft.nb=String(uDraft.title||'').trim();renderUnitForm();const x=document.querySelector('#unitForm [data-nbname]');if(x)x.focus();return}
+  if((b=e.target.closest('[data-nbx]'))){uDraft.nb=null;renderUnitForm();return}
+  if((b=e.target.closest('[data-nbok]'))){nbMake(uDraft.nb);return}
 });
+uForm.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.closest&&e.target.closest('[data-nbname]')){e.preventDefault();nbMake(uDraft&&uDraft.nb)}});
+/* ＋ 空白筆記頁：讀網站上的 templates/notebook.html，填好名稱與一個新的資料庫名稱，排進上傳佇列 */
+async function nbMake(name){
+  if(!uDraft)return;name=String(name||'').trim();
+  if(!name){toast('請填筆記頁名稱');const x=document.querySelector('#unitForm [data-nbname]');if(x)x.focus();return}
+  let t='';
+  try{const r=await fetch(new URL('templates/notebook.html',location.href).href,{cache:'no-cache'});if(!r.ok)throw new Error(String(r.status));t=await r.text()}
+  catch(e){toast('讀不到筆記頁模板，請確認網路後再試');return}
+  if(!/<script id="nb-config" type="application\/json">/.test(t)){toast('筆記頁模板壞了');return}
+  const cfg=JSON.stringify({db:'nb-'+uid()+uid().slice(0,3),title:name}).replace(/</g,'\\u003c');
+  t=t.replace(/(<script id="nb-config" type="application\/json">)[\s\S]*?(<\/script>)/,(m,a,b)=>a+cfg+b).replace(/<title>[^<]*<\/title>/,()=>'<title>'+esc(name)+'</title>');
+  const code=libCode(uDraft.cid),taken=new Set(libFiles().map(x=>x.f.path).concat(upFiles.map(f=>'library/'+code+'/'+f.file)));
+  const base=ucSlug(name)||'notebook';let file=base+'.html',k=2;
+  while(taken.has('library/'+code+'/'+file))file=base+'-'+(k++)+'.html';
+  upFiles.push({name,file,text:t,size:new Blob([t]).size,nb:true});
+  uDraft.nb=null;document.getElementById('upState').textContent='';renderUnitForm();
+}
 /* 拖進來：圖片進說明的圖片、HTML 進 HTML，不分落在哪一區 */
 function libDropFiles(list){
   const a=[...(list||[])];
@@ -1823,14 +1851,27 @@ async function ghPutB64(path,b64,msg){
     body:JSON.stringify(payload)},60000);
   if(!r.ok)throw new Error(ghErrMsg(r.status));
 }
+/* 要覆蓋 repo 裡已有的 HTML 前：先把這台的頁面資料存上去，舊版 HTML 另存 .old-日期.html、.data.json 另存 .data.backup-日期.json
+   回傳 {sha（舊檔的）, kept（備份了幾個）, same（內容一樣，不用上傳）} */
+async function libKeepOld(p,text){
+  const m=await ghMeta(p);if(!m)return {sha:null,kept:0,same:false};
+  const old=await ghRaw(p);if(old===text)return {sha:m.sha,kept:0,same:true};
+  const hit=libFiles().find(x=>x.f.path===p);
+  if(hit&&hit.f.dbs&&hit.f.dbs.length){try{await libPush(hit.f.fid,{quiet:true})}catch(e){}}
+  const st=libStamp(),base=p.replace(/\.html?$/i,'');let kept=0;
+  await ghPut(base+'.old-'+st+'.html',old,'backup '+p,null);kept++;
+  const dp=base+'.data.json',dm=await ghMeta(dp);
+  if(dm){await ghPut(base+'.data.backup-'+st+'.json',await ghRaw(dp),'backup '+dp,null);kept++}
+  return {sha:m.sha,kept,same:false};
+}
 /* 上傳排隊的 HTML 與圖片並綁到卡片；成功的從佇列移除，回傳一句結果 */
 async function libUpload(u){
-  const code=libCode(u.cid),tot=upFiles.length+upImgs.length;let n=0,okF=0,okI=0,fail=0,last='';
+  const code=libCode(u.cid),tot=upFiles.length+upImgs.length;let n=0,okF=0,okI=0,fail=0,last='',kept=0;
   const st=()=>{const el=document.getElementById('upState');if(el)el.textContent='上傳中… '+(++n)+'/'+tot};
   const doneF=[],doneI=[];
   for(const f of upFiles){st();
     const p='library/'+code+'/'+f.file;
-    try{await ghPut(p,f.text,'add '+p);ufBind(u,p,f.name);okF++;doneF.push(f)}catch(e){fail++;last=e.message}}
+    try{const k=await libKeepOld(p,f.text);kept+=k.kept;if(!k.same)await ghPut(p,f.text,'add '+p,k.sha);ufBind(u,p,f.name);okF++;doneF.push(f)}catch(e){fail++;last=e.message}}
   for(const g of upImgs){st();
     const p='library/'+code+'/img/'+u.id+'-'+g.iid+'.jpg';
     try{await ghPutB64(p,g.b64,'add '+p);if(!Array.isArray(u.imgs))u.imgs=[];
@@ -1839,7 +1880,7 @@ async function libUpload(u){
   upFiles=upFiles.filter(f=>doneF.indexOf(f)<0);upImgs=upImgs.filter(g=>doneI.indexOf(g)<0);
   save();renderLib();
   const ok=[okF?okF+' 個 HTML':'',okI?okI+' 張圖片':''].filter(Boolean).join('、');
-  return (ok?'已上傳 '+ok:'')+(fail?(ok?'，':'')+'失敗 '+fail+' 個：'+last:'');
+  return (ok?'已上傳 '+ok:'')+(kept?'（同檔名的舊版已另存備份）':'')+(fail?(ok?'，':'')+'失敗 '+fail+' 個：'+last:'');
 }
 
 /* ---------- 圖片：從 epi-data 讀回來顯示（本次開啟期間快取） ---------- */
@@ -1999,8 +2040,8 @@ async function idbRestore(dump){
   }
 }
 let libAskRes=null;
-function libAsk(f,localAt){
-  document.getElementById('libAskMsg').innerHTML='「<strong>'+esc(f.name||f.path)+'</strong>」在這台裝置和雲端<strong>都改過</strong>（可能是兩台裝置都編輯過）。要用哪一份？'
+function libAsk(f,localAt,msg){
+  document.getElementById('libAskMsg').innerHTML=(msg||'「<strong>'+esc(f.name||f.path)+'</strong>」在這台裝置和雲端<strong>都改過</strong>（可能是兩台裝置都編輯過）。要用哪一份？')
     +(localAt?'<br><span class="hint">這台上次同步：'+esc(libTime(localAt))+'</span>':'');
   document.getElementById('libAsk').classList.add('on');
   return new Promise(res=>{libAskRes=res});
@@ -2058,7 +2099,20 @@ async function libPush(fid,opt){
       if(opt.quiet)return 'conflict';
       return await libPull(f);
     }
-    const res=await ghPut(dp,libPayload(f,local),'sync '+dp,meta?meta.sha:null);
+    const pay=libPayload(f,local),kb=n=>Math.max(1,Math.round(n/1024))+' KB',sz=new Blob([pay]).size;
+    if(meta&&meta.size>=4096&&sz<meta.size*0.5){
+      if(opt.quiet)return 'shrink';
+      const pick=await libAsk(f,rec.at,'「<strong>'+esc(f.name||f.path)+'</strong>」這次要上傳的頁面資料（'+kb(sz)+'）比雲端那份（'+kb(meta.size)+'）<strong>少一半以上</strong>。'
+        +'如果是你刪了很多東西，選「用這台的」；如果是換了新版網頁、東西不見了，選「用雲端的」。');
+      const txt=await ghRaw(dp);
+      if(pick==='cloud'){
+        let remote;try{remote=JSON.parse(txt)}catch(e){throw new Error('雲端的頁面資料檔壞了：'+dp)}
+        await libBackup(f,pay);const rd=Array.isArray(remote.dbs)?remote.dbs:[];
+        await idbRestore(rd);libRec(fid,{h:libHash(rd),sha:meta.sha,at:Date.now()});return 'pulled';
+      }
+      await libBackup(f,txt);
+    }
+    const res=await ghPut(dp,pay,'sync '+dp,meta?meta.sha:null);
     libRec(fid,{h:lh,sha:res.sha,at:Date.now()});
     return 'pushed';
   })();
@@ -2072,7 +2126,7 @@ function uvSyncLabel(msg){
   const r=uvFid&&fileById(uvFid),rec=uvFid&&libRec(uvFid);
   el.textContent=rec&&rec.at?'已同步 '+libTime(rec.at).split(' ')[1]:(r&&r.f.dbs&&r.f.dbs.length?'未同步':'');
 }
-function libMsg(v){return {pushed:'頁面資料已上傳',pulled:'已從雲端還原頁面資料',same:'頁面資料已是最新',conflict:'雲端也有更新，下次打開時再決定',off:'',none:'',local:''}[v]||''}
+function libMsg(v){return {pushed:'頁面資料已上傳',pulled:'已從雲端還原頁面資料',same:'頁面資料已是最新',conflict:'雲端也有更新，下次打開時再決定',shrink:'這次的頁面資料比雲端少很多，先沒上傳，下次關閉時再問你',off:'',none:'',local:''}[v]||''}
 
 /* ---------- 檢視：blob 網址、不加 sandbox；先插入偵測程式（記錄資料庫、新分頁加 ✕） ---------- */
 function libShim(fid,isTab){
@@ -2134,6 +2188,7 @@ document.getElementById('uvSync').onclick=async()=>{
     const a=await libPull(r.f);
     if(a==='pulled'&&uvUrl&&uvFid===fid){document.getElementById('uvFrame').src=uvUrl}
     const b=a==='pulled'||a==='pushed'?a:await libPush(fid);
+    if(b==='pulled'&&a!=='pulled'&&uvUrl&&uvFid===fid){document.getElementById('uvFrame').src=uvUrl}
     uvSyncLabel();toast(libMsg(b)||'頁面資料已是最新');
   }catch(e){uvSyncLabel('同步失敗');toast('同步失敗：'+e.message)}
 };
@@ -4789,12 +4844,14 @@ document.getElementById('helpBox').innerHTML=`
   <li><strong>HTML 和圖片拖進同一個 📎 框</strong>，或點一下選檔、在表單裡 Ctrl+V 貼上截圖，可一次多個，App 依類型自動分。按 Save 才上傳。</li>
   <li>每張圖可以加一行小說明，卡片上只顯示「🖼️ 小說明」，點了才放大（‹ › 或 ← → 換張、Esc 關閉）。</li>
   <li>卡片的 ✎ 可以改內容、再加檔案、改圖片小說明；<strong>長按 ✕</strong> 從卡片移除 HTML 或圖片（repo 裡的檔案還在，到 Settings 清理）。</li>
+  <li><strong>＋ 空白筆記頁</strong>（📎 框下面）：填名稱、按「加入」再按 Save，就用內建模板建一頁筆記頁，見下面「筆記頁」。</li>
 </ul>
 <table><thead><tr><th>檔案</th><th>存在 epi-data 的哪裡</th></tr></thead><tbody>
   <tr><td>HTML</td><td><code>library/代碼/檔名.html</code>（同檔名覆蓋）</td></tr>
   <tr><td>圖片</td><td><code>library/代碼/img/</code>（壓成最長邊 1600px 的 JPG）</td></tr>
   <tr><td>頁面資料</td><td><code>library/代碼/檔名.data.json</code></td></tr>
   <tr><td>衝突時沒選的那份</td><td><code>library/代碼/檔名.data.backup-日期.json</code></td></tr>
+  <tr><td>重新上傳同檔名時的舊版</td><td><code>library/代碼/檔名.old-日期.html</code>（頁面資料同時備份一份 <code>.data.backup-日期.json</code>）</td></tr>
 </tbody></table>
 <h4>打開 HTML</h4>
 <ul>
@@ -4809,8 +4866,18 @@ document.getElementById('helpBox').innerHTML=`
   <tr><td>app 打開時</td><td>補上上次沒存到的</td></tr>
   <tr><td>全螢幕頂列 ☁️</td><td>立即同步，旁邊顯示最後同步時間（滑鼠停在 📄 上也看得到）</td></tr>
   <tr><td>兩台都改過</td><td>跳出來問要用哪一份，沒選的另存 <code>.data.backup-日期.json</code></td></tr>
+  <tr><td>這次要上傳的比雲端少一半以上</td><td>先問你：刪了很多東西就用這台的；換了新版網頁、東西不見了就用雲端的。沒選的一樣另存備份</td></tr>
 </tbody></table>
 <ul><li>截圖很多時同步檔會變大、比較慢；兩個 HTML 用同一個資料庫名稱會混在一起（app 會提醒）；重新上傳新版 HTML 不會清掉頁面資料。</li></ul>
+<h4>📓 筆記頁（＋ 空白筆記頁建出來的）</h4>
+<ul>
+  <li>一頁筆記頁就像一本活頁夾：裡面只有<strong>卡片</strong>，卡片底下可以再放卡片，要幾層都可以；左邊是目錄，上方顯示目前在哪一層。</li>
+  <li>標題、副標、說明、卡片和它們的上下層與順序<strong>全部是資料</strong>，在頁面裡按 ✎ 就能改，不用改 HTML。</li>
+  <li>＋ 新增卡片；✎ 改標題、內容（Markdown、表格、公式）、圖片，或移到別張卡片底下；⇅ 用 ↑ ↓ 調整順序；長按 ✕ 刪除（底下的卡片一起刪，刪完可按「復原」）。</li>
+  <li>底下的卡片可以切「格狀」（放主題）或「清單」（放問答，點一下就地展開）；內容空著的卡片 ● 是酒紅色。</li>
+  <li>✎ 裡勾「內容預設收起來」，內容會收成一行，要用時再點開（適合放指令、待辦）；寫 <code>- [ ]</code> 就是可以勾的待辦。</li>
+  <li>要給 Claude 做一頁有預設內容的筆記頁時，請它照 epi-app 的 <code>templates/README.md</code>（資料規約）做。</li>
+</ul>
 </div></details>
 
 <details class="card fold"><summary>📕 Textbooks</summary><div class="help">
