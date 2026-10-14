@@ -911,7 +911,7 @@ button.ufo:hover{text-decoration:underline}
 
   <div class="kdgroup setg">使用說明<button class="kx" data-setg="help" aria-expanded="false" title="展開"></button></div>
   <div class="setbody" id="sg-help" style="display:none"><div id="helpBox"></div></div>
-  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin 1.2 · 2026-10-14</p>
+  <p class="hint" id="appVer" style="text-align:center;margin:22px 0 4px;font-family:var(--mono);font-size:11px;color:var(--faint)">Epi_Yaxin 1.3 · 2026-10-14</p>
 
 </section>
 
@@ -4874,9 +4874,11 @@ document.getElementById('helpBox').innerHTML=`
   <li>一頁筆記頁就像一本活頁夾：裡面只有<strong>卡片</strong>，卡片底下可以再放卡片，要幾層都可以；左邊是目錄，上方顯示目前在哪一層。</li>
   <li>標題、副標、說明、卡片和它們的上下層與順序<strong>全部是資料</strong>，在頁面裡按 ✎ 就能改，不用改 HTML。</li>
   <li>＋ 新增卡片；✎ 改標題、內容（Markdown、表格、公式）、圖片，或移到別張卡片底下；⇅ 用 ↑ ↓ 調整順序；長按 ✕ 刪除（底下的卡片一起刪，刪完可按「復原」）。</li>
+  <li><strong>左邊目錄調整順序</strong>：電腦上直接拖曳（放在一列的上半＝前面、下半＝後面、中間＝放進它底下），或按列尾的 ⋯；手機長按一列 0.5 秒，跳出「↑ 上移／↓ 下移／移到…」。</li>
+  <li>✎ 和「移到…」都可以選<strong>放在哪張卡片底下</strong>和<strong>位置</strong>（最前面，或在某張卡片後面），不會一律排到最後。</li>
   <li>底下的卡片可以切「格狀」（放主題）或「清單」（放問答，點一下就地展開）；內容空著的卡片 ● 是酒紅色。</li>
   <li>✎ 裡勾「內容預設收起來」，內容會收成一行，要用時再點開（適合放指令、待辦）；寫 <code>- [ ]</code> 就是可以勾的待辦。</li>
-  <li>要給 Claude 做一頁有預設內容的筆記頁時，請它照 epi-app 的 <code>templates/README.md</code>（資料規約）做。</li>
+  <li>要給 Claude 做一頁有預設內容的筆記頁時，請它照 epi-app 的 <code>templates/README.md</code>（資料規約）做；改版時要把既有卡片收進新的分組，用預設內容裡的 <code>moves</code>（只搬還在原位、你沒自己搬過的卡片，每條只做一次）。</li>
 </ul>
 </div></details>
 

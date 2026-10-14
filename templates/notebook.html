@@ -62,6 +62,29 @@ a{color:var(--ac)}
 .tn.sel .tt{font-weight:600}
 .tn .tc{font-size:11px;color:var(--faint);font-family:var(--mono);padding-right:4px}
 .tn.home .tt{padding-left:4px}
+.tn[data-tn]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.tn .tm{border:0;background:none;color:var(--faint);width:24px;height:24px;padding:0;border-radius:6px;opacity:0;flex:0 0 auto;font-size:15px;line-height:1}
+.tn:hover .tm,.tn.menu .tm,.tn .tm:focus-visible{opacity:1}
+.tn .tm:hover{color:var(--ac);background:rgba(0,0,0,.05)}
+@media(hover:none){.tn .tm{display:none}}
+.tn.menu{background:var(--surface);box-shadow:0 0 0 1px var(--line-strong)}
+.tn.dz-before{box-shadow:inset 0 2px 0 var(--ac)}
+.tn.dz-after{box-shadow:inset 0 -2px 0 var(--ac)}
+.tn.dz-into{background:var(--ac-soft);box-shadow:0 0 0 1px var(--ac-mid)}
+.tn.dragging{opacity:.45}
+.tmenu{position:fixed;z-index:55;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);padding:6px;min-width:190px;display:none}
+.tmenu.on{display:block}
+.tmenu .mt{font-size:12px;color:var(--muted);padding:3px 10px 7px;border-bottom:1px solid var(--line);margin-bottom:4px;max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tmenu button{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:7px;font-size:14px}
+.tmenu button:hover:not(:disabled){background:var(--surface-2);color:var(--ac)}
+.tmenu button:disabled{opacity:.35;cursor:default}
+.mvdlg{position:fixed;inset:0;background:rgba(20,18,14,.35);z-index:58;display:none;align-items:center;justify-content:center;padding:16px}
+.mvdlg.on{display:flex}
+.mvdlg .box{background:var(--surface);border-radius:12px;padding:16px 18px 14px;width:min(460px,100%);box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.mvdlg .mvt{font-weight:600;margin-bottom:12px;word-break:break-word}
+.place{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.place .f{margin-bottom:11px}
+@media(max-width:560px){.place{grid-template-columns:1fr;gap:0}}
 .tadd{border:0;background:none;color:var(--muted);font-size:13.5px;padding:8px 10px;margin-top:4px}
 .tadd:hover{color:var(--ac)}
 
@@ -229,6 +252,11 @@ a{color:var(--ac)}
   </div>
 </div>
 <div class="lbx" id="lbx"><button class="nv pv" id="lbPrev">‹</button><img id="lbImg" alt=""><div class="cap" id="lbCap"></div><button class="nv nx" id="lbNext">›</button></div>
+<div class="tmenu" id="tmenu"></div>
+<div class="mvdlg" id="mvdlg"><div class="box"><div class="mvt" id="mvTitle"></div>
+  <div class="place"><label class="f"><span>放在哪張卡片底下</span><select id="mvParent"></select></label>
+  <label class="f"><span>位置</span><select id="mvPos"></select></label></div>
+  <div class="fa"><button class="btn ghost" type="button" id="mvCancel">取消</button><button class="btn" type="button" id="mvOk">移過去</button></div></div></div>
 <div class="toast" id="toast"></div>
 <input type="file" id="filePick" accept="image/*" multiple style="display:none">
 <script>
@@ -277,7 +305,7 @@ const Store={mode:'idb',_db:null,mem:{},
 
 /* ================= 資料 ================= */
 let doc=null,readOnly=false;
-function blankDoc(){const t=NOW();return{schema:'epi-notebook',v:1,title:real(CFG.title)?CFG.title:'未命名筆記頁',sub:'',about:'',view:'grid',kids:[],nodes:{},seeded:[],trash:[],created:t,updated:t}}
+function blankDoc(){const t=NOW();return{schema:'epi-notebook',v:1,title:real(CFG.title)?CFG.title:'未命名筆記頁',sub:'',about:'',view:'grid',kids:[],nodes:{},seeded:[],seedAt:{},movesDone:[],trash:[],created:t,updated:t}}
 function blankNode(){const t=NOW();return{id:uid(),title:'',body:'',imgs:[],kids:[],view:'grid',created:t,updated:t}}
 function fixNode(n,id){
   n.id=id;n.title=typeof n.title==='string'?n.title:String(n.title||'');n.body=typeof n.body==='string'?n.body:String(n.body||'');
@@ -288,7 +316,9 @@ function fixNode(n,id){
 function normalize(d){
   if(!d.nodes||typeof d.nodes!=='object')d.nodes={};
   Object.keys(d.nodes).forEach(id=>{if(!d.nodes[id]||typeof d.nodes[id]!=='object')delete d.nodes[id];else fixNode(d.nodes[id],id)});
-  ['kids','seeded','trash'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
+  ['kids','seeded','trash','movesDone'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
+  if(!d.seedAt||typeof d.seedAt!=='object'||Array.isArray(d.seedAt))d.seedAt={};
+  Object.keys(d.seedAt).forEach(id=>{if(!d.nodes[id]||typeof d.seedAt[id]!=='string')delete d.seedAt[id]});
   d.title=typeof d.title==='string'?d.title:'';d.sub=typeof d.sub==='string'?d.sub:'';d.about=typeof d.about==='string'?d.about:'';
   d.view=d.view==='list'?'list':'grid';d.fold=!!d.fold;
   const seen=new Set();
@@ -307,10 +337,40 @@ function mergeSeed(d,seed){
     if(!has.has(id)){has.add(id);d.seeded.push(id);ch=true;
       if(!d.nodes[id]){d.nodes[id]=fixNode(Object.assign(blankNode(),clone(sn),{kids:[]}),id);
         const par=pid==null?null:d.nodes[pid];const arr=pid==null?d.kids:(par?par.kids:d.kids);
-        if(pid!=null&&!par)arr.push(id);else arr.splice(Math.min(i,arr.length),0,id)}}
+        if(pid!=null&&!par)arr.push(id);else arr.splice(Math.min(i,arr.length),0,id);
+        d.seedAt[id]=par?pid:''}}
     add(id,sn.kids);
   });
   add(null,seed.kids);return ch;
+}
+/* 作者搬卡片（seed.moves）：{"卡片": "目的地"} 或 {"卡片": {"to":"目的地","from":"現在的上層"}}，""＝首頁
+   只在「卡片還在模板放的位置、使用者沒搬到別處」時搬，每條只做一次（記在 movesDone） */
+function applyMoves(d,seed){
+  const mv=seed&&seed.moves;if(!mv||typeof mv!=='object'||Array.isArray(mv))return false;
+  const par={};d.kids.forEach(k=>par[k]='');Object.keys(d.nodes).forEach(i=>d.nodes[i].kids.forEach(k=>par[k]=i));
+  const done=new Set(d.movesDone);let ch=false;
+  const mark=k=>{if(!done.has(k)){done.add(k);d.movesDone.push(k);ch=true}};
+  const under=(a,b)=>{let c=par[b];while(c){if(c===a)return true;c=par[c]}return false};
+  Object.keys(mv).forEach(card=>{
+    let sp=mv[card];if(typeof sp==='string')sp={to:sp};if(!sp||typeof sp!=='object')return;
+    const to=sp.to==null?'':String(sp.to),key=card+'>'+to;
+    if(done.has(key)||!d.nodes[card])return;
+    const cp=par[card]===undefined?'':par[card];
+    if(cp===to){mark(key);return}
+    const at=Object.prototype.hasOwnProperty.call(d.seedAt,card)?d.seedAt[card]:undefined;
+    const from=sp.from==null?null:String(sp.from);
+    const ok=at!==undefined?(at===cp&&(from==null||from===cp)):(from!=null&&from===cp);
+    if(!ok){mark(key);return}
+    if(to&&!d.nodes[to])return;
+    if(to&&(to===card||under(card,to))){mark(key);return}
+    const src=cp?d.nodes[cp].kids:d.kids;src.splice(src.indexOf(card),1);
+    const arr=to?d.nodes[to].kids:d.kids,order=(to?(seed.nodes&&seed.nodes[to]&&seed.nodes[to].kids):seed.kids)||[];
+    let idx=arr.length;const k=order.indexOf(card);
+    if(k>=0){let f=-1;for(let j=k-1;j>=0&&f<0;j--)f=arr.indexOf(order[j]);
+      if(f>=0)idx=f+1;else{for(let j=k+1;j<order.length;j++){const g=arr.indexOf(order[j]);if(g>=0){idx=g;break}}}}
+    arr.splice(idx,0,card);par[card]=to;d.seedAt[card]=to;mark(key);ch=true;
+  });
+  return ch;
 }
 let saveChain=Promise.resolve();
 function persist(){
@@ -385,8 +445,34 @@ function toggleTask(owner,i,on){
   const key=isHome?'about':'body';const{lines,idx}=taskIdx(tgt[key]);const li=idx[i];if(li==null)return;
   lines[li]=lines[li].replace(/\[[ xX]\]/,on?'[x]':'[ ]');tgt[key]=lines.join('\n');if(!isHome)tgt.updated=NOW();persist();
 }
+/* 程式碼區塊（```、````、~~~；結尾要同一種字元、長度不短於開頭）逐行拿掉，回傳 [剩下的文字, 區塊數] */
+function stripCode(src){
+  const out=[];let fence=null,n=0;
+  src.split('\n').forEach(l=>{const m=l.match(/^\s{0,3}(`{3,}|~{3,})/);
+    if(fence){if(m&&m[1][0]===fence[0]&&m[1].length>=fence.length&&/^\s*(`{3,}|~{3,})\s*$/.test(l))fence=null;return}
+    if(m){fence=m[1];n++;return}
+    out.push(l)});
+  return [out.join('\n'),n];
+}
+/* 行內公式轉成看得懂的文字（摘要用） */
+const TEXSYM={mid:'∣',vert:'∣',le:'≤',leq:'≤',ge:'≥',geq:'≥',ne:'≠',neq:'≠',times:'×',cdot:'·',approx:'≈',pm:'±',to:'→',rightarrow:'→',leftarrow:'←',Rightarrow:'⇒',perp:'⊥',infty:'∞',sum:'Σ',prod:'Π',
+  alpha:'α',beta:'β',gamma:'γ',delta:'δ',Delta:'Δ',epsilon:'ε',varepsilon:'ε',theta:'θ',lambda:'λ',mu:'μ',pi:'π',rho:'ρ',sigma:'σ',tau:'τ',phi:'φ',psi:'ψ',omega:'ω',chi:'χ',hat:'',bar:'',tilde:''};
+const SUB={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉','+':'₊','-':'₋'},SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','-':'⁻'};
+function texText(t){
+  t=t.replace(/\\(?:frac|dfrac|tfrac)\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,'$1/$2')
+    .replace(/\\(?:text|mathrm|mathbf|mathit|textbf|operatorname|mathcal|mathbb)\s*\{([^{}]*)\}/g,'$1')
+    .replace(/\\[!,;:> ]/g,' ').replace(/\\(?:left|right|big|Big)\b/g,'')
+    .replace(/\\([A-Za-z]+)/g,(m,w)=>w in TEXSYM?TEXSYM[w]:w)
+    .replace(/_\{([0-9+-]+)\}|_([0-9])/g,(m,a,b)=>[...(a||b)].map(c=>SUB[c]||c).join(''))
+    .replace(/\^\{([0-9+-]+)\}|\^([0-9])/g,(m,a,b)=>[...(a||b)].map(c=>SUP[c]||c).join(''))
+    .replace(/[{}]/g,'').replace(/⊥(\s*⊥)+/g,'⊥').replace(/\s+/g,' ').trim();
+  return t.replace(/\s*∣\s*/g,' ∣ ');
+}
 function excerpt(body){
-  return stripFence(body).replace(/^\s*\|?[\s:|-]*-{3,}[\s:|-]*$/gm,' ').replace(/^\s*-{3,}\s*$/gm,' ').replace(/```[\s\S]*?```/g,' ').replace(/\$\$[\s\S]*?\$\$/g,' ').replace(/!\[[^\]]*\]\([^)]*\)/g,' ')
+  let s=stripCode(stripFence(body))[0];
+  s=s.replace(/\$\$[\s\S]*?\$\$/g,' ').replace(/\\\[[\s\S]*?\\\]/g,' ');
+  s=s.split(/(`[^`\n]*`)/).map((p,i)=>i%2?p.slice(1,-1):p.replace(/\\\(([\s\S]+?)\\\)/g,(m,x)=>texText(x)).replace(/\$(?!\s)([^$\n]+?)\$/g,(m,x)=>texText(x))).join('');
+  return s.replace(/^\s*\|?[\s:|-]*-{3,}[\s:|-]*$/gm,' ').replace(/^\s*-{3,}\s*$/gm,' ').replace(/!\[[^\]]*\]\([^)]*\)/g,' ')
     .replace(/\[([^\]]*)\]\([^)]*\)/g,'$1').replace(/^\s*(#+|>|[-*+]|\d+[.)])\s*(\[[ xX]\]\s*)?/gm,'').replace(/[*_`~|]/g,'').replace(/\s+/g,' ').trim().slice(0,110);
 }
 
@@ -443,6 +529,8 @@ function homeHTML(){
     +'<li>這一頁就像一本活頁夾：裡面只有<strong>卡片</strong>，卡片底下可以再放卡片，要幾層都可以；左邊是目錄</li>'
     +'<li><strong>＋</strong> 新增卡片；<strong>✎</strong> 改標題、內容、圖片，或移到別張卡片底下；<strong>長按 ✕ 1.5 秒</strong>刪除（底下的卡片一起刪，刪完可以按「復原」）</li>'
     +'<li>底下的卡片可以切「<strong>格狀</strong>」（適合放主題）或「<strong>清單</strong>」（適合放問答，點一下展開）；⇅ 調整順序</li>'
+    +'<li><strong>左邊目錄</strong>：電腦上直接拖曳（放在一列上半＝前面、下半＝後面、中間＝放進它底下），或按列尾的 ⋯；手機長按一列跳出「↑ 上移／↓ 下移／移到…」</li>'
+    +'<li>✎ 和「移到…」都可以選「放在哪張卡片底下」和「位置」（最前面或某張卡片後面）</li>'
     +'<li>內容空著的卡片，前面的 ● 是酒紅色</li>'
     +'<li>✎ 裡勾「<strong>內容預設收起來</strong>」，內容會收成一行，要用時再點開（適合放指令、待辦）</li>'
     +'<li>內容用 Markdown：表格、$公式$、程式碼區塊（右上有複製鈕）；寫 <code>- [ ]</code> 就是可以勾的待辦</li>'
@@ -467,7 +555,7 @@ function bodyBlock(owner,body,imgs,fold){
   const inner=(body.trim()?mdHTML(body,owner):'')+imgsHTML(owner,imgs);
   if(!fold)return '<div class="body">'+inner+'</div>';
   const open=bodyOpen.has(owner),t=taskCount(body);
-  const code=Math.floor((stripFence(body).match(/^\s{0,3}(`{3,}|~{3,})/gm)||[]).length/2);
+  const code=stripCode(stripFence(body))[1];
   const pills=(t.tot?'<span class="pill">✓ '+t.done+'/'+t.tot+'</span>':'')+(code?'<span class="pill" title="可複製的區塊">📋 '+code+'</span>':'')+(imgs.length?'<span class="pill">🖼️ '+imgs.length+'</span>':'');
   return '<div class="fold'+(open?' open':'')+'"><button type="button" class="fbar" data-fold="'+esc(owner)+'" aria-expanded="'+open+'" title="'+(open?'收起來':'展開')+'">'
     +'<span class="fl">'+(open?'內容':esc(excerpt(body)||'內容'))+'</span>'+pills+'<span class="kx">'+CHEV+'</span></button>'
@@ -530,7 +618,8 @@ function cardForm(id){
     +'<label class="f"><span>內容（Markdown）</span><textarea data-f="body">'+esc(n.body)+'</textarea></label>'
     +'<div class="f"><span>圖片</span><div class="drop" data-drop="1">📎 拖進圖片、點一下選檔，或在這張表單裡 Ctrl+V 貼上</div><div id="fImgs">'+fimgsHTML()+'</div></div>'
     +'<label class="chk"><input type="checkbox" data-f="fold"'+(n.fold?' checked':'')+'>內容預設收起來，要用時再展開</label>'
-    +(newOne===id?'':'<label class="f"><span>放在哪張卡片底下</span><select data-f="parent">'+placeOpts(id)+'</select></label>')
+    +(newOne===id?'':'<div class="place"><label class="f"><span>放在哪張卡片底下</span><select data-f="parent">'+placeOpts(id)+'</select></label>'
+      +'<label class="f"><span>位置</span><select data-f="pos">'+posOpts(id,PARENT[id])+'</select></label></div>')
     +'<div class="fa"><button class="btn ghost" data-cancel="1">取消</button><button class="btn" data-save="1">Save</button></div></div>';
 }
 function homeForm(){
@@ -544,12 +633,14 @@ function homeForm(){
 function fimgsHTML(){
   return formImgs.map((g,i)=>'<div class="fim"><img src="'+esc(g.src)+'" alt=""><input type="text" data-cap="'+i+'" value="'+esc(g.cap||'')+'" title="小說明"><button class="cx del" data-hold="fimg|'+i+'" title="長按 1.5 秒移除">✕</button></div>').join('');
 }
+const canDrag=()=>!readOnly&&!!(window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches);
 function renderTree(){
   let sel=cur;if(sel){const p=pathOf(sel);const k=p.findIndex(i=>i!==sel&&N(i).view==='list');if(k>=0)sel=p[k]}
-  let h='<div class="tn home'+(sel==null&&!query?' sel':'')+'"><span class="tt" data-go="">首頁</span></div>';
+  let h='<div class="tn home'+(sel==null&&!query?' sel':'')+'" data-tn=""><span class="tt" data-go="">首頁</span></div>';
   const w=(ids,d)=>ids.forEach(id=>{const n=N(id);const has=n.kids.length>0&&n.view!=='list';const ex=has&&expanded.has(id);
-    h+='<div class="tn'+(id===sel&&!query?' sel':'')+'" style="--d:'+d+'"><button class="tg'+(has?'':' no')+'" data-tg="'+id+'" aria-expanded="'+ex+'" title="展開／收合">'+CHEV+'</button>'
-      +'<span class="tt" data-go="'+id+'" title="'+esc(ttl(n))+'">'+(isEmpty(n)?'<span class="dot w">●</span>':'')+esc(ttl(n))+'</span>'+(has?'<span class="tc">'+n.kids.length+'</span>':'')+'</div>';
+    h+='<div class="tn'+(id===sel&&!query?' sel':'')+(id===tmId?' menu':'')+'" style="--d:'+d+'" data-tn="'+id+'"'+(canDrag()?' draggable="true"':'')+'><button class="tg'+(has?'':' no')+'" data-tg="'+id+'" aria-expanded="'+ex+'" title="展開／收合">'+CHEV+'</button>'
+      +'<span class="tt" data-go="'+id+'" title="'+esc(ttl(n))+'">'+(isEmpty(n)?'<span class="dot w">●</span>':'')+esc(ttl(n))+'</span>'+(has?'<span class="tc">'+n.kids.length+'</span>':'')
+      +(readOnly?'':'<button class="tm" type="button" data-tmenu="'+id+'" title="上移、下移、移到…">⋯</button>')+'</div>';
     if(ex)w(n.kids,d+1)});
   w(doc.kids,0);
   $('#tree').innerHTML=h;
@@ -579,8 +670,7 @@ function saveForm(form){
   const n=N(id);n.title=val('title').trim();n.body=val('body');n.imgs=formImgs.map(g=>({id:g.id||uid(),src:g.src,cap:String(g.cap||'').trim()}));n.fold=fold;n.updated=NOW();
   if(!n.title&&!n.body.trim()&&!n.imgs.length&&!n.kids.length){toast('標題或內容至少要填一樣');return}
   const np=val('parent');
-  if(np!==null){const newP=np===''?null:np;const oldP=PARENT[id];
-    if(newP!==oldP&&(newP==null||N(newP))){const a=kidsOf(oldP);a.splice(a.indexOf(id),1);kidsOf(newP).push(id);if(newP!=null){expanded.add(newP);lsSet('exp',[...expanded])}}}
+  if(np!==null){const newP=np===''?null:np;if(newP==null||N(newP))placeAt(id,newP,val('pos')||'first')}
   const wasNew=newOne===id;newOne=null;editing=null;formImgs=[];persist();
   indexParents();const p=PARENT[id];
   if(wasNew&&viewOf(p)==='list'){openRows.add(id);go(p)}else render();
@@ -604,7 +694,57 @@ function restore(rec){
   Object.assign(doc.nodes,rec.nodes);const par=rec.parent==null?null:N(rec.parent);const arr=par?par.kids:doc.kids;
   arr.splice(Math.min(rec.index,arr.length),0,rec.root);persist();render();toast('已復原');
 }
-function move(id,dir){indexParents();const arr=kidsOf(PARENT[id]);const i=arr.indexOf(id),j=i+dir;if(i<0||j<0||j>=arr.length)return;arr.splice(i,1);arr.splice(j,0,id);persist();render()}
+function move(id,dir){indexParents();const arr=kidsOf(PARENT[id]);const i=arr.indexOf(id),j=i+dir;if(i<0||j<0||j>=arr.length)return false;arr.splice(i,1);arr.splice(j,0,id);persist();render();return true}
+/* 把卡片放到 pid 底下（null＝首頁）；pos：'first'｜'last'｜{before:id}｜{after:id}。
+   換到別張卡片底下算「使用者自己搬過」，模板的 moves 之後不會再動它 */
+function moveTo(id,pid,pos){
+  indexParents();if(!N(id))return false;
+  if(pid!=null&&(!N(pid)||pid===id||descendants(id).includes(pid)))return false;
+  const oldP=PARENT[id],from=kidsOf(oldP),i=from.indexOf(id);if(i<0)return false;
+  from.splice(i,1);const to=kidsOf(pid);let idx=to.length;
+  if(pos==='first')idx=0;
+  else if(pos&&pos.before){const k=to.indexOf(pos.before);idx=k<0?to.length:k}
+  else if(pos&&pos.after){const k=to.indexOf(pos.after);idx=k<0?to.length:k+1}
+  to.splice(idx,0,id);
+  if(pid!==oldP){delete doc.seedAt[id];if(pid!=null){expanded.add(pid);lsSet('exp',[...expanded])}}
+  return true;
+}
+/* 「位置」下拉：最前面／在「某張」後面 */
+function curPos(id){indexParents();const a=kidsOf(PARENT[id]),i=a.indexOf(id);return i<=0?'first':'after:'+a[i-1]}
+function posOpts(id,pid){
+  indexParents();const sib=kidsOf(pid).filter(k=>k!==id);
+  const cv=PARENT[id]===pid?curPos(id):(sib.length?'after:'+sib[sib.length-1]:'first');
+  let o='<option value="first"'+(cv==='first'?' selected':'')+'>最前面</option>';
+  sib.forEach((k,j)=>{const v='after:'+k;o+='<option value="'+v+'"'+(cv===v?' selected':'')+'>在「'+esc(ttl(N(k)))+'」後面'+(j===sib.length-1?'（最後面）':'')+'</option>'});
+  return o;
+}
+function placeAt(id,pid,pv){
+  indexParents();if(PARENT[id]===pid&&pv===curPos(id))return false;
+  return moveTo(id,pid,pv&&pv.indexOf('after:')===0?{after:pv.slice(6)}:'first');
+}
+/* 「移到…」視窗 */
+let mvId=null;
+function openMove(id){
+  closeTMenu();indexParents();mvId=id;
+  $('#mvTitle').textContent='移動「'+ttl(N(id))+'」';
+  $('#mvParent').innerHTML=placeOpts(id);$('#mvPos').innerHTML=posOpts(id,PARENT[id]);
+  $('#mvdlg').classList.add('on');
+}
+function closeMove(){$('#mvdlg').classList.remove('on');mvId=null}
+/* 目錄的小選單（電腦：⋯；手機：長按一列） */
+let tmId=null;
+function openTMenu(id,row){
+  indexParents();if(!N(id))return;tmId=id;const a=kidsOf(PARENT[id]),i=a.indexOf(id);
+  const m=$('#tmenu');
+  m.innerHTML='<div class="mt">'+esc(ttl(N(id)))+'</div><button type="button" data-tm="up"'+(i<=0?' disabled':'')+'>↑ 上移</button>'
+    +'<button type="button" data-tm="down"'+(i>=a.length-1?' disabled':'')+'>↓ 下移</button><button type="button" data-tm="to">移到…</button>';
+  document.querySelectorAll('.tn.menu').forEach(x=>x.classList.remove('menu'));
+  if(row)row.classList.add('menu');m.classList.add('on');
+  const r=row?row.getBoundingClientRect():{left:20,bottom:60,top:40},w=m.offsetWidth,h=m.offsetHeight;
+  let x=Math.max(8,Math.min(r.left+28,innerWidth-w-8)),y=r.bottom+4;if(y+h>innerHeight-8)y=Math.max(8,r.top-h-4);
+  m.style.left=x+'px';m.style.top=y+'px';
+}
+function closeTMenu(){$('#tmenu').classList.remove('on');tmId=null;document.querySelectorAll('.tn.menu').forEach(x=>x.classList.remove('menu'))}
 function setView(pid,v){if(pid==null)doc.view=v;else{N(pid).view=v;N(pid).updated=NOW()}persist();render()}
 
 /* 圖片：壓到最長邊 1600px 的白底 JPG */
@@ -639,7 +779,13 @@ function doHold(k){const[t,v]=k.split('|');
 
 /* ================= 事件 ================= */
 document.addEventListener('click',e=>{
+  if(lpFired){lpFired=false;e.preventDefault();e.stopPropagation();return}
   if(hEl)return;const t=e.target;let b;
+  if(tmId!==null&&!t.closest('#tmenu')){if(!t.closest('[data-tmenu]')){closeTMenu();return}}
+  if((b=t.closest('[data-tmenu]'))){const id=b.dataset.tmenu;if(tmId===id){closeTMenu();return}openTMenu(id,b.closest('.tn'));return}
+  if((b=t.closest('[data-tm]'))){const id=tmId,a=b.dataset.tm;if(!id||b.disabled)return;
+    if(a==='to'){openMove(id);return}
+    move(id,a==='up'?-1:1);const r=document.querySelector('.tn[data-tn="'+id+'"]');if(r)openTMenu(id,r);else closeTMenu();return}
   if(t.closest('[data-hold]'))return;
   if((b=t.closest('.md pre .cp'))){const code=b.parentElement.querySelector('code');const txt=(code||b.parentElement).textContent;
     (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('已複製')).catch(()=>toast('複製失敗，請手動選取'));return}
@@ -686,8 +832,54 @@ document.addEventListener('drop',e=>{const d=e.target.closest&&e.target.closest(
 document.addEventListener('keydown',e=>{
   if($('#lbx').classList.contains('on')){if(e.key==='Escape')lbClose();else if(e.key==='ArrowLeft'&&lbList.length>1){lbI=(lbI-1+lbList.length)%lbList.length;lbShow()}else if(e.key==='ArrowRight'&&lbList.length>1){lbI=(lbI+1)%lbList.length;lbShow()}return}
   if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){const f=e.target.closest&&e.target.closest('.form');if(f){e.preventDefault();saveForm(f)}}
+  if(e.key==='Escape'&&$('#mvdlg').classList.contains('on')){closeMove();return}
+  if(e.key==='Escape'&&tmId!==null){closeTMenu();return}
   if(e.key==='Escape'&&editing){cancelForm()}
 });
+/* 「移到…」視窗 */
+$('#mvParent').addEventListener('change',()=>{if(mvId)$('#mvPos').innerHTML=posOpts(mvId,$('#mvParent').value||null)});
+$('#mvCancel').onclick=closeMove;
+$('#mvdlg').addEventListener('click',e=>{if(e.target.id==='mvdlg')closeMove()});
+$('#mvOk').onclick=()=>{
+  const id=mvId;if(!id||!N(id)){closeMove();return}
+  const pid=$('#mvParent').value||null;indexParents();const oldP=PARENT[id];
+  if(placeAt(id,pid,$('#mvPos').value)){persist();render();toast(pid!==oldP?(pid==null?'已移到首頁':'已移到「'+ttl(N(pid))+'」底下'):'已調整位置')}
+  closeMove();
+};
+/* 表單裡換了上層，位置下拉跟著換 */
+document.addEventListener('change',e=>{const t=e.target;if(t.matches&&t.matches('.form [data-f=parent]')){const f=t.closest('.form'),ps=f.querySelector('[data-f=pos]');if(ps)ps.innerHTML=posOpts(f.dataset.form,t.value||null)}});
+/* 目錄拖曳（電腦）：上 1/3 放前面、下 1/3 放後面、中間放進它底下 */
+let dragId=null;
+function dzClear(){document.querySelectorAll('.tn.dz-before,.tn.dz-after,.tn.dz-into').forEach(x=>x.classList.remove('dz-before','dz-after','dz-into'))}
+function dzOf(e,row){
+  const tid=row.dataset.tn;if(!dragId)return null;
+  if(tid===''){return 'into'}
+  if(tid===dragId||descendants(dragId).includes(tid))return null;
+  const r=row.getBoundingClientRect(),y=(e.clientY-r.top)/r.height;
+  return y<0.3?'before':y>0.7?'after':'into';
+}
+$('#tree').addEventListener('dragstart',e=>{const row=e.target.closest&&e.target.closest('.tn[data-tn]');if(!row||!row.dataset.tn||readOnly)return;
+  dragId=row.dataset.tn;indexParents();closeTMenu();row.classList.add('dragging');
+  try{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',dragId)}catch(_){}});
+$('#tree').addEventListener('dragover',e=>{const row=e.target.closest&&e.target.closest('.tn[data-tn]');if(!row||!dragId)return;
+  const z=dzOf(e,row);dzClear();if(!z)return;e.preventDefault();try{e.dataTransfer.dropEffect='move'}catch(_){}row.classList.add('dz-'+z)});
+$('#tree').addEventListener('dragleave',e=>{const row=e.target.closest&&e.target.closest('.tn[data-tn]');if(row&&!row.contains(e.relatedTarget))row.classList.remove('dz-before','dz-after','dz-into')});
+$('#tree').addEventListener('drop',e=>{const row=e.target.closest&&e.target.closest('.tn[data-tn]');if(!row||!dragId)return;e.preventDefault();
+  const z=dzOf(e,row),id=dragId,tid=row.dataset.tn;dzClear();dragId=null;if(!z)return;
+  indexParents();const oldP=PARENT[id];let pid,pos;
+  if(z==='into'){pid=tid===''?null:tid;pos='last'}else{pid=PARENT[tid];pos=z==='before'?{before:tid}:{after:tid}}
+  if(pid===oldP&&pos!=='last'&&((pos.before&&kidsOf(pid)[kidsOf(pid).indexOf(tid)-1]===id)||(pos.after&&kidsOf(pid)[kidsOf(pid).indexOf(tid)+1]===id)))return render();
+  if(moveTo(id,pid,pos)){persist();render();toast(pid!==oldP?(pid==null?'已移到首頁':'已移到「'+ttl(N(pid))+'」底下'):'已調整順序')}});
+$('#tree').addEventListener('dragend',()=>{dragId=null;dzClear();document.querySelectorAll('.tn.dragging').forEach(x=>x.classList.remove('dragging'))});
+/* 目錄長按（手機）：0.5 秒跳出小選單 */
+let lpT=null,lpX=0,lpY=0,lpFired=false;
+$('#tree').addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||readOnly)return;const row=e.target.closest('.tn[data-tn]');if(!row||!row.dataset.tn)return;
+  lpX=e.clientX;lpY=e.clientY;clearTimeout(lpT);
+  lpT=setTimeout(()=>{lpT=null;lpFired=true;setTimeout(()=>{lpFired=false},800);openTMenu(row.dataset.tn,row);try{if(navigator.vibrate)navigator.vibrate(10)}catch(_){}},500)});
+['pointerup','pointercancel'].forEach(ev=>$('#tree').addEventListener(ev,()=>{clearTimeout(lpT);lpT=null}));
+$('#tree').addEventListener('pointermove',e=>{if(lpT&&(Math.abs(e.clientX-lpX)>8||Math.abs(e.clientY-lpY)>8)){clearTimeout(lpT);lpT=null}},{passive:true});
+$('#tree').addEventListener('contextmenu',e=>{if(e.target.closest('.tn[data-tn]'))e.preventDefault()});
+$('#tree').addEventListener('scroll',()=>{if(tmId!==null)closeTMenu()});
 $('#lbx').addEventListener('click',e=>{if(e.target.id==='lbPrev'){lbI=(lbI-1+lbList.length)%lbList.length;lbShow()}else if(e.target.id==='lbNext'){lbI=(lbI+1)%lbList.length;lbShow()}else if(e.target.id!=='lbImg')lbClose()});
 $('#qClr').onclick=()=>{query='';$('#q').value='';render()};
 $('#addRoot').onclick=()=>{if(editing)cancelForm();document.body.classList.remove('drawer');addCard(null)};
@@ -696,7 +888,7 @@ $('#menuBtn').onclick=()=>document.body.classList.toggle('drawer');
 $('#scrim').onclick=()=>document.body.classList.remove('drawer');
 $('#fsDn').onclick=()=>{fsIdx=Math.max(0,fsIdx-1);lsSet('fs',fsIdx);render()};
 $('#fsUp').onclick=()=>{fsIdx=Math.min(SCALES.length-1,fsIdx+1);lsSet('fs',fsIdx);render()};
-window.addEventListener('hashchange',()=>{if(keepEdit){keepEdit=false}else if(editing){const back=newOne;dropNew();editing=null;formImgs=[];if(back)persist()}reorder=false;render();window.scrollTo(0,0)});
+window.addEventListener('hashchange',()=>{closeTMenu();if(keepEdit){keepEdit=false}else if(editing){const back=newOne;dropNew();editing=null;formImgs=[];if(back)persist()}reorder=false;render();window.scrollTo(0,0)});
 
 /* ================= 啟動 ================= */
 (async function init(){
@@ -707,8 +899,9 @@ window.addEventListener('hashchange',()=>{if(keepEdit){keepEdit=false}else if(ed
   }else if(typeof d!=='object'||d.schema!=='epi-notebook'){readOnly=true;d=blankDoc()}
   doc=normalize(d);
   const ch=mergeSeed(doc,SEED);
+  const mvd=!readOnly&&applyMoves(doc,SEED);
   normalize(doc);
-  if((fresh||ch)&&!readOnly)persist();
+  if((fresh||ch||mvd)&&!readOnly)persist();
   render();
 })();
 </script>
