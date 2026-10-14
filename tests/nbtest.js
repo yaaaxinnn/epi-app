@@ -137,6 +137,26 @@ async function drag(p,from,to,zone){
   await p.evaluate(()=>location.hash='#/c/g-confounding');await p.waitForTimeout(200);await p.screenshot({path:OUT+'7_cp_group.png'});
   ok(await p.evaluate(()=>doc.movesDone.length===0&&!doc.seedAt['chapter-map']),'舊資料沒有放置紀錄，也沒有被亂搬');
   ok(errs.length===0,'causal-prep 沒有錯誤 '+errs.join('|'));await ctx.close();
+
+  // ===== 6. 表格裡的英文單字不能被切斷（電腦、手機）=====
+  const split=()=>{const bad=[];document.querySelectorAll('.md td,.md th').forEach(td=>{
+      const w=document.createTreeWalker(td,NodeFilter.SHOW_TEXT);let n;
+      while((n=w.nextNode())){const re=/[A-Za-z]{4,}/g;let m;while((m=re.exec(n.data))){const r=document.createRange();r.setStart(n,m.index);r.setEnd(n,m.index+m[0].length);
+        if(new Set([...r.getClientRects()].map(x=>Math.round(x.top))).size>1)bad.push(m[0])}}});return bad};
+  for(const [lab,w] of [['電腦',1200],['手機',390]]){
+    errs=[];ctx=await ctxFor(b,{viewport:{width:w,height:900}});p=await ctx.newPage();p.on('pageerror',e=>errs.push(e.message));
+    await p.goto('http://nb.test/blank.html');
+    await p.evaluate(recs=>new Promise(res=>{const r=indexedDB.open('causalPrep',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');
+      r.onsuccess=()=>{const tx=r.result.transaction('kv','readwrite');recs.forEach(([k,v])=>tx.objectStore('kv').put(v,k));tx.oncomplete=()=>{r.result.close();res()}}}),data.dbs[0].stores[0].records);
+    await p.goto('http://nb.test/cp.html#/c/glossary');await p.waitForTimeout(600);await p.click('.lr .lh');await p.waitForTimeout(400);
+    const cut=await p.evaluate(split),cells=await p.$$eval('.lb2 td',a=>a.length);
+    const po=await p.evaluate(()=>{const td=[...document.querySelectorAll('.lb2 td')].find(t=>t.textContent.trim()==='potential outcome');return td?Math.round(td.getBoundingClientRect().width):0});
+    ok(cells>100&&cut.length===0,lab+'：術語對照表 '+cells+' 格，英文單字沒有被從中間切斷'+(cut.length?'（被切：'+cut.slice(0,5).join('、')+'）':''));
+    ok(po>=100,lab+'：「potential outcome」那一欄夠寬（'+po+'px）');
+    if(w<600)ok(await p.$eval('.lb2 .tw',e=>e.scrollWidth>e.clientWidth)&&await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'手機：表格太寬時在框裡左右滑，整頁不會橫向捲動');
+    await (await p.$('.lb2 .tw')).screenshot({path:OUT+'8_table_'+(w<600?'phone':'desk')+'.png'});
+    ok(errs.length===0,lab+'表格頁沒有錯誤 '+errs.join('|'));await ctx.close();
+  }
   await b.close();
   console.log(bad.length?'✗ '+bad.length+' 項沒過':'✓ 全部合格');process.exit(bad.length?1:0);
 })();

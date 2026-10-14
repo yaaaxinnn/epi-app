@@ -1,4 +1,4 @@
-// 1.3：筆記頁模板目錄拖曳／長按選單、移到…與位置、摘要修正、seed.moves（模板本身由 nbtest.js 實機測）；使用說明補上；沿用 1.2：Library ＋ 空白筆記頁（templates/notebook.html）、覆蓋同名 HTML 前另存 .old-日期.html 與 .data.backup、頁面資料比雲端少一半以上先問；沿用 1.1：Review 每日複習開關（暫停時不顯示紅點、打開時到期日順延）、評分會蓋 mtime（跨裝置同步）、Notes 內容空著的 ● 變酒紅色、使用說明改成列點與表格、Library 說明 ☁️／長按 ✕／img 路徑；沿用 1.0：HTML 與圖片同一個拖放區、卡片上都是小標籤（沒有 ↗）、右欄一列兩張、🖼️、搜尋框提示字加回來、Settings 說明更新；沿用 v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
+// 1.4：筆記頁表格英文單字不從中間切斷（td word-break:normal、min-width:7em；.tw 與 .katex-display position:relative，手機不會整頁橫捲）；沿用 1.3：筆記頁模板目錄拖曳／長按選單、移到…與位置、摘要修正、seed.moves（模板本身由 nbtest.js 實機測）；使用說明補上；沿用 1.2：Library ＋ 空白筆記頁（templates/notebook.html）、覆蓋同名 HTML 前另存 .old-日期.html 與 .data.backup、頁面資料比雲端少一半以上先問；沿用 1.1：Review 每日複習開關（暫停時不顯示紅點、打開時到期日順延）、評分會蓋 mtime（跨裝置同步）、Notes 內容空著的 ● 變酒紅色、使用說明改成列點與表格、Library 說明 ☁️／長按 ✕／img 路徑；沿用 1.0：HTML 與圖片同一個拖放區、卡片上都是小標籤（沒有 ↗）、右欄一列兩張、🖼️、搜尋框提示字加回來、Settings 說明更新；沿用 v52：說明區可放圖片（拖曳、選檔、貼上，小說明、點開才看大圖）、HTML 區不再手填路徑、全站拿掉輸入框提示字；沿用 v51：Library 左右兩欄（左主題、右卡片）、卡片概覽、指定閱讀拿掉、HTML 在表單裡上傳；沿用 v49：拿掉 Guide、頁面資料（IndexedDB）同步到 .data.json、兩台裝置還原與衝突
 const {JSDOM}=require('jsdom');const fs=require('fs');const fidb=require('fake-indexeddb');
 const html=fs.readFileSync('/home/claude/index.html','utf8');
 const TPL=fs.readFileSync('/home/claude/epi-app/templates/notebook.html','utf8');
@@ -244,7 +244,7 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  const op=A.eval('orphans').map(o=>o.path).sort().join('|');
  t('清理列出沒人指向的 HTML 與 Library 圖片（.data.json 不列）',()=>op===['library/causal/slides.html','library/causal/unused.html',U1.imgs.length?Object.keys(REPO).find(p=>p.includes('/img/')&&p!==U1.imgs[0].path):''].sort().join('|')||op);
  const hb=$('#helpBox').innerHTML;
- t('版本標示 1.3',()=>$('#appVer').textContent.includes('Epi_Yaxin 1.3'));
+ t('版本標示 1.4',()=>$('#appVer').textContent.includes('Epi_Yaxin 1.4'));
  t('Settings 說明補上 Library',()=>$('#tipGh').textContent.includes('library/')&&$('#tipData').textContent.includes('不含檔案')&&$('#tipClean').textContent.includes('Library'));
  t('使用說明：資料夾圖有 library/、沒有 Guide、Textbooks 改 📕',()=>{const h=$('#helpBox').innerHTML;return h.includes('<code>library/代碼/</code>')&&h.includes('<code>tests/</code>')&&!h.includes('Guide')&&h.includes('<summary>📕 Textbooks</summary>')});
  t('HELP：📚 Library、八個分頁、同步說明、沒有 Guide',()=>hb.includes('<summary>📚 Library</summary>')&&hb.includes('八個分頁在做什麼')&&hb.includes('.data.backup-日期.json')&&!hb.includes('📑 Guide')&&!/<strong>Guide<\/strong>/.test(hb));
@@ -383,6 +383,7 @@ const blobText=b=>new Promise(r=>{const fr=new b.constructor===undefined?null:nu
  const hb4=$('#helpBox').innerHTML;
  t('使用說明：目錄拖曳、手機長按、選位置、moves',()=>hb4.includes('左邊目錄調整順序')&&hb4.includes('手機長按一列 0.5 秒')&&hb4.includes('不會一律排到最後')&&hb4.includes('<code>moves</code>'));
  t('模板有目錄拖曳、長按選單、位置、moves',()=>TPL.includes('function applyMoves')&&TPL.includes('function moveTo')&&TPL.includes('id="mvdlg"')&&TPL.includes('data-f="pos"')&&TPL.includes('function stripCode'));
+ t('模板表格：單字不切斷、每欄至少 7em、捲動框裝得住隱藏的公式文字',()=>TPL.includes('word-break:normal;overflow-wrap:break-word;min-width:7em')&&TPL.includes('.md .tw{overflow-x:auto;margin:.6em 0;position:relative}'));
  t('全分頁可切換',()=>{$$('#tabs button').forEach(b=>click(b));return A.__errs.length===0||A.__errs.join('|')});
  await sleep(400);
  const sv=JSON.parse(A.localStorage.getItem('epi-yaxin'));

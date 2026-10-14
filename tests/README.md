@@ -12,5 +12,5 @@ cd /home/claude && npm i jsdom playwright fake-indexeddb
 - `rshot.js` 是 1.1 的 Chromium 截圖檢查（Review 開關、Notes 酒紅 ●、使用說明表格不超寬），單獨跑 `node rshot.js`。
 - `nshot.js` 是 1.2 的筆記頁實機（兩台裝置）：app 裡「＋ 空白筆記頁」→ 頁面裡加卡片 → 同步 → 另一台還原 → 重新上傳同檔名不掉資料。和 lshot 一樣開 http.server（/home/claude/serve/ 要有 index.html 與 templates/notebook.html），CDN 的 marked／dompurify／katex 從 node_modules 供應（`npm i marked@12.0.2 dompurify@3.1.6 katex@0.16.9`）。
 - `nbtest.js` 是筆記頁模板本身的實機測試（電腦拖曳、手機長按選單、移到…與位置、摘要、seed.moves、用 epi-data 上的 causal-prep 資料讀一次），不用開 server；會讀 `/home/claude/epi-data`（唯讀）。
-- 最新一支版本測試是 `t35.js`（1.3），會讀 repo 的 `templates/notebook.html`。
+- 最新一支版本測試是 `t36.js`（1.4），會讀 repo 的 `templates/notebook.html`。
 - Chromium 用預裝的，不要跑 `playwright install`。
